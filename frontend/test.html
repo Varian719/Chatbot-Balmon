@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Balmon Samarinda</title>
+    
+    <style>
+        /* --- 1. SETUP WARNA --- */
+        :root {
+            --primary-color: #0E3557;   /* Navy Blue */
+            --accent-color: #00A3E0;    /* Cyan */
+            --text-white: #ffffff;
+            --bg-light: #f4f7f6;
+        }
+
+        /* --- RESET & GLOBAL --- */
+        body { margin: 0; padding: 0; font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background-color: #f9f9f9; color: #333; line-height: 1.6; }
+        a { text-decoration: none; color: inherit; transition: 0.2s; }
+        ul { list-style: none; padding: 0; margin: 0; }
+        * { box-sizing: border-box; }
+
+        .container {
+            max-width: 1100px; 
+            margin: 0 auto;
+            padding: 0 20px;
+            width: 100%;
+        }
+
+        /* --- HEADER (PUTIH PERMANEN) --- */
+        header {
+            background-color: #ffffff; 
+            height: 70px; 
+            position: fixed; 
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1); 
+        }
+
+        .header-content { display: flex; align-items: center; justify-content: space-between; height: 100%; }
+        .brand-area { display: flex; align-items: center; gap: 15px; }
+        
+        .brand-logo { 
+            height: 50px; 
+            width: auto; 
+        }
+
+        .brand-text { 
+            font-size: 22px; 
+            font-weight: 700; 
+            color: var(--primary-color);
+            letter-spacing: -0.5px;
+        }
+
+        /* --- NAVIGASI --- */
+        .nav-menu { height: 100%; display: flex; align-items: center; }
+        .menu-list { display: flex; gap: 5px; height: 100%; align-items: center; }
+        
+        .menu-item { 
+            position: relative; 
+            height: 100%; 
+            display: flex; 
+            align-items: center; 
+            padding: 0 15px; 
+            font-size: 15px; 
+            font-weight: 500; 
+            color: var(--primary-color); 
+            cursor: pointer; 
+            transition: all 0.2s;
+        }
+
+        .menu-item:hover { 
+            color: var(--accent-color); 
+            background-color: #f0f8ff; 
+        }
+        
+        .arrow-down { font-size: 10px; margin-left: 6px; opacity: 0.6; }
+
+        /* --- TOMBOL PENCARIAN --- */
+        .search-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: var(--primary-color);
+            padding: 8px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+            margin-left: 5px;
+        }
+
+        .search-btn:hover {
+            background-color: #f0f8ff;
+            color: var(--accent-color);
+            transform: scale(1.1);
+        }
+
+        /* DROPDOWN */
+        .dropdown-content { display: none; position: absolute; top: 100%; right: 0; background-color: #ffffff; min-width: 220px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); border-radius: 0 0 4px 4px; z-index: 1000; padding: 5px 0; border-top: 3px solid var(--accent-color); }
+        .menu-item:hover .dropdown-content { display: block; animation: slideDown 0.2s ease; }
+        .dropdown-content li a { display: block; padding: 12px 20px; color: #444; font-size: 14px; }
+        .dropdown-content li a:hover { background-color: #f5f5f5; color: var(--primary-color); }
+        @keyframes slideDown { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* --- HERO SECTION --- */
+        .hero-background { 
+            background: #ffffff;
+            width: 100%;
+            padding-bottom: 60px;
+            padding-top: 110px; 
+            border-bottom: 1px solid #eee;
+        }
+        
+        .hero-content { color: var(--primary-color); text-align: center; }
+        
+        /* --- CAROUSEL --- */
+        .carousel-container {
+            max-width: 100%;
+            position: relative;
+            margin: 0 auto;
+            border-radius: 12px; 
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(14, 53, 87, 0.15); 
+            background-color: #eee; 
+        }
+
+        .mySlides { display: none; }
+        .mySlides img { vertical-align: middle; width: 100%; height: 480px; object-fit: cover; }
+
+        .prev, .next {
+            cursor: pointer; position: absolute; top: 50%; width: auto; padding: 16px; margin-top: -22px; color: white; font-weight: bold; font-size: 18px; transition: 0.6s ease; user-select: none; background-color: rgba(14, 53, 87, 0.5); border-radius: 50%; width: 50px; height: 50px; display: flex; align-items: center; justify-content: center; margin: 0 20px;
+        }
+        .next { right: 0; }
+        .prev:hover, .next:hover { background-color: var(--accent-color); }
+
+        .text-caption { 
+            color: #fff; font-size: 18px; padding: 20px; position: absolute; bottom: 0; width: 100%; text-align: center; 
+            background: linear-gradient(to top, rgba(14, 53, 87, 0.9), transparent); 
+            font-weight: 500; 
+        }
+
+        .dot-container { text-align: center; margin-top: 20px; }
+        
+        .dot { cursor: pointer; height: 12px; width: 12px; margin: 0 4px; background-color: #ccc; border-radius: 50%; display: inline-block; transition: background-color 0.6s ease; }
+        .active-dot, .dot:hover { background-color: var(--primary-color); transform: scale(1.3); }
+        .fade { animation-name: fade; animation-duration: 1.5s; }
+        @keyframes fade { from {opacity: .4} to {opacity: 1} }
+
+        /* --- MAIN CONTENT & LOREM IPSUM --- */
+        .main-section { padding: 60px 0; color: #555; background-color: #f9f9f9; }
+        
+        .content-block {
+            background: white;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            margin-bottom: 40px;
+            text-align: left;
+        }
+
+        .content-block h2 { color: var(--primary-color); margin-top: 0; border-bottom: 2px solid var(--accent-color); display: inline-block; padding-bottom: 10px; margin-bottom: 20px; }
+        .content-block p { margin-bottom: 20px; text-align: justify; }
+
+        /* --- FOOTER PROFESSIONAL --- */
+        footer {
+            background-color: var(--primary-color); /* Warna Biru Tua */
+            color: white;
+            padding-top: 60px;
+            font-size: 14px;
+            position: relative; /* Penting untuk deteksi JS */
+            z-index: 1;
+        }
+
+        .footer-grid {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            gap: 40px;
+            padding-bottom: 40px;
+        }
+
+        .footer-col {
+            flex: 1;
+            min-width: 250px;
+        }
+
+        .footer-col h3 {
+            font-size: 18px;
+            margin-bottom: 20px;
+            color: var(--text-white);
+            border-bottom: 2px solid var(--accent-color);
+            display: inline-block;
+            padding-bottom: 5px;
+        }
+
+        .footer-col p { color: #ccc; line-height: 1.8; margin-bottom: 15px; }
+        .footer-links li { margin-bottom: 10px; }
+        .footer-links a { color: #ddd; transition: 0.3s; display: flex; align-items: center; }
+        .footer-links a:hover { color: var(--accent-color); padding-left: 5px; }
+
+        .copyright {
+            background-color: rgba(0,0,0,0.2);
+            text-align: center;
+            padding: 20px 0;
+            color: #aaa;
+            font-size: 13px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+
+        /* --- WIDGET CHAT --- */
+        .chat-toggle-btn { 
+            position: fixed; 
+            bottom: 30px; 
+            right: 30px; 
+            width: 60px; 
+            height: 60px; 
+            background-color: var(--primary-color); /* Warna Asli Biru */
+            color: var(--text-white); /* Ikon Asli Putih */
+            border: none; 
+            border-radius: 50%; 
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25); 
+            cursor: pointer; 
+            z-index: 9999; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            transition: all 0.3s ease; /* Transisi halus */
+        }
+
+        /* CLASS BARU: Saat tombol berada di atas footer */
+        .chat-toggle-btn.on-footer {
+            background-color: #ffffff !important; /* Berubah jadi Putih */
+            color: var(--primary-color) !important; /* Ikon berubah jadi Biru */
+            box-shadow: 0 4px 12px rgba(0,0,0,0.4); /* Bayangan lebih kuat agar terlihat */
+        }
+
+        .chat-toggle-btn:hover { background-color: var(--accent-color); transform: scale(1.1); }
+        .chat-toggle-btn.on-footer:hover { background-color: #f0f0f0 !important; } /* Hover saat mode putih */
+        
+        .chat-icon { width: 28px; height: 28px; fill: currentColor; }
+        .close-icon { display: none; width: 24px; height: 24px; fill: #fff; }
+        .chat-toggle-btn.active .chat-icon { display: none; }
+        .chat-toggle-btn.active .close-icon { display: block; }
+        
+        /* Chat box container */
+        .chat-box-container { position: fixed; bottom: 100px; right: 30px; width: 350px; max-width: 90%; background-color: #fff; border-radius: 12px; box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15); z-index: 9998; overflow: hidden; opacity: 0; visibility: hidden; transform: translateY(20px); transition: all 0.3s; }
+        .chat-box-container.active { opacity: 1; visibility: visible; transform: translateY(0); }
+        .chat-header { background-color: var(--primary-color); color: var(--text-white); padding: 15px 20px; display: flex; align-items: center; gap: 10px; }
+        .chat-logo { width: 35px; height: 35px; background-color: #fff; border-radius: 50%; padding: 2px; }
+        .chat-body { padding: 20px; height: 300px; overflow-y: auto; background-color: var(--bg-light); display: flex; flex-direction: column; gap: 12px; }
+        .message { max-width: 80%; padding: 12px 16px; border-radius: 12px; font-size: 14px; line-height: 1.5; font-family: sans-serif; }
+        .bot-message { align-self: flex-start; background-color: #fff; color: #333; border: 1px solid #e0e0e0; }
+        .chat-footer { padding: 15px; border-top: 1px solid #eee; display: flex; gap: 10px; background: #fff; }
+        .chat-footer input { flex: 1; padding: 12px 15px; border: 1px solid #ddd; border-radius: 25px; outline: none; }
+        .chat-footer button { background: var(--primary-color); border: none; width: 40px; height: 40px; border-radius: 50%; color: #fff; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+
+        @media (max-width: 768px) {
+            header { background-color: #ffffff; height: auto; position: relative; }
+            .header-content { flex-direction: column; height: auto; padding: 15px 0; gap: 10px; }
+            .hero-background { padding-top: 40px; }
+            .menu-list { flex-wrap: wrap; justify-content: center; width: 100%; }
+            .dropdown-content { position: static; box-shadow: none; border: none; background: #f9f9f9; width: 100%; text-align: center; }
+            .menu-item { flex-direction: column; padding: 10px; color: var(--primary-color); }
+            .carousel-container { margin-top: 20px; }
+            .mySlides img { height: 250px; }
+            .footer-col { margin-bottom: 30px; }
+        }
+    </style>
+</head>
+<body>
+
+    <header id="mainHeader">
+        <div class="container header-content">
+            <div class="brand-area">
+                <img src="balmonsmd.png" alt="Logo" class="brand-logo">
+                <div class="brand-text">Balmon Samarinda</div>
+            </div>
+
+            <nav class="nav-menu">
+                <ul class="menu-list">
+                    <li class="menu-item"><a href="#">Beranda</a></li>
+                    
+                    <li class="menu-item">
+                        <span>Media Sosial <span class="arrow-down">▼</span></span>
+                        <ul class="dropdown-content">
+                            <li><a href="#">Instagram</a></li>
+                            <li><a href="#">Facebook</a></li>
+                            <li><a href="#">YouTube</a></li>
+                            <li><a href="#">Whatsapp</a></li>
+                            <li><a href="#">Tiktok</a></li>
+                        </ul>
+                    </li>
+
+                    <li class="menu-item">
+                        <span>Publikasi <span class="arrow-down">▼</span></span>
+                        <ul class="dropdown-content">
+                            <li><a href="#">Berita & Artikel</a></li>
+                            <li><a href="#">Pengumuman</a></li>
+                            <li><a href="#">Galeri Foto</a></li>
+                            <li><a href="#">Galeri Video</a></li>
+                        </ul>
+                    </li>
+
+                    <li class="menu-item">
+                        <span>Layanan <span class="arrow-down">▼</span></span>
+                        <ul class="dropdown-content">
+                            <li><a href="#">Perizinan Konsesi</a></li>
+                            <li><a href="#">Perizinan Maritim</a></li>
+                            <li><a href="#">Perizinan Penyiaran FM</a></li>
+                            <li><a href="#">Lain-lain</a></li>
+                            <li><a href="#">FAQ</a></li>
+                            <li><a href="#">Menu</a></li>
+                        </ul>
+                    </li>
+
+                    <li class="menu-item"><a href="#">Standard Pelayanan</a></li>
+                    <li class="menu-item"><a href="#">Kontak</a></li>
+
+                    <li class="menu-item" style="padding-right: 0;">
+                        <button class="search-btn" onclick="alert('Fitur pencarian belum aktif.')">
+                            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="11" cy="11" r="8"></circle>
+                                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                            </svg>
+                        </button>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <div class="hero-background">
+        <div class="container hero-content">
+            <div class="carousel-container">
+                <div class="mySlides fade">
+                    <img src="https://picsum.photos/1100/480?random=1" alt="Kegiatan 1">
+                    <div class="text-caption">Monitoring & Penertiban Spektrum Frekuensi Radio</div>
+                </div>
+                <div class="mySlides fade">
+                    <img src="https://picsum.photos/1100/480?random=2" alt="Kegiatan 2">
+                    <div class="text-caption">Pelayanan Terpadu Satu Pintu (PTSP)</div>
+                </div>
+                <div class="mySlides fade">
+                    <img src="https://picsum.photos/1100/480?random=3" alt="Kegiatan 3">
+                    <div class="text-caption">Sosialisasi Penggunaan Frekuensi Radio</div>
+                </div>
+                
+                <a class="prev" onclick="plusSlides(-1)">&#10094;</a>
+                <a class="next" onclick="plusSlides(1)">&#10095;</a>
+            </div>
+
+            <div class="dot-container">
+                <span class="dot" onclick="currentSlide(1)"></span> 
+                <span class="dot" onclick="currentSlide(2)"></span> 
+                <span class="dot" onclick="currentSlide(3)"></span> 
+            </div>
+        </div>
+    </div>
+
+    <div class="container main-section">
+        <div class="content-block">
+            <h2>Tentang Balmon Samarinda</h2>
+            <p>
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur sed lectus et purus maximus finibus. 
+                Nulla facilisi. Integer vel nisl nec dui tincidunt feugiat ut a augue. Suspendisse potenti. 
+                Vivamus non tellus eu augue rhoncus lacinia. Sed nec orci vel augue bibendum dictum.
+            </p>
+            <p>
+                Quisque vel lorem ut justo rhoncus ornare. Aliquam erat volutpat. 
+                Duis et metus vitae est fermentum malesuada. Nam a tempor ante. 
+                In hac habitasse platea dictumst. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; 
+                Ut nec libero magna. Fusce finibus, nisl ut tristique vehicula, ex neque sodales urna, a pharetra augue leo et magna.
+            </p>
+        </div>
+
+        <div class="content-block">
+            <h2>Visi dan Misi</h2>
+            <p>
+                <strong>Visi:</strong> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+            </p>
+            <p>
+                <strong>Misi:</strong>
+                <ul>
+                    <li>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</li>
+                    <li>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.</li>
+                    <li>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum.</li>
+                    <li>Excepteur sint occaecat cupidatat non proident.</li>
+                </ul>
+            </p>
+        </div>
+
+        <div class="content-block">
+            <h2>Berita Terkini & Kegiatan</h2>
+            <p>
+                Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, 
+                totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. 
+                Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt.
+            </p>
+            <p>
+                Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, 
+                sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. 
+                Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur?
+            </p>
+            <p>
+                Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, 
+                vel illum qui dolorem eum fugiat quo voluptas nulla pariatur? At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident.
+            </p>
+        </div>
+
+        <div class="content-block">
+            <h2>Layanan Publik</h2>
+            <p>
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce a tellus nec elit efficitur gravida. 
+                Nullam sit amet purus vel urna ullamcorper accumsan. Proin at varius lacus. 
+                Praesent tincidunt, ligula sit amet feugiat auctor, augue lorem ultricies nibh, a tristique quam dui ut justo.
+            </p>
+            <p>
+                Suspendisse potenti. Mauris eget diam magna. Ut non nisi bibendum, tempor erat at, pellentesque neque. 
+                Cras et turpis vel ligula suscipit efficitur. Morbi lacinia justo eu libero facilisis, ac eleifend ex bibendum.
+            </p>
+        </div>
+    </div>
+
+    <footer id="mainFooter">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <h3>Balmon Samarinda</h3>
+                    <p>
+                        Balai Monitor Spektrum Frekuensi Radio Kelas I Samarinda.<br>
+                        Direktorat Jenderal Sumber Daya dan Perangkat Pos dan Informatika.
+                    </p>
+                    <p>Kementerian Komunikasi dan Digital Republik Indonesia.</p>
+                </div>
+                <div class="footer-col">
+                    <h3>Tautan Cepat</h3>
+                    <ul class="footer-links">
+                        <li><a href="#">Profil Balai</a></li>
+                        <li><a href="#">Layanan Publik</a></li>
+                        <li><a href="#">Pengaduan Masyarakat</a></li>
+                        <li><a href="#">Regulasi & Aturan</a></li>
+                        <li><a href="#">PPID</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h3>Hubungi Kami</h3>
+                    <p>
+                        <strong>Alamat:</strong><br>
+                        Jl. Sultan Sulaiman No. 123<br>
+                        Samarinda, Kalimantan Timur<br>
+                        Indonesia 75111
+                    </p>
+                    <p>
+                        <strong>Kontak:</strong><br>
+                        Telp: 0856-4828-3012<br>
+                        Email: pelayananuptbalmonsamarinda@gmail.com
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="copyright">
+            &copy; Copyright@2024 Balai Monitor Spektrum Frekuensi Radio Kelas I Samarinda
+        </div>
+    </footer>
+
+    <div class="chat-box-container" id="chatBox">
+        <div class="chat-header">
+            <img src="balmonsmd.png" alt="Logo" class="chat-logo">
+            <div class="chat-title"><h4>Halo, Sobat Digi!</h4><span>Layanan DJID Online</span></div>
+        </div>
+        <div class="chat-body">
+            <div class="message bot-message">Selamat datang di layanan bantuan Direktorat Jenderal Infrastruktur Digital. Ada yang bisa kami bantu?</div>
+        </div>
+        <div class="chat-footer">
+            <input type="text" placeholder="Tulis pesan..." />
+            <button><svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"></path></svg></button>
+        </div>
+    </div>
+
+    <button class="chat-toggle-btn" id="toggleBtn" onclick="toggleChat()">
+        <svg class="chat-icon" viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg>
+        <svg class="close-icon" viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+    </button>
+
+    <script>
+        // --- SCRIPT DETEKSI FOOTER UNTUK UBAH WARNA TOMBOL CHAT ---
+        window.addEventListener('scroll', function() {
+            const chatBtn = document.getElementById('toggleBtn');
+            const footer = document.getElementById('mainFooter');
+
+            // Ambil posisi (bounding rectangle) dari tombol dan footer
+            const btnRect = chatBtn.getBoundingClientRect();
+            const footerRect = footer.getBoundingClientRect();
+
+            // Logika: Jika bagian bawah tombol chat sudah melewati bagian atas footer
+            // DAN footer sudah terlihat di layar (top < innerHeight)
+            if (footerRect.top < window.innerHeight && btnRect.bottom > footerRect.top) {
+                chatBtn.classList.add('on-footer'); // Tambah class putih
+            } else {
+                chatBtn.classList.remove('on-footer'); // Hapus class (kembali biru)
+            }
+        });
+
+        function toggleChat() {
+            var chatBox = document.getElementById("chatBox");
+            var btn = document.getElementById("toggleBtn");
+            chatBox.classList.toggle("active");
+            btn.classList.toggle("active");
+        }
+
+        let slideIndex = 1;
+        showSlides(slideIndex);
+        function plusSlides(n) { showSlides(slideIndex += n); }
+        function currentSlide(n) { showSlides(slideIndex = n); }
+        function showSlides(n) {
+            let i;
+            let slides = document.getElementsByClassName("mySlides");
+            let dots = document.getElementsByClassName("dot");
+            if (n > slides.length) {slideIndex = 1}    
+            if (n < 1) {slideIndex = slides.length}
+            for (i = 0; i < slides.length; i++) { slides[i].style.display = "none"; }
+            for (i = 0; i < dots.length; i++) { dots[i].className = dots[i].className.replace(" active-dot", ""); }
+            slides[slideIndex-1].style.display = "block";  
+            dots[slideIndex-1].className += " active-dot";
+        }
+        setInterval(function() { plusSlides(1); }, 5000); 
+    </script>
+
+</body>
+</html>
