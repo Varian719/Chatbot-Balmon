@@ -388,24 +388,43 @@
         .chat-toggle-btn.on-footer .icon-message { color: var(--primary-color); }
 
         /* CHAT BOX CONTAINER */
-        .chat-box-container { 
-            position: fixed; bottom: 110px; right: 30px; 
-            width: 360px; max-width: 90%; 
-            background-color: #fff; border-radius: 16px; 
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15); 
+       /* CHAT BOX CONTAINER (UKURAN DIPERBESAR) */
+       .chat-box-container { 
+            position: fixed; 
+            bottom: 110px; 
+            right: 30px; 
+            
+            /* --- UKURAN BARU --- */
+            width: 450px;       /* Lebih Lebar */
+            height: 600px;      /* Lebih Tinggi */
+            max-height: 80vh;   /* Jaga-jaga agar tidak mentok atas layar di laptop kecil */
+            /* ------------------- */
+
+            background-color: #fff; 
+            border-radius: 16px; 
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2); 
             z-index: 9998; 
-            opacity: 0; visibility: hidden; transform: translateY(20px) scale(0.95); 
+            opacity: 0; 
+            visibility: hidden; 
+            transform: translateY(20px) scale(0.95); 
             transition: all 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
             overflow: hidden;
+            display: flex;       /* Agar layout header & iframe rapi */
+            flex-direction: column;
         }
 
         .chat-box-container.active { 
             opacity: 1; visibility: visible; transform: translateY(0) scale(1); 
         }
 
-        .chat-header { 
-            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color)); 
-            color: white; padding: 20px; display: flex; align-items: center; gap: 15px; 
+        /* Responsive untuk HP (Agar tidak melebar ke luar layar) */
+        @media (max-width: 500px) {
+            .chat-box-container {
+                width: 90%;     /* Di HP pakai persentase */
+                right: 5%;      /* Posisi tengah */
+                height: 70vh;   /* Tinggi 70% layar HP */
+                bottom: 100px;
+            }
         }
         /* Logo SVG di Chat Header */
         .chat-logo-bg { 
@@ -595,21 +614,20 @@
     </footer>
 
     <div class="chat-box-container" id="chatBox">
+        
         <div class="chat-header">
             <div class="chat-logo-bg">
                 <svg width="24" height="24" fill="white" viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg>
             </div>
             <div class="chat-title"><h4>Sobat Digi</h4><span>Online - Siap Membantu</span></div>
         </div>
-        <div class="chat-body">
-            <div class="bot-message" style="margin-top: 10px;">Halo! Selamat datang di layanan Balmon Samarinda. Ada yang bisa kami bantu terkait perizinan frekuensi?</div>
-        </div>
-        <div class="chat-footer">
-            <input type="text" placeholder="Ketik pesan Anda..." />
-            <button>
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
-            </button>
-        </div>
+
+        <iframe 
+            src="https://vr711-chatbotbalmon.hf.space" 
+            style="width: 100%; height: calc(100% - 85px); border: none; background: white;"
+            allow="clipboard-write; microphone"
+        ></iframe>
+
     </div>
 
     <button class="chat-toggle-btn" id="toggleBtn" onclick="animateChatToggle()">
@@ -641,7 +659,6 @@
                     <div class="text-caption">${item.caption}</div>
                 </div>
             `;
-
             [...slideData, ...slideData, ...slideData].forEach(item => {
                 contentHTML += createCard(item);
             });
