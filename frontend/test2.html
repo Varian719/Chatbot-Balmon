@@ -1,0 +1,754 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Balmon Samarinda - DJID Official</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        /* --- 1. SETUP WARNA (Branding Guideline DJID) --- */
+        :root {
+            --primary-color: #006fb0;   /* Biru Utama */
+            --primary-dark: #005082;    /* Biru Gelap untuk Hover */
+            --secondary-color: #00ace0; /* Cyan/Biru Langit */
+            --accent-yellow: #ecbb1d;   /* Kuning Emas */
+            --accent-red: #de262a;      /* Merah */
+            --bg-light-blue: #f4f9fc;   
+            --bg-white: #ffffff;
+            --text-dark: #1e293b;
+            --text-gray: #64748b;
+            --shadow-soft: 0 10px 30px -5px rgba(0, 0, 0, 0.05);
+            --radius-md: 12px;
+        }
+
+        /* --- RESET & GLOBAL --- */
+        body { 
+            margin: 0; padding: 0; 
+            font-family: 'Inter', sans-serif; 
+            background-color: var(--bg-light-blue);
+            color: var(--text-dark); 
+            line-height: 1.6; 
+            overflow-x: hidden; 
+        }
+        a { text-decoration: none; color: inherit; transition: 0.3s; }
+        ul { list-style: none; padding: 0; margin: 0; }
+        * { box-sizing: border-box; }
+
+        .container {
+            max-width: 1200px; margin: 0 auto; padding: 0 20px; width: 100%;
+        }
+
+        /* --- HEADER & NAVIGATION --- */
+        header {
+            background-color: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            height: 80px; 
+            position: fixed; top: 0; left: 0; width: 100%; z-index: 1000;
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.04);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .header-content { display: flex; align-items: center; justify-content: space-between; height: 100%; }
+        
+        /* Brand Area (Logo & Teks) */
+        .brand-area { 
+            display: flex; 
+            align-items: center; 
+            gap: 12px; 
+            transition: all 0.4s ease;
+            padding: 5px;
+            border-radius: 50px;
+            cursor: pointer; /* UPDATE: Agar kursor berubah jadi jari telunjuk */
+        }
+
+        .brand-logo-img {
+            height: 50px; 
+            width: auto; 
+            object-fit: contain;
+            transition: 0.3s;
+        }
+
+        .brand-text { 
+            font-size: 18px; 
+            font-weight: 800; 
+            color: var(--primary-color); 
+            line-height: 1.2;
+            display: flex; 
+            flex-direction: column;
+            transition: 0.3s;
+        }
+
+        .brand-text span { 
+            font-size: 11px; 
+            font-weight: 500; 
+            color: var(--text-gray); 
+            letter-spacing: 0.5px;
+            transition: 0.3s;
+        }
+
+        /* NAVIGASI */
+        .nav-menu { 
+            height: 100%; 
+            display: flex; 
+            align-items: center; 
+            transition: all 0.4s ease;
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .menu-list { display: flex; gap: 8px; height: 100%; align-items: center; }
+        
+        .menu-item { 
+            position: relative; height: 100%; display: flex; align-items: center; 
+            padding: 0 12px; font-size: 14px; font-weight: 600; 
+            color: var(--text-dark); 
+            cursor: pointer; 
+        }
+        
+        .menu-item:hover { color: var(--primary-color); }
+        .menu-item::after {
+            content: ''; position: absolute; bottom: 0; left: 0; width: 0%; height: 3px;
+            background: var(--accent-yellow); transition: 0.3s;
+        }
+        .menu-item:hover::after { width: 100%; }
+        
+        /* Dropdown */
+        .dropdown-content { 
+            display: none; position: absolute; top: 100%; left: 0; 
+            background-color: #ffffff; 
+            min-width: 240px; 
+            box-shadow: 0 15px 30px rgba(0,0,0,0.1); 
+            border-radius: 0 0 8px 8px; z-index: 1000; 
+            padding: 10px 0; 
+            border-top: 3px solid var(--primary-color);
+            animation: slideDown 0.3s ease;
+        }
+        .menu-item:hover .dropdown-content { display: block; }
+        .dropdown-content li a { 
+            display: block; padding: 10px 20px; color: var(--text-dark); font-weight: 400; font-size: 14px;
+        }
+        .dropdown-content li a:hover { background-color: var(--bg-light-blue); color: var(--primary-color); padding-left: 25px; }
+        
+        @keyframes slideDown { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* ======================================================= */
+        /* --- [UPDATED] STYLE KHUSUS HEADER SAAT SCROLL --- */
+        /* ======================================================= */
+        header.header-minimal {
+            background-color: transparent; 
+            backdrop-filter: none;
+            box-shadow: none;
+            height: 0; 
+            overflow: visible; 
+        }
+
+        /* 1. Sembunyikan Navigasi */
+        header.header-minimal .nav-menu {
+            opacity: 0;
+            transform: translateY(-20px);
+            pointer-events: none;
+        }
+
+        /* 2. Logo Container jadi BULAT SEMPURNA */
+        header.header-minimal .brand-area {
+            position: fixed; 
+            top: 20px;
+            left: 20px; 
+            background: #ffffff; 
+            box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+            
+            /* --- KUNCI UKURAN AGAR BULAT --- */
+            padding: 0;           /* Reset padding */
+            width: 60px;          /* Lebar tetap */
+            height: 60px;         /* Tinggi tetap (sama dgn lebar) */
+            border-radius: 50%;   /* Membuat lingkaran */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            
+            transform: scale(1); 
+            border: 1px solid rgba(0,0,0,0.05);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        
+        header.header-minimal .brand-area:hover {
+            transform: scale(1.1); /* Efek hover saat jadi tombol bulat */
+        }
+
+        /* 3. Sembunyikan Teks */
+        header.header-minimal .brand-text {
+            display: none; 
+            width: 0;
+            opacity: 0;
+        }
+
+        /* 4. Sesuaikan Gambar Logo di dalam Lingkaran */
+        header.header-minimal .brand-logo-img {
+            height: 35px; /* Ukuran pas di dalam lingkaran 60px */
+            width: auto;
+            margin: 0;
+        }
+
+        .hero-section {
+            padding-top: 100px; padding-bottom: 80px;
+            
+            /* Background Image */
+            background-image: url('mantap.png'); 
+            background-size: cover;      /* Agar gambar memenuhi layar */
+            background-position: center; /* Agar gambar di tengah */
+            
+            position: relative; overflow: hidden;
+        }
+        /* Dekorasi latar belakang */
+        .hero-bg-blob {
+            position: absolute; width: 600px; height: 600px;
+            background: radial-gradient(circle, rgba(0,172,224,0.08) 0%, rgba(255,255,255,0) 70%);
+            top: -100px; right: -100px; border-radius: 50%; z-index: 0;
+        }
+
+        .hero-grid {
+            display: flex; align-items: center; gap: 60px; position: relative; z-index: 1;
+        }
+
+        /* Hero Text */
+        .hero-text-side { flex: 1; }
+
+        .hero-badge {
+            background-color: rgba(0, 111, 176, 0.1);
+            color: var(--primary-color);
+            padding: 6px 14px; border-radius: 50px;
+            font-size: 13px; font-weight: 700;
+            display: inline-flex; align-items: center; gap: 8px;
+            margin-bottom: 20px;
+        }
+        .hero-badge::before { content: ''; width: 8px; height: 8px; background: var(--accent-yellow); border-radius: 50%; }
+
+        .hero-text-side h1 {
+            font-size: 42px; line-height: 1.2; color: var(--text-dark); margin: 0 0 20px 0;
+            font-weight: 800;
+        }
+        .hero-text-side h1 span { color: var(--primary-color); }
+        .hero-text-side p { color: var(--text-gray); font-size: 17px; margin-bottom: 35px; max-width: 90%; }
+
+        .hero-btn-group { display: flex; gap: 15px; }
+
+        .btn-primary {
+            background: var(--primary-color); color: white;
+            padding: 14px 28px; border-radius: 8px; font-weight: 600;
+            box-shadow: 0 5px 15px rgba(0, 111, 176, 0.25);
+        }
+        .btn-primary:hover { background: var(--primary-dark); transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0, 111, 176, 0.35); }
+
+        .btn-secondary {
+            background: transparent; color: var(--primary-color);
+            border: 2px solid rgba(0, 111, 176, 0.15);
+            padding: 14px 28px; border-radius: 8px; font-weight: 600;
+        }
+        .btn-secondary:hover { border-color: var(--primary-color); background: rgba(0, 111, 176, 0.05); }
+
+        /* Hero Slider */
+        .hero-slider-side {
+            flex: 1.2;
+            width: 100%;
+            border-radius: 20px;
+            background: #fff;
+            padding: 10px;
+            box-shadow: var(--shadow-soft);
+            transform: rotate(-2deg); /* Sedikit miring agar artistik */
+            transition: 0.5s;
+        }
+        .hero-slider-side:hover { transform: rotate(0deg) scale(1.02); }
+
+        .slider-window { overflow: hidden; border-radius: 16px; position: relative; }
+        
+        .slider-track {
+            display: flex; width: max-content; 
+            animation: scrollHorizontal 40s linear infinite; 
+        }
+        .slider-track:hover { animation-play-state: paused; }
+
+        .slide-card {
+            width: 320px; height: 280px; position: relative; flex-shrink: 0; 
+            margin-right: 10px; border-radius: 12px; overflow: hidden;
+        }
+        .slide-card img { width: 100%; height: 100%; object-fit: cover; transition: 0.5s; }
+        .slide-card:hover img { transform: scale(1.1); }
+        
+        .text-caption { 
+            position: absolute; bottom: 0; left: 0; width: 100%;
+            background: linear-gradient(to top, rgba(0,0,0,0.8), transparent); 
+            color: #fff; padding: 20px; font-size: 14px; font-weight: 600;
+        }
+
+        @keyframes scrollHorizontal {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); } 
+        }
+
+        /* --- PARALLAX BANNER --- */
+        .parallax-banner {
+            background-image: url('https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=1600&q=80');
+            background-attachment: fixed; background-position: center; background-size: cover;
+            min-height: 350px; position: relative; display: flex;
+            align-items: center; justify-content: center; text-align: center; color: white;
+        }
+        .parallax-overlay { position: absolute; inset: 0; background: rgba(0, 50, 90, 0.85); z-index: 1; }
+        .parallax-content { position: relative; z-index: 2; padding: 20px; max-width: 800px; }
+        .parallax-content h2 { 
+            font-size: 36px; font-weight: 800; margin-bottom: 10px; letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+        .tagline-berakhlak { 
+            font-size: 18px; color: var(--accent-yellow); font-weight: 500; display: block; margin-top: 15px; 
+            border-top: 1px solid rgba(255,255,255,0.2); padding-top: 15px;
+        }
+
+        /* --- CONTENT SECTION --- */
+        .main-section { padding: 80px 0; }
+        .content-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
+
+        .content-card { 
+            background: var(--bg-white); padding: 40px; border-radius: 16px; 
+            box-shadow: var(--shadow-soft); border-left: 5px solid var(--secondary-color);
+            transition: 0.3s;
+        }
+        .content-card:hover { transform: translateY(-5px); box-shadow: 0 15px 30px rgba(0,0,0,0.08); }
+        
+        .content-card h2 { 
+            color: var(--primary-color); margin-top: 0; font-size: 24px; 
+            display: flex; align-items: center; gap: 10px;
+        }
+        .content-card p { color: var(--text-gray); }
+        .content-card ul li {
+            padding: 8px 0; border-bottom: 1px dashed #eee; color: var(--text-dark);
+            display: flex; gap: 10px;
+        }
+        .content-card ul li::before { content: '✓'; color: var(--primary-color); font-weight: bold; }
+
+        /* --- FOOTER --- */
+        footer { 
+            background-color: var(--primary-color); color: white; 
+            padding-top: 70px; font-size: 14px; position: relative;
+        }
+        .footer-grid { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 40px; padding-bottom: 50px; }
+        .footer-col { flex: 1; min-width: 250px; }
+        
+        .footer-col h3 { 
+            color: var(--accent-yellow); margin-bottom: 25px; font-size: 18px; font-weight: 700;
+        }
+        .footer-links a { 
+            color: rgba(255,255,255,0.8); display: block; margin-bottom: 12px; 
+            transition: 0.2s; 
+        }
+        .footer-links a:hover { color: #fff; transform: translateX(5px); }
+        
+        .copyright { 
+            background-color: rgba(0,0,0,0.1); text-align: center; padding: 25px 0; 
+            color: rgba(255,255,255,0.6); border-top: 1px solid rgba(255,255,255,0.1);
+        }
+
+        /* ========================================= */
+        /* --- CHAT WIDGET & ANIMASI TOMBOL --- */
+        /* ========================================= */
+        
+        .chat-toggle-btn { 
+            position: fixed; bottom: 30px; right: 30px; 
+            width: 65px; height: 65px; 
+            background-color: #ffffff; 
+            border: none; 
+            border-radius: 50%; 
+            box-shadow: 0 8px 25px rgba(0, 111, 176, 0.3); 
+            cursor: pointer; z-index: 9999; 
+            display: flex; align-items: center; justify-content: center; 
+            transition: transform 0.3s ease, background-color 0.3s;
+            overflow: hidden; 
+        }
+
+        /* SVG Styles */
+        .chat-toggle-btn svg {
+            position: absolute;
+            width: 32px; height: 32px;
+            transition: all 0.4s ease-in-out;
+            pointer-events: none;
+        }
+        
+        /* Ikon Pesan (Biru) */
+        .icon-message {
+            opacity: 1; transform: scale(1) rotate(0deg); color: var(--primary-color); fill: currentColor;
+        }
+        /* Ikon Close (Merah/Biru) */
+        .icon-close {
+            opacity: 0; transform: scale(0) rotate(-180deg); color: var(--accent-red); fill: currentColor;
+        }
+
+        /* 1. STATE LOADING (Berputar) */
+        .chat-toggle-btn.loading {
+            animation: pulseWidth 0.6s forwards;
+            background-color: var(--bg-light-blue);
+        }
+        
+        /* Icon berputar saat loading */
+        .chat-toggle-btn.loading .icon-message {
+            animation: spinLoad 0.6s cubic-bezier(0.68, -0.55, 0.27, 1.55) forwards;
+        }
+
+        @keyframes spinLoad {
+            0% { transform: rotate(0deg) scale(1); }
+            50% { transform: rotate(180deg) scale(0.8); opacity: 0.5; } 
+            100% { transform: rotate(360deg) scale(0); opacity: 0; }
+        }
+
+        /* 2. STATE ACTIVE (Terbuka) */
+        .chat-toggle-btn.active .icon-message { opacity: 0; transform: scale(0); }
+        
+        .chat-toggle-btn.active .icon-close {
+            opacity: 1; transform: scale(1) rotate(0deg);
+        }
+        .chat-toggle-btn.active { background-color: #fff; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+        .chat-toggle-btn:hover:not(.active):not(.loading) { transform: scale(1.1); }
+
+        /* DETEKSI FOOTER (Tombol berubah warna) */
+        .chat-toggle-btn.on-footer { background-color: var(--accent-yellow); }
+        .chat-toggle-btn.on-footer .icon-message { color: var(--primary-color); }
+
+        /* CHAT BOX CONTAINER */
+       /* CHAT BOX CONTAINER (UKURAN DIPERBESAR) */
+       .chat-box-container { 
+           position: fixed; 
+           bottom: 110px; 
+           right: 30px; 
+           
+           /* --- UKURAN BARU --- */
+           width: 450px;       /* Lebih Lebar */
+           height: 600px;      /* Lebih Tinggi */
+           max-height: 80vh;   /* Jaga-jaga agar tidak mentok atas layar di laptop kecil */
+           /* ------------------- */
+
+           background-color: #fff; 
+           border-radius: 16px; 
+           box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2); 
+           z-index: 9998; 
+           opacity: 0; 
+           visibility: hidden; 
+           transform: translateY(20px) scale(0.95); 
+           transition: all 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
+           overflow: hidden;
+           display: flex;       /* Agar layout header & iframe rapi */
+           flex-direction: column;
+       }
+
+       .chat-box-container.active { 
+           opacity: 1; visibility: visible; transform: translateY(0) scale(1); 
+       }
+
+       /* Responsive untuk HP (Agar tidak melebar ke luar layar) */
+       @media (max-width: 500px) {
+           .chat-box-container {
+               width: 90%;     /* Di HP pakai persentase */
+               right: 5%;      /* Posisi tengah */
+               height: 70vh;   /* Tinggi 70% layar HP */
+               bottom: 100px;
+           }
+       }
+       /* Logo SVG di Chat Header */
+       .chat-logo-bg { 
+           width: 45px; height: 45px; background: rgba(255,255,255,0.2); 
+           border-radius: 50%; display: flex; align-items: center; justify-content: center; 
+       }
+       
+       .chat-title h4 { margin: 0; font-size: 16px; font-weight: 700; }
+       .chat-title span { font-size: 12px; opacity: 0.9; }
+       
+       .chat-body { height: 320px; padding: 20px; background: #f8fafc; overflow-y: auto; }
+       .bot-message { 
+           background-color: #fff; padding: 12px 16px; border-radius: 12px; border-bottom-left-radius: 2px;
+           display: inline-block; max-width: 85%; box-shadow: 0 2px 5px rgba(0,0,0,0.05); 
+           font-size: 14px; color: var(--text-dark); position: relative;
+       }
+       .bot-message::before {
+           content: 'CS Balmon'; position: absolute; top: -18px; left: 0; 
+           font-size: 11px; color: var(--text-gray);
+       }
+
+       .chat-footer { padding: 15px; border-top: 1px solid #f1f1f1; display: flex; gap: 10px; background-color: #fff; }
+       .chat-footer input { 
+           flex: 1; padding: 12px 15px; border-radius: 25px; border: 1px solid #e2e8f0; 
+           outline: none; font-size: 14px; background: #f8fafc; transition: 0.3s;
+       }
+       .chat-footer input:focus { border-color: var(--secondary-color); background: #fff; }
+       
+       .chat-footer button { 
+           width: 42px; height: 42px; border-radius: 50%; border: none; 
+           background: var(--primary-color); color: white; cursor: pointer; 
+           display: flex; align-items: center; justify-content: center; transition: 0.2s;
+       }
+       .chat-footer button:hover { background: var(--secondary-color); transform: scale(1.1); }
+
+        /* RESPONSIVE */
+        @media (max-width: 900px) {
+            .hero-grid { flex-direction: column; text-align: center; }
+            .hero-text-side { margin-bottom: 30px; }
+            .hero-btn-group { justify-content: center; }
+            .hero-slider-side { transform: rotate(0deg); width: 100%; max-width: 500px; margin: 0 auto; }
+            .content-grid { grid-template-columns: 1fr; }
+        }
+        
+        @media (max-width: 600px) {
+            .brand-text { font-size: 14px; }
+            .brand-logo-svg { height: 35px; }
+            .menu-list { display: none; } /* Mobile Menu Simpel (Hilang dulu) */
+            .hero-text-side h1 { font-size: 32px; }
+        }
+    </style>
+</head>
+<body>
+
+    <header id="mainHeader">
+        <div class="container header-content">
+            <div class="brand-area" onclick="scrollToTop()">
+                <img 
+                    src="balmonsmd.png" 
+                    alt="Logo Balmon" 
+                    class="brand-logo-img"
+                >
+                
+                <div class="brand-text">
+                    BALMON SAMARINDA
+                    <span>Kementerian Komunikasi & Digital</span>
+                </div>
+            </div>
+            <nav class="nav-menu">
+                <ul class="menu-list">
+                    <li class="menu-item">Beranda</li>
+                    <li class="menu-item">
+                        Layanan
+                        <ul class="dropdown-content">
+                            <li><a href="#">Izin Konsesi</a></li>
+                            <li><a href="#">Izin Maritim</a></li>
+                            <li><a href="#">Izin Penyiaran FM</a></li>
+                        </ul>
+                    </li>
+                    <li class="menu-item">Publikasi
+                        <ul class="dropdown-content">
+                            <li><a href="#">Galeri Foto</a></li>
+                            <li><a href="#">Galeri Video</a></li>
+                        </ul>
+                    </li>
+                    <li class="menu-item">Kontak</li>
+                </ul>
+                <button style="margin-left:10px; border:none; background:transparent; color:var(--primary-color); cursor:pointer;">
+                    <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                </button>
+            </nav>
+        </div>
+    </header>
+
+    <div class="hero-section">
+        <div class="hero-bg-blob"></div>
+        <div class="container hero-grid">
+            
+            <div class="hero-text-side">
+                <div class="hero-badge">Portal Resmi Pelayanan Publik</div>
+                <h1>Pengawasan Spektrum<br><span>Frekuensi Radio</span></h1>
+                <p>
+                    Mewujudkan frekuensi radio yang tertib, efisien, dan bebas gangguan di Kalimantan Timur. Ajukan perizinan dan pengaduan Anda secara online.
+                </p>
+                <div class="hero-btn-group">
+                    <a href="#" class="btn-primary">Layanan</a>
+                    <a href="#" class="btn-secondary">Kontak</a>
+                </div>
+            </div>
+
+            <div class="hero-slider-side">
+                <div class="slider-window">
+                    <div class="slider-track" id="sliderTrack">
+                        </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="parallax-banner">
+        <div class="parallax-overlay"></div>
+        <div class="parallax-content">
+            <h2>ASN BerAKHLAK</h2>
+            <p style="font-size: 16px; opacity: 0.9;">Bangga Melayani Bangsa</p>
+            <span class="tagline-berakhlak">Berorientasi Pelayanan • Akuntabel • Kompeten • Harmonis • Loyal • Adaptif • Kolaboratif</span>
+        </div>
+    </div>
+
+    <div class="container main-section">
+        <div class="content-grid">
+            <div class="content-card">
+                <h2>
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+                    Tentang Balmon
+                </h2>
+                <p>Unit Pelaksana Teknis (UPT) di bawah Ditjen SDPPI Kemkomdigi RI yang bertugas melaksanakan pengawasan dan pengendalian spektrum frekuensi radio di wilayah Provinsi Kalimantan Timur.</p>
+                <a href="#" style="color:var(--primary-color); font-weight:600; font-size:14px;">Selengkapnya &rarr;</a>
+            </div>
+            <div class="content-card">
+                <h2>
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
+                    Tugas & Fungsi
+                </h2>
+                <ul>
+                    <li>Monitoring penggunaan frekuensi radio.</li>
+                    <li>Penertiban gangguan spektrum.</li>
+                    <li>Pelayanan ujian amatir radio (UNAR).</li>
+                    <li>Sosialisasi regulasi telekomunikasi.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <footer id="mainFooter">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <h3>Balmon Samarinda</h3>
+                    <p style="color:rgba(255,255,255,0.7); line-height:1.8;">
+                        Jalan Sultan Sulaiman No. 123<br>
+                        Samarinda, Kalimantan Timur.<br><br>
+                        <strong>Telp:</strong> 0856-4828-3012<br>
+                        <strong>Email:</strong> pelayananuptbalmonsamarinda@gmail.com
+                    </p>
+                </div>
+                <div class="footer-col">
+                    <h3>Tautan Cepat</h3>
+                    <div class="footer-links">
+                        <a href="#">Profil Organisasi</a>
+                        <a href="#">Standar Pelayanan</a>
+                        <a href="#">Pengaduan Masyarakat</a>
+                        <a href="#">Peta Sebaran Menara</a>
+                    </div>
+                </div>
+                <div class="footer-col">
+                    <h3>Jam Pelayanan</h3>
+                    <p style="color:rgba(255,255,255,0.7);">
+                        Senin - Kamis: 08.00 - 16.00<br>
+                        Jumat: 08.00 - 16.30<br>
+                        Sabtu - Minggu: Libur
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="copyright">Copyright@2024 Balai Monitor Spektrum Frekuensi Radio Kelas I Samarinda</div>
+    </footer>
+
+    <div class="chat-box-container" id="chatBox">
+        
+        <div class="chat-header">
+            <div class="chat-logo-bg">
+                <svg width="24" height="24" fill="white" viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg>
+            </div>
+            <div class="chat-title"><h4>Sobat Digi</h4><span>Online - Siap Membantu</span></div>
+        </div>
+
+        <iframe 
+            src="https://MagangBalmon2619-Chat-Balmon.hf.space" 
+            style="width: 100%; height: calc(100% - 85px); border: none; background: white;"
+            allow="clipboard-write; microphone"
+        ></iframe>
+
+    </div>
+
+    <button class="chat-toggle-btn" id="toggleBtn" onclick="animateChatToggle()">
+        <svg class="icon-message" viewBox="0 0 24 24">
+            <path d="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 9h12v2H6V9zm8 5H6v-2h8v2zm4-6H6V6h12v2z"/>
+        </svg>
+        
+        <svg class="icon-close" viewBox="0 0 24 24">
+            <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+        </svg>
+    </button>
+
+    <script>
+        // 1. DATA SLIDER OTOMATIS
+        const slideData = [
+            { img: 's1.jpg', caption: 'Monitoring Spektrum' },
+            { img: 's2.jpg', caption: 'Pelayanan Publik' },
+            { img: 's3.jpg', caption: 'Ujian Amatir Radio' },
+            { img: 's4.jpg', caption: 'Penertiban Lapangan' }
+        ];
+
+        function initSlider() {
+            const track = document.getElementById('sliderTrack');
+            let contentHTML = '';
+
+            const createCard = (item) => `
+                <div class="slide-card">
+                    <img src="${item.img}" alt="${item.caption}">
+                    <div class="text-caption">${item.caption}</div>
+                </div>
+            `;
+            [...slideData, ...slideData, ...slideData].forEach(item => {
+                contentHTML += createCard(item);
+            });
+
+            track.innerHTML = contentHTML;
+        }
+
+        // 2. LOGIKA ANIMASI CHAT
+        function animateChatToggle() {
+            const btn = document.getElementById("toggleBtn");
+            const box = document.getElementById("chatBox");
+
+            if (btn.classList.contains("active")) {
+                btn.classList.remove("active");
+                box.classList.remove("active");
+                return;
+            }
+
+            if (btn.classList.contains("loading")) return;
+
+            btn.classList.add("loading");
+
+            setTimeout(() => {
+                btn.classList.remove("loading");
+                btn.classList.add("active");
+                box.classList.add("active");
+            }, 600);
+        }
+
+        // 3. EVENT SCROLL (HEADER & CHAT BUTTON)
+        window.addEventListener('scroll', function() {
+            const chatBtn = document.getElementById('toggleBtn');
+            const footer = document.getElementById('mainFooter');
+            const header = document.getElementById('mainHeader');
+            
+            // A. Logika Header Minimalis
+            // Jika scroll lebih dari 50px (keluar dari area atas hero sedikit), header berubah
+            if (window.scrollY > 50) {
+                header.classList.add('header-minimal');
+            } else {
+                header.classList.remove('header-minimal');
+            }
+
+            // B. Logika Warna Tombol Chat
+            const btnRect = chatBtn.getBoundingClientRect();
+            const footerRect = footer.getBoundingClientRect();
+            
+            if (footerRect.top < window.innerHeight && btnRect.bottom > footerRect.top) {
+                chatBtn.classList.add('on-footer'); 
+            } else {
+                chatBtn.classList.remove('on-footer'); 
+            }
+        });
+
+        // 4. FUNGSI KEMBALI KE ATAS (Scroll To Top)
+        function scrollToTop() {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        }
+
+        initSlider();
+    </script>
+
+</body>
+</html>

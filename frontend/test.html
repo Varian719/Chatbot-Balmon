@@ -47,7 +47,7 @@
             height: 80px; 
             position: fixed; top: 0; left: 0; width: 100%; z-index: 1000;
             box-shadow: 0 2px 20px rgba(0, 0, 0, 0.04);
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); /* Transisi halus */
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .header-content { display: flex; align-items: center; justify-content: space-between; height: 100%; }
@@ -57,9 +57,10 @@
             display: flex; 
             align-items: center; 
             gap: 12px; 
-            transition: all 0.4s ease; /* Animasi perubahan posisi/bentuk */
+            transition: all 0.4s ease;
             padding: 5px;
             border-radius: 50px;
+            cursor: pointer;
         }
 
         .brand-logo-img {
@@ -92,7 +93,7 @@
             height: 100%; 
             display: flex; 
             align-items: center; 
-            transition: all 0.4s ease; /* Animasi hilang */
+            transition: all 0.4s ease;
             opacity: 1;
             transform: translateX(0);
         }
@@ -132,49 +133,65 @@
         
         @keyframes slideDown { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* --- STYLE KHUSUS HEADER SAAT SCROLL (MINIMALIS) --- */
+        /* HEADER MINIMAL SCROLL */
         header.header-minimal {
-            background-color: transparent; /* Latar belakang header hilang */
+            background-color: transparent; 
             backdrop-filter: none;
             box-shadow: none;
-            height: 0; /* Secara visual mengecil agar tidak menghalangi klik */
-            overflow: visible; /* Biarkan logo tetap terlihat */
+            height: 0; 
+            overflow: visible; 
         }
 
-        /* Sembunyikan Navigasi saat scroll */
         header.header-minimal .nav-menu {
             opacity: 0;
             transform: translateY(-20px);
-            pointer-events: none; /* Agar tidak bisa diklik saat hilang */
+            pointer-events: none;
         }
 
-        /* Logo Transformasi jadi Kapsul Floating */
         header.header-minimal .brand-area {
-            position: fixed; /* Kunci posisi */
+            position: fixed; 
             top: 20px;
-            left: 20px; /* Pojok kiri */
-            background: rgba(255, 255, 255, 0.95); /* Beri background putih pada logo saja */
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-            padding: 8px 20px 8px 12px;
-            transform: scale(0.9); /* Sedikit mengecil */
+            left: 20px; 
+            background: #ffffff; 
+            box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+            padding: 0;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transform: scale(1); 
             border: 1px solid rgba(0,0,0,0.05);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
         
-        /* Opsional: Jika ingin teks sub-judul hilang saat discroll agar lebih ringkas */
-        header.header-minimal .brand-text span {
-            display: none;
+        header.header-minimal .brand-area:hover {
+            transform: scale(1.1); 
         }
+
         header.header-minimal .brand-text {
-            font-size: 16px; /* Sedikit mengecilkan font */
+            display: none; 
+            width: 0;
+            opacity: 0;
+        }
+
+        header.header-minimal .brand-logo-img {
+            height: 35px;
+            width: auto;
+            margin: 0;
         }
 
         /* --- HERO SECTION --- */
         .hero-section {
             padding-top: 100px; padding-bottom: 80px;
-            background: linear-gradient(135deg, #ffffff 0%, #f0f7ff 100%);
+            background-image: url('mantap.png'); 
+            background-size: cover;
+            background-position: center;
             position: relative; overflow: hidden;
+            min-height: 650px;
+            display: flex; align-items: center;
         }
-        /* Dekorasi latar belakang */
         .hero-bg-blob {
             position: absolute; width: 600px; height: 600px;
             background: radial-gradient(circle, rgba(0,172,224,0.08) 0%, rgba(255,255,255,0) 70%);
@@ -182,10 +199,9 @@
         }
 
         .hero-grid {
-            display: flex; align-items: center; gap: 60px; position: relative; z-index: 1;
+            display: flex; align-items: center; gap: 60px; position: relative; z-index: 1; width: 100%;
         }
 
-        /* Hero Text */
         .hero-text-side { flex: 1; }
 
         .hero-badge {
@@ -221,21 +237,15 @@
         }
         .btn-secondary:hover { border-color: var(--primary-color); background: rgba(0, 111, 176, 0.05); }
 
-        /* Hero Slider */
         .hero-slider-side {
-            flex: 1.2;
-            width: 100%;
-            border-radius: 20px;
-            background: #fff;
-            padding: 10px;
+            flex: 1.2; width: 100%; border-radius: 20px;
+            background: #fff; padding: 10px;
             box-shadow: var(--shadow-soft);
-            transform: rotate(-2deg); /* Sedikit miring agar artistik */
-            transition: 0.5s;
+            transform: rotate(-2deg); transition: 0.5s;
         }
         .hero-slider-side:hover { transform: rotate(0deg) scale(1.02); }
 
         .slider-window { overflow: hidden; border-radius: 16px; position: relative; }
-        
         .slider-track {
             display: flex; width: max-content; 
             animation: scrollHorizontal 40s linear infinite; 
@@ -262,7 +272,6 @@
 
         /* --- PARALLAX BANNER --- */
         .parallax-banner {
-            /* Placeholder gambar gedung/abstrak */
             background-image: url('https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=1600&q=80');
             background-attachment: fixed; background-position: center; background-size: cover;
             min-height: 350px; position: relative; display: flex;
@@ -279,27 +288,144 @@
             border-top: 1px solid rgba(255,255,255,0.2); padding-top: 15px;
         }
 
-        /* --- CONTENT SECTION --- */
-        .main-section { padding: 80px 0; }
-        .content-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
-
-        .content-card { 
-            background: var(--bg-white); padding: 40px; border-radius: 16px; 
-            box-shadow: var(--shadow-soft); border-left: 5px solid var(--secondary-color);
-            transition: 0.3s;
-        }
-        .content-card:hover { transform: translateY(-5px); box-shadow: 0 15px 30px rgba(0,0,0,0.08); }
+        /* ========================================================= */
+        /* --- [UPDATED] COMPACT FEATURE CAROUSEL (STRIP STYLE) --- */
+        /* ========================================================= */
         
-        .content-card h2 { 
-            color: var(--primary-color); margin-top: 0; font-size: 24px; 
-            display: flex; align-items: center; gap: 10px;
+        .feature-carousel-section {
+            /* Tinggi dibuat otomatis dan padding kecil agar compact seperti parallax */
+            padding: 40px 0; 
+            width: 100%;
+            background-color: #fff;
+            position: relative;
+            overflow: hidden;
         }
-        .content-card p { color: var(--text-gray); }
-        .content-card ul li {
-            padding: 8px 0; border-bottom: 1px dashed #eee; color: var(--text-dark);
-            display: flex; gap: 10px;
+
+        .feature-bg-decor {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle at top right, rgba(0,172,224,0.05), transparent 60%);
+            z-index: 0;
+            pointer-events: none;
         }
-        .content-card ul li::before { content: '✓'; color: var(--primary-color); font-weight: bold; }
+
+        /* Wrapper utama */
+        .fc-wrapper {
+            position: relative;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Window slider (untuk memotong overflow) */
+        .fc-window {
+            width: 100%;
+            overflow: hidden;
+            padding: 10px 5px; /* Sedikit padding agar bayangan tidak terpotong */
+        }
+
+        /* Track yang bergerak */
+        .fc-track {
+            display: flex;
+            gap: 20px;
+            transition: transform 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+            width: max-content; /* Agar elemen berjejer ke samping */
+        }
+
+        /* Kartu Individual (Compact) */
+        .fc-card {
+            width: 280px; /* Ukuran kartu tetap */
+            height: 320px; /* Tinggi kartu (Compact ~300px an) */
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            border: 1px solid rgba(0,0,0,0.03);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .fc-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 25px rgba(0, 111, 176, 0.15);
+            border-color: rgba(0, 111, 176, 0.2);
+        }
+
+        /* Gambar dalam kartu (Setengah tinggi) */
+        .fc-card-img {
+            height: 160px;
+            width: 100%;
+            overflow: hidden;
+        }
+        .fc-card-img img {
+            width: 100%; height: 100%; object-fit: cover;
+            transition: 0.5s;
+        }
+        .fc-card:hover .fc-card-img img {
+            transform: scale(1.1);
+        }
+
+        /* Konten Teks */
+        .fc-card-content {
+            padding: 20px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .fc-card-content h3 {
+            margin: 0 0 8px 0;
+            color: var(--primary-color);
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        .fc-card-content p {
+            font-size: 13px;
+            color: var(--text-gray);
+            margin: 0;
+            line-height: 1.5;
+            display: -webkit-box;
+            -webkit-line-clamp: 3; /* Batasi teks 3 baris */
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        /* Navigasi Bulat Kecil di Kanan Atas Section */
+        .fc-nav-group {
+            position: absolute;
+            top: -50px; /* Di luar window, sejajar judul jika ada */
+            right: 20px;
+            display: flex;
+            gap: 10px;
+            z-index: 10;
+        }
+        
+        /* Tombol Navigasi Overlay (Kiri Kanan) */
+        .fc-nav-btn {
+            width: 40px; height: 40px;
+            border-radius: 50%;
+            background: #fff;
+            border: 1px solid #eee;
+            color: var(--primary-color);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+            cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 18px;
+            transition: 0.3s;
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 20;
+        }
+        .fc-nav-btn:hover { background: var(--primary-color); color: #fff; }
+        
+        .fc-prev { left: -20px; }
+        .fc-next { right: -20px; }
+
 
         /* --- FOOTER --- */
         footer { 
@@ -324,155 +450,113 @@
         }
 
         /* ========================================= */
-        /* --- CHAT WIDGET & ANIMASI TOMBOL --- */
+        /* --- CHAT WIDGET STYLE (SAMA SEPERTI SEBELUMNYA) --- */
         /* ========================================= */
         
         .chat-toggle-btn { 
             position: fixed; bottom: 30px; right: 30px; 
             width: 65px; height: 65px; 
-            background-color: #ffffff; 
-            border: none; 
-            border-radius: 50%; 
-            box-shadow: 0 8px 25px rgba(0, 111, 176, 0.3); 
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark)); 
+            color: #ffffff; 
+            border: none; border-radius: 50%; 
+            box-shadow: 0 8px 25px rgba(0, 111, 176, 0.4); 
             cursor: pointer; z-index: 9999; 
             display: flex; align-items: center; justify-content: center; 
-            transition: transform 0.3s ease, background-color 0.3s;
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.3s;
             overflow: hidden; 
         }
 
-        /* SVG Styles */
-        .chat-toggle-btn svg {
-            position: absolute;
-            width: 32px; height: 32px;
-            transition: all 0.4s ease-in-out;
-            pointer-events: none;
-        }
-        
-        /* Ikon Pesan (Biru) */
-        .icon-message {
-            opacity: 1; transform: scale(1) rotate(0deg); color: var(--primary-color); fill: currentColor;
-        }
-        /* Ikon Close (Merah/Biru) */
-        .icon-close {
-            opacity: 0; transform: scale(0) rotate(-180deg); color: var(--accent-red); fill: currentColor;
+        .chat-toggle-btn:hover { transform: scale(1.1); box-shadow: 0 12px 30px rgba(0, 111, 176, 0.5); }
+        .chat-toggle-btn.on-footer { background: var(--accent-yellow); color: var(--text-dark); }
+        /* --- UPDATE CSS ICON CHAT --- */
+        .chat-toggle-btn svg { 
+            position: absolute; 
+            width: 28px; /* Ukuran icon sedikit disesuaikan */
+            height: 28px; 
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); /* Transisi lebih smooth */
+            pointer-events: none; 
         }
 
-        /* 1. STATE LOADING (Berputar) */
-        .chat-toggle-btn.loading {
-            animation: pulseWidth 0.6s forwards;
-            background-color: var(--bg-light-blue);
-        }
-        
-        /* Icon berputar saat loading */
-        .chat-toggle-btn.loading .icon-message {
-            animation: spinLoad 0.6s cubic-bezier(0.68, -0.55, 0.27, 1.55) forwards;
+        /* Icon Pesan (Tetap Fill) */
+        .icon-message { 
+            opacity: 1; 
+            transform: scale(1) rotate(0deg); 
+            fill: currentColor; 
         }
 
-        @keyframes spinLoad {
-            0% { transform: rotate(0deg) scale(1); }
-            50% { transform: rotate(180deg) scale(0.8); opacity: 0.5; } 
-            100% { transform: rotate(360deg) scale(0); opacity: 0; }
-        }
-
-        /* 2. STATE ACTIVE (Terbuka) */
-        .chat-toggle-btn.active .icon-message { opacity: 0; transform: scale(0); }
-        
-        .chat-toggle-btn.active .icon-close {
-            opacity: 1; transform: scale(1) rotate(0deg);
-        }
-        .chat-toggle-btn.active { background-color: #fff; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
-        .chat-toggle-btn:hover:not(.active):not(.loading) { transform: scale(1.1); }
-
-        /* DETEKSI FOOTER (Tombol berubah warna) */
-        .chat-toggle-btn.on-footer { background-color: var(--accent-yellow); }
-        .chat-toggle-btn.on-footer .icon-message { color: var(--primary-color); }
-
-        /* CHAT BOX CONTAINER */
-       /* CHAT BOX CONTAINER (UKURAN DIPERBESAR) */
-       .chat-box-container { 
-            position: fixed; 
-            bottom: 110px; 
-            right: 30px; 
-            
-            /* --- UKURAN BARU --- */
-            width: 450px;       /* Lebih Lebar */
-            height: 600px;      /* Lebih Tinggi */
-            max-height: 80vh;   /* Jaga-jaga agar tidak mentok atas layar di laptop kecil */
-            /* ------------------- */
-
-            background-color: #fff; 
-            border-radius: 16px; 
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2); 
-            z-index: 9998; 
+        /* Icon Close (GANTI JADI STROKE/GARIS) */
+        .icon-close { 
             opacity: 0; 
-            visibility: hidden; 
+            transform: scale(0) rotate(-180deg); 
+            fill: none;            /* PENTING: Jangan di-fill */
+            stroke: currentColor;  /* PENTING: Pakai garis */
+            stroke-width: 2.5;     /* Ketebalan garis */
+            stroke-linecap: round; /* Ujung garis membulat */
+            stroke-linejoin: round;
+        }
+
+        /* State Aktif */
+        .chat-toggle-btn.active .icon-message { opacity: 0; transform: scale(0) rotate(90deg); }
+        .chat-toggle-btn.active .icon-close { opacity: 1; transform: scale(1) rotate(0deg); }
+
+        @keyframes spinLoad { 100% { transform: rotate(360deg); } }
+
+        .chat-box-container { 
+            position: fixed; bottom: 110px; right: 30px; 
+            width: 400px; height: 600px; max-height: 75vh;
+            background-color: #fff; border-radius: 16px; 
+            box-shadow: 0 20px 50px -10px rgba(0, 60, 100, 0.25);
+            border: 1px solid rgba(0, 111, 176, 0.1);
+            z-index: 9998; opacity: 0; visibility: hidden; 
             transform: translateY(20px) scale(0.95); 
             transition: all 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
-            overflow: hidden;
-            display: flex;       /* Agar layout header & iframe rapi */
-            flex-direction: column;
+            overflow: hidden; display: flex; flex-direction: column;
         }
 
-        .chat-box-container.active { 
-            opacity: 1; visibility: visible; transform: translateY(0) scale(1); 
+        .chat-box-container.active { opacity: 1; visibility: visible; transform: translateY(0) scale(1); }
+
+        .chat-header {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+            padding: 18px 20px; display: flex; align-items: center; gap: 15px;
+            border-bottom: 2px solid var(--accent-yellow); color: #fff; flex-shrink: 0;
         }
 
-        /* Responsive untuk HP (Agar tidak melebar ke luar layar) */
-        @media (max-width: 500px) {
-            .chat-box-container {
-                width: 90%;     /* Di HP pakai persentase */
-                right: 5%;      /* Posisi tengah */
-                height: 70vh;   /* Tinggi 70% layar HP */
-                bottom: 100px;
-            }
-        }
-        /* Logo SVG di Chat Header */
         .chat-logo-bg { 
-            width: 45px; height: 45px; background: rgba(255,255,255,0.2); 
-            border-radius: 50%; display: flex; align-items: center; justify-content: center; 
-        }
-        
-        .chat-title h4 { margin: 0; font-size: 16px; font-weight: 700; }
-        .chat-title span { font-size: 12px; opacity: 0.9; }
-        
-        .chat-body { height: 320px; padding: 20px; background: #f8fafc; overflow-y: auto; }
-        .bot-message { 
-            background-color: #fff; padding: 12px 16px; border-radius: 12px; border-bottom-left-radius: 2px;
-            display: inline-block; max-width: 85%; box-shadow: 0 2px 5px rgba(0,0,0,0.05); 
-            font-size: 14px; color: var(--text-dark); position: relative;
-        }
-        .bot-message::before {
-            content: 'CS Balmon'; position: absolute; top: -18px; left: 0; 
-            font-size: 11px; color: var(--text-gray);
+            width: 42px; height: 42px; background: rgba(255, 255, 255, 0.15); 
+            backdrop-filter: blur(4px); border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #fff;
         }
 
-        .chat-footer { padding: 15px; border-top: 1px solid #f1f1f1; display: flex; gap: 10px; background-color: #fff; }
-        .chat-footer input { 
-            flex: 1; padding: 12px 15px; border-radius: 25px; border: 1px solid #e2e8f0; 
-            outline: none; font-size: 14px; background: #f8fafc; transition: 0.3s;
-        }
-        .chat-footer input:focus { border-color: var(--secondary-color); background: #fff; }
+        .chat-title { display: flex; flex-direction: column; }
+        .chat-title h4 { margin: 0; font-size: 16px; font-weight: 700; letter-spacing: 0.5px; }
+        .chat-status { display: flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 400; color: rgba(255,255,255,0.9); margin-top: 2px; }
         
-        .chat-footer button { 
-            width: 42px; height: 42px; border-radius: 50%; border: none; 
-            background: var(--primary-color); color: white; cursor: pointer; 
-            display: flex; align-items: center; justify-content: center; transition: 0.2s;
+        .status-dot {
+            width: 8px; height: 8px; background-color: #00ff88; 
+            border-radius: 50%; box-shadow: 0 0 8px rgba(0, 255, 136, 0.6);
+            animation: pulseDot 2s infinite;
         }
-        .chat-footer button:hover { background: var(--secondary-color); transform: scale(1.1); }
+        @keyframes pulseDot {
+            0% { transform: scale(0.95); opacity: 0.7; }
+            50% { transform: scale(1.2); opacity: 1; }
+            100% { transform: scale(0.95); opacity: 0.7; }
+        }
 
-        /* RESPONSIVE */
+        /* Responsive Mobile Update */
         @media (max-width: 900px) {
             .hero-grid { flex-direction: column; text-align: center; }
             .hero-text-side { margin-bottom: 30px; }
             .hero-btn-group { justify-content: center; }
             .hero-slider-side { transform: rotate(0deg); width: 100%; max-width: 500px; margin: 0 auto; }
-            .content-grid { grid-template-columns: 1fr; }
+            
+            .fc-nav-btn { display: none; } /* Sembunyikan tombol di mobile, pakai swipe */
+            .fc-window { overflow-x: auto; scroll-behavior: smooth; } /* Enable horizontal scroll */
         }
         
         @media (max-width: 600px) {
             .brand-text { font-size: 14px; }
-            .brand-logo-svg { height: 35px; }
-            .menu-list { display: none; } /* Mobile Menu Simpel (Hilang dulu) */
+            .brand-logo-img { height: 35px; }
+            .menu-list { display: none; } 
             .hero-text-side h1 { font-size: 32px; }
         }
     </style>
@@ -481,13 +565,8 @@
 
     <header id="mainHeader">
         <div class="container header-content">
-            <div class="brand-area">
-                <img 
-                    src="balmonsmd.png" 
-                    alt="Logo Balmon" 
-                    class="brand-logo-img"
-                >
-                
+            <div class="brand-area" onclick="scrollToTop()">
+                <img src="balmonsmd.png" alt="Logo Balmon" class="brand-logo-img">
                 <div class="brand-text">
                     BALMON SAMARINDA
                     <span>Kementerian Komunikasi & Digital</span>
@@ -496,8 +575,7 @@
             <nav class="nav-menu">
                 <ul class="menu-list">
                     <li class="menu-item">Beranda</li>
-                    <li class="menu-item">
-                        Layanan
+                    <li class="menu-item">Layanan
                         <ul class="dropdown-content">
                             <li><a href="#">Izin Konsesi</a></li>
                             <li><a href="#">Izin Maritim</a></li>
@@ -522,7 +600,6 @@
     <div class="hero-section">
         <div class="hero-bg-blob"></div>
         <div class="container hero-grid">
-            
             <div class="hero-text-side">
                 <div class="hero-badge">Portal Resmi Pelayanan Publik</div>
                 <h1>Pengawasan Spektrum<br><span>Frekuensi Radio</span></h1>
@@ -541,7 +618,6 @@
                         </div>
                 </div>
             </div>
-
         </div>
     </div>
 
@@ -554,27 +630,67 @@
         </div>
     </div>
 
-    <div class="container main-section">
-        <div class="content-grid">
-            <div class="content-card">
-                <h2>
-                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
-                    Tentang Balmon
-                </h2>
-                <p>Unit Pelaksana Teknis (UPT) di bawah Ditjen SDPPI Kemkomdigi RI yang bertugas melaksanakan pengawasan dan pengendalian spektrum frekuensi radio di wilayah Provinsi Kalimantan Timur.</p>
-                <a href="#" style="color:var(--primary-color); font-weight:600; font-size:14px;">Selengkapnya &rarr;</a>
-            </div>
-            <div class="content-card">
-                <h2>
-                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
-                    Tugas & Fungsi
-                </h2>
-                <ul>
-                    <li>Monitoring penggunaan frekuensi radio.</li>
-                    <li>Penertiban gangguan spektrum.</li>
-                    <li>Pelayanan ujian amatir radio (UNAR).</li>
-                    <li>Sosialisasi regulasi telekomunikasi.</li>
-                </ul>
+    <div class="feature-carousel-section">
+        <div class="feature-bg-decor"></div>
+        
+        <div class="fc-wrapper">
+            <button class="fc-nav-btn fc-prev" onclick="scrollFeature(-1)">&#10094;</button>
+            <button class="fc-nav-btn fc-next" onclick="scrollFeature(1)">&#10095;</button>
+
+            <div class="fc-window" id="fcWindow">
+                <div class="fc-track" id="fcTrack">
+                    
+                    <div class="fc-card">
+                        <div class="fc-card-img">
+                            <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=600&q=80" alt="Tentang Balmon">
+                        </div>
+                        <div class="fc-card-content">
+                            <h3>Tentang Balmon</h3>
+                            <p>Unit Pelaksana Teknis (UPT) Ditjen SDPPI yang bertugas mengawasi frekuensi radio di Kaltim.</p>
+                        </div>
+                    </div>
+
+                    <div class="fc-card">
+                        <div class="fc-card-img">
+                            <img src="https://images.unsplash.com/photo-1581092160562-40aa08e78837?auto=format&fit=crop&w=600&q=80" alt="Tugas Fungsi">
+                        </div>
+                        <div class="fc-card-content">
+                            <h3>Tugas & Fungsi</h3>
+                            <p>Monitoring frekuensi, penertiban gangguan, dan pelayanan ujian amatir radio (UNAR).</p>
+                        </div>
+                    </div>
+
+                    <div class="fc-card">
+                        <div class="fc-card-img">
+                            <img src="https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?auto=format&fit=crop&w=600&q=80" alt="Pelayanan Publik">
+                        </div>
+                        <div class="fc-card-content">
+                            <h3>Pelayanan Publik</h3>
+                            <p>Layanan perizinan spektrum radio maritim, penerbangan, dan penyiaran yang transparan.</p>
+                        </div>
+                    </div>
+
+                    <div class="fc-card">
+                        <div class="fc-card-img">
+                            <img src="https://images.unsplash.com/photo-1581092334651-ddf26d9a09d0?auto=format&fit=crop&w=600&q=80" alt="Fasilitas Teknis">
+                        </div>
+                        <div class="fc-card-content">
+                            <h3>Fasilitas Teknis</h3>
+                            <p>Dilengkapi perangkat monitoring canggih tetap dan bergerak untuk menjaga kualitas spektrum.</p>
+                        </div>
+                    </div>
+
+                    <div class="fc-card">
+                        <div class="fc-card-img">
+                            <img src="https://images.unsplash.com/photo-1596524430615-b46475ddff6e?auto=format&fit=crop&w=600&q=80" alt="Pengaduan">
+                        </div>
+                        <div class="fc-card-content">
+                            <h3>Pengaduan</h3>
+                            <p>Masyarakat dapat melaporkan gangguan frekuensi radio melalui kanal pengaduan resmi kami.</p>
+                        </div>
+                    </div>
+
+                </div>
             </div>
         </div>
     </div>
@@ -614,34 +730,38 @@
     </footer>
 
     <div class="chat-box-container" id="chatBox">
-        
         <div class="chat-header">
             <div class="chat-logo-bg">
-                <svg width="24" height="24" fill="white" viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg>
+                <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>
             </div>
-            <div class="chat-title"><h4>Sobat Digi</h4><span>Online - Siap Membantu</span></div>
+            <div class="chat-title">
+                <h4>Sobat Digi</h4>
+                <div class="chat-status">
+                    <span class="status-dot"></span>
+                    Online - Siap Membantu
+                </div>
+            </div>
         </div>
-
         <iframe 
-            src="https://vr711-chatbotbalmon.hf.space" 
-            style="width: 100%; height: calc(100% - 85px); border: none; background: white;"
+            src="https://MagangBalmon2619-Chat-Balmon.hf.space" 
+            style="width: 100%; height: 100%; border: none; background: #fff;"
             allow="clipboard-write; microphone"
         ></iframe>
-
     </div>
 
-    <button class="chat-toggle-btn" id="toggleBtn" onclick="animateChatToggle()">
-        <svg class="icon-message" viewBox="0 0 24 24">
-            <path d="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 9h12v2H6V9zm8 5H6v-2h8v2zm4-6H6V6h12v2z"/>
-        </svg>
-        
-        <svg class="icon-close" viewBox="0 0 24 24">
-            <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
-        </svg>
-    </button>
+        <button class="chat-toggle-btn" id="toggleBtn" onclick="animateChatToggle()">
+            <svg class="icon-message" viewBox="0 0 24 24">
+                <path d="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 9h12v2H6V9zm8 5H6v-2h8v2zm4-6H6V6h12v2z"/>
+            </svg>
+            
+            <svg class="icon-close" viewBox="0 0 24 24">
+                <line x1="18" y1="6" x2="6" y2="18"></line>
+                <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+        </button>
 
     <script>
-        // 1. DATA SLIDER OTOMATIS
+        // --- 1. SLIDER HERO (OTOMATIS) ---
         const slideData = [
             { img: 's1.jpg', caption: 'Monitoring Spektrum' },
             { img: 's2.jpg', caption: 'Pelayanan Publik' },
@@ -652,7 +772,6 @@
         function initSlider() {
             const track = document.getElementById('sliderTrack');
             let contentHTML = '';
-
             const createCard = (item) => `
                 <div class="slide-card">
                     <img src="${item.img}" alt="${item.caption}">
@@ -662,11 +781,41 @@
             [...slideData, ...slideData, ...slideData].forEach(item => {
                 contentHTML += createCard(item);
             });
-
             track.innerHTML = contentHTML;
         }
 
-        // 2. LOGIKA ANIMASI CHAT
+        // --- 2. LOGIKA FEATURE CAROUSEL (STRIP SLIDER - UPDATED) ---
+        // Sederhana: Menggeser track berdasarkan lebar kartu + gap
+        let scrollPosition = 0;
+        const cardWidth = 280; // Lebar kartu
+        const cardGap = 20;    // Gap antar kartu
+        const totalMove = cardWidth + cardGap;
+        
+        function scrollFeature(direction) {
+            const track = document.getElementById('fcTrack');
+            const windowWidth = document.getElementById('fcWindow').offsetWidth;
+            const trackWidth = track.scrollWidth;
+            
+            // Hitung posisi baru
+            scrollPosition += direction * totalMove;
+
+            // Batasi Scroll (Agar tidak kebablasan)
+            // Kiri max: 0
+            if (scrollPosition < 0) {
+                scrollPosition = 0;
+            }
+            // Kanan max: trackWidth - windowWidth
+            const maxScroll = trackWidth - windowWidth;
+            if (scrollPosition > maxScroll) {
+                scrollPosition = maxScroll; 
+            }
+            
+            // Terapkan Transform
+            track.style.transform = `translateX(-${scrollPosition}px)`;
+        }
+
+
+        // --- 3. ANIMASI CHAT ---
         function animateChatToggle() {
             const btn = document.getElementById("toggleBtn");
             const box = document.getElementById("chatBox");
@@ -678,7 +827,6 @@
             }
 
             if (btn.classList.contains("loading")) return;
-
             btn.classList.add("loading");
 
             setTimeout(() => {
@@ -688,21 +836,18 @@
             }, 600);
         }
 
-        // 3. EVENT SCROLL (HEADER & CHAT BUTTON)
+        // --- 4. SCROLL EVENTS ---
         window.addEventListener('scroll', function() {
             const chatBtn = document.getElementById('toggleBtn');
             const footer = document.getElementById('mainFooter');
             const header = document.getElementById('mainHeader');
             
-            // A. Logika Header Minimalis
-            // Jika scroll lebih dari 50px (keluar dari area atas hero sedikit), header berubah
             if (window.scrollY > 50) {
                 header.classList.add('header-minimal');
             } else {
                 header.classList.remove('header-minimal');
             }
 
-            // B. Logika Warna Tombol Chat
             const btnRect = chatBtn.getBoundingClientRect();
             const footerRect = footer.getBoundingClientRect();
             
@@ -712,6 +857,10 @@
                 chatBtn.classList.remove('on-footer'); 
             }
         });
+
+        function scrollToTop() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
 
         initSlider();
     </script>
