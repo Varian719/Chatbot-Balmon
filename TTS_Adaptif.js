@@ -1,7 +1,7 @@
 /**
  * ------------------------------------------------------------------
- * FITUR BACA BERITA (TTS) - GOOGLE CLOUD FIX
- * Endpoint: translate.googleapis.com (Lebih stabil untuk 'gtx')
+ * FITUR BACA BERITA - VERSI HYBRID (ANTI BISU)
+ * Logika: Coba Google Cloud dulu, jika error -> Pakai Suara Lokal (Backup)
  * ------------------------------------------------------------------
  */
 
@@ -10,153 +10,243 @@
 
     // 1. KONFIGURASI
     const CONFIG = {
-        contentSelectors: [
+        selectors: [
             '#konten-layanan', '.entry-content', '.post-content', 
             'article', 'main', '.col-md-8', '#main-content', 'body'
         ],
-        themeColor: '#006fb0',      
-        stopColor: '#dc3545',       
-        lang: 'id' 
+        color: '#006fb0',       
+        activeColor: '#dc3545', 
+        lang: 'id'
     };
 
-    // 2. STYLING (UI)
+    // 2. STYLE CSS (Tampilan Premium)
     const style = document.createElement('style');
     style.innerHTML = `
-        #tts-floating-btn {
-            position: fixed; bottom: 25px; left: 25px; z-index: 99999;
-            display: flex; align-items: center; gap: 10px; padding: 12px 20px;
-            background-color: ${CONFIG.themeColor}; color: white; border: none;
-            border-radius: 50px; box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-            cursor: pointer; font-family: sans-serif; font-size: 14px; font-weight: 600;
+        #tts-hybrid-container {
+            position: fixed; bottom: 30px; left: 30px; z-index: 999999;
+            font-family: sans-serif;
+        }
+        #tts-btn {
+            display: flex; align-items: center; gap: 10px;
+            background: ${CONFIG.color}; color: white;
+            padding: 12px 20px; border-radius: 50px; border: none;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2); cursor: pointer;
             transition: transform 0.2s;
         }
-        #tts-floating-btn:hover { transform: scale(1.05); }
-        #tts-floating-btn svg { width: 20px; height: 20px; fill: white; }
+        #tts-btn:hover { transform: scale(1.05); }
+        #tts-btn svg { width: 20px; height: 20px; fill: white; }
+        
+        .tts-status { font-size: 13px; font-weight: 600; }
         .tts-loading {
-            border: 2px solid rgba(255,255,255,0.3); border-top: 2px solid #fff;
-            border-radius: 50%; width: 14px; height: 14px;
+            width: 12px; height: 12px; border: 2px solid rgba(255,255,255,0.3);
+            border-top: 2px solid white; border-radius: 50%;
             animation: spin 1s linear infinite; display: none;
         }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        
+        /* Notifikasi Error Kecil */
+        #tts-toast {
+            position: absolute; bottom: 60px; left: 0;
+            background: rgba(0,0,0,0.8); color: white;
+            padding: 8px 12px; border-radius: 8px; font-size: 12px;
+            width: 200px; display: none;
+        }
     `;
     document.head.appendChild(style);
 
-    // 3. TOMBOL UI
-    const iconSpeaker = `<svg viewBox="0 0 24 24"><path d="M14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77zm-4 0h-2.5l-5 5h-5v7h5l5 5v-17z"/></svg>`;
-    const iconStop = `<svg viewBox="0 0 24 24"><path d="M6 6h12v12H6z"/></svg>`;
-    
-    const btn = document.createElement('button');
-    btn.id = 'tts-floating-btn';
-    btn.innerHTML = `${iconSpeaker} <span>Baca Cloud</span> <div class="tts-loading"></div>`;
-    document.body.appendChild(btn);
+    // 3. ELEMENT UI
+    const container = document.createElement('div');
+    container.id = 'tts-hybrid-container';
+    container.innerHTML = `
+        <div id="tts-toast"></div>
+        <button id="tts-btn">
+            <svg viewBox="0 0 24 24"><path d="M14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77zm-4 0h-2.5l-5 5h-5v7h5l5 5v-17z"/></svg>
+            <div class="tts-loading"></div>
+            <span class="tts-status">Baca Berita</span>
+        </button>
+    `;
+    document.body.appendChild(container);
 
-    // 4. LOGIKA PLAYER
+    const btn = document.getElementById('tts-btn');
+    const statusLabel = container.querySelector('.tts-status');
+    const loading = container.querySelector('.tts-loading');
+    const toast = document.getElementById('tts-toast');
+    const icon = container.querySelector('svg');
+
+    // 4. LOGIC ENGINE
     let audioPlayer = new Audio();
-    let audioQueue = [];
+    let synth = window.speechSynthesis;
+    let queue = [];
+    let index = 0;
     let isPlaying = false;
-    let currentQueueIndex = 0;
+    let mode = 'CLOUD'; // Mode awal: Cloud
 
-    function getMainContent() {
-        let contentEl = null;
-        for (let selector of CONFIG.contentSelectors) {
-            const el = document.querySelector(selector);
-            if (el && el.innerText.trim().length > 50) { 
-                contentEl = el; break;
-            }
-        }
-        if (!contentEl) contentEl = document.body;
-        // Bersihkan teks: Hapus baris baru berlebih dan spasi ganda
-        return contentEl.innerText.replace(/\s+/g, ' ').trim();
+    // Helper: Show Toast
+    function showMsg(msg) {
+        toast.innerText = msg;
+        toast.style.display = 'block';
+        setTimeout(() => { toast.style.display = 'none'; }, 3000);
     }
 
-    // Chunking text lebih agresif (Max 100 char) agar Google tidak menolak
-    function splitTextToChunks(text) {
-        // Regex memisah kalimat berdasarkan titik/tanda tanya/seru
-        const regex = /[^.!?]+[.!?]+/g;
-        const sentences = text.match(regex) || [text];
-        const chunks = [];
-        let currentChunk = "";
+    // A. Ambil Teks
+    function getText() {
+        let el = null;
+        for (let sel of CONFIG.selectors) {
+            el = document.querySelector(sel);
+            if (el && el.innerText.trim().length > 30) break;
+        }
+        if (!el) el = document.body;
+        // Bersihkan teks
+        return el.innerText.replace(/\s+/g, ' ').trim();
+    }
 
-        sentences.forEach(sentence => {
-            if (currentChunk.length + sentence.length < 100) {
-                currentChunk += sentence + " ";
-            } else {
-                chunks.push(currentChunk.trim());
-                currentChunk = sentence + " ";
-            }
+    // B. Potong Teks (Wajib < 100 char untuk Cloud)
+    function chunkText(text) {
+        const regex = /[^.!?]+[.!?]+/g; // Pisah per kalimat
+        const raw = text.match(regex) || [text];
+        const chunks = [];
+        let buf = "";
+        raw.forEach(s => {
+            if (buf.length + s.length < 90) buf += s + " "; // Batas aman 90 char
+            else { chunks.push(buf.trim()); buf = s + " "; }
         });
-        if (currentChunk) chunks.push(currentChunk.trim());
+        if (buf) chunks.push(buf.trim());
         return chunks;
     }
 
-    btn.addEventListener('click', () => {
-        if (isPlaying) stopAudio();
-        else {
-            const text = getMainContent();
-            if (!text || text.length < 5) return alert("Teks tidak ditemukan.");
-            
-            // UI Loading
-            btn.querySelector('.tts-loading').style.display = 'block';
-            
-            audioQueue = splitTextToChunks(text);
-            currentQueueIndex = 0;
-            playNextChunk();
-        }
-    });
+    // C. PLAYER UTAMA
+    function playNext() {
+        if (index >= queue.length) { stopAll(); return; }
 
-    function playNextChunk() {
-        if (currentQueueIndex >= audioQueue.length) {
-            stopAudio(true); 
-            return;
-        }
+        const textPart = queue[index];
+        loading.style.display = 'block';
+        icon.style.display = 'none';
 
-        const textPart = encodeURIComponent(audioQueue[currentQueueIndex]);
-        // MENGGUNAKAN ENDPOINT GOOGLEAPIS (CLIENT=GTX) YANG LEBIH STABIL
-        const url = `https://translate.googleapis.com/translate_tts?client=gtx&ie=UTF-8&tl=${CONFIG.lang}&dt=t&q=${textPart}`;
+        if (mode === 'CLOUD') {
+            playCloud(textPart);
+        } else {
+            playLocal(textPart);
+        }
+    }
+
+    // C1. METODE CLOUD (Google)
+    function playCloud(text) {
+        const q = encodeURIComponent(text);
+        // URL Magic (client=tw-ob biasanya lebih ampuh dari gtx)
+        const url = `https://translate.google.com/translate_tts?ie=UTF-8&q=${q}&tl=${CONFIG.lang}&client=tw-ob`;
 
         audioPlayer.src = url;
         audioPlayer.playbackRate = 1.0;
-        
+
         const playPromise = audioPlayer.play();
         
         if (playPromise !== undefined) {
             playPromise.then(() => {
-                // Sukses Play
-                btn.querySelector('.tts-loading').style.display = 'none';
-                isPlaying = true;
-                btn.style.backgroundColor = CONFIG.stopColor;
-                btn.innerHTML = `${iconStop} <span>Berhenti</span>`;
+                // Sukses
+                loading.style.display = 'none';
+                icon.style.display = 'block';
+                statusLabel.innerText = "Membaca...";
             }).catch(error => {
-                console.error("Playback error:", error);
-                // Jika error, coba skip ke kalimat berikutnya (jangan stop total)
-                currentQueueIndex++;
-                playNextChunk();
+                console.warn("Cloud gagal, switch ke Lokal:", error);
+                showMsg("Gagal koneksi Cloud, beralih ke mode Lokal.");
+                mode = 'LOCAL'; // Switch mode permanen untuk sesi ini
+                playLocal(text); // Retry pakai lokal
             });
         }
     }
 
-    audioPlayer.onended = () => {
-        currentQueueIndex++;
-        playNextChunk();
-    };
-
-    audioPlayer.onerror = () => {
-        console.warn("Gagal memuat chunk audio, mencoba skip...");
-        currentQueueIndex++;
-        playNextChunk();
-    };
-
-    function stopAudio(finished = false) {
-        audioPlayer.pause();
-        audioPlayer.currentTime = 0;
-        audioQueue = [];
-        isPlaying = false;
+    // C2. METODE LOCAL (Browser Bawaan) - Fallback
+    function playLocal(text) {
+        loading.style.display = 'none';
+        icon.style.display = 'block';
         
-        btn.querySelector('.tts-loading').style.display = 'none';
-        btn.style.backgroundColor = CONFIG.themeColor;
-        btn.innerHTML = `${iconSpeaker} <span>Baca Cloud</span> <div class="tts-loading"></div>`;
+        // Setup Suara
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = 'id-ID';
+        utterance.rate = 1.0;
+
+        // Cari suara Google Indo di device jika ada
+        const voices = synth.getVoices();
+        const indoVoice = voices.find(v => v.lang.includes('id') && v.name.includes('Google')) || voices.find(v => v.lang.includes('id'));
+        if (indoVoice) utterance.voice = indoVoice;
+
+        utterance.onend = () => {
+            index++;
+            playNext();
+        };
+        
+        utterance.onerror = (e) => {
+            console.error("Local Error", e);
+            index++; // Skip aja kalau error
+            playNext();
+        };
+
+        statusLabel.innerText = "Mode Lokal...";
+        synth.speak(utterance);
     }
 
-    window.onbeforeunload = () => audioPlayer.pause();
+    // Handler Event Cloud (Selesai/Error)
+    audioPlayer.onended = () => {
+        index++;
+        playNext();
+    };
+    audioPlayer.onerror = () => {
+        console.warn("Audio Cloud Error (Mungkin 404/403)");
+        mode = 'LOCAL'; // Switch ke lokal
+        playLocal(queue[index]);
+    };
+
+    function stopAll() {
+        audioPlayer.pause();
+        audioPlayer.currentTime = 0;
+        synth.cancel();
+        
+        queue = [];
+        index = 0;
+        isPlaying = false;
+        mode = 'CLOUD'; // Reset prioritas ke cloud
+
+        loading.style.display = 'none';
+        icon.style.display = 'block';
+        statusLabel.innerText = "Baca Berita";
+        btn.style.background = CONFIG.color;
+    }
+
+    // E. TRIGGER BUTTON
+    btn.addEventListener('click', () => {
+        if (isPlaying) {
+            stopAll();
+        } else {
+            // Cek file protocol
+            if (window.location.protocol === 'file:') {
+                alert("PERINGATAN: Fitur Cloud tidak jalan di file://. Harap gunakan Live Server.");
+                mode = 'LOCAL'; // Paksa lokal
+            }
+
+            const fullText = getText();
+            if (!fullText || fullText.length < 5) {
+                alert("Teks artikel tidak ditemukan.");
+                return;
+            }
+
+            queue = chunkText(fullText);
+            if (queue.length === 0) return;
+
+            isPlaying = true;
+            btn.style.background = CONFIG.activeColor;
+            statusLabel.innerText = "Memuat...";
+            
+            // Fix untuk iOS/Chrome: Harus ada interaksi user
+            if (synth.paused) synth.resume(); 
+            
+            index = 0;
+            playNext();
+        }
+    });
+    
+    // Fix bug chrome suara tidak muncul (load voices)
+    if (speechSynthesis.onvoiceschanged !== undefined) {
+        speechSynthesis.onvoiceschanged = function() {};
+    }
 
 })();
