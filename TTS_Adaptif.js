@@ -62,7 +62,7 @@
         <button id="tts-btn">
             <svg viewBox="0 0 24 24"><path d="M14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77zm-4 0h-2.5l-5 5h-5v7h5l5 5v-17z"/></svg>
             <div class="tts-loading"></div>
-            <span class="tts-status">Baca Berita</span>
+            <span class="tts-status">Baca</span>
         </button>
     `;
     document.body.appendChild(container);
