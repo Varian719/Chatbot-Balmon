@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Izin Maritim & Pantai - Balmon Samarinda</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        /* ========================================= */
+        /* --- 1. GLOBAL STYLE (BASE SYSTEM) --- */
+        /* ========================================= */
+        :root {
+            --primary-color: #006fb0;
+            --primary-dark: #005082;
+            --secondary-color: #00ace0;
+            --accent-yellow: #ecbb1d;
+            --accent-red: #de262a;
+            --bg-light-blue: #f4f9fc;
+            --bg-white: #ffffff;
+            --text-dark: #1e293b;
+            --text-gray: #64748b;
+            --shadow-soft: 0 10px 30px -5px rgba(0, 0, 0, 0.05);
+            --radius-md: 12px;
+        }
+
+        body { 
+            margin: 0; padding: 0; 
+            font-family: 'Inter', sans-serif; 
+            background-color: var(--bg-light-blue);
+            color: var(--text-dark); 
+            line-height: 1.6; 
+            overflow-x: hidden; 
+        }
+        a { text-decoration: none; color: inherit; transition: 0.3s; }
+        ul { list-style: none; padding: 0; margin: 0; }
+        * { box-sizing: border-box; }
+
+        .container {
+            max-width: 1200px; margin: 0 auto; padding: 0 20px; width: 100%;
+        }
+
+        /* --- HEADER STYLE (CLONED) --- */
+        header {
+            background-color: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            height: 80px; 
+            position: fixed; top: 0; left: 0; width: 100%; z-index: 1000;
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.04);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .header-content { display: flex; align-items: center; justify-content: space-between; height: 100%; }
+        .brand-area { display: flex; align-items: center; gap: 12px; cursor: pointer; transition: 0.3s; }
+        .brand-logo-img { height: 50px; width: auto; }
+        .brand-text { font-size: 18px; font-weight: 800; color: var(--primary-color); line-height: 1.2; display: flex; flex-direction: column; }
+        .brand-text span { font-size: 11px; font-weight: 500; color: var(--text-gray); letter-spacing: 0.5px; }
+
+        /* NAVIGASI & DROPDOWN */
+        .nav-menu { height: 100%; display: flex; align-items: center; }
+        .menu-list { display: flex; gap: 8px; height: 100%; align-items: center; }
+        
+        .menu-item { 
+            position: relative; height: 100%; display: flex; align-items: center; 
+            padding: 0 12px; font-size: 14px; font-weight: 600; 
+            color: var(--text-dark); cursor: pointer; 
+        }
+        .menu-item:hover { color: var(--primary-color); }
+        .menu-item::after { 
+            content: ''; position: absolute; bottom: 0; left: 0; width: 0%; height: 3px; 
+            background: var(--accent-yellow); transition: 0.3s; 
+        }
+        .menu-item:hover::after { width: 100%; }
+
+        .dropdown-content { 
+            display: none; position: absolute; top: 100%; left: 0; 
+            background-color: #ffffff; 
+            min-width: 240px; 
+            box-shadow: 0 15px 30px rgba(0,0,0,0.1); 
+            border-radius: 0 0 8px 8px; z-index: 1000; 
+            padding: 10px 0; 
+            border-top: 3px solid var(--primary-color);
+            animation: slideDown 0.3s ease;
+        }
+        .menu-item:hover .dropdown-content { display: block; }
+        .dropdown-content li a { display: block; padding: 10px 20px; color: var(--text-dark); font-weight: 400; font-size: 14px; }
+        .dropdown-content li a:hover { background-color: var(--bg-light-blue); color: var(--primary-color); padding-left: 25px; }
+        
+        @keyframes slideDown { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* HEADER MINIMAL */
+        header.header-minimal { height: 0; overflow: visible; background: transparent; box-shadow: none; }
+        header.header-minimal .nav-menu { opacity: 0; transform: translateY(-20px); pointer-events: none; }
+        header.header-minimal .brand-area {
+            position: fixed; top: 20px; left: 20px; background: #fff; box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+            width: 60px; height: 60px; border-radius: 50%; padding: 0; justify-content: center;
+        }
+        header.header-minimal .brand-text { display: none; }
+        header.header-minimal .brand-logo-img { height: 35px; margin: 0; }
+
+        /* ========================================= */
+        /* --- 2. PAGE CONTENT STYLE --- */
+        /* ========================================= */
+        
+        .page-header {
+            padding-top: 120px; padding-bottom: 60px;
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+            color: white; position: relative; overflow: hidden;
+        }
+        .ph-bg-decor {
+            position: absolute; right: -50px; top: -50px; width: 300px; height: 300px;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%); border-radius: 50%;
+        }
+        .breadcrumb { font-size: 13px; opacity: 0.8; margin-bottom: 10px; }
+        .breadcrumb a { color: #fff; text-decoration: underline; }
+        .page-title { font-size: 36px; font-weight: 800; margin: 0; }
+
+        .content-grid {
+            display: grid; grid-template-columns: 2.5fr 1fr; gap: 40px;
+            margin-top: -40px; margin-bottom: 60px; position: relative; z-index: 10;
+        }
+
+        .content-card {
+            background: #fff; border-radius: 16px; padding: 40px;
+            box-shadow: 0 5px 30px rgba(0,0,0,0.05); border: 1px solid rgba(0,0,0,0.03);
+        }
+        
+        /* --- TAB SYSTEM STYLE --- */
+        .tab-container { margin-bottom: 30px; border-bottom: 2px solid #e2e8f0; display: flex; gap: 20px; }
+        .tab-btn {
+            padding: 15px 5px; font-size: 16px; font-weight: 600; color: var(--text-gray);
+            cursor: pointer; background: none; border: none; position: relative; transition: 0.3s;
+        }
+        .tab-btn:hover { color: var(--primary-color); }
+        .tab-btn.active { color: var(--primary-color); }
+        .tab-btn.active::after {
+            content: ''; position: absolute; bottom: -2px; left: 0; width: 100%;
+            height: 3px; background: var(--primary-color); border-radius: 3px 3px 0 0;
+        }
+        
+        .tab-content { display: none; animation: fadeIn 0.4s ease; }
+        .tab-content.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+
+        .section-title { font-size: 22px; font-weight: 700; color: var(--primary-color); margin-bottom: 20px; display: flex; align-items: center; gap: 10px; }
+        .section-title::before { content: ''; width: 4px; height: 24px; background: var(--accent-yellow); border-radius: 2px; }
+        
+        /* Checklist & Timeline */
+        .check-list li {
+            position: relative; padding-left: 30px; margin-bottom: 12px; color: var(--text-dark);
+        }
+        .check-list li::before {
+            content: '✔'; position: absolute; left: 0; top: 2px; 
+            color: var(--primary-color); font-weight: bold; background: rgba(0, 111, 176, 0.1);
+            width: 20px; height: 20px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10px;
+        }
+        .timeline { position: relative; border-left: 2px solid #e2e8f0; margin-left: 10px; padding-left: 30px; margin-top: 30px; }
+        .timeline-item { margin-bottom: 30px; position: relative; }
+        .timeline-dot {
+            position: absolute; left: -39px; top: 0; width: 16px; height: 16px;
+            background: #fff; border: 4px solid var(--primary-color); border-radius: 50%;
+        }
+        .timeline-title { font-weight: 700; color: var(--text-dark); margin-bottom: 5px; }
+        .timeline-desc { font-size: 14px; color: var(--text-gray); }
+
+        /* Sidebar & Footer (Same as Clone) */
+        .sidebar-card {
+            background: #fff; border-radius: 16px; padding: 25px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.05); margin-bottom: 20px; position: sticky; top: 120px;
+        }
+        .btn-download, .btn-apply { display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; padding: 12px; border-radius: 8px; font-weight: 600; transition: 0.3s; text-align: center; }
+        .btn-download { background: var(--bg-light-blue); color: var(--primary-color); margin-bottom: 10px; border: 1px solid transparent; }
+        .btn-download:hover { background: #e0f2fe; border-color: var(--primary-color); }
+        .btn-apply { background: var(--accent-red); color: #fff; padding: 15px; box-shadow: 0 5px 15px rgba(222, 38, 42, 0.3); }
+        .btn-apply:hover { background: #b91c20; transform: translateY(-2px); }
+
+        footer { background-color: var(--primary-color); color: white; padding-top: 70px; font-size: 14px; }
+        .footer-grid { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 40px; padding-bottom: 50px; }
+        .footer-col { flex: 1; min-width: 250px; }
+        .footer-col h3 { color: var(--accent-yellow); margin-bottom: 25px; font-size: 18px; font-weight: 700; }
+        .footer-links a { color: rgba(255,255,255,0.8); display: block; margin-bottom: 12px; transition: 0.2s; }
+        .footer-links a:hover { color: #fff; transform: translateX(5px); }
+        .copyright { background-color: rgba(0,0,0,0.1); text-align: center; padding: 25px 0; color: rgba(255,255,255,0.6); border-top: 1px solid rgba(255,255,255,0.1); }
+
+        /* Chat Widget */
+        .chat-toggle-btn { position: fixed; bottom: 30px; right: 30px; width: 65px; height: 65px; background: linear-gradient(135deg, var(--primary-color), var(--primary-dark)); color: #ffffff; border: none; border-radius: 50%; box-shadow: 0 8px 25px rgba(0, 111, 176, 0.4); cursor: pointer; z-index: 9999; display: flex; align-items: center; justify-content: center; transition: transform 0.3s; }
+        .chat-toggle-btn:hover { transform: scale(1.1); }
+        .chat-toggle-btn svg { position: absolute; width: 28px; height: 28px; transition: all 0.4s; pointer-events: none; }
+        .icon-message { opacity: 1; transform: scale(1); fill: currentColor; }
+        .icon-close { opacity: 0; transform: scale(0) rotate(-180deg); fill: none; stroke: currentColor; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+        .chat-toggle-btn.active .icon-message { opacity: 0; transform: scale(0); }
+        .chat-toggle-btn.active .icon-close { opacity: 1; transform: scale(1) rotate(0deg); }
+        .chat-box-container { position: fixed; bottom: 110px; right: 30px; width: 400px; height: 600px; max-height: 75vh; background: #fff; border-radius: 16px; box-shadow: 0 20px 50px rgba(0,0,0,0.2); z-index: 9998; opacity: 0; visibility: hidden; transform: translateY(20px); transition: 0.3s; border: 1px solid #eee; overflow: hidden; display: flex; flex-direction: column; }
+        .chat-box-container.active { opacity: 1; visibility: visible; transform: translateY(0); }
+        .chat-header { background: linear-gradient(135deg, var(--primary-color), var(--primary-dark)); padding: 15px 20px; color: #fff; display: flex; align-items: center; gap: 15px; }
+
+        @media (max-width: 900px) {
+            .content-grid { grid-template-columns: 1fr; margin-top: 0; }
+            .sidebar-card { position: relative; top: 0; order: -1; }
+            .page-header { padding-bottom: 40px; }
+        }
+    </style>
+</head>
+<body>
+
+    <header id="mainHeader">
+        <div class="container header-content">
+            <div class="brand-area" onclick="window.location.href='index.html'">
+                <img src="balmonsmd.png" alt="Logo Balmon" class="brand-logo-img">
+                <div class="brand-text">
+                    BALMON SAMARINDA
+                    <span>Kementerian Komunikasi & Digital</span>
+                </div>
+            </div>
+            
+            <nav class="nav-menu">
+                <ul class="menu-list">
+                    <li class="menu-item">Beranda</li>
+                    <li class="menu-item">Layanan
+                        <ul class="dropdown-content">
+                            <li><a href="konsesi.html">Izin Konsesi</a></li>
+                            <li><a href="maritim.html">Izin Maritim</a></li>
+                            <li><a href="fm.html">Izin Penyiaran FM</a></li>
+                        </ul>
+                    </li>
+                    <li class="menu-item">Publikasi
+                        <ul class="dropdown-content">
+                            <li><a href="#">Galeri Foto</a></li>
+                            <li><a href="#">Galeri Video</a></li>
+                        </ul>
+                    </li>
+                    <li class="menu-item">Kontak</li>
+                </ul>
+                <button style="margin-left:10px; border:none; background:transparent; color:var(--primary-color); cursor:pointer;">
+                    <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                </button>
+            </nav>
+        </div>
+    </header>
+
+    <div class="page-header">
+        <div class="ph-bg-decor"></div>
+        <div class="container">
+            <div class="breadcrumb">
+                <a href="index.html">Beranda</a> / Izin Maritim & Pantai
+            </div>
+            <h1 class="page-title">Izin Maritim & Pantai</h1>
+        </div>
+    </div>
+
+    <div class="container content-grid">
+        <div class="content-left">
+            <div class="content-card">
+                
+                <div class="tab-container">
+                    <button class="tab-btn active" onclick="openTab(event, 'tabKapal')">Stasiun Kapal (Maritim)</button>
+                    <button class="tab-btn" onclick="openTab(event, 'tabPantai')">Stasiun Pantai</button>
+                </div>
+
+                <div id="tabKapal" class="tab-content active">
+                    <h2 class="section-title">Deskripsi Stasiun Kapal</h2>
+                    <p>
+                        Izin Stasiun Radio (ISR) untuk dinas maritim yang dipasang di atas kapal laut. Wajib dimiliki untuk keselamatan pelayaran dan komunikasi sesuai standar GMDSS.
+                    </p>
+
+                    <h3 style="font-size:18px; color:var(--text-dark); margin-top:30px;">Prasyarat Utama</h3>
+                    <ul class="check-list" style="margin-bottom:30px;">
+                        <li>Memiliki Akun OSS (NIB) dengan KBLI/PBUMKU <strong>"Izin Stasiun Radio"</strong>.</li>
+                        <li>Registrasi akun e-Licensing di <strong>isr.postel.go.id</strong>.</li>
+                    </ul>
+
+                    <h3 style="font-size:18px; color:var(--text-dark);">Dokumen Persyaratan (Badan Hukum)</h3>
+                    <ul class="check-list">
+                        <li>Surat Kuasa Penunjukan PIC (Wakil sah perusahaan).</li>
+                        <li>Scan NPWP Perusahaan & NIB.</li>
+                        <li>Scan SIUP / Izin Usaha.</li>
+                        <li>Akta Pendirian Perusahaan (Hal 1-5, TTD Notaris & Pengesahan).</li>
+                    </ul>
+
+                    <h3 style="font-size:18px; color:var(--text-dark); margin-top:20px;">Dokumen Persyaratan (Perseorangan/Nelayan)</h3>
+                    <ul class="check-list">
+                        <li>KTP & NPWP Pemohon.</li>
+                        <li>SIUP Perikanan (Khusus Nelayan).</li>
+                        <li>Pas Kecil / Pas Besar / Grosse Akta (Bukti kepemilikan kapal).</li>
+                        <li><em>Khusus Kapal < 7 GT:</em> Cukup melampirkan Pas Kecil & KTP.</li>
+                    </ul>
+
+                    <div style="background:#fff3cd; border-left:4px solid #ffc107; padding:15px; margin:20px 0; border-radius:4px; font-size:14px;">
+                        <strong>Catatan:</strong> Pastikan data teknis perangkat (Merk, Tipe, Nomor Seri) sesuai dengan sertifikat alat yang berlaku di Indonesia.
+                    </div>
+                </div>
+
+                <div id="tabPantai" class="tab-content">
+                    <h2 class="section-title">Deskripsi Stasiun Pantai</h2>
+                    <p>
+                        Izin Stasiun Radio untuk stasiun darat (pantai) yang berkomunikasi dengan stasiun kapal. Biasanya digunakan oleh perusahaan pelayaran, pelabuhan, atau agen kapal.
+                    </p>
+
+                    <h3 style="font-size:18px; color:var(--text-dark); margin-top:30px;">Persyaratan Administrasi</h3>
+                    <ul class="check-list">
+                        <li>Formulir Permohonan ISR (Tanda tangan basah/digital).</li>
+                        <li>Surat Kuasa PIC (Jika diwakilkan).</li>
+                        <li>NPWP, NIB, dan Akta Pendirian Perusahaan.</li>
+                        <li><strong>Perjanjian Kerjasama (PKS)</strong> dengan Penyelenggara Telekomunikasi Khusus (SROP) untuk layanan GMDSS/Telekomunikasi Maritim.</li>
+                    </ul>
+
+                    <h3 style="font-size:18px; color:var(--text-dark); margin-top:20px;">Persyaratan Teknis</h3>
+                    <ul class="check-list">
+                        <li>Koordinat lokasi stasiun (Latitude/Longitude).</li>
+                        <li>Data Antena (Tinggi, Jenis, Gain).</li>
+                        <li>Spesifikasi Perangkat Radio (Power, Emisi).</li>
+                        <li>Sertifikat Perangkat (Postel).</li>
+                    </ul>
+                    
+                    <div style="background:#d1ecf1; border-left:4px solid #17a2b8; padding:15px; margin:20px 0; border-radius:4px; font-size:14px;">
+                        <strong>Info Tambahan:</strong> Untuk stasiun di wilayah pelabuhan besar, mungkin diperlukan rekomendasi dari Dinas Perhubungan atau Syahbandar setempat.
+                    </div>
+                </div>
+
+                <hr style="border: 0; border-top: 1px solid #eee; margin: 40px 0;">
+
+                <h2 class="section-title">Alur Pengurusan ISR Maritim</h2>
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <div class="timeline-dot"></div>
+                        <div class="timeline-title">1. Registrasi Akun</div>
+                        <div class="timeline-desc">Buat akun di <strong>isr.postel.go.id</strong> atau via OSS (SSO). Pilih kategori Maritim/Pantai.</div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-dot"></div>
+                        <div class="timeline-title">2. Unggah Dokumen</div>
+                        <div class="timeline-desc">Upload dokumen legalitas (NIB, NPWP) dan dokumen kapal (Grosse Akta/Pas Kecil) atau PKS (untuk Pantai).</div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-dot"></div>
+                        <div class="timeline-title">3. Verifikasi & Analisa</div>
+                        <div class="timeline-desc">Petugas memverifikasi kelengkapan berkas dan parameter teknis radio.</div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-dot"></div>
+                        <div class="timeline-title">4. Pembayaran (SPP)</div>
+                        <div class="timeline-desc">Menerima Surat Perintah Bayar (SPP) BHP Frekuensi. Bayar via Bank/ATM (Host to Host).</div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-dot" style="background:var(--accent-yellow); border-color:var(--accent-yellow);"></div>
+                        <div class="timeline-title">5. Penerbitan ISR</div>
+                        <div class="timeline-desc">Izin Stasiun Radio (ISR) elektronik diterbitkan dan dapat diunduh (PDF) lengkap dengan QR Code.</div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="sidebar-area">
+            <div class="sidebar-card">
+                <h3 style="margin-top:0; color:var(--text-dark);">Aksi Cepat</h3>
+                <p style="font-size:13px;">Unduh panduan lengkap sesuai jenis layanan yang Anda butuhkan.</p>
+                
+                <a href="https://isr.postel.go.id" target="_blank" class="btn-apply">DAFTAR VIA E-LICENSING</a>
+                
+                <div style="margin-top: 20px;">
+                    <a href="#" class="btn-download">
+                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                        Syarat ISR Maritim.pdf
+                    </a>
+                    <a href="#" class="btn-download">
+                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                        Syarat ISR Pantai.pdf
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer id="mainFooter">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <h3>Balmon Samarinda</h3>
+                    <p style="color:rgba(255,255,255,0.7); line-height:1.8;">
+                        Jalan Sultan Sulaiman No. 123<br>Samarinda, Kalimantan Timur.<br><br>
+                        <strong>Email:</strong> pelayananuptbalmonsamarinda@gmail.com
+                    </p>
+                </div>
+                <div class="footer-col">
+                    <h3>Tautan Cepat</h3>
+                    <div class="footer-links">
+                        <a href="#">Profil Organisasi</a>
+                        <a href="#">Standar Pelayanan</a>
+                        <a href="#">Pengaduan Masyarakat</a>
+                    </div>
+                </div>
+                <div class="footer-col">
+                    <h3>Jam Pelayanan</h3>
+                    <p style="color:rgba(255,255,255,0.7);">
+                        Senin - Kamis: 08.00 - 16.00<br>Jumat: 08.00 - 16.30
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="copyright">Copyright@2024 Balai Monitor Spektrum Frekuensi Radio Kelas I Samarinda</div>
+    </footer>
+
+    <div class="chat-box-container" id="chatBox">
+        <div class="chat-header">
+            <div class="chat-logo-bg">
+                <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>
+            </div>
+            <div class="chat-title">
+                <h4>Sobat Digi</h4>
+                <div class="chat-status"><span class="status-dot"></span>Online</div>
+            </div>
+        </div>
+        <iframe src="https://MagangBalmon2619-Chat-Balmon.hf.space" style="width: 100%; height: 100%; border: none; background: #fff;" allow="clipboard-write; microphone"></iframe>
+    </div>
+
+    <button class="chat-toggle-btn" id="toggleBtn" onclick="animateChatToggle()">
+        <svg class="icon-message" viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 9h12v2H6V9zm8 5H6v-2h8v2zm4-6H6V6h12v2z"/></svg>
+        <svg class="icon-close" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+    </button>
+
+    <script>
+        // TAB LOGIC
+        function openTab(evt, tabName) {
+            var i, tabcontent, tablinks;
+            tabcontent = document.getElementsByClassName("tab-content");
+            for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].style.display = "none";
+                tabcontent[i].classList.remove("active");
+            }
+            tablinks = document.getElementsByClassName("tab-btn");
+            for (i = 0; i < tablinks.length; i++) {
+                tablinks[i].className = tablinks[i].className.replace(" active", "");
+            }
+            document.getElementById(tabName).style.display = "block";
+            // Timeout agar animasi CSS berjalan smooth
+            setTimeout(() => {
+                document.getElementById(tabName).classList.add("active");
+            }, 10);
+            evt.currentTarget.className += " active";
+        }
+
+        // CHAT TOGGLE
+        function animateChatToggle() {
+            const btn = document.getElementById("toggleBtn");
+            const box = document.getElementById("chatBox");
+            if (btn.classList.contains("active")) {
+                btn.classList.remove("active"); box.classList.remove("active"); return;
+            }
+            btn.classList.add("active"); box.classList.add("active");
+        }
+
+        // HEADER SCROLL
+        window.addEventListener('scroll', function() {
+            const header = document.getElementById('mainHeader');
+            if (window.scrollY > 20) {
+                header.classList.add('header-minimal');
+            } else {
+                header.classList.remove('header-minimal');
+            }
+        });
+    </script>
+</body>
+</html>
