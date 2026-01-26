@@ -208,7 +208,7 @@
 
         loading.style.display = 'none';
         icon.style.display = 'block';
-        statusLabel.innerText = "Baca Berita";
+        statusLabel.innerText = "Baca";
         btn.style.background = CONFIG.color;
     }
 
