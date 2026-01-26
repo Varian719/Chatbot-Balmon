@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Galeri Foto - Balmon Samarinda</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        /* --- 1. SETUP WARNA & GLOBAL --- */
+        :root {
+            --primary-color: #006fb0;
+            --primary-dark: #005082;
+            --secondary-color: #00ace0;
+            --accent-yellow: #ecbb1d;
+            --bg-light-blue: #f4f9fc;
+            --bg-white: #ffffff;
+            --text-dark: #1e293b;
+            --text-gray: #64748b;
+            --shadow-soft: 0 10px 30px -5px rgba(0, 0, 0, 0.05);
+            --radius-md: 12px;
+        }
+
+        body { 
+            margin: 0; padding: 0; 
+            font-family: 'Inter', sans-serif; 
+            background-color: var(--bg-light-blue);
+            color: var(--text-dark); 
+            line-height: 1.6; 
+        }
+        a { text-decoration: none; color: inherit; transition: 0.3s; }
+        ul { list-style: none; padding: 0; margin: 0; }
+        * { box-sizing: border-box; }
+
+        .container {
+            max-width: 1200px; margin: 0 auto; padding: 0 20px; width: 100%;
+        }
+
+        /* --- PAGE LOADER --- */
+        .page-loader {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-color: #ffffff; z-index: 99999;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            transition: opacity 0.5s ease, visibility 0.5s ease;
+            opacity: 1; visibility: visible;
+        }
+        .page-loader.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
+        .loader-spinner {
+            width: 50px; height: 50px;
+            border: 4px solid rgba(0, 111, 176, 0.1);
+            border-left-color: var(--primary-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite; margin-bottom: 15px;
+        }
+        .loader-text {
+            color: var(--primary-color); font-weight: 600; font-size: 14px; letter-spacing: 1px;
+            animation: pulseText 1.5s infinite ease-in-out;
+        }
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+        @keyframes pulseText { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+
+        /* --- HEADER STYLE --- */
+        header {
+            background-color: rgba(255, 255, 255, 0.98); backdrop-filter: blur(10px);
+            height: 80px; position: fixed; top: 0; left: 0; width: 100%; z-index: 1000;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05); transition: all 0.3s ease;
+        }
+        header.header-minimal { height: 60px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08); }
+        .header-content { display: flex; align-items: center; justify-content: space-between; height: 100%; }
+        .brand-area { display: flex; align-items: center; gap: 12px; cursor: pointer; }
+        .brand-logo-img { height: 45px; width: auto; object-fit: contain; }
+        .brand-text { font-size: 18px; font-weight: 800; color: var(--primary-color); line-height: 1.2; display: flex; flex-direction: column; }
+        .brand-text span { font-size: 11px; font-weight: 500; color: var(--text-gray); }
+
+        .nav-menu { height: 100%; display: flex; align-items: center; }
+        .menu-list { display: flex; gap: 25px; height: 100%; align-items: center; }
+        .menu-item { font-size: 14px; font-weight: 600; color: var(--text-dark); cursor: pointer; transition: 0.3s; height: 100%; display: flex; align-items: center; position: relative; }
+        .menu-item:hover { color: var(--primary-color); }
+        .menu-item:hover::after { width: 100%; }
+        .menu-item::after { content: ''; position: absolute; bottom: 0; left: 0; width: 0%; height: 3px; background: var(--accent-yellow); transition: 0.3s; }
+        
+        .dropdown-content { display: none; position: absolute; top: 100%; left: 0; background-color: #ffffff; min-width: 220px; box-shadow: 0 15px 30px rgba(0,0,0,0.1); border-radius: 0 0 8px 8px; z-index: 1000; padding: 10px 0; border-top: 3px solid var(--primary-color); animation: slideDown 0.3s ease; }
+        .menu-item:hover .dropdown-content { display: block; }
+        .dropdown-content li a { display: block; padding: 12px 20px; color: var(--text-dark); font-weight: 400; font-size: 14px; }
+        .dropdown-content li a:hover { background-color: var(--bg-light-blue); color: var(--primary-color); padding-left: 25px; }
+        @keyframes slideDown { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* --- PAGE HEADER (Style Lengkung) --- */
+        .page-header {
+            margin-top: 80px; padding: 60px 0;
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            color: white; text-align: center; position: relative; overflow: hidden;
+        }
+        .page-header::after {
+            content: ''; position: absolute; bottom: -50px; left: 0; width: 100%; height: 100px;
+            background: var(--bg-light-blue); border-radius: 50% 50% 0 0 / 100% 100% 0 0;
+            transform: scaleX(1.5);
+        }
+        .page-header h1 { font-size: 36px; font-weight: 800; margin: 0 0 10px 0; }
+        .page-header p { font-size: 16px; opacity: 0.9; max-width: 600px; margin: 0 auto; }
+
+        /* ========================================= */
+        /* --- [GALLERY STYLES] --- */
+        /* ========================================= */
+
+
+
+        /* Gallery Grid */
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); /* Responsif */
+            gap: 25px;
+            padding-bottom: 60px;
+        }
+
+        /* Gallery Card */
+        .gallery-card {
+            background: #fff; border-radius: 16px; overflow: hidden;
+            box-shadow: var(--shadow-soft); cursor: pointer; position: relative;
+            height: 280px; /* Tinggi tetap */
+            group: 'card'; /* Helper for identifying group */
+        }
+
+        /* Image Wrapper & Zoom Effect */
+        .img-wrapper {
+            width: 100%; height: 100%; overflow: hidden; position: relative;
+        }
+        .img-wrapper img {
+            width: 100%; height: 100%; object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+        .gallery-card:hover .img-wrapper img {
+            transform: scale(1.1); /* Zoom in effect */
+        }
+
+        /* Overlay Caption (Muncul saat hover) */
+        .overlay-caption {
+            position: absolute; bottom: 0; left: 0; width: 100%;
+            background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+            padding: 20px; color: #fff;
+            transform: translateY(100%); transition: transform 0.3s ease;
+            display: flex; flex-direction: column;
+        }
+        .gallery-card:hover .overlay-caption {
+            transform: translateY(0);
+        }
+        .overlay-caption h3 { margin: 0; font-size: 18px; font-weight: 700; color: var(--accent-yellow); }
+        .overlay-caption p { margin: 5px 0 0; font-size: 14px; opacity: 0.9; }
+
+        /* Icon Zoom Tengah (Opsional visual cue) */
+        .zoom-icon {
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0);
+            width: 50px; height: 50px; background: rgba(255,255,255,0.2); backdrop-filter: blur(5px);
+            border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            color: #fff; border: 1px solid rgba(255,255,255,0.5);
+            transition: 0.3s ease;
+        }
+        .gallery-card:hover .zoom-icon { transform: translate(-50%, -50%) scale(1); }
+
+
+
+        /* LIGHTBOX (MODAL) */
+        .lightbox {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.9); z-index: 10000;
+            display: none; align-items: center; justify-content: center;
+            opacity: 0; transition: opacity 0.3s ease;
+        }
+        .lightbox.active { display: flex; opacity: 1; }
+        .lightbox-img {
+            max-width: 90%; max-height: 85vh; border-radius: 8px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.5);
+        }
+        .close-lightbox {
+            position: absolute; top: 20px; right: 20px;
+            background: transparent; border: none; color: #fff; font-size: 30px; cursor: pointer;
+        }
+        .lightbox-caption {
+            position: absolute; bottom: 30px; color: #fff; font-size: 16px; text-align: center;
+            background: rgba(0,0,0,0.6); padding: 10px 20px; border-radius: 50px;
+        }
+
+        /* --- FOOTER & CHAT (SAMA) --- */
+        footer { background-color: var(--primary-color); color: white; padding-top: 70px; font-size: 14px; position: relative; }
+        .footer-grid { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 40px; padding-bottom: 50px; }
+        .footer-col { flex: 1; min-width: 250px; }
+        .footer-col h3 { color: var(--accent-yellow); margin-bottom: 25px; font-size: 18px; font-weight: 700; }
+        .footer-links a { color: rgba(255,255,255,0.8); display: block; margin-bottom: 12px; transition: 0.2s; }
+        .footer-links a:hover { color: #fff; transform: translateX(5px); }
+        .copyright { background-color: rgba(0,0,0,0.1); text-align: center; padding: 25px 0; color: rgba(255,255,255,0.6); border-top: 1px solid rgba(255,255,255,0.1); }
+
+        .chat-toggle-btn { position: fixed; bottom: 30px; right: 30px; width: 65px; height: 65px; background: linear-gradient(135deg, var(--primary-color), var(--primary-dark)); color: #fff; border: none; border-radius: 50%; box-shadow: 0 8px 25px rgba(0, 111, 176, 0.4); cursor: pointer; z-index: 9999; display: flex; align-items: center; justify-content: center; transition: 0.3s; }
+        .chat-toggle-btn.on-footer { background: var(--accent-yellow); color: var(--text-dark); }
+        .chat-box-container { position: fixed; bottom: 110px; right: 30px; width: 400px; height: 600px; max-height: 75vh; background: #fff; border-radius: 16px; box-shadow: 0 20px 50px rgba(0,0,0,0.2); z-index: 9998; opacity: 0; visibility: hidden; transform: translateY(20px); transition: 0.3s; overflow: hidden; display: flex; flex-direction: column; }
+        .chat-box-container.active { opacity: 1; visibility: visible; transform: translateY(0); }
+        .chat-header-widget { background: linear-gradient(135deg, var(--primary-color), var(--primary-dark)); padding: 15px; color: #fff; font-weight: bold; display: flex; align-items: center; gap: 10px; }
+
+        @media (max-width: 768px) {
+            .menu-list { display: none; }
+            .gallery-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="pageLoader" class="page-loader">
+        <div class="loader-spinner"></div>
+        <div class="loader-text">MEMUAT...</div>
+    </div>
+
+    <header id="mainHeader">
+        <div class="container header-content">
+            <div class="brand-area" onclick="window.location.href='index.html'">
+                <img src="balmonsmd.png" alt="Logo Balmon" class="brand-logo-img">
+                <div class="brand-text">
+                    BALMON SAMARINDA
+                    <span>Kementerian Komunikasi & Digital</span>
+                </div>
+            </div>
+            <nav class="nav-menu">
+                <ul class="menu-list">
+                    <li class="menu-item" onclick="window.location.href='index.html'">Beranda</li>
+                    <li class="menu-item">Layanan
+                        <ul class="dropdown-content">
+                            <li><a href="konsesi.html">Izin Konsesi</a></li>
+                            <li><a href="maritim.html">Izin Maritim</a></li>
+                            <li><a href="fm.html">Izin Penyiaran FM</a></li>
+                        </ul>
+                    </li>
+                    <li class="menu-item">Publikasi
+                        <ul class="dropdown-content">
+                            <li><a href="galeri.html" style="color:var(--primary-color);">Galeri Foto</a></li>
+                            <li><a href="#">Galeri Video</a></li>
+                        </ul>
+                    </li>
+                    <li class="menu-item" onclick="window.location.href='kontak.html'">Kontak</li>
+                </ul>
+                <button style="margin-left:10px; border:none; background:transparent; color:var(--primary-color); cursor:pointer;">
+                    <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                </button>
+            </nav>
+        </div>
+    </header>
+
+    <div class="page-header">
+        <div class="container">
+            <h1>Galeri Kegiatan</h1>
+            <p>Dokumentasi aktivitas pelayanan, monitoring, dan sosialisasi Balai Monitor Kelas I Samarinda.</p>
+        </div>
+    </div>
+
+    <div class="container">
+
+        <div class="gallery-grid">
+            
+            <div class="gallery-card" data-category="sosialisasi" onclick="openLightbox(this)">
+                <div class="img-wrapper">
+                    <img src="https://images.unsplash.com/photo-1551818255-e6e10975bc17?auto=format&fit=crop&w=600&q=80" alt="Sosialisasi Perizinan">
+                    <div class="zoom-icon"><svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg></div>
+                </div>
+                <div class="overlay-caption">
+                    <h3>Sosialisasi Perizinan</h3>
+                    <p>Kegiatan sosialisasi tertib frekuensi di Balikpapan.</p>
+                </div>
+            </div>
+
+            <div class="gallery-card" data-category="monitoring" onclick="openLightbox(this)">
+                <div class="img-wrapper">
+                    <img src="https://images.unsplash.com/photo-1581092160562-40aa08e78837?auto=format&fit=crop&w=600&q=80" alt="Monitoring Lapangan">
+                    <div class="zoom-icon"><svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg></div>
+                </div>
+                <div class="overlay-caption">
+                    <h3>Monitoring Lapangan</h3>
+                    <p>Tim penertiban melakukan pengukuran sinyal radio.</p>
+                </div>
+            </div>
+
+            <div class="gallery-card" data-category="ujian" onclick="openLightbox(this)">
+                <div class="img-wrapper">
+                    <img src="https://images.unsplash.com/photo-1434030216411-0b793f4b4173?auto=format&fit=crop&w=600&q=80" alt="Ujian CAT UNAR">
+                    <div class="zoom-icon"><svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg></div>
+                </div>
+                <div class="overlay-caption">
+                    <h3>Ujian UNAR</h3>
+                    <p>Pelaksanaan Ujian Negara Amatir Radio berbasis CAT.</p>
+                </div>
+            </div>
+
+            <div class="gallery-card" data-category="sosialisasi" onclick="openLightbox(this)">
+                <div class="img-wrapper">
+                    <img src="https://images.unsplash.com/photo-1544531586-fde5298cdd40?auto=format&fit=crop&w=600&q=80" alt="Rapat Koordinasi">
+                    <div class="zoom-icon"><svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg></div>
+                </div>
+                <div class="overlay-caption">
+                    <h3>Rapat Koordinasi</h3>
+                    <p>Koordinasi dengan instansi terkait penggunaan spektrum.</p>
+                </div>
+            </div>
+
+            <div class="gallery-card" data-category="monitoring" onclick="openLightbox(this)">
+                <div class="img-wrapper">
+                    <img src="s5.jpg" alt="Perangkat Monitoring">
+                    <div class="zoom-icon"><svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg></div>
+                </div>
+                <div class="overlay-caption">
+                    <h3>Perangkat Monitoring</h3>
+                    <p>Maintenance perangkat stasiun monitoring tetap.</p>
+                </div>
+            </div>
+
+            <div class="gallery-card" data-category="ujian" onclick="openLightbox(this)">
+                <div class="img-wrapper">
+                    <img src="https://images.unsplash.com/photo-1524178232363-1fb2b075b655?auto=format&fit=crop&w=600&q=80" alt="Peserta Ujian">
+                    <div class="zoom-icon"><svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg></div>
+                </div>
+                <div class="overlay-caption">
+                    <h3>Peserta Ujian</h3>
+                    <p>Antusiasme peserta UNAR reguler di Samarinda.</p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div id="lightbox" class="lightbox" onclick="closeLightbox(event)">
+        <button class="close-lightbox" onclick="closeLightbox(event)">&times;</button>
+        <img id="lightbox-img" class="lightbox-img" src="" alt="Fullscreen">
+        <div id="lightbox-caption" class="lightbox-caption">Caption Text</div>
+    </div>
+
+
+    <footer id="mainFooter">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <h3>Balmon Samarinda</h3>
+                    <p style="color:rgba(255,255,255,0.7); line-height:1.8;">
+                        Jalan Sultan Sulaiman No. 123<br>
+                        Samarinda, Kalimantan Timur.<br><br>
+                        <strong>Telp:</strong> 0856-4828-3012<br>
+                        <strong>Email:</strong> pelayananuptbalmonsamarinda@gmail.com
+                    </p>
+                </div>
+                <div class="footer-col">
+                    <h3>Tautan Cepat</h3>
+                    <div class="footer-links">
+                        <a href="#">Profil Organisasi</a>
+                        <a href="#">Standar Pelayanan</a>
+                        <a href="#">Pengaduan Masyarakat</a>
+                    </div>
+                </div>
+                <div class="footer-col">
+                    <h3>Jam Pelayanan</h3>
+                    <p style="color:rgba(255,255,255,0.7);">
+                        Senin - Kamis: 08.00 - 16.00<br>
+                        Jumat: 08.00 - 16.30<br>
+                        Sabtu - Minggu: Libur
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="copyright">Copyright@2024 Balai Monitor Spektrum Frekuensi Radio Kelas I Samarinda</div>
+    </footer>
+
+    <div class="chat-box-container" id="chatBox">
+        <div class="chat-header-widget">
+            <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>
+            Sobat Digi
+        </div>
+        <iframe src="https://MagangBalmon2619-Chat-Balmon.hf.space" style="width: 100%; height: 100%; border: none;"></iframe>
+    </div>
+
+    <button class="chat-toggle-btn" id="toggleBtn" onclick="toggleChat()">
+        <svg width="30" height="30" viewBox="0 0 24 24" fill="#fff"><path d="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg>
+    </button>
+
+    <script>
+        // --- PAGE LOADER & LINK HANDLER ---
+        window.addEventListener('load', () => {
+            const loader = document.getElementById('pageLoader');
+            if(loader) loader.classList.add('hidden');
+        });
+        window.addEventListener('pageshow', (event) => {
+            const loader = document.getElementById('pageLoader');
+            if (event.persisted && loader) loader.classList.add('hidden');
+        });
+        document.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', function(e) {
+                const href = this.getAttribute('href');
+                const target = this.getAttribute('target');
+                if (href && !href.startsWith('#') && !href.startsWith('javascript') && target !== '_blank') {
+                    e.preventDefault(); 
+                    const loader = document.getElementById('pageLoader');
+                    loader.classList.remove('hidden'); 
+                    setTimeout(() => { window.location.href = href; }, 500);
+                }
+            });
+        });
+
+
+
+        // --- LIGHTBOX LOGIC ---
+        function openLightbox(element) {
+            const imgSrc = element.querySelector('img').src;
+            const captionText = element.querySelector('.overlay-caption h3').innerText;
+            
+            const lightbox = document.getElementById('lightbox');
+            const lightboxImg = document.getElementById('lightbox-img');
+            const lightboxCap = document.getElementById('lightbox-caption');
+
+            lightboxImg.src = imgSrc;
+            lightboxCap.innerText = captionText;
+            lightbox.classList.add('active');
+        }
+
+        function closeLightbox(e) {
+            // Tutup jika klik tombol close atau klik area background (bukan gambar)
+            if (e.target.id === 'lightbox' || e.target.classList.contains('close-lightbox')) {
+                document.getElementById('lightbox').classList.remove('active');
+            }
+        }
+
+        // --- CHAT & SCROLL ---
+        function toggleChat() {
+            document.getElementById("chatBox").classList.toggle("active");
+        }
+
+        window.addEventListener('scroll', function() {
+            const chatBtn = document.getElementById('toggleBtn');
+            const footer = document.getElementById('mainFooter');
+            const header = document.getElementById('mainHeader');
+            
+            if (window.scrollY > 50) header.classList.add('header-minimal');
+            else header.classList.remove('header-minimal');
+
+            const btnRect = chatBtn.getBoundingClientRect();
+            const footerRect = footer.getBoundingClientRect();
+            
+            if (footerRect.top < window.innerHeight && btnRect.bottom > footerRect.top) {
+                chatBtn.classList.add('on-footer'); 
+            } else {
+                chatBtn.classList.remove('on-footer'); 
+            }
+        });
+    </script>
+
+</body>
+</html>
