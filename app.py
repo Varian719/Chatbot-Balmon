@@ -1,6 +1,9 @@
 import streamlit as st
 import os
 import sys
+import base64  # Penting untuk membaca gambar
+import io
+from gtts import gTTS
 
 # --- 1. FIX DATABASE ---
 try:
@@ -10,37 +13,87 @@ except ImportError:
     pass
 
 from openai import OpenAI
-# Import alat baca PDF dan WORD
-from langchain_community.document_loaders import PyPDFLoader, Docx2txtLoader
+from langchain_community.document_loaders import PyPDFLoader, Docx2txtLoader, TextLoader
 from langchain_community.vectorstores import Chroma
 from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 
-# --- 2. SETUP HALAMAN ---
-st.set_page_config(page_title="Asisten Balmon", page_icon="📡")
+# --- 2. CONFIG HALAMAN ---
+st.set_page_config(
+    page_title="Asisten Balmon", 
+    page_icon="📡", 
+    layout="centered"
+)
 
-# --- CSS DESAIN ---
+# --- 3. CSS AGAR TAMPILAN RAPI & BERSIH ---
 st.markdown("""
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
-    html, body, [class*="css"] { font-family: 'Inter', sans-serif; }
+
+    /* Background Putih */
+    .stApp { background-color: #ffffff !important; }
     
+    /* Paksa Huruf Jadi Hitam/Gelap */
+    html, body, p, li, h1, h2, h3, h4, span, div {
+        font-family: 'Inter', sans-serif;
+        color: #333333 !important;
+    }
+
+    /* Hilangkan Header Streamlit */
     header[data-testid="stHeader"] { visibility: hidden; height: 0%; }
     .stDeployButton, #MainMenu, footer { display:none; }
+    
     .block-container { padding-top: 2rem; padding-bottom: 5rem; }
 
-    .st-emotion-cache-16idsys p { background-color: #006fb0 !important; color: white !important; }
-    .st-emotion-cache-16idsys svg { fill: #006fb0 !important; }
-    .stChatInputContainer { border-color: #006fb0 !important; }
-    button[kind="primary"] { background-color: #006fb0 !important; border: none; color: white !important; }
-    button[kind="primary"]:hover { background-color: #005082 !important; }
-    h1 { color: #006fb0 !important; font-size: 1.8rem !important; }
+    /* Bubble Chat User & Bot */
+    div[data-testid="stChatMessage"] {
+        background-color: #f8f9fa; 
+        border: 1px solid #e0e0e0;
+        border-radius: 15px;
+        padding: 10px;
+    }
+    
+    /* Tombol Kirim */
+    button[kind="primary"] {
+        background-color: #006fb0 !important;
+        border: none;
+        color: white !important;
+    }
     </style>
 """, unsafe_allow_html=True)
 
-st.title("📡 Chatbot Balmon Samarinda")
+# --- 4. FUNGSI LOAD GAMBAR (KUNCI AGAR LOGO MUNCUL) ---
+def get_img_as_base64(file):
+    try:
+        with open(file, "rb") as f:
+            data = f.read()
+        return base64.b64encode(data).decode()
+    except Exception as e:
+        return None
 
-# --- 3. API KEY ---
+# --- 5. HEADER DENGAN LOGO ---
+logo_filename = "logo_komdigi.png"  # Sesuai nama file di screenshot Anda
+img_base64 = get_img_as_base64(logo_filename)
+
+if img_base64:
+    # Jika gambar berhasil dibaca, tampilkan dengan HTML Base64
+    st.markdown(
+        f"""
+        <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 20px; padding-bottom: 15px; border-bottom: 2px solid #006fb0;">
+            <img src="data:image/png;base64,{img_base64}" alt="Logo" style="height: 60px; width: auto;">
+            <div>
+                <h1 style="margin: 0; color: #006fb0 !important; font-size: 1.5rem; font-weight: 700;">Asisten AI</h1>
+                <h2 style="margin: 0; color: #555 !important; font-size: 0.9rem; font-weight: 400;">Balai Monitor SFR Kelas I Samarinda</h2>
+            </div>
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
+else:
+    # Fallback jika gambar gagal dimuat
+    st.markdown("### 📡 Asisten Balmon Samarinda")
+
+# --- 6. API KEY ---
 api_key = os.environ.get("GROQ_API_KEY")
 if not api_key:
     try:
@@ -51,63 +104,52 @@ if not api_key:
 
 client = OpenAI(api_key=api_key, base_url="https://api.groq.com/openai/v1")
 
-# --- 4. DATABASE (SUPPORT PDF & WORD) ---
+# --- 7. DATABASE & RAG ---
 DB_PATH = "./chroma_db_fix"
 
 @st.cache_resource
 def get_vectorstore():
     embedding_function = HuggingFaceEmbeddings(model_name="sentence-transformers/all-MiniLM-L6-v2")
     
-    # Cek DB lama
+    # Cek DB yang sudah ada
     if os.path.exists(DB_PATH):
         try:
             db = Chroma(persist_directory=DB_PATH, embedding_function=embedding_function)
-            if len(db.get()['ids']) > 0:
-                return db
-        except:
-            pass 
+            if len(db.get()['ids']) > 0: return db
+        except: pass 
     
-    # --- SCAN FILE (PDF & WORD) ---
+    # Scan Dokumen Baru
     documents = []
-    
     for root, dirs, files in os.walk("."):
         for file in files:
             full_path = os.path.join(root, file)
             try:
-                # Jika PDF
-                if file.lower().endswith(".pdf"):
-                    loader = PyPDFLoader(full_path)
-                    documents.extend(loader.load())
-                
-                # Jika WORD (.docx)
-                elif file.lower().endswith(".docx"):
-                    loader = Docx2txtLoader(full_path)
-                    documents.extend(loader.load())
-            except:
-                pass # Lewati file yang error/rusak
+                if file.lower().endswith(".pdf"): documents.extend(PyPDFLoader(full_path).load())
+                elif file.lower().endswith(".docx"): documents.extend(Docx2txtLoader(full_path).load())
+                elif file.lower().endswith(".txt") and "requirements" not in file: 
+                     documents.extend(TextLoader(full_path, encoding='utf-8').load())
+            except: pass
     
-    if not documents:
-        return None
-
-    # Proses Database
+    if not documents: return None
+    
     text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=200)
     splits = text_splitter.split_documents(documents)
     db = Chroma.from_documents(documents=splits, embedding=embedding_function, persist_directory=DB_PATH)
-    
     return db
 
-# Load Database
 db = get_vectorstore()
 
-# --- 5. CHAT INTERFACE ---
+# --- 8. LOGIKA CHAT ---
 if "messages" not in st.session_state:
     st.session_state.messages = []
 
 for message in st.session_state.messages:
     with st.chat_message(message["role"]):
         st.markdown(message["content"])
+        if message["role"] == "assistant" and "audio" in message:
+             st.audio(message["audio"], format="audio/mp3")
 
-if user_input := st.chat_input("Tanya seputar layanan Balmon..."):
+if user_input := st.chat_input("Tanyakan sesuatu..."):
     st.session_state.messages.append({"role": "user", "content": user_input})
     with st.chat_message("user"):
         st.markdown(user_input)
@@ -115,10 +157,9 @@ if user_input := st.chat_input("Tanya seputar layanan Balmon..."):
     konteks = ""
     if db:
         try:
-            docs = db.similarity_search(user_input, k=4)
+            docs = db.similarity_search(user_input, k=3)
             konteks = "\n\n".join([d.page_content for d in docs])
-        except:
-            pass
+        except: konteks = ""
 
     system_prompt = f"""
     Kamu adalah Asisten AI Balmon Samarinda.
@@ -137,12 +178,29 @@ if user_input := st.chat_input("Tanya seputar layanan Balmon..."):
 
     with st.chat_message("assistant"):
         try:
-            stream = client.chat.completions.create(
+            completion = client.chat.completions.create(
                 model="llama-3.3-70b-versatile",
-                messages=[{"role": "system", "content": system_prompt}, {"role": "user", "content": user_input}],
-                temperature=0.5, stream=True
+                messages=[
+                    {"role": "system", "content": system_prompt},
+                    {"role": "user", "content": user_input}
+                ],
+                temperature=0.3,
+                stream=False
             )
-            response = st.write_stream(stream)
-            st.session_state.messages.append({"role": "assistant", "content": response})
-        except:
-            st.error("Error koneksi.")
+            response_text = completion.choices[0].message.content
+            st.markdown(response_text)
+            
+            # TTS Generation
+            tts = gTTS(text=response_text, lang='id')
+            audio_buffer = io.BytesIO()
+            tts.write_to_fp(audio_buffer)
+            audio_buffer.seek(0)
+            st.audio(audio_buffer, format="audio/mp3")
+            
+            st.session_state.messages.append({
+                "role": "assistant", 
+                "content": response_text,
+                "audio": audio_buffer
+            })
+        except Exception as e:
+            st.error(f"Error: {e}")
