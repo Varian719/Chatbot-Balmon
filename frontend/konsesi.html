@@ -41,6 +41,51 @@
             max-width: 1200px; margin: 0 auto; padding: 0 20px; width: 100%;
         }
 
+        /* ========================================= */
+        /* --- [NEW] PAGE TRANSITION LOADER CSS --- */
+        /* ========================================= */
+        .page-loader {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background-color: #ffffff;
+            z-index: 99999; /* Paling atas */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.5s ease, visibility 0.5s ease;
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .page-loader.hidden {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+
+        .loader-spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid rgba(0, 111, 176, 0.1);
+            border-left-color: var(--primary-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 15px;
+        }
+
+        .loader-text {
+            color: var(--primary-color);
+            font-weight: 600;
+            font-size: 14px;
+            letter-spacing: 1px;
+            animation: pulseText 1.5s infinite ease-in-out;
+        }
+
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+        @keyframes pulseText { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+
         /* --- HEADER STYLE --- */
         header {
             background-color: rgba(255, 255, 255, 0.95);
@@ -221,6 +266,11 @@
 </head>
 <body>
 
+    <div id="pageLoader" class="page-loader">
+        <div class="loader-spinner"></div>
+        <div class="loader-text">MEMUAT...</div>
+    </div>
+
     <header id="mainHeader">
         <div class="container header-content">
             <div class="brand-area" onclick="window.location.href='index.html'">
@@ -233,7 +283,7 @@
             
             <nav class="nav-menu">
                 <ul class="menu-list">
-                    <li class="menu-item">Beranda</li>
+                    <li class="menu-item" onclick="window.location.href='index.html'">Beranda</li>
                     <li class="menu-item">Layanan
                         <ul class="dropdown-content">
                             <li><a href="konsesi.html">Izin Konsesi</a></li>
@@ -352,7 +402,7 @@
             <div class="sidebar-card">
                 <h3 style="margin-top:0; color:var(--text-dark);">Aksi Cepat</h3>
                 <p style="font-size:13px;">Gunakan tombol di bawah ini untuk memulai proses atau mengunduh panduan.</p>
-                                        
+                                          
                 <div style="margin-top: 20px;">
                     <a href="#" class="btn-download">
                         <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
@@ -415,6 +465,44 @@
     </button>
 
     <script>
+        // --- [NEW] LOGIKA PAGE TRANSITION (LOADING) ---
+        
+        // Hilangkan loader saat halaman selesai dimuat (Load Event)
+        window.addEventListener('load', () => {
+            const loader = document.getElementById('pageLoader');
+            if(loader) loader.classList.add('hidden');
+        });
+
+        // Tangani masalah tombol "Back" di browser (bfcache)
+        window.addEventListener('pageshow', (event) => {
+            const loader = document.getElementById('pageLoader');
+            if (event.persisted && loader) {
+                loader.classList.add('hidden');
+            }
+        });
+
+        // Intercept Link Clicks untuk menampilkan Loader sebelum pindah halaman
+        document.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', function(e) {
+                const href = this.getAttribute('href');
+                const target = this.getAttribute('target');
+
+                // Hanya jalankan jika link valid, bukan hash (#), bukan JS, dan bukan open new tab
+                if (href && href !== '#' && !href.startsWith('javascript') && target !== '_blank') {
+                    e.preventDefault(); // Stop perpindahan langsung
+                    
+                    const loader = document.getElementById('pageLoader');
+                    loader.classList.remove('hidden'); // Munculkan loader
+
+                    // Tunggu animasi sebentar (500ms) lalu pindah
+                    setTimeout(() => {
+                        window.location.href = href;
+                    }, 500);
+                }
+            });
+        });
+
+        // --- EXISTING LOGIC ---
         function animateChatToggle() {
             const btn = document.getElementById("toggleBtn");
             const box = document.getElementById("chatBox");
