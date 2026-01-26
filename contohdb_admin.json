@@ -1,0 +1,66 @@
+{
+    "users_admin": {
+      "uid_firebase_12345": {
+        "nama": "Admin Utama",
+        "email": "admin@balmon.go.id",
+        "role": "super_admin",
+        "last_login": "2025-01-26"
+      }
+    },
+    "dokumen_publik": {
+      "doc_001": {
+        "judul": "SOP Pelayanan ISR 2025",
+        "kategori": "SOP",
+        "deskripsi": "Panduan lengkap pengurusan izin stasiun radio.",
+        "file_url": "https://firebasestorage.googleapis.com/.../sop_isr.pdf",
+        "file_type": "pdf",
+        "ukuran": "2.5 MB",
+        "tanggal_upload": "2025-01-20"
+      },
+      "doc_002": {
+        "judul": "Surat Edaran Frekuensi 2.4 GHz",
+        "kategori": "Regulasi",
+        "deskripsi": "Aturan penggunaan pita frekuensi WiFi.",
+        "file_url": "https://firebasestorage.googleapis.com/.../edaran_wifi.pdf",
+        "file_type": "pdf",
+        "ukuran": "1.1 MB",
+        "tanggal_upload": "2025-01-22"
+      }
+    },
+    "galeri_kegiatan": {
+      "img_001": {
+        "judul": "Pemusnahan Barang Bukti",
+        "caption": "Kegiatan pemusnahan alat ilegal di halaman kantor.",
+        "image_url": "https://firebasestorage.googleapis.com/.../img_musnah.png",
+        "tanggal": "2025-01-25"
+      },
+      "img_002": {
+        "judul": "Kunjungan Dirjen SDPPI",
+        "caption": "Foto bersama staf Balmon.",
+        "image_url": "https://firebasestorage.googleapis.com/.../kunjungan.jpg",
+        "tanggal": "2025-01-10"
+      }
+    },
+    "banner_website": {
+      "banner_utama": {
+        "text_header": "Selamat Datang di Balmon",
+        "text_subheader": "Pelayanan Cepat, Tepat, Transparan",
+        "background_image_url": "https://firebasestorage.googleapis.com/.../banner_depan.jpg",
+        "aktif": true
+      },
+      "banner_info": {
+        "text_header": "Jadwal Ujian REOR",
+        "background_image_url": "https://firebasestorage.googleapis.com/.../banner_ujian.png",
+        "aktif": false
+      }
+    },
+    "berita": {
+      "news_001": {
+        "judul": "Pemusnahan Perangkat Ilegal",
+        "konten": "Isi berita panjang...",
+        "thumbnail_url": "https://firebasestorage.googleapis.com/.../thumb_news1.jpg",
+        "lampiran_pdf_url": "", 
+        "tanggal": "2025-01-20"
+      }
+    }
+  }
