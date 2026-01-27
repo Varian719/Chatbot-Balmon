@@ -10,7 +10,7 @@
 
     <style>
         /* ========================================= */
-        /* --- 1. GLOBAL STYLE (ASLI KONSESI.HTML) --- */
+        /* --- 1. GLOBAL STYLE (Sesuai Konsesi) --- */
         /* ========================================= */
         :root {
             --primary-color: #006fb0;
@@ -38,9 +38,7 @@
         ul { list-style: none; padding: 0; margin: 0; }
         * { box-sizing: border-box; }
 
-        .container {
-            max-width: 1200px; margin: 0 auto; padding: 0 20px; width: 100%;
-        }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; width: 100%; }
 
         /* --- LOADER --- */
         .page-loader {
@@ -111,7 +109,7 @@
         header.header-minimal .brand-text { display: none; }
         header.header-minimal .brand-logo-img { height: 35px; margin: 0; }
 
-        /* --- PAGE CONTENT --- */
+        /* --- CONTENT STYLE --- */
         .page-header {
             padding-top: 120px; padding-bottom: 60px;
             background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
@@ -130,8 +128,9 @@
             margin-top: -40px; margin-bottom: 60px; position: relative; z-index: 10;
         }
 
-        /* --- MODIFIKASI: STYLE KHUSUS DAFTAR ARSIP --- */
-        /* Menggunakan style dasar .content-card tapi kita modif sedikit untuk list */
+        /* --- MODIFIKASI KHUSUS ARSIP (Gaya tetap sama) --- */
+        
+        /* 1. Kolom Pencarian */
         .search-wrapper {
             background: #fff; padding: 20px; border-radius: 16px; 
             box-shadow: 0 5px 20px rgba(0,0,0,0.05); margin-bottom: 25px;
@@ -139,33 +138,37 @@
         }
         .search-input {
             flex: 1; border: 1px solid #eee; background: #f8f9fa; padding: 12px 20px;
-            border-radius: 50px; font-family: 'Inter', sans-serif; font-size: 15px;
+            border-radius: 50px; font-family: 'Inter', sans-serif; font-size: 15px; outline: none;
         }
+        .search-input:focus { border-color: var(--secondary-color); background: #fff; }
         .search-btn {
             background: var(--accent-yellow); color: var(--primary-dark); font-weight: bold;
             border: none; padding: 0 25px; border-radius: 50px; cursor: pointer; transition: 0.3s;
         }
         .search-btn:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(236,187,29,0.3); }
 
-        /* Container untuk item dokumen */
+        /* 2. Kartu Dokumen (Doc Item) */
         .doc-item {
             background: #fff; border-radius: 16px; padding: 25px;
             box-shadow: 0 5px 20px rgba(0,0,0,0.05);
             margin-bottom: 15px; border-left: 5px solid var(--text-gray);
-            transition: transform 0.2s; display: flex; align-items: center; justify-content: space-between; gap: 20px;
+            transition: transform 0.2s, box-shadow 0.2s; display: flex; align-items: center; justify-content: space-between; gap: 20px;
         }
-        .doc-item:hover { transform: translateX(5px); }
+        .doc-item:hover { transform: translateY(-3px); box-shadow: 0 10px 25px rgba(0,0,0,0.08); }
+        
         .doc-item.pdf { border-left-color: var(--accent-red); }
         .doc-item.doc { border-left-color: var(--primary-color); }
         
+        .doc-info { flex: 1; }
         .doc-info h3 { font-size: 16px; font-weight: 700; margin: 0 0 5px 0; color: var(--text-dark); }
-        .doc-info span { font-size: 12px; color: var(--text-gray); display: flex; align-items: center; gap: 5px; }
-        
-        .doc-action .btn-dl {
+        .doc-info span { font-size: 12px; color: var(--text-gray); display: flex; align-items: center; gap: 8px; }
+
+        .btn-dl {
             padding: 8px 20px; border-radius: 50px; border: 1px solid var(--primary-color);
             color: var(--primary-color); font-size: 13px; font-weight: 600; background: transparent;
+            white-space: nowrap; display: inline-flex; align-items: center; gap: 5px;
         }
-        .doc-action .btn-dl:hover { background: var(--primary-color); color: #fff; }
+        .btn-dl:hover { background: var(--primary-color); color: #fff; }
 
         /* --- SIDEBAR STYLE (ASLI) --- */
         .sidebar-card {
@@ -190,6 +193,7 @@
         .footer-links a:hover { color: #fff; transform: translateX(5px); }
         .copyright { background-color: rgba(0,0,0,0.1); text-align: center; padding: 25px 0; color: rgba(255,255,255,0.6); border-top: 1px solid rgba(255,255,255,0.1); }
 
+        /* CHAT WIDGET STYLES (ASLI) */
         .chat-toggle-btn { position: fixed; bottom: 30px; right: 30px; width: 65px; height: 65px; background: linear-gradient(135deg, var(--primary-color), var(--primary-dark)); color: #ffffff; border: none; border-radius: 50%; box-shadow: 0 8px 25px rgba(0, 111, 176, 0.4); cursor: pointer; z-index: 9999; display: flex; align-items: center; justify-content: center; transition: transform 0.3s; }
         .chat-toggle-btn:hover { transform: scale(1.1); }
         .chat-toggle-btn svg { position: absolute; width: 28px; height: 28px; transition: all 0.4s; pointer-events: none; }
@@ -200,11 +204,16 @@
         .chat-box-container { position: fixed; bottom: 110px; right: 30px; width: 400px; height: 600px; max-height: 75vh; background: #fff; border-radius: 16px; box-shadow: 0 20px 50px rgba(0,0,0,0.2); z-index: 9998; opacity: 0; visibility: hidden; transform: translateY(20px); transition: 0.3s; border: 1px solid #eee; overflow: hidden; display: flex; flex-direction: column; }
         .chat-box-container.active { opacity: 1; visibility: visible; transform: translateY(0); }
         .chat-header { background: linear-gradient(135deg, var(--primary-color), var(--primary-dark)); padding: 15px 20px; color: #fff; display: flex; align-items: center; gap: 15px; }
+        .chat-logo-bg { width: 45px; height: 45px; background: rgba(255,255,255,0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+        .chat-title h4 { margin: 0; font-size: 16px; font-weight: 700; }
+        .chat-title span { font-size: 12px; opacity: 0.9; }
 
         @media (max-width: 900px) {
             .content-grid { grid-template-columns: 1fr; margin-top: 0; }
             .sidebar-card { position: relative; top: 0; order: -1; }
-            .page-header { padding-bottom: 40px; }
+            .doc-item { flex-direction: column; align-items: flex-start; }
+            .doc-item .doc-action { width: 100%; margin-top: 15px; }
+            .btn-dl { width: 100%; justify-content: center; }
         }
     </style>
 </head>
@@ -254,34 +263,51 @@
 
     <div class="container content-grid">
         
+        <!-- BAGIAN KIRI: DAFTAR DOKUMEN FIREBASE -->
         <div class="content-left">
             
+            <!-- SEARCH BAR (Hanya Judul) -->
             <div class="search-wrapper">
-                <input type="text" id="searchInput" class="search-input" placeholder="Cari dokumen, peraturan, atau surat keputusan...">
+                <input type="text" id="searchInput" class="search-input" placeholder="Cari dokumen (judul)...">
                 <button class="search-btn"><i class="bi bi-search"></i></button>
             </div>
 
+            <!-- HASIL DATA -->
             <div id="docListContainer">
                 <div style="text-align:center; padding: 40px; color:var(--text-gray);">
                     <div class="loader-spinner" style="margin:0 auto 15px auto; width:30px; height:30px; border-width:3px;"></div>
-                    <p>Mengambil data dari server...</p>
+                    <p>Mengambil data arsip...</p>
                 </div>
             </div>
 
         </div>
 
+        <!-- BAGIAN KANAN: SIDEBAR (SAMA PERSIS DENGAN KONSESI) -->
         <div class="sidebar-area">
             <div class="sidebar-card">
                 <h3 style="margin-top:0; color:var(--text-dark);">Informasi</h3>
-                <p style="font-size:13px;">Dokumen yang tersedia di sini adalah dokumen publik yang dapat diunduh oleh masyarakat umum.</p>
-                
+                <p style="font-size:13px;">Dokumen ini bersifat publik dan dapat diunduh untuk kebutuhan referensi regulasi atau panduan teknis.</p>
                 <hr style="border:0; border-top:1px solid #eee; margin:15px 0;">
-
-                <h3 style="margin-top:0; color:var(--text-dark); font-size:16px;">Kategori Populer</h3>
-                <div style="display:flex; flex-wrap:wrap; gap:8px; margin-top:10px;">
-                    <span style="background:#f1f5f9; padding:5px 12px; border-radius:20px; font-size:12px; color:var(--text-gray);">Regulasi</span>
-                    <span style="background:#f1f5f9; padding:5px 12px; border-radius:20px; font-size:12px; color:var(--text-gray);">SOP</span>
-                    <span style="background:#f1f5f9; padding:5px 12px; border-radius:20px; font-size:12px; color:var(--text-gray);">Renstra</span>
+                <h3 style="margin-top:0; color:var(--text-dark); font-size:16px;">Total Arsip</h3>
+                <div style="background:#f8f9fa; padding:15px; border-radius:12px; text-align:center;">
+                    <h2 id="totalDocs" style="margin:0; color:var(--primary-color);">0</h2>
+                    <span style="font-size:12px; color:var(--text-gray);">Dokumen Tersedia</span>
+                </div>
+            </div>
+            
+             <!-- Link ke Dokumen Penting (Statis) -->
+             <div class="sidebar-card">
+                <h3 style="margin-top:0; color:var(--text-dark);">Aksi Cepat</h3>
+                <p style="font-size:13px;">Akses cepat ke panduan utama.</p>
+                <div style="margin-top: 20px;">
+                    <!-- DOWNLOAD LINK PANDUAN -->
+                    <a href="files/panduan_teknis.pdf" class="btn-download" download>
+                        <i class="bi bi-file-earmark-pdf-fill"></i> Panduan Teknis
+                    </a>
+                     <!-- DOWNLOAD LINK FORMULIR -->
+                     <a href="files/formulir_manual.pdf" class="btn-download" download>
+                        <i class="bi bi-file-earmark-text-fill"></i> Formulir Manual
+                    </a>
                 </div>
             </div>
         </div>
@@ -316,11 +342,37 @@
         <div class="copyright">Copyright@2024 Balai Monitor Spektrum Frekuensi Radio Kelas I Samarinda</div>
     </footer>
 
+    <!-- CHAT BOX CONTAINER (SAMA DENGAN KONSESI) -->
+    <div class="chat-box-container" id="chatBox">
+        <div class="chat-header">
+            <div class="chat-logo-bg">
+                <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>
+            </div>
+            <div class="chat-title">
+                <h4>Sobat Digi</h4>
+                <span style="font-size: 12px; opacity: 0.9;">Online - Siap Membantu</span>
+            </div>
+        </div>
+        <!-- IFRAME CHATBOT -->
+        <iframe 
+            src="https://MagangBalmon2619-Chat-Balmon.hf.space" 
+            style="width: 100%; height: 100%; border: none; background: #fff;" 
+            allow="clipboard-write; microphone"
+        ></iframe>
+    </div>
+
+    <!-- TOMBOL CHAT -->
+    <button class="chat-toggle-btn" id="toggleBtn" onclick="animateChatToggle()">
+        <svg class="icon-message" viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 9h12v2H6V9zm8 5H6v-2h8v2zm4-6H6V6h12v2z"/></svg>
+        <svg class="icon-close" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+    </button>
+
+    <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 
     <script>
-        // 1. CONFIG FIREBASE (Sesuai Data Anda)
+        // 1. CONFIG FIREBASE
         const firebaseConfig = {
             apiKey: "AIzaSyDUeIg9Zn_xndPXtChO8KufXFp6EMtqBJ0",
             authDomain: "admin-pelayanan-balmon.firebaseapp.com",
@@ -332,84 +384,107 @@
         if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
 
-        // 2. LOGIKA RENDER DOKUMEN
+        // 2. VARIABEL
         const container = document.getElementById('docListContainer');
         const searchInput = document.getElementById('searchInput');
+        const totalDocsLabel = document.getElementById('totalDocs');
         let allDocs = [];
 
-        // Ambil data dari 'arsip_drive'
+        // 3. AMBIL DATA DARI FIREBASE (Realtime)
+        // Sesuai gambar: Node = 'arsip_drive'
         db.ref('arsip_drive').on('value', snap => {
             if(!snap.exists()) {
-                container.innerHTML = `
-                    <div style="text-align:center; padding:40px; background:#fff; border-radius:16px;">
-                        <p>Belum ada arsip dokumen.</p>
-                    </div>`;
+                container.innerHTML = `<div style="text-align:center; padding:40px;"><p>Belum ada dokumen.</p></div>`;
+                totalDocsLabel.innerText = "0";
                 return;
             }
 
             allDocs = [];
-            snap.forEach(c => allDocs.push(c.val()));
-            allDocs.reverse(); // Terbaru diatas
+            snap.forEach(child => {
+                const val = child.val();
+                // Simpan data, pastikan drive_id ada
+                allDocs.push({
+                    judul: val.judul || 'Tanpa Judul',
+                    tipe: val.tipe || 'file',
+                    drive_id: val.drive_id || '',
+                    timestamp: val.timestamp || Date.now()
+                });
+            });
             
+            // Urutkan (Terbaru di atas)
+            allDocs.sort((a, b) => b.timestamp - a.timestamp);
+            
+            // Update UI
+            totalDocsLabel.innerText = allDocs.length;
             renderDocs(allDocs);
         });
 
-        function renderDocs(data) {
+        // 4. FUNGSI RENDER (TAMPILKAN DATA)
+        function renderDocs(dataList) {
             container.innerHTML = '';
-            
-            if(data.length === 0) {
-                container.innerHTML = '<p style="text-align:center; padding:20px;">Tidak ditemukan dokumen.</p>';
+
+            if(dataList.length === 0) {
+                container.innerHTML = `
+                    <div style="text-align:center; padding:40px; color:var(--text-gray);">
+                        <i class="bi bi-search" style="font-size:2rem; opacity:0.5;"></i>
+                        <p>Dokumen tidak ditemukan.</p>
+                    </div>`;
                 return;
             }
 
-            data.forEach(d => {
-                // Deteksi Tipe (PDF/Word)
-                let typeClass = 'doc';
-                let iconClass = 'bi-file-earmark-text';
-                let typeLabel = 'Dokumen';
+            let htmlBuffer = '';
 
-                if(d.tipe && d.tipe.includes('pdf')) {
+            dataList.forEach(d => {
+                // Tentukan Icon & Warna Border
+                let typeClass = 'doc';
+                let iconClass = 'bi-file-earmark-text-fill text-primary';
+                
+                // Cek tipe file dari string MIME type atau ekstensi
+                if(d.tipe && d.tipe.toLowerCase().includes('pdf')) {
                     typeClass = 'pdf';
-                    iconClass = 'bi-file-earmark-pdf-fill text-danger'; // Bootstrap Icon class
-                    typeLabel = 'PDF File';
+                    iconClass = 'bi-file-earmark-pdf-fill text-danger'; 
                 } else if(d.tipe && (d.tipe.includes('word') || d.tipe.includes('doc'))) {
                     iconClass = 'bi-file-earmark-word-fill text-primary';
-                    typeLabel = 'Word Doc';
                 }
 
-                const date = new Date(d.timestamp).toLocaleDateString('id-ID', {
+                // Format Tanggal
+                let dateStr = new Date(d.timestamp).toLocaleDateString('id-ID', {
                     day: 'numeric', month: 'long', year: 'numeric'
                 });
 
-                // HTML Item Dokumen
-                const html = `
+                // Buat Link Download dari drive_id
+                // Menggunakan format export=download agar langsung terunduh/terbuka
+                const downloadLink = `https://drive.google.com/uc?export=download&id=${d.drive_id}`;
+
+                htmlBuffer += `
                 <div class="doc-item ${typeClass}">
-                    <div style="display:flex; align-items:center; gap:15px;">
+                    <div style="display:flex; align-items:center; gap:15px; flex:1;">
                         <i class="bi ${iconClass}" style="font-size:32px;"></i>
                         <div class="doc-info">
                             <h3>${d.judul}</h3>
-                            <span><i class="bi bi-clock"></i> ${date} &nbsp;|&nbsp; ${typeLabel}</span>
+                            <span><i class="bi bi-calendar3"></i> ${dateStr}</span>
                         </div>
                     </div>
                     <div class="doc-action">
-                        <a href="${d.url}" target="_blank" class="btn-dl">
-                            <i class="bi bi-download"></i> Unduh
+                        <a href="${downloadLink}" target="_blank" class="btn-dl">
+                            <i class="bi bi-cloud-arrow-down-fill"></i> Unduh
                         </a>
                     </div>
                 </div>
                 `;
-                container.innerHTML += html;
             });
+
+            container.innerHTML = htmlBuffer;
         }
 
-        // Fitur Pencarian
+        // 5. FUNGSI PENCARIAN (Filter Judul Saja)
         searchInput.addEventListener('keyup', (e) => {
             const keyword = e.target.value.toLowerCase();
-            const filtered = allDocs.filter(item => item.judul.toLowerCase().includes(keyword));
+            const filtered = allDocs.filter(doc => doc.judul.toLowerCase().includes(keyword));
             renderDocs(filtered);
         });
 
-        // --- GLOBAL JS (Loader & Navbar Scroll) ---
+        // --- UTILS (Loader & Scroll Header & Chat) ---
         window.addEventListener('load', () => {
             const loader = document.getElementById('pageLoader');
             if(loader) loader.classList.add('hidden');
@@ -423,6 +498,15 @@
                 header.classList.remove('header-minimal');
             }
         });
+
+        function animateChatToggle() {
+            const btn = document.getElementById("toggleBtn");
+            const box = document.getElementById("chatBox");
+            if (btn.classList.contains("active")) {
+                btn.classList.remove("active"); box.classList.remove("active"); return;
+            }
+            btn.classList.add("active"); box.classList.add("active");
+        }
     </script>
 </body>
 </html>
