@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Arsip Digital - Balmon Samarinda</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.min.css">
+
+    <style>
+        /* ========================================= */
+        /* --- 1. GLOBAL STYLE (ASLI KONSESI.HTML) --- */
+        /* ========================================= */
+        :root {
+            --primary-color: #006fb0;
+            --primary-dark: #005082;
+            --secondary-color: #00ace0;
+            --accent-yellow: #ecbb1d;
+            --accent-red: #de262a;
+            --bg-light-blue: #f4f9fc;
+            --bg-white: #ffffff;
+            --text-dark: #1e293b;
+            --text-gray: #64748b;
+            --shadow-soft: 0 10px 30px -5px rgba(0, 0, 0, 0.05);
+            --radius-md: 12px;
+        }
+
+        body { 
+            margin: 0; padding: 0; 
+            font-family: 'Inter', sans-serif; 
+            background-color: var(--bg-light-blue);
+            color: var(--text-dark); 
+            line-height: 1.6; 
+            overflow-x: hidden; 
+        }
+        a { text-decoration: none; color: inherit; transition: 0.3s; }
+        ul { list-style: none; padding: 0; margin: 0; }
+        * { box-sizing: border-box; }
+
+        .container {
+            max-width: 1200px; margin: 0 auto; padding: 0 20px; width: 100%;
+        }
+
+        /* --- LOADER --- */
+        .page-loader {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-color: #ffffff; z-index: 99999;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            transition: opacity 0.5s ease, visibility 0.5s ease;
+        }
+        .page-loader.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
+        .loader-spinner {
+            width: 50px; height: 50px; border: 4px solid rgba(0, 111, 176, 0.1);
+            border-left-color: var(--primary-color); border-radius: 50%;
+            animation: spin 1s linear infinite; margin-bottom: 15px;
+        }
+        .loader-text {
+            color: var(--primary-color); font-weight: 600; font-size: 14px; letter-spacing: 1px;
+            animation: pulseText 1.5s infinite ease-in-out;
+        }
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+        @keyframes pulseText { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+
+        /* --- HEADER --- */
+        header {
+            background-color: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px);
+            height: 80px; position: fixed; top: 0; left: 0; width: 100%; z-index: 1000;
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.04);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .header-content { display: flex; align-items: center; justify-content: space-between; height: 100%; }
+        .brand-area { display: flex; align-items: center; gap: 12px; cursor: pointer; transition: 0.3s; }
+        .brand-logo-img { height: 50px; width: auto; }
+        .brand-text { font-size: 18px; font-weight: 800; color: var(--primary-color); line-height: 1.2; display: flex; flex-direction: column; }
+        .brand-text span { font-size: 11px; font-weight: 500; color: var(--text-gray); letter-spacing: 0.5px; }
+
+        .nav-menu { height: 100%; display: flex; align-items: center; }
+        .menu-list { display: flex; gap: 8px; height: 100%; align-items: center; }
+        .menu-item { 
+            position: relative; height: 100%; display: flex; align-items: center; 
+            padding: 0 12px; font-size: 14px; font-weight: 600; 
+            color: var(--text-dark); cursor: pointer; 
+        }
+        .menu-item:hover { color: var(--primary-color); }
+        .menu-item::after { 
+            content: ''; position: absolute; bottom: 0; left: 0; width: 0%; height: 3px; 
+            background: var(--accent-yellow); transition: 0.3s; 
+        }
+        .menu-item:hover::after { width: 100%; }
+
+        .dropdown-content { 
+            display: none; position: absolute; top: 100%; left: 0; 
+            background-color: #ffffff; min-width: 240px; 
+            box-shadow: 0 15px 30px rgba(0,0,0,0.1); 
+            border-radius: 0 0 8px 8px; z-index: 1000; padding: 10px 0; 
+            border-top: 3px solid var(--primary-color);
+            animation: slideDown 0.3s ease;
+        }
+        .menu-item:hover .dropdown-content { display: block; }
+        .dropdown-content li a { display: block; padding: 10px 20px; color: var(--text-dark); font-weight: 400; font-size: 14px; }
+        .dropdown-content li a:hover { background-color: var(--bg-light-blue); color: var(--primary-color); padding-left: 25px; }
+        @keyframes slideDown { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        header.header-minimal { height: 0; overflow: visible; background: transparent; box-shadow: none; }
+        header.header-minimal .nav-menu { opacity: 0; transform: translateY(-20px); pointer-events: none; }
+        header.header-minimal .brand-area {
+            position: fixed; top: 20px; left: 20px; background: #fff; box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+            width: 60px; height: 60px; border-radius: 50%; padding: 0; justify-content: center;
+        }
+        header.header-minimal .brand-text { display: none; }
+        header.header-minimal .brand-logo-img { height: 35px; margin: 0; }
+
+        /* --- PAGE CONTENT --- */
+        .page-header {
+            padding-top: 120px; padding-bottom: 60px;
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+            color: white; position: relative; overflow: hidden;
+        }
+        .ph-bg-decor {
+            position: absolute; right: -50px; top: -50px; width: 300px; height: 300px;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%); border-radius: 50%;
+        }
+        .breadcrumb { font-size: 13px; opacity: 0.8; margin-bottom: 10px; }
+        .breadcrumb a { color: #fff; text-decoration: underline; }
+        .page-title { font-size: 36px; font-weight: 800; margin: 0; }
+
+        .content-grid {
+            display: grid; grid-template-columns: 2.5fr 1fr; gap: 40px;
+            margin-top: -40px; margin-bottom: 60px; position: relative; z-index: 10;
+        }
+
+        /* --- MODIFIKASI: STYLE KHUSUS DAFTAR ARSIP --- */
+        /* Menggunakan style dasar .content-card tapi kita modif sedikit untuk list */
+        .search-wrapper {
+            background: #fff; padding: 20px; border-radius: 16px; 
+            box-shadow: 0 5px 20px rgba(0,0,0,0.05); margin-bottom: 25px;
+            display: flex; gap: 10px;
+        }
+        .search-input {
+            flex: 1; border: 1px solid #eee; background: #f8f9fa; padding: 12px 20px;
+            border-radius: 50px; font-family: 'Inter', sans-serif; font-size: 15px;
+        }
+        .search-btn {
+            background: var(--accent-yellow); color: var(--primary-dark); font-weight: bold;
+            border: none; padding: 0 25px; border-radius: 50px; cursor: pointer; transition: 0.3s;
+        }
+        .search-btn:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(236,187,29,0.3); }
+
+        /* Container untuk item dokumen */
+        .doc-item {
+            background: #fff; border-radius: 16px; padding: 25px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+            margin-bottom: 15px; border-left: 5px solid var(--text-gray);
+            transition: transform 0.2s; display: flex; align-items: center; justify-content: space-between; gap: 20px;
+        }
+        .doc-item:hover { transform: translateX(5px); }
+        .doc-item.pdf { border-left-color: var(--accent-red); }
+        .doc-item.doc { border-left-color: var(--primary-color); }
+        
+        .doc-info h3 { font-size: 16px; font-weight: 700; margin: 0 0 5px 0; color: var(--text-dark); }
+        .doc-info span { font-size: 12px; color: var(--text-gray); display: flex; align-items: center; gap: 5px; }
+        
+        .doc-action .btn-dl {
+            padding: 8px 20px; border-radius: 50px; border: 1px solid var(--primary-color);
+            color: var(--primary-color); font-size: 13px; font-weight: 600; background: transparent;
+        }
+        .doc-action .btn-dl:hover { background: var(--primary-color); color: #fff; }
+
+        /* --- SIDEBAR STYLE (ASLI) --- */
+        .sidebar-card {
+            background: #fff; border-radius: 16px; padding: 25px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+            margin-bottom: 20px; position: sticky; top: 120px;
+        }
+        .btn-download {
+            display: flex; align-items: center; justify-content: center; gap: 10px;
+            width: 100%; padding: 12px; background: var(--bg-light-blue);
+            color: var(--primary-color); border-radius: 8px; font-weight: 600;
+            margin-bottom: 10px; border: 1px solid transparent;
+        }
+        .btn-download:hover { background: #e0f2fe; border-color: var(--primary-color); }
+
+        /* FOOTER & CHAT STYLE (ASLI) */
+        footer { background-color: var(--primary-color); color: white; padding-top: 70px; font-size: 14px; }
+        .footer-grid { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 40px; padding-bottom: 50px; }
+        .footer-col { flex: 1; min-width: 250px; }
+        .footer-col h3 { color: var(--accent-yellow); margin-bottom: 25px; font-size: 18px; font-weight: 700; }
+        .footer-links a { color: rgba(255,255,255,0.8); display: block; margin-bottom: 12px; transition: 0.2s; }
+        .footer-links a:hover { color: #fff; transform: translateX(5px); }
+        .copyright { background-color: rgba(0,0,0,0.1); text-align: center; padding: 25px 0; color: rgba(255,255,255,0.6); border-top: 1px solid rgba(255,255,255,0.1); }
+
+        .chat-toggle-btn { position: fixed; bottom: 30px; right: 30px; width: 65px; height: 65px; background: linear-gradient(135deg, var(--primary-color), var(--primary-dark)); color: #ffffff; border: none; border-radius: 50%; box-shadow: 0 8px 25px rgba(0, 111, 176, 0.4); cursor: pointer; z-index: 9999; display: flex; align-items: center; justify-content: center; transition: transform 0.3s; }
+        .chat-toggle-btn:hover { transform: scale(1.1); }
+        .chat-toggle-btn svg { position: absolute; width: 28px; height: 28px; transition: all 0.4s; pointer-events: none; }
+        .icon-message { opacity: 1; transform: scale(1); fill: currentColor; }
+        .icon-close { opacity: 0; transform: scale(0) rotate(-180deg); fill: none; stroke: currentColor; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+        .chat-toggle-btn.active .icon-message { opacity: 0; transform: scale(0); }
+        .chat-toggle-btn.active .icon-close { opacity: 1; transform: scale(1) rotate(0deg); }
+        .chat-box-container { position: fixed; bottom: 110px; right: 30px; width: 400px; height: 600px; max-height: 75vh; background: #fff; border-radius: 16px; box-shadow: 0 20px 50px rgba(0,0,0,0.2); z-index: 9998; opacity: 0; visibility: hidden; transform: translateY(20px); transition: 0.3s; border: 1px solid #eee; overflow: hidden; display: flex; flex-direction: column; }
+        .chat-box-container.active { opacity: 1; visibility: visible; transform: translateY(0); }
+        .chat-header { background: linear-gradient(135deg, var(--primary-color), var(--primary-dark)); padding: 15px 20px; color: #fff; display: flex; align-items: center; gap: 15px; }
+
+        @media (max-width: 900px) {
+            .content-grid { grid-template-columns: 1fr; margin-top: 0; }
+            .sidebar-card { position: relative; top: 0; order: -1; }
+            .page-header { padding-bottom: 40px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="pageLoader" class="page-loader">
+        <div class="loader-spinner"></div>
+        <div class="loader-text">MEMUAT...</div>
+    </div>
+
+    <header id="mainHeader">
+        <div class="container header-content">
+            <div class="brand-area" onclick="window.location.href='index.html'">
+                <img src="balmonsmd.png" alt="Logo Balmon" class="brand-logo-img">
+                <div class="brand-text">
+                    BALMON SAMARINDA
+                    <span>Kementerian Komunikasi & Digital</span>
+                </div>
+            </div>
+            
+            <nav class="nav-menu">
+                <ul class="menu-list">
+                    <li class="menu-item" onclick="window.location.href='index.html'">Beranda</li>
+                    <li class="menu-item">Layanan
+                        <ul class="dropdown-content">
+                            <li><a href="konsesi.html">Izin Konsesi</a></li>
+                            <li><a href="maritim.html">Izin Maritim</a></li>
+                            <li><a href="fm.html">Izin Penyiaran FM</a></li>
+                        </ul>
+                    </li>
+                    <li class="menu-item">Arsip</li>
+                    <li class="menu-item">Kontak</li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <div class="page-header">
+        <div class="ph-bg-decor"></div>
+        <div class="container">
+            <div class="breadcrumb">
+                <a href="index.html">Beranda</a> / Arsip
+            </div>
+            <h1 class="page-title">Arsip Digital & Regulasi</h1>
+        </div>
+    </div>
+
+    <div class="container content-grid">
+        
+        <div class="content-left">
+            
+            <div class="search-wrapper">
+                <input type="text" id="searchInput" class="search-input" placeholder="Cari dokumen, peraturan, atau surat keputusan...">
+                <button class="search-btn"><i class="bi bi-search"></i></button>
+            </div>
+
+            <div id="docListContainer">
+                <div style="text-align:center; padding: 40px; color:var(--text-gray);">
+                    <div class="loader-spinner" style="margin:0 auto 15px auto; width:30px; height:30px; border-width:3px;"></div>
+                    <p>Mengambil data dari server...</p>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="sidebar-area">
+            <div class="sidebar-card">
+                <h3 style="margin-top:0; color:var(--text-dark);">Informasi</h3>
+                <p style="font-size:13px;">Dokumen yang tersedia di sini adalah dokumen publik yang dapat diunduh oleh masyarakat umum.</p>
+                
+                <hr style="border:0; border-top:1px solid #eee; margin:15px 0;">
+
+                <h3 style="margin-top:0; color:var(--text-dark); font-size:16px;">Kategori Populer</h3>
+                <div style="display:flex; flex-wrap:wrap; gap:8px; margin-top:10px;">
+                    <span style="background:#f1f5f9; padding:5px 12px; border-radius:20px; font-size:12px; color:var(--text-gray);">Regulasi</span>
+                    <span style="background:#f1f5f9; padding:5px 12px; border-radius:20px; font-size:12px; color:var(--text-gray);">SOP</span>
+                    <span style="background:#f1f5f9; padding:5px 12px; border-radius:20px; font-size:12px; color:var(--text-gray);">Renstra</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer id="mainFooter">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <h3>Balmon Samarinda</h3>
+                    <p style="color:rgba(255,255,255,0.7); line-height:1.8;">
+                        Jalan Sultan Sulaiman No. 123<br>Samarinda, Kalimantan Timur.<br><br>
+                        <strong>Email:</strong> pelayananuptbalmonsamarinda@gmail.com
+                    </p>
+                </div>
+                <div class="footer-col">
+                    <h3>Tautan Cepat</h3>
+                    <div class="footer-links">
+                        <a href="#">Profil Organisasi</a>
+                        <a href="#">Standar Pelayanan</a>
+                        <a href="#">Pengaduan Masyarakat</a>
+                    </div>
+                </div>
+                <div class="footer-col">
+                    <h3>Jam Pelayanan</h3>
+                    <p style="color:rgba(255,255,255,0.7);">
+                        Senin - Kamis: 08.00 - 16.00<br>Jumat: 08.00 - 16.30
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="copyright">Copyright@2024 Balai Monitor Spektrum Frekuensi Radio Kelas I Samarinda</div>
+    </footer>
+
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+
+    <script>
+        // 1. CONFIG FIREBASE (Sesuai Data Anda)
+        const firebaseConfig = {
+            apiKey: "AIzaSyDUeIg9Zn_xndPXtChO8KufXFp6EMtqBJ0",
+            authDomain: "admin-pelayanan-balmon.firebaseapp.com",
+            databaseURL: "https://admin-pelayanan-balmon-default-rtdb.firebaseio.com",
+            projectId: "admin-pelayanan-balmon",
+            appId: "1:1071557110255:web:bff7087da1feacccb7ee1a"
+        };
+
+        if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+        const db = firebase.database();
+
+        // 2. LOGIKA RENDER DOKUMEN
+        const container = document.getElementById('docListContainer');
+        const searchInput = document.getElementById('searchInput');
+        let allDocs = [];
+
+        // Ambil data dari 'arsip_drive'
+        db.ref('arsip_drive').on('value', snap => {
+            if(!snap.exists()) {
+                container.innerHTML = `
+                    <div style="text-align:center; padding:40px; background:#fff; border-radius:16px;">
+                        <p>Belum ada arsip dokumen.</p>
+                    </div>`;
+                return;
+            }
+
+            allDocs = [];
+            snap.forEach(c => allDocs.push(c.val()));
+            allDocs.reverse(); // Terbaru diatas
+            
+            renderDocs(allDocs);
+        });
+
+        function renderDocs(data) {
+            container.innerHTML = '';
+            
+            if(data.length === 0) {
+                container.innerHTML = '<p style="text-align:center; padding:20px;">Tidak ditemukan dokumen.</p>';
+                return;
+            }
+
+            data.forEach(d => {
+                // Deteksi Tipe (PDF/Word)
+                let typeClass = 'doc';
+                let iconClass = 'bi-file-earmark-text';
+                let typeLabel = 'Dokumen';
+
+                if(d.tipe && d.tipe.includes('pdf')) {
+                    typeClass = 'pdf';
+                    iconClass = 'bi-file-earmark-pdf-fill text-danger'; // Bootstrap Icon class
+                    typeLabel = 'PDF File';
+                } else if(d.tipe && (d.tipe.includes('word') || d.tipe.includes('doc'))) {
+                    iconClass = 'bi-file-earmark-word-fill text-primary';
+                    typeLabel = 'Word Doc';
+                }
+
+                const date = new Date(d.timestamp).toLocaleDateString('id-ID', {
+                    day: 'numeric', month: 'long', year: 'numeric'
+                });
+
+                // HTML Item Dokumen
+                const html = `
+                <div class="doc-item ${typeClass}">
+                    <div style="display:flex; align-items:center; gap:15px;">
+                        <i class="bi ${iconClass}" style="font-size:32px;"></i>
+                        <div class="doc-info">
+                            <h3>${d.judul}</h3>
+                            <span><i class="bi bi-clock"></i> ${date} &nbsp;|&nbsp; ${typeLabel}</span>
+                        </div>
+                    </div>
+                    <div class="doc-action">
+                        <a href="${d.url}" target="_blank" class="btn-dl">
+                            <i class="bi bi-download"></i> Unduh
+                        </a>
+                    </div>
+                </div>
+                `;
+                container.innerHTML += html;
+            });
+        }
+
+        // Fitur Pencarian
+        searchInput.addEventListener('keyup', (e) => {
+            const keyword = e.target.value.toLowerCase();
+            const filtered = allDocs.filter(item => item.judul.toLowerCase().includes(keyword));
+            renderDocs(filtered);
+        });
+
+        // --- GLOBAL JS (Loader & Navbar Scroll) ---
+        window.addEventListener('load', () => {
+            const loader = document.getElementById('pageLoader');
+            if(loader) loader.classList.add('hidden');
+        });
+        
+        window.addEventListener('scroll', function() {
+            const header = document.getElementById('mainHeader');
+            if (window.scrollY > 20) {
+                header.classList.add('header-minimal');
+            } else {
+                header.classList.remove('header-minimal');
+            }
+        });
+    </script>
+</body>
+</html>
