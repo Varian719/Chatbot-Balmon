@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Balmon Samarinda - DJID Official</title>
     
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
 
     <style>
         /* --- 1. SETUP WARNA (Branding Guideline DJID) --- */
@@ -144,6 +144,125 @@
         
         @keyframes slideDown { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
+        /* HAMBURGER MENU (MOBILE) */
+        .hamburger-btn {
+            display: none;
+            flex-direction: column;
+            gap: 6px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 8px;
+            z-index: 1001;
+        }
+
+        .hamburger-btn span {
+            width: 24px;
+            height: 2.5px;
+            background-color: var(--primary-color);
+            border-radius: 2px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .hamburger-btn.active span:nth-child(1) {
+            transform: rotate(45deg) translate(10px, 10px);
+        }
+
+        .hamburger-btn.active span:nth-child(2) {
+            opacity: 0;
+        }
+
+        .hamburger-btn.active span:nth-child(3) {
+            transform: rotate(-45deg) translate(8px, -8px);
+        }
+
+        /* MOBILE NAV DROPDOWN */
+        .mobile-nav-dropdown {
+            display: none;
+            position: fixed;
+            top: 80px;
+            left: 0;
+            width: 100%;
+            max-height: calc(100vh - 80px);
+            background-color: #ffffff;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+            flex-direction: column;
+            overflow-y: auto;
+            z-index: 999;
+            animation: slideDownMobile 0.3s ease;
+        }
+
+        .mobile-nav-dropdown.active {
+            display: flex;
+        }
+
+        @keyframes slideDownMobile {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .mobile-menu-item {
+            padding: 16px 20px;
+            border-bottom: 1px solid #eee;
+            color: var(--text-dark);
+            font-weight: 600;
+            font-size: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .mobile-menu-item:hover {
+            background-color: var(--bg-light-blue);
+            color: var(--primary-color);
+        }
+
+        .mobile-menu-item.has-submenu::after {
+            content: '▼';
+            font-size: 12px;
+            transition: transform 0.3s ease;
+        }
+
+        .mobile-menu-item.has-submenu.active::after {
+            transform: rotate(-180deg);
+        }
+
+        /* SUBMENU MOBILE */
+        .mobile-submenu {
+            max-height: 0;
+            overflow: hidden;
+            background-color: #f8f9fa;
+            transition: max-height 0.3s ease;
+        }
+
+        .mobile-submenu.active {
+            max-height: 500px;
+        }
+
+        .mobile-submenu a {
+            display: block;
+            padding: 12px 40px;
+            color: var(--text-gray);
+            font-size: 14px;
+            font-weight: 500;
+            border-bottom: 1px solid #eee;
+            transition: all 0.2s ease;
+        }
+
+        .mobile-submenu a:hover {
+            background-color: #ffffff;
+            color: var(--primary-color);
+            padding-left: 48px;
+        }
+
         /* HEADER MINIMAL SCROLL */
         header.header-minimal { background-color: transparent; backdrop-filter: none; box-shadow: none; height: 0; overflow: visible; }
         header.header-minimal .nav-menu { opacity: 0; transform: translateY(-20px); pointer-events: none; }
@@ -222,18 +341,30 @@
             border-top: 1px solid rgba(255,255,255,0.2); padding-top: 15px;
         }
 
-        /* ========================================================= */
-        /* --- [NEW] FEATURE CAROUSEL (SLIDE UP OVERLAY STYLE) --- */
-        /* ========================================================= */
-        
+        /* --- FEATURE CAROUSEL SECTION --- */
         .feature-carousel-section {
-            padding: 40px 0; width: 100%; background-color: #fff; position: relative; overflow: hidden;
+            /* DEFINISI PALET WARNA LOKAL (Biru - Kuning - Putih) */
+            --fc-primary-blue: #0056b3;       /* Biru Profesional */
+            --fc-dark-blue: #003d80;          /* Biru Gelap untuk Text */
+            --fc-accent-yellow: #ffc107;      /* Kuning Cerah untuk Highlight/Active */
+            --fc-bg-light-blue: #f0f8ff;      /* Biru sangat muda untuk background link */
+            --fc-white: #ffffff;
+            --fc-text-gray: #666666;
+            
+            padding: 40px 0; 
+            width: 100%; 
+            background-color: var(--fc-white); 
+            position: relative; 
+            overflow: hidden;
         }
+
         .feature-bg-decor {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background: radial-gradient(circle at top right, rgba(0,172,224,0.05), transparent 60%);
+            /* Gradient Biru Halus */
+            background: radial-gradient(circle at top right, rgba(0, 86, 179, 0.08), transparent 60%);
             z-index: 0; pointer-events: none;
         }
+
         .fc-wrapper { position: relative; max-width: 1200px; margin: 0 auto; padding: 0 20px; }
         .fc-window { width: 100%; overflow: visible; padding: 10px 5px; }
         .fc-track { display: flex; gap: 20px; transition: transform 0.5s cubic-bezier(0.25, 1, 0.5, 1); width: max-content; align-items: flex-start; }
@@ -242,10 +373,10 @@
         .fc-card {
             width: 280px;
             height: 380px; /* TINGGI TETAP (FIXED) agar tidak dorong footer */
-            background: #fff;
+            background: var(--fc-white);
             border-radius: 12px;
             box-shadow: 0 5px 15px rgba(0,0,0,0.05);
-            border: 1px solid rgba(0,0,0,0.03);
+            border: 1px solid rgba(0,0,0,0.05);
             position: relative; /* Penting untuk children absolute */
             overflow: hidden;
             transition: all 0.3s ease;
@@ -254,10 +385,11 @@
 
         .fc-card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 12px 25px rgba(0, 111, 176, 0.15);
-            border-color: rgba(0, 111, 176, 0.2);
+            /* Shadow Biru Muda saat hover */
+            box-shadow: 0 12px 25px rgba(0, 86, 179, 0.15);
+            border-color: rgba(0, 86, 179, 0.3);
         }
-        
+
         /* Gambar selalu di background (setengah atas) */
         .fc-card-img {
             height: 200px; 
@@ -267,7 +399,7 @@
         .fc-card-img img {
             width: 100%; height: 100%; object-fit: cover; transition: 0.5s;
         }
-        
+
         /* Konten (Putih) mengambang di atas gambar */
         .fc-card-content {
             position: absolute;
@@ -275,7 +407,7 @@
             left: 0;
             width: 100%;
             height: 180px; /* Tinggi saat TERTUTUP (380px - 200px) */
-            background: #fff;
+            background: var(--fc-white);
             padding: 20px;
             display: flex;
             flex-direction: column;
@@ -287,7 +419,8 @@
         /* Saat Aktif: Konten naik menutupi gambar */
         .fc-card.active .fc-card-content {
             height: 100%; /* Penuh satu kartu */
-            border-top: 4px solid var(--primary-color); /* Aksen garis di atas */
+            /* Aksen garis KUNING saat aktif */
+            border-top: 4px solid var(--fc-accent-yellow); 
         }
 
         .fc-card-header-text {
@@ -295,19 +428,26 @@
             flex-shrink: 0; /* Header tidak boleh mengecil */
         }
 
-        .fc-card-content h3 { margin: 0; color: var(--primary-color); font-size: 18px; font-weight: 700; }
+        /* Judul berwarna Biru Utama */
+        .fc-card-content h3 { 
+            margin: 0; 
+            color: var(--fc-primary-blue); 
+            font-size: 18px; 
+            font-weight: 700; 
+        }
 
         /* Deskripsi selalu tampil */
         .fc-card-desc {
-            font-size: 13px; color: var(--text-gray); margin: 0 0 15px 0; line-height: 1.5;
+            font-size: 13px; color: var(--fc-text-gray); margin: 0 0 15px 0; line-height: 1.5;
             flex-shrink: 0; /* Deskripsi tidak boleh hilang/gepeng */
         }
 
         .fc-arrow {
-            font-size: 14px; color: var(--text-gray); transition: transform 0.3s ease;
+            font-size: 14px; color: var(--fc-text-gray); transition: transform 0.3s ease;
         }
+        /* Panah berubah jadi Kuning saat aktif */
         .fc-card.active .fc-arrow {
-            transform: rotate(180deg); color: var(--primary-color);
+            transform: rotate(180deg); color: var(--fc-accent-yellow);
         }
 
         /* --- BAGIAN DROPDOWN (Link) --- */
@@ -330,7 +470,7 @@
         .fc-dropdown-area::-webkit-scrollbar {
             display: none;
         }
-        
+
         /* Saat aktif, area link muncul mengisi sisa ruang */
         .fc-card.active .fc-dropdown-area {
             opacity: 1;
@@ -339,26 +479,160 @@
         }
 
         .fc-link-list { display: flex; flex-direction: column; gap: 8px; }
+
         .fc-link-list a {
-            display: block; padding: 10px 12px; background: var(--bg-light-blue);
-            color: var(--primary-color); border-radius: 6px; font-size: 13px; font-weight: 600;
-            text-align: center; border: 1px solid transparent; transition: 0.2s;
+            display: block; 
+            padding: 10px 12px; 
+            /* Background default Biru Muda */
+            background: var(--fc-bg-light-blue);
+            /* Teks default Biru */
+            color: var(--fc-primary-blue); 
+            border-radius: 6px; 
+            font-size: 13px; 
+            font-weight: 600;
+            text-align: center; 
+            border: 1px solid transparent; 
+            transition: 0.2s;
         }
+
         .fc-link-list a:hover {
-            background: var(--primary-color); color: #fff; transform: translateX(3px);
+            /* Hover jadi Kuning */
+            background: var(--fc-accent-yellow); 
+            /* Teks jadi Biru Gelap agar kontras */
+            color: var(--fc-dark-blue); 
+            transform: translateX(3px);
+            border-color: var(--fc-accent-yellow);
         }
 
         /* Navigasi Carousel */
         .fc-nav-group { position: absolute; top: -50px; right: 20px; display: flex; gap: 10px; z-index: 10; }
+
         .fc-nav-btn {
-            width: 40px; height: 40px; border-radius: 50%; background: #fff; border: 1px solid #eee;
-            color: var(--primary-color); box-shadow: 0 4px 10px rgba(0,0,0,0.08); cursor: pointer;
+            width: 40px; height: 40px; border-radius: 50%; 
+            background: var(--fc-white); 
+            border: 1px solid #eee;
+            color: var(--fc-primary-blue); 
+            box-shadow: 0 4px 10px rgba(0,0,0,0.08); 
+            cursor: pointer;
             display: flex; align-items: center; justify-content: center; font-size: 18px;
             transition: 0.3s; position: absolute; top: 50%; transform: translateY(-50%); z-index: 20;
         }
-        .fc-nav-btn:hover { background: var(--primary-color); color: #fff; }
-        .fc-prev { left: -20px; }
-        .fc-next { right: -20px; }
+
+        .fc-nav-btn:hover {
+            /* Tombol Navigasi Hover jadi Biru, Icon Putih */
+            background: var(--fc-primary-blue);
+            color: var(--fc-white);
+            border-color: var(--fc-primary-blue);
+        }
+
+        /* ========================================= */
+        /* --- [NEW SECTION] IMPACT YELLOW SECTION --- */
+        /* ========================================= */
+        .impact-yellow-section {
+            position: relative;
+            /* Background Image Teknologi/Komunikasi (Parallax) */
+            background-image: url('https://images.unsplash.com/photo-1541888946425-d81bb19240f5?auto=format&fit=crop&w=1600&q=80');
+            background-attachment: fixed;
+            background-size: cover;
+            background-position: center;
+            padding: 100px 0;
+            color: var(--primary-dark);
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+        }
+
+        /* Overlay Dominan Kuning */
+        .impact-overlay {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            /* Gradient dari Kuning Emas ke Oranye Tipis agar elegan */
+            background: linear-gradient(135deg, rgba(236, 187, 29, 0.9) 0%, rgba(255, 193, 7, 0.85) 100%);
+            z-index: 1;
+        }
+
+        .impact-content-wrapper {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .impact-title {
+            font-size: 42px;
+            font-weight: 800;
+            margin-bottom: 20px;
+            color: var(--primary-dark);
+            line-height: 1.2;
+            letter-spacing: -1px;
+        }
+
+        .impact-desc {
+            font-size: 18px;
+            font-weight: 500;
+            color: rgba(0, 61, 128, 0.85); /* Biru gelap transparansi dikit */
+            margin-bottom: 40px;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Grid Statistik Kecil */
+        .impact-stats-grid {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+        }
+
+        .impact-stat-item {
+            background: rgba(255, 255, 255, 0.3);
+            backdrop-filter: blur(5px);
+            padding: 15px 25px;
+            border-radius: 50px;
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 700;
+            color: var(--primary-dark);
+            transition: transform 0.3s ease;
+        }
+
+        .impact-stat-item:hover {
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.5);
+        }
+
+        .impact-btn {
+            display: inline-block;
+            background-color: var(--primary-dark);
+            color: #ffffff;
+            padding: 16px 40px;
+            font-size: 16px;
+            font-weight: 700;
+            border-radius: 8px;
+            box-shadow: 0 10px 25px rgba(0, 61, 128, 0.3);
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .impact-btn:hover {
+            background-color: #002a5c;
+            transform: scale(1.05);
+            box-shadow: 0 15px 35px rgba(0, 61, 128, 0.4);
+        }
+
+        /* Responsive untuk Impact Section */
+        @media (max-width: 768px) {
+            .impact-title { font-size: 32px; }
+            .impact-desc { font-size: 16px; }
+            .impact-stats-grid { flex-direction: column; align-items: center; gap: 15px; }
+            .impact-stat-item { width: 100%; justify-content: center; max-width: 300px; }
+        }
 
 
         /* --- FOOTER --- */
@@ -429,6 +703,17 @@
             .menu-list { display: none; } 
             .hero-text-side h1 { font-size: 32px; }
         }
+        @media (max-width: 768px) {
+            .hamburger-btn {
+                display: flex;
+            }
+
+            .menu-list { display: none; }
+            
+            .nav-menu {
+                display: flex;
+            }
+        }
     </style>
 </head>
 <body>
@@ -457,18 +742,47 @@
                             <li><a href="fm.html">Izin Penyiaran FM</a></li>
                         </ul>
                     </li>
-                    <li class="menu-item">Publikasi
-                        <ul class="dropdown-content">
-                            <li><a href="galeri.html">Galeri Foto</a></li>
-                            <li><a href="#">Galeri Video</a></li>
-                        </ul>
-                    </li>
+                    <li class="menu-item" onclick="window.location.href='galeri.html'">Publikasi</li>
+
                     <li class="menu-item" onclick="window.location.href='kontak.html'">Kontak</li>
                 </ul>
                 <button style="margin-left:10px; border:none; background:transparent; color:var(--primary-color); cursor:pointer;">
                     <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
                 </button>
             </nav>
+
+            <button class="hamburger-btn" id="hamburgerBtn" onclick="toggleMobileMenu()">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+
+        <div class="mobile-nav-dropdown" id="mobileNavDropdown">
+            <div class="mobile-menu-item" onclick="handleMobileMenuItem(this, 'beranda')">
+                Beranda
+            </div>
+            
+            <div class="mobile-menu-item has-submenu" onclick="toggleMobileSubmenu(this)">
+                Layanan
+            </div>
+            <div class="mobile-submenu" id="submenu-layanan">
+                <a href="konsesi.html" onclick="closeMobileMenu()">Izin Konsesi</a>
+                <a href="maritim.html" onclick="closeMobileMenu()">Izin Maritim</a>
+                <a href="fm.html" onclick="closeMobileMenu()">Izin Penyiaran FM</a>
+            </div>
+
+            <div class="mobile-menu-item has-submenu" onclick="toggleMobileSubmenu(this)">
+                Publikasi
+            </div>
+            <div class="mobile-submenu" id="submenu-publikasi">
+                <a href="galeri.html" onclick="closeMobileMenu()">Galeri Foto</a>
+                <a href="#" onclick="closeMobileMenu()">Galeri Video</a>
+            </div>
+
+            <div class="mobile-menu-item" onclick="handleMobileMenuItem(this, 'kontak')">
+                Kontak
+            </div>
         </div>
     </header>
 
@@ -528,6 +842,7 @@
                                     <li><a href="#">Sejarah Kami</a></li>
                                     <li><a href="#">Visi & Misi</a></li>
                                     <li><a href="#">Struktur Organisasi</a></li>
+                                    <li><a href="galeri.html">Publikasi</a></li>
                                 </ul>
                             </div>
                         </div>
@@ -596,6 +911,33 @@
 
                 </div>
             </div>
+        </div>
+    </div>
+
+    <div class="impact-yellow-section">
+        <div class="impact-overlay"></div>
+        <div class="container impact-content-wrapper">
+            <h2 class="impact-title">Tertib Frekuensi, Komunikasi Lancar</h2>
+            <p class="impact-desc">
+                Kami berkomitmen menciptakan tata kelola spektrum frekuensi radio yang tertib di Kalimantan Timur. Laporkan gangguan atau ajukan perizinan Anda sekarang demi keamanan bersama.
+            </p>
+            
+            <div class="impact-stats-grid">
+                <div class="impact-stat-item">
+                    <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                    <span>Layanan Cepat</span>
+                </div>
+                <div class="impact-stat-item">
+                    <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+                    <span>Transparan</span>
+                </div>
+                <div class="impact-stat-item">
+                    <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="8.5" cy="7" r="4"></circle><line x1="20" y1="8" x2="20" y2="14"></line><line x1="23" y1="11" x2="17" y2="11"></line></svg>
+                    <span>Akuntabel</span>
+                </div>
+            </div>
+
+            <a href="kontak.html" class="impact-btn">Hubungi Kami Sekarang</a>
         </div>
     </div>
 
@@ -804,6 +1146,60 @@
         }
 
         initSlider();
+
+        // --- HAMBURGER & MOBILE MENU LOGIC ---
+        function toggleMobileMenu() {
+            const hamburger = document.getElementById('hamburgerBtn');
+            const mobileNav = document.getElementById('mobileNavDropdown');
+            
+            hamburger.classList.toggle('active');
+            mobileNav.classList.toggle('active');
+        }
+
+        function closeMobileMenu() {
+            const hamburger = document.getElementById('hamburgerBtn');
+            const mobileNav = document.getElementById('mobileNavDropdown');
+            const submenus = document.querySelectorAll('.mobile-submenu');
+            const submenuItems = document.querySelectorAll('.mobile-menu-item.has-submenu');
+            
+            hamburger.classList.remove('active');
+            mobileNav.classList.remove('active');
+            
+            // Close all submenus
+            submenus.forEach(submenu => submenu.classList.remove('active'));
+            submenuItems.forEach(item => item.classList.remove('active'));
+        }
+
+        function toggleMobileSubmenu(element) {
+            // Get the submenu that follows this menu item
+            const submenu = element.nextElementSibling;
+            
+            // Toggle active class
+            element.classList.toggle('active');
+            if (submenu && submenu.classList.contains('mobile-submenu')) {
+                submenu.classList.toggle('active');
+            }
+        }
+
+        function handleMobileMenuItem(element, action) {
+            if (action === 'beranda') {
+                window.location.href = 'index.html';
+            } else if (action === 'kontak') {
+                window.location.href = 'kontak.html';
+            }
+            closeMobileMenu();
+        }
+
+        // Close mobile menu when clicking outside
+        document.addEventListener('click', function(event) {
+            const hamburger = document.getElementById('hamburgerBtn');
+            const mobileNav = document.getElementById('mobileNavDropdown');
+            const header = document.getElementById('mainHeader');
+            
+            if (!header.contains(event.target) && mobileNav.classList.contains('active')) {
+                closeMobileMenu();
+            }
+        });
     </script>
     <script src="TTS_Adaptif.js"></script>
 

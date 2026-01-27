@@ -41,15 +41,13 @@
             max-width: 1200px; margin: 0 auto; padding: 0 20px; width: 100%;
         }
 
-        /* ========================================= */
-        /* --- [NEW] PAGE TRANSITION LOADER CSS --- */
-        /* ========================================= */
+        /* --- PAGE TRANSITION LOADER --- */
         .page-loader {
             position: fixed;
             top: 0; left: 0;
             width: 100%; height: 100%;
             background-color: #ffffff;
-            z-index: 99999; /* Paling atas */
+            z-index: 99999; 
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -58,23 +56,15 @@
             opacity: 1;
             visibility: visible;
         }
-
-        .page-loader.hidden {
-            opacity: 0;
-            visibility: hidden;
-            pointer-events: none;
-        }
-
+        .page-loader.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
         .loader-spinner {
-            width: 50px;
-            height: 50px;
+            width: 50px; height: 50px;
             border: 4px solid rgba(0, 111, 176, 0.1);
             border-left-color: var(--primary-color);
             border-radius: 50%;
             animation: spin 1s linear infinite;
             margin-bottom: 15px;
         }
-
         .loader-text {
             color: var(--primary-color);
             font-weight: 600;
@@ -82,7 +72,6 @@
             letter-spacing: 1px;
             animation: pulseText 1.5s infinite ease-in-out;
         }
-
         @keyframes spin { 100% { transform: rotate(360deg); } }
         @keyframes pulseText { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
 
@@ -104,7 +93,6 @@
         /* NAVIGASI & DROPDOWN */
         .nav-menu { height: 100%; display: flex; align-items: center; }
         .menu-list { display: flex; gap: 8px; height: 100%; align-items: center; }
-        
         .menu-item { 
             position: relative; height: 100%; display: flex; align-items: center; 
             padding: 0 12px; font-size: 14px; font-weight: 600; 
@@ -117,26 +105,85 @@
         }
         .menu-item:hover::after { width: 100%; }
 
-        /* Dropdown CSS */
         .dropdown-content { 
             display: none; position: absolute; top: 100%; left: 0; 
-            background-color: #ffffff; 
-            min-width: 240px; 
-            box-shadow: 0 15px 30px rgba(0,0,0,0.1); 
-            border-radius: 0 0 8px 8px; z-index: 1000; 
-            padding: 10px 0; 
-            border-top: 3px solid var(--primary-color);
+            background-color: #ffffff; min-width: 240px; 
+            box-shadow: 0 15px 30px rgba(0,0,0,0.1); border-radius: 0 0 8px 8px; z-index: 1000; 
+            padding: 10px 0; border-top: 3px solid var(--primary-color);
             animation: slideDown 0.3s ease;
         }
         .menu-item:hover .dropdown-content { display: block; }
-        .dropdown-content li a { 
-            display: block; padding: 10px 20px; color: var(--text-dark); font-weight: 400; font-size: 14px;
-        }
-        .dropdown-content li a:hover { 
-            background-color: var(--bg-light-blue); color: var(--primary-color); padding-left: 25px; 
-        }
-        
+        .dropdown-content li a { display: block; padding: 10px 20px; color: var(--text-dark); font-weight: 400; font-size: 14px; }
+        .dropdown-content li a:hover { background-color: var(--bg-light-blue); color: var(--primary-color); padding-left: 25px; }
         @keyframes slideDown { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* HAMBURGER MENU (FIXED FOR 'X' SHAPE) */
+        .hamburger-btn {
+            display: none;
+            flex-direction: column;
+            gap: 6px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 8px;
+            z-index: 1001;
+        }
+        .hamburger-btn span {
+            width: 24px;
+            height: 2.5px;
+            background-color: var(--primary-color);
+            border-radius: 2px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            transform-origin: center;
+        }
+
+        /* Perbaikan Logika Transformasi ke Bentuk X */
+        .hamburger-btn.active span:nth-child(1) {
+            transform: translateY(8.5px) rotate(45deg);
+        }
+        .hamburger-btn.active span:nth-child(2) {
+            opacity: 0;
+            transform: translateX(10px);
+        }
+        .hamburger-btn.active span:nth-child(3) {
+            transform: translateY(-8.5px) rotate(-45deg);
+        }
+
+        /* MOBILE NAV DROPDOWN */
+        .mobile-nav-dropdown {
+            display: none;
+            position: fixed; top: 80px; left: 0; width: 100%;
+            max-height: calc(100vh - 80px);
+            background-color: #ffffff;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+            flex-direction: column;
+            overflow-y: auto; z-index: 999;
+            animation: slideDownMobile 0.3s ease;
+        }
+        .mobile-nav-dropdown.active { display: flex; }
+        @keyframes slideDownMobile { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
+
+        .mobile-menu-item {
+            padding: 16px 20px; border-bottom: 1px solid #eee;
+            color: var(--text-dark); font-weight: 600; font-size: 15px;
+            cursor: pointer; transition: all 0.3s ease;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .mobile-menu-item:hover { background-color: var(--bg-light-blue); color: var(--primary-color); }
+        .mobile-menu-item.has-submenu::after { content: '▼'; font-size: 12px; transition: transform 0.3s ease; }
+        .mobile-menu-item.has-submenu.active::after { transform: rotate(-180deg); }
+
+        .mobile-submenu {
+            max-height: 0; overflow: hidden; background-color: #f8f9fa;
+            transition: max-height 0.3s ease;
+        }
+        .mobile-submenu.active { max-height: 500px; }
+        .mobile-submenu a {
+            display: block; padding: 12px 40px;
+            color: var(--text-gray); font-size: 14px; font-weight: 500;
+            border-bottom: 1px solid #eee; transition: all 0.2s ease;
+        }
+        .mobile-submenu a:hover { background-color: #ffffff; color: var(--primary-color); padding-left: 48px; }
 
         /* HEADER MINIMAL LOGIC */
         header.header-minimal { height: 0; overflow: visible; background: transparent; box-shadow: none; }
@@ -148,18 +195,11 @@
         header.header-minimal .brand-text { display: none; }
         header.header-minimal .brand-logo-img { height: 35px; margin: 0; }
 
-        /* ========================================= */
-        /* --- 2. PAGE SPECIFIC STYLE (CONTENT) --- */
-        /* ========================================= */
-        
-        /* Page Header */
+        /* --- CONTENT STYLE --- */
         .page-header {
-            padding-top: 120px;
-            padding-bottom: 60px;
+            padding-top: 120px; padding-bottom: 60px;
             background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
-            color: white;
-            position: relative;
-            overflow: hidden;
+            color: white; position: relative; overflow: hidden;
         }
         .ph-bg-decor {
             position: absolute; right: -50px; top: -50px; width: 300px; height: 300px;
@@ -170,41 +210,25 @@
         .breadcrumb a { color: #fff; text-decoration: underline; }
         .page-title { font-size: 36px; font-weight: 800; margin: 0; }
 
-        /* Layout Grid */
         .content-grid {
-            display: grid;
-            grid-template-columns: 2.5fr 1fr;
-            gap: 40px;
-            margin-top: -40px;
-            margin-bottom: 60px;
-            position: relative;
-            z-index: 10;
+            display: grid; grid-template-columns: 2.5fr 1fr; gap: 40px;
+            margin-top: -40px; margin-bottom: 60px; position: relative; z-index: 10;
         }
-
-        /* Content Card */
         .content-card {
-            background: #fff;
-            border-radius: 16px;
-            padding: 40px;
-            box-shadow: 0 5px 30px rgba(0,0,0,0.05);
-            border: 1px solid rgba(0,0,0,0.03);
+            background: #fff; border-radius: 16px; padding: 40px;
+            box-shadow: 0 5px 30px rgba(0,0,0,0.05); border: 1px solid rgba(0,0,0,0.03);
         }
         .section-title { font-size: 22px; font-weight: 700; color: var(--primary-color); margin-bottom: 20px; display: flex; align-items: center; gap: 10px; }
         .section-title::before { content: ''; width: 4px; height: 24px; background: var(--accent-yellow); border-radius: 2px; }
         
         p { color: var(--text-gray); margin-bottom: 20px; }
-
-        /* List Persyaratan */
-        .check-list li {
-            position: relative; padding-left: 30px; margin-bottom: 12px; color: var(--text-dark);
-        }
+        .check-list li { position: relative; padding-left: 30px; margin-bottom: 12px; color: var(--text-dark); }
         .check-list li::before {
             content: '✔'; position: absolute; left: 0; top: 2px; 
             color: var(--primary-color); font-weight: bold; background: rgba(0, 111, 176, 0.1);
             width: 20px; height: 20px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10px;
         }
 
-        /* Timeline */
         .timeline { position: relative; border-left: 2px solid #e2e8f0; margin-left: 10px; padding-left: 30px; margin-top: 30px; }
         .timeline-item { margin-bottom: 30px; position: relative; }
         .timeline-dot {
@@ -214,11 +238,9 @@
         .timeline-title { font-weight: 700; color: var(--text-dark); margin-bottom: 5px; }
         .timeline-desc { font-size: 14px; color: var(--text-gray); }
 
-        /* Sidebar */
         .sidebar-card {
             background: #fff; border-radius: 16px; padding: 25px;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.05);
-            margin-bottom: 20px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.05); margin-bottom: 20px;
             position: sticky; top: 120px;
         }
         .btn-download {
@@ -228,15 +250,8 @@
             margin-bottom: 10px; border: 1px solid transparent;
         }
         .btn-download:hover { background: #e0f2fe; border-color: var(--primary-color); }
-        
-        .btn-apply {
-            display: block; text-align: center; width: 100%; padding: 15px;
-            background: var(--accent-red); color: #fff; border-radius: 8px; font-weight: 700;
-            box-shadow: 0 5px 15px rgba(222, 38, 42, 0.3);
-        }
-        .btn-apply:hover { background: #b91c20; transform: translateY(-2px); }
 
-        /* Footer */
+        /* --- FOOTER & CHAT --- */
         footer { background-color: var(--primary-color); color: white; padding-top: 70px; font-size: 14px; }
         .footer-grid { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 40px; padding-bottom: 50px; }
         .footer-col { flex: 1; min-width: 250px; }
@@ -245,7 +260,6 @@
         .footer-links a:hover { color: #fff; transform: translateX(5px); }
         .copyright { background-color: rgba(0,0,0,0.1); text-align: center; padding: 25px 0; color: rgba(255,255,255,0.6); border-top: 1px solid rgba(255,255,255,0.1); }
 
-        /* Chat Widget */
         .chat-toggle-btn { position: fixed; bottom: 30px; right: 30px; width: 65px; height: 65px; background: linear-gradient(135deg, var(--primary-color), var(--primary-dark)); color: #ffffff; border: none; border-radius: 50%; box-shadow: 0 8px 25px rgba(0, 111, 176, 0.4); cursor: pointer; z-index: 9999; display: flex; align-items: center; justify-content: center; transition: transform 0.3s; }
         .chat-toggle-btn:hover { transform: scale(1.1); }
         .chat-toggle-btn svg { position: absolute; width: 28px; height: 28px; transition: all 0.4s; pointer-events: none; }
@@ -261,6 +275,10 @@
             .content-grid { grid-template-columns: 1fr; margin-top: 0; }
             .sidebar-card { position: relative; top: 0; order: -1; }
             .page-header { padding-bottom: 40px; }
+        }
+        @media (max-width: 768px) {
+            .hamburger-btn { display: flex; }
+            .menu-list { display: none; }
         }
     </style>
 </head>
@@ -291,19 +309,36 @@
                             <li><a href="fm.html">Izin Penyiaran FM</a></li>
                         </ul>
                     </li>
-                    <li class="menu-item">Publikasi
-                        <ul class="dropdown-content">
-                            <li><a href="#">Galeri Foto</a></li>
-                            <li><a href="#">Galeri Video</a></li>
-                        </ul>
-                    </li>
-                    <li class="menu-item">Kontak</li>
+                    <li class="menu-item" onclick="window.location.href='galeri.html'">Publikasi</li>
+
+                    <li class="menu-item" onclick="window.location.href='kontak.html'">Kontak</li>
                 </ul>
                 <button style="margin-left:10px; border:none; background:transparent; color:var(--primary-color); cursor:pointer;">
                     <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
                 </button>
             </nav>
 
+            <button class="hamburger-btn" id="hamburgerBtn" onclick="toggleMobileMenu()">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+
+        <div class="mobile-nav-dropdown" id="mobileNavDropdown">
+            <div class="mobile-menu-item" onclick="window.location.href='index.html'">Beranda</div>
+            <div class="mobile-menu-item has-submenu" onclick="toggleMobileSubmenu(this)">Layanan</div>
+            <div class="mobile-submenu">
+                <a href="konsesi.html">Izin Konsesi</a>
+                <a href="maritim.html">Izin Maritim</a>
+                <a href="fm.html">Izin Penyiaran FM</a>
+            </div>
+            <div class="mobile-menu-item has-submenu" onclick="toggleMobileSubmenu(this)">Publikasi</div>
+            <div class="mobile-submenu">
+                <a href="galeri.html">Galeri Foto</a>
+                <a href="#">Galeri Video</a>
+            </div>
+            <div class="mobile-menu-item" onclick="window.location.href='kontak.html'">Kontak</div>
         </div>
     </header>
 
@@ -346,25 +381,21 @@
                         <div class="timeline-title">1. Melengkapi Berkas Permohonan ISR</div>
                         <div class="timeline-desc">Pemohon memastikan kelengkapan dokumen persyaratan permohonan ISR sebelum diajukan.</div>
                     </div>
-                    
                     <div class="timeline-item">
                         <div class="timeline-dot"></div>
                         <div class="timeline-title">2. Verifikasi Persyaratan</div>
                         <div class="timeline-desc">Memastikan dokumen pendukung lengkap dalam bentuk soft file (scan dokumen).</div>
                     </div>
-
                     <div class="timeline-item">
                         <div class="timeline-dot"></div>
                         <div class="timeline-title">3. Input Data</div>
                         <div class="timeline-desc">Pemohon mengunggah dokumen persyaratan sesuai kategori pada sistem.</div>
                     </div>
-
                     <div class="timeline-item">
                         <div class="timeline-dot"></div>
                         <div class="timeline-title">4. Analisa Teknis</div>
                         <div class="timeline-desc">Sistem menganalisa input data dan dokumen yang sudah diunggah oleh pemohon.</div>
                     </div>
-
                     <div class="timeline-item">
                         <div class="timeline-dot"></div>
                         <div class="timeline-title">5. Otorisasi</div>
@@ -374,35 +405,29 @@
                             <span style="color:var(--primary-color); font-weight:600;">Jika Approved:</span> Proses berlanjut ke tahap submit.
                         </div>
                     </div>
-
                     <div class="timeline-item">
                         <div class="timeline-dot"></div>
                         <div class="timeline-title">6. Terbit SPP BHP Frekuensi Radio</div>
                         <div class="timeline-desc">Jika disetujui, sistem akan menerbitkan Surat Perintah Pembayaran (SPP) untuk Biaya Hak Penggunaan (BHP).</div>
                     </div>
-
                     <div class="timeline-item">
                         <div class="timeline-dot"></div>
                         <div class="timeline-title">7. Pembayaran SPP BHP (Host to Host)</div>
-                        <div class="timeline-desc">
-                            Pemohon melakukan pembayaran di Bank langsung atau melalui Mobile Banking (<strong>Mandiri, BNI, BRI</strong>).
-                        </div>
+                        <div class="timeline-desc">Pemohon melakukan pembayaran di Bank langsung atau melalui Mobile Banking (<strong>Mandiri, BNI, BRI</strong>).</div>
                     </div>
-
                     <div class="timeline-item">
                         <div class="timeline-dot" style="background:var(--accent-yellow); border-color:var(--accent-yellow);"></div>
                         <div class="timeline-title">8. Izin Stasiun Radio Terbit</div>
                         <div class="timeline-desc">Proses selesai. Izin Stasiun Radio (ISR) diterbitkan dan dapat diunduh oleh pemohon.</div>
                     </div>
                 </div>
-                </div>
+            </div>
         </div>
 
         <div class="sidebar-area">
             <div class="sidebar-card">
                 <h3 style="margin-top:0; color:var(--text-dark);">Aksi Cepat</h3>
                 <p style="font-size:13px;">Gunakan tombol di bawah ini untuk memulai proses atau mengunduh panduan.</p>
-                                          
                 <div style="margin-top: 20px;">
                     <a href="#" class="btn-download">
                         <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
@@ -437,9 +462,7 @@
                 </div>
                 <div class="footer-col">
                     <h3>Jam Pelayanan</h3>
-                    <p style="color:rgba(255,255,255,0.7);">
-                        Senin - Kamis: 08.00 - 16.00<br>Jumat: 08.00 - 16.30
-                    </p>
+                    <p style="color:rgba(255,255,255,0.7);">Senin - Kamis: 08.00 - 16.00<br>Jumat: 08.00 - 16.30</p>
                 </div>
             </div>
         </div>
@@ -465,44 +488,29 @@
     </button>
 
     <script>
-        // --- [NEW] LOGIKA PAGE TRANSITION (LOADING) ---
-        
-        // Hilangkan loader saat halaman selesai dimuat (Load Event)
         window.addEventListener('load', () => {
             const loader = document.getElementById('pageLoader');
             if(loader) loader.classList.add('hidden');
         });
 
-        // Tangani masalah tombol "Back" di browser (bfcache)
         window.addEventListener('pageshow', (event) => {
             const loader = document.getElementById('pageLoader');
-            if (event.persisted && loader) {
-                loader.classList.add('hidden');
-            }
+            if (event.persisted && loader) loader.classList.add('hidden');
         });
 
-        // Intercept Link Clicks untuk menampilkan Loader sebelum pindah halaman
         document.querySelectorAll('a').forEach(link => {
             link.addEventListener('click', function(e) {
                 const href = this.getAttribute('href');
                 const target = this.getAttribute('target');
-
-                // Hanya jalankan jika link valid, bukan hash (#), bukan JS, dan bukan open new tab
                 if (href && href !== '#' && !href.startsWith('javascript') && target !== '_blank') {
-                    e.preventDefault(); // Stop perpindahan langsung
-                    
+                    e.preventDefault(); 
                     const loader = document.getElementById('pageLoader');
-                    loader.classList.remove('hidden'); // Munculkan loader
-
-                    // Tunggu animasi sebentar (500ms) lalu pindah
-                    setTimeout(() => {
-                        window.location.href = href;
-                    }, 500);
+                    loader.classList.remove('hidden'); 
+                    setTimeout(() => { window.location.href = href; }, 500);
                 }
             });
         });
 
-        // --- EXISTING LOGIC ---
         function animateChatToggle() {
             const btn = document.getElementById("toggleBtn");
             const box = document.getElementById("chatBox");
@@ -514,12 +522,26 @@
 
         window.addEventListener('scroll', function() {
             const header = document.getElementById('mainHeader');
-            if (window.scrollY > 20) {
-                header.classList.add('header-minimal');
-            } else {
-                header.classList.remove('header-minimal');
-            }
+            if (window.scrollY > 20) header.classList.add('header-minimal');
+            else header.classList.remove('header-minimal');
         });
+
+        function toggleMobileMenu() {
+            const hamburger = document.getElementById('hamburgerBtn');
+            const mobileNav = document.getElementById('mobileNavDropdown');
+            hamburger.classList.toggle('active');
+            mobileNav.classList.toggle('active');
+        }
+
+        function toggleMobileSubmenu(element) {
+            const submenu = element.nextElementSibling;
+            element.classList.toggle('active');
+            if (submenu && submenu.classList.contains('mobile-submenu')) {
+                submenu.classList.toggle('active');
+            }
+        }
     </script>
+    <script src="TTS_Adaptif.js"></script>
+
 </body>
 </html>
