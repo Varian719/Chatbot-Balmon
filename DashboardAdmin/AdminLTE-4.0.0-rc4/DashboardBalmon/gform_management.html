@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="utf-8" />
+    <title>Admin Balmon | Manajemen G-Form</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/source-sans-3@5.0.12/index.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/admin-lte@4.0.0-beta2/dist/css/adminlte.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+
+    <style>
+        /* KEAMANAN & VISUAL */
+        body { visibility: hidden; opacity: 0; transition: opacity 0.5s; background-color: #f4f6f9; }
+        
+        #security-overlay {
+            visibility: visible; opacity: 1; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            background: #ffffff; z-index: 99999; display: flex; flex-direction: column;
+            justify-content: center; align-items: center;
+        }
+        
+        /* Kartu Form */
+        .form-card { transition: all 0.3s; border: none; border-left: 5px solid #6f42c1; }
+        .form-card:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(111, 66, 193, 0.15) !important; }
+        
+        .bg-purple { background-color: #6f42c1 !important; color: white; }
+        .text-purple { color: #6f42c1 !important; }
+        
+        /* Iframe Preview */
+        .sheet-frame { width: 100%; height: 80vh; border: none; }
+    </style>
+</head>
+
+<body class="layout-fixed sidebar-expand-lg bg-body-tertiary">
+
+    <div id="security-overlay">
+        <div class="spinner-border text-primary mb-3" role="status"></div>
+        <h5 class="fw-bold">Memuat Data Form...</h5>
+    </div>
+
+    <div class="app-wrapper">
+        <nav class="app-header navbar navbar-expand bg-body shadow-sm">
+            <div class="container-fluid">
+                <ul class="navbar-nav">
+                    <li class="nav-item"> <a class="nav-link" data-lte-toggle="sidebar" href="#"><i class="bi bi-list"></i></a> </li>
+                    <li class="nav-item d-none d-md-block"> <span class="nav-link fw-bold text-primary">MANAJEMEN GOOGLE FORM</span> </li>
+                </ul>
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item d-none d-md-block me-3"> <span class="nav-link text-muted" id="user-display">Checking...</span> </li>
+                    <li class="nav-item"> <button id="btnLogout" class="btn btn-sm btn-danger"><i class="bi bi-power"></i> Keluar</button> </li>
+                </ul>
+            </div>
+        </nav>
+
+        <aside class="app-sidebar bg-dark shadow" data-bs-theme="dark">
+            <div class="sidebar-brand">
+                <a href="index.html" class="brand-link text-center">
+                    <span class="brand-text fw-bold">BALMON SAMARINDA</span>
+                </a>
+            </div>
+            <div class="sidebar-wrapper">
+                <nav class="mt-2">
+                    <ul class="nav sidebar-menu flex-column">
+                        <li class="nav-item"> <a href="admin-balmon.html" class="nav-link"> <i class="nav-icon bi bi-speedometer2"></i> <p>Dashboard</p> </a> </li>
+                        <li class="nav-item"> <a href="dokumen.html" class="nav-link"> <i class="nav-icon bi bi-folder-check"></i> <p>Arsip Digital</p> </a> </li>
+                        
+                        <li class="nav-item"> 
+                            <a href="gform.html" class="nav-link active"> <i class="nav-icon bi bi-ui-checks"></i> <p>Manajemen G-Form</p> </a> 
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </aside>
+
+        <main class="app-main">
+            <div class="app-content-header">
+                <div class="container-fluid">
+                    <div class="row align-items-center">
+                        <div class="col-sm-6"> <h3 class="mb-0">Daftar Formulir Online</h3> </div>
+                        <div class="col-sm-6 text-end">
+                            <a href="https://docs.google.com/forms/u/0/?tgif=d" target="_blank" class="btn btn-outline-success me-2">
+                                <i class="bi bi-plus-lg"></i> Buat Form Baru
+                            </a>
+                            <button class="btn btn-primary bg-purple border-0" data-bs-toggle="modal" data-bs-target="#modalForm">
+                                <i class="bi bi-bookmark-plus"></i> Simpan Link Form
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="app-content">
+                <div class="container-fluid">
+                    <div class="row" id="gridForm">
+                         <div class="col-12 text-center py-5">
+                             <div class="spinner-border text-primary" role="status"></div>
+                             <p class="mt-2 text-muted">Mengambil data form...</p>
+                         </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <div class="modal fade" id="modalForm" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-purple text-white">
+                    <h5 class="modal-title"><i class="bi bi-ui-checks"></i> Input Data Form</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="formGForm">
+                        <div class="alert alert-light border small">
+                            <i class="bi bi-info-circle text-primary"></i> <b>Tips:</b> Salin link langsung dari browser (Address Bar).
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Judul Formulir</label>
+                            <input type="text" class="form-control" id="inputJudul" placeholder="Contoh: Absensi Rapat" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-bold text-purple">Link Google Form (Untuk diisi user)</label>
+                            <input type="url" class="form-control" id="inputLinkIsi" placeholder="https://forms.gle/..." required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-bold text-success">Link Spreadsheet (Hasil Data)</label>
+                            <input type="url" class="form-control" id="inputLinkHasil" placeholder="https://docs.google.com/spreadsheets/d/..." required>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                    <button type="button" class="btn btn-primary bg-purple border-0" id="btnSimpan">Simpan</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="modalPreview" tabindex="-1">
+        <div class="modal-dialog modal-xl modal-dialog-scrollable" style="height: 90vh;">
+            <div class="modal-content h-100">
+                <div class="modal-header bg-success text-white">
+                    <h5 class="modal-title"><i class="bi bi-table"></i> Preview Data Spreadsheet</h5>
+                    <div class="ms-auto">
+                        <a id="btnOpenReal" href="#" target="_blank" class="btn btn-sm btn-light text-success me-2"><i class="bi bi-box-arrow-up-right"></i> Buka Full Screen</a>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                    </div>
+                </div>
+                <div class="modal-body p-0">
+                    <div id="iframeContainer" class="h-100 d-flex justify-content-center align-items-center bg-light">
+                        <div class="spinner-border text-success" role="status"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/admin-lte@4.0.0-beta2/dist/js/adminlte.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getDatabase, ref, push, onValue, remove } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDUeIg9Zn_xndPXtChO8KufXFp6EMtqBJ0",
+            authDomain: "admin-pelayanan-balmon.firebaseapp.com",
+            databaseURL: "https://admin-pelayanan-balmon-default-rtdb.firebaseio.com",
+            projectId: "admin-pelayanan-balmon",
+            appId: "1:1071557110255:web:bff7087da1feacccb7ee1a"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+        const auth = getAuth(app);
+
+        // 1. CEK LOGIN
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                document.getElementById('user-display').innerText = user.email;
+                document.body.style.visibility = 'visible';
+                document.body.style.opacity = '1';
+                document.getElementById('security-overlay').style.display = 'none';
+                loadDataForm();
+            } else {
+                window.location.replace("login.html");
+            }
+        });
+
+        document.getElementById('btnLogout').addEventListener('click', () => {
+            signOut(auth).then(() => window.location.replace("login.html"));
+        });
+
+        // 2. LOAD DATA
+        function loadDataForm() {
+            onValue(ref(db, 'daftar_gform'), (snapshot) => {
+                const grid = document.getElementById('gridForm');
+                grid.innerHTML = "";
+
+                if (snapshot.exists()) {
+                    const data = snapshot.val();
+                    let items = [];
+                    Object.keys(data).forEach(key => items.push({id: key, ...data[key]}));
+                    items.sort((a, b) => b.timestamp - a.timestamp);
+
+                    items.forEach(item => {
+                        // Tombol Preview memanggil fungsi previewSheet()
+                        const html = `
+                        <div class="col-md-6 col-lg-4 mb-4">
+                            <div class="card h-100 shadow-sm form-card">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between align-items-start mb-3">
+                                        <div class="d-flex align-items-center gap-2">
+                                            <div class="bg-purple text-white rounded p-2"><i class="bi bi-ui-checks fs-4"></i></div>
+                                            <div>
+                                                <h6 class="card-title fw-bold text-dark mb-0 text-truncate" style="max-width: 180px;">${item.judul}</h6>
+                                                <small class="text-muted">${item.tanggal}</small>
+                                            </div>
+                                        </div>
+                                        <div class="dropdown">
+                                            <button class="btn btn-link text-muted p-0" data-bs-toggle="dropdown"><i class="bi bi-three-dots-vertical"></i></button>
+                                            <ul class="dropdown-menu dropdown-menu-end">
+                                                <li><a class="dropdown-item text-danger" href="#" onclick="hapusForm('${item.id}')"><i class="bi bi-trash me-2"></i>Hapus</a></li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="d-grid gap-2 mt-4">
+                                        <a href="${item.link_isi}" target="_blank" class="btn btn-outline-primary btn-sm text-start shadow-sm">
+                                            <i class="bi bi-send me-2"></i> Link Isi Form (User)
+                                        </a>
+                                        
+                                        <div class="btn-group shadow-sm" role="group">
+                                            <a href="${item.link_hasil}" target="_blank" class="btn btn-outline-success btn-sm text-start w-75">
+                                                <i class="bi bi-file-earmark-excel me-2"></i> Buka Excel
+                                            </a>
+                                            <button onclick="previewSheet('${item.link_hasil}')" class="btn btn-success btn-sm w-25" title="Intip Data Langsung">
+                                                <i class="bi bi-eye"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>`;
+                        grid.innerHTML += html;
+                    });
+                } else {
+                    grid.innerHTML = `<div class="col-12 text-center text-muted py-5"><i class="bi bi-clipboard-x display-1 opacity-25"></i><p class="mt-3">Belum ada Form.</p></div>`;
+                }
+            });
+        }
+
+        // 3. LOGIKA PREVIEW SPREADSHEET (MAGIC HAPPENS HERE)
+        window.previewSheet = function(originalUrl) {
+            // Regex untuk mengambil ID Spreadsheet dari link panjang
+            // Contoh: https://docs.google.com/spreadsheets/d/1BxiMVs.../edit
+            const match = originalUrl.match(/\/d\/([a-zA-Z0-9-_]+)/);
+            
+            if (match && match[1]) {
+                const sheetId = match[1];
+                // URL Embed Google Sheet
+                const embedUrl = `https://docs.google.com/spreadsheets/d/${sheetId}/htmlview?embedded=true`;
+                
+                // Masukkan ke Iframe Modal
+                const container = document.getElementById('iframeContainer');
+                container.innerHTML = `<iframe src="${embedUrl}" class="sheet-frame" allowfullscreen></iframe>`;
+                
+                // Set link tombol "Buka Full"
+                document.getElementById('btnOpenReal').href = originalUrl;
+
+                // Tampilkan Modal
+                const modal = new bootstrap.Modal(document.getElementById('modalPreview'));
+                modal.show();
+            } else {
+                Swal.fire("Error", "Link Spreadsheet tidak valid atau tidak dikenali.", "error");
+            }
+        };
+
+        // 4. SIMPAN FORM
+        document.getElementById('btnSimpan').addEventListener('click', () => {
+            const judul = document.getElementById('inputJudul').value;
+            const linkIsi = document.getElementById('inputLinkIsi').value;
+            const linkHasil = document.getElementById('inputLinkHasil').value;
+
+            if(!judul || !linkIsi || !linkHasil) return Swal.fire("Gagal", "Lengkapi semua data!", "warning");
+
+            push(ref(db, 'daftar_gform'), {
+                judul: judul, link_isi: linkIsi, link_hasil: linkHasil,
+                tanggal: new Date().toLocaleDateString('id-ID'), timestamp: Date.now()
+            }).then(() => {
+                Swal.fire("Sukses", "Data tersimpan!", "success");
+                document.getElementById('formGForm').reset();
+                bootstrap.Modal.getInstance(document.getElementById('modalForm')).hide();
+            });
+        });
+
+        // 5. HAPUS FORM
+        window.hapusForm = function(id) {
+            Swal.fire({
+                title: 'Hapus?', text: "Hanya menghapus pintasan, data asli aman.", icon: 'warning',
+                showCancelButton: true, confirmButtonColor: '#d33', confirmButtonText: 'Ya'
+            }).then((res) => {
+                if(res.isConfirmed) remove(ref(db, 'daftar_gform/' + id));
+            });
+        };
+    </script>
+</body>
+</html>

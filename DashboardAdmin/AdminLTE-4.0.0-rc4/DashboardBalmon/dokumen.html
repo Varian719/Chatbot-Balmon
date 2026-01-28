@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
   <meta charset="utf-8" />
-  <title>Admin Balmon | Manajemen Arsip</title>
+  <title>Admin Balmon | Manajemen Arsip Aman</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/source-sans-3@5.0.12/index.css" />
@@ -11,10 +11,33 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
 
   <style>
-    /* Efek hover pada kartu dokumen */
+    /* --- SISTEM KEAMANAN VISUAL --- */
+    /* 1. Sembunyikan isi website secara default saat dimuat */
+    body {
+        visibility: hidden;
+        opacity: 0;
+        background-color: #f4f6f9;
+        transition: opacity 0.5s ease-in-out;
+    }
+
+    /* 2. Layar Pengunci (Overlay) - Muncul sebelum data dimuat */
+    #security-overlay {
+        visibility: visible;
+        opacity: 1;
+        position: fixed;
+        top: 0; left: 0;
+        width: 100vw; height: 100vh;
+        background: #ffffff;
+        z-index: 99999;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+
+    /* Styling Tambahan */
     .card-doc { transition: transform 0.2s, box-shadow 0.2s; cursor: default; }
     .card-doc:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.1) !important; }
-    /* Styling scrollbar agar lebih rapi */
     ::-webkit-scrollbar { width: 8px; }
     ::-webkit-scrollbar-track { background: #f1f1f1; }
     ::-webkit-scrollbar-thumb { background: #ccc; border-radius: 4px; }
@@ -23,6 +46,15 @@
 </head>
 
 <body class="layout-fixed sidebar-expand-lg bg-body-tertiary">
+
+  <div id="security-overlay">
+      <div class="spinner-border text-primary" role="status" style="width: 3rem; height: 3rem;">
+          <span class="visually-hidden">Loading...</span>
+      </div>
+      <h4 class="mt-4 fw-bold text-dark">Memverifikasi Enkripsi...</h4>
+      <p class="text-muted">Membuka brankas arsip digital</p>
+  </div>
+
   <div class="app-wrapper">
 
     <nav class="app-header navbar navbar-expand bg-body shadow-sm">
@@ -32,12 +64,19 @@
           <li class="nav-item"><span class="nav-link fw-bold text-primary">Panel Admin Arsip</span></li>
         </ul>
         <ul class="navbar-nav ms-auto">
+            <li class="nav-item d-none d-md-block me-3">
+                <span class="nav-link text-muted" id="user-display">Checking...</span>
+            </li>
             <li class="nav-item">
                 <button id="authorize_button" class="btn btn-primary btn-sm me-2 shadow-sm" style="display: none;">
-                    <i class="bi bi-google"></i> Login Google Drive
+                    <i class="bi bi-google"></i> Login Drive
                 </button>
-                <button id="signout_button" class="btn btn-outline-danger btn-sm shadow-sm" style="display: none;">
-                    <i class="bi bi-box-arrow-right"></i> Logout
+                <button id="signout_button" class="btn btn-outline-secondary btn-sm me-2 shadow-sm" style="display: none;">
+                    <i class="bi bi-cloud-slash"></i> Logout Drive
+                </button>
+                
+                <button id="btnSystemLogout" class="btn btn-danger btn-sm shadow-sm">
+                    <i class="bi bi-power"></i> Keluar
                 </button>
             </li>
         </ul>
@@ -104,7 +143,7 @@
           <div class="row" id="gridDokumen">
              <div class="col-12 text-center py-5">
                  <div class="spinner-border text-primary" role="status"></div>
-                 <p class="mt-2 text-muted">Mengambil data dari Firebase...</p>
+                 <p class="mt-2 text-muted">Mengambil data aman dari Firebase...</p>
              </div>
           </div>
 
@@ -118,16 +157,16 @@
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script> <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 
   <script async defer src="https://apis.google.com/js/api.js" onload="gapiLoaded()"></script>
   <script async defer src="https://accounts.google.com/gsi/client" onload="gisLoaded()"></script>
 
   <script>
     // ============================================================
-    // 1. KONFIGURASI (JANGAN UBAH ID FOLDER INI)
+    // 1. KONFIGURASI DAN INISIALISASI
     // ============================================================
-    const TARGET_FOLDER_ID = '1EUgbh4L8nh9J8X2EDc1s0KhnrqQGQmzL'; // ID Folder Anda
+    const TARGET_FOLDER_ID = '1EUgbh4L8nh9J8X2EDc1s0KhnrqQGQmzL'; // ID Folder Drive Anda
     
     const firebaseConfig = {
       apiKey: "AIzaSyDUeIg9Zn_xndPXtChO8KufXFp6EMtqBJ0",
@@ -137,6 +176,7 @@
       appId: "1:1071557110255:web:bff7087da1feacccb7ee1a"
     };
 
+    // Google Drive API Config
     const CLIENT_ID = '1053263347737-g32v5386cnfl8dbe49i0t9i9pv9fg44t.apps.googleusercontent.com'; 
     const API_KEY = 'AIzaSyAcIVdG6dQxewbNNlvRCWb0yGjCWoeqdE4'; 
     const DISCOVERY_DOC = 'https://www.googleapis.com/discovery/v1/apis/drive/v3/rest';
@@ -144,31 +184,85 @@
 
     // Inisialisasi Firebase
     if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
     const db = firebase.database();
-    let allDocs = []; // Menyimpan data lokal untuk pencarian
+    
+    let allDocs = []; // Lokal storage untuk pencarian
 
     // ============================================================
-    // 2. LOGIKA FIREBASE (TAMPILKAN & CARI DATA)
+    // 2. SISTEM KEAMANAN (SATPAM DIGITAL)
     // ============================================================
     
-    // Ambil Data Realtime
-    db.ref('arsip_drive').on('value', snap => {
-        const grid = document.getElementById('gridDokumen');
+    // Cek apakah User Login (Ini adalah gerbang utamanya)
+    auth.onAuthStateChanged((user) => {
+        const overlay = document.getElementById('security-overlay');
         
-        if(!snap.exists()) {
-            allDocs = [];
-            renderGrid(allDocs);
-            return;
-        }
+        if (user) {
+            // --- AKSES DITERIMA ---
+            console.log("Akses Diberikan untuk: " + user.email);
+            document.getElementById('user-display').innerText = user.email;
 
-        allDocs = [];
-        snap.forEach(child => { allDocs.push({ key: child.key, ...child.val() }); });
-        
-        // Urutkan Terbaru di Atas
-        allDocs.sort((a, b) => b.timestamp - a.timestamp);
-        
-        renderGrid(allDocs);
+            // Buka Gerbang (Hapus Overlay)
+            setTimeout(() => {
+                document.body.style.visibility = 'visible';
+                document.body.style.opacity = '1';
+                overlay.style.opacity = '0';
+                setTimeout(() => overlay.style.display = 'none', 500);
+            }, 800);
+
+            // Mulai Muat Data dari Database
+            loadDataArsip();
+
+        } else {
+            // --- AKSES DITOLAK ---
+            console.warn("User ilegal terdeteksi. Mengusir...");
+            window.location.replace("login.html"); // Tendang ke halaman login
+        }
     });
+
+    // Fungsi Logout Sistem (Aplikasi)
+    document.getElementById('btnSystemLogout').addEventListener('click', () => {
+        Swal.fire({
+            title: 'Keluar Sistem?',
+            text: "Sesi anda akan diakhiri.",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Ya, Keluar',
+            cancelButtonText: 'Batal'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Tampilkan overlay lagi saat logout
+                document.getElementById('security-overlay').style.display = 'flex';
+                document.getElementById('security-overlay').style.opacity = '1';
+                auth.signOut().then(() => {
+                    window.location.replace("login.html");
+                });
+            }
+        });
+    });
+
+    // ============================================================
+    // 3. LOGIKA DATA ARSIP (FIREBASE DATABASE)
+    // ============================================================
+    
+    function loadDataArsip() {
+        db.ref('arsip_drive').on('value', snap => {
+            const grid = document.getElementById('gridDokumen');
+            
+            if(!snap.exists()) {
+                allDocs = [];
+                renderGrid(allDocs);
+                return;
+            }
+
+            allDocs = [];
+            snap.forEach(child => { allDocs.push({ key: child.key, ...child.val() }); });
+            
+            // Urutkan Terbaru di Atas
+            allDocs.sort((a, b) => b.timestamp - a.timestamp);
+            renderGrid(allDocs);
+        });
+    }
 
     // Fungsi Render ke HTML
     function renderGrid(dataList) {
@@ -180,7 +274,6 @@
 
         let html = '';
         dataList.forEach(d => {
-            // Deteksi Tipe File untuk Ikon
             let isPdf = d.tipe && d.tipe.toLowerCase().includes('pdf');
             let iconClass = isPdf ? 'bi-file-earmark-pdf-fill text-danger' : 'bi-file-earmark-word-fill text-primary';
             let dateStr = new Date(d.timestamp).toLocaleDateString('id-ID', {day: 'numeric', month: 'short', year: 'numeric'});
@@ -218,7 +311,7 @@
     });
 
     // Fungsi Hapus Data
-    function hapusData(key) {
+    window.hapusData = function(key) {
         Swal.fire({
             title: 'Hapus Arsip?',
             text: "Link akan dihapus dari aplikasi. File asli di Google Drive TIDAK otomatis terhapus (harus dihapus manual jika perlu).",
@@ -237,17 +330,20 @@
     }
 
     // ============================================================
-    // 3. LOGIKA GOOGLE DRIVE (AUTH & UPLOAD)
+    // 4. LOGIKA GOOGLE DRIVE (KHUSUS UNTUK UPLOAD)
     // ============================================================
+    // Bagian ini terpisah dari Login Sistem. Admin login sistem pakai Firebase,
+    // tapi untuk Upload harus Otorisasi Drive (bisa akun Gmail yang berbeda).
+    
     let tokenClient;
     let gapiInited = false, gisInited = false;
 
-    function gapiLoaded() { gapi.load('client', async () => {
+    window.gapiLoaded = function() { gapi.load('client', async () => {
         await gapi.client.init({ apiKey: API_KEY, discoveryDocs: [DISCOVERY_DOC] });
         gapiInited = true; checkAuth();
     });}
     
-    function gisLoaded() {
+    window.gisLoaded = function() {
         tokenClient = google.accounts.oauth2.initTokenClient({
             client_id: CLIENT_ID, scope: SCOPES, callback: '',
         });
@@ -256,12 +352,10 @@
 
     function checkAuth() {
         if (gapiInited && gisInited) {
-            // Default state: Minta login
-            updateUI(false);
+            updateUI(false); // Default state
         }
     }
 
-    // Tombol Login
     document.getElementById('authorize_button').onclick = () => {
         tokenClient.callback = async (resp) => {
             if (resp.error) throw (resp);
@@ -270,7 +364,6 @@
         tokenClient.requestAccessToken({prompt: 'consent'});
     };
 
-    // Tombol Logout
     document.getElementById('signout_button').onclick = () => {
         const token = gapi.client.getToken();
         if (token) {
@@ -288,23 +381,21 @@
 
         if(isLoggedIn) {
             btnLogin.style.display = 'none';
-            btnLogout.style.display = 'block';
+            btnLogout.style.display = 'inline-block';
             btnUpload.disabled = false;
             statusDiv.className = 'alert alert-success border py-2 mb-3';
-            statusDiv.innerHTML = '<small><i class="bi bi-check-circle-fill"></i> <b>Terkoneksi.</b> File akan disimpan ke folder Arsip Balmon.</small>';
+            statusDiv.innerHTML = '<small><i class="bi bi-check-circle-fill"></i> <b>Terkoneksi Drive.</b> Siap upload.</small>';
         } else {
-            btnLogin.style.display = 'block';
+            btnLogin.style.display = 'inline-block';
             btnLogout.style.display = 'none';
             btnUpload.disabled = true;
             statusDiv.className = 'alert alert-warning border py-2 mb-3';
-            statusDiv.innerHTML = '<small><i class="bi bi-exclamation-triangle"></i> Silakan <b>Login Google Drive</b> untuk mengupload file.</small>';
+            statusDiv.innerHTML = '<small><i class="bi bi-exclamation-triangle"></i> Silakan <b>Login Drive</b> untuk mengupload file.</small>';
         }
     }
 
-    // ============================================================
-    // 4. FUNGSI UPLOAD FILE KE FOLDER SPESIFIK
-    // ============================================================
-    async function uploadToDrive() {        const fileInput = document.getElementById('docFile');
+    window.uploadToDrive = async function() { 
+        const fileInput = document.getElementById('docFile');
         const judul = document.getElementById('docJudul').value;
         const file = fileInput.files[0];
 
@@ -312,7 +403,6 @@
             return Swal.fire({ title: 'Data Belum Lengkap', text: 'Mohon isi judul dan pilih file.', icon: 'warning' });
         }
 
-        // Tampilkan Loading
         Swal.fire({
             title: 'Sedang Mengupload...',
             html: 'Mengirim file ke folder Google Drive...',
@@ -323,11 +413,10 @@
         try {
             const accessToken = gapi.client.getToken().access_token;
             
-            // --- INTI UPLOAD ---
             const metadata = { 
                 'name': file.name, 
                 'mimeType': file.type,
-                'parents': [TARGET_FOLDER_ID] // Mengarahkan ke Folder Anda
+                'parents': [TARGET_FOLDER_ID]
             };
 
             const form = new FormData();
@@ -343,7 +432,6 @@
             const driveData = await response.json();
             if(driveData.error) throw new Error(driveData.error.message);
 
-            // Simpan Metadata ke Firebase
             await db.ref('arsip_drive').push({
                 judul: judul,
                 drive_id: driveData.id,
@@ -351,10 +439,7 @@
                 timestamp: firebase.database.ServerValue.TIMESTAMP
             });
 
-            // Sukses
             Swal.fire('Berhasil Upload!', 'Dokumen sudah tersimpan dan dapat diakses publik.', 'success');
-            
-            // Reset Form
             document.getElementById('docJudul').value = '';
             document.getElementById('docFile').value = '';
 
