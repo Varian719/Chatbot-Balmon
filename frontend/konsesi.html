@@ -5,7 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Izin Konsesi - Balmon Samarinda</title>
     
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/png" href="logo-ikon.png" sizes="32x32">
+    <link rel="icon" type="image/svg+xml" href="balmonsmd1.png">
+    <link rel="apple-touch-icon" href="logo-180x180.png">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
     <style>
         /* ========================================= */
@@ -310,14 +316,14 @@
                         </ul>
                     </li>
                     <li class="menu-item" onclick="window.location.href='galeri.html'">Publikasi</li>
-
+                    <li class="menu-item" onclick="window.location.href='arsip.html'">Download</li>
                     <li class="menu-item" onclick="window.location.href='kontak.html'">Kontak</li>
                 </ul>
                 <button style="margin-left:10px; border:none; background:transparent; color:var(--primary-color); cursor:pointer;">
                     <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
                 </button>
             </nav>
-
+            
             <button class="hamburger-btn" id="hamburgerBtn" onclick="toggleMobileMenu()">
                 <span></span>
                 <span></span>
@@ -359,6 +365,11 @@
                 <p>
                     Layanan perizinan penggunaan spektrum frekuensi radio untuk penyelenggaraan jaringan telekomunikasi, penyiaran, maupun keperluan khusus. Izin ini diberikan kepada badan hukum yang telah memenuhi persyaratan teknis dan administratif sesuai peraturan perundang-undangan.
                 </p>
+
+                <div style="margin-top: 25px; margin-bottom: 10px; text-align: center;">
+                    <img src="alur-preizinan.png" alt="Alur Pengajuan dan Prosedur" style="width: 100%; height: auto; border-radius: 8px; border: 1px solid #eee; box-shadow: 0 4px 10px rgba(0,0,0,0.05);">
+                    <div style="font-size: 12px; color: var(--text-gray); margin-top: 8px;">Diagram Alur Pengajuan ISR</div>
+                </div>
 
                 <hr style="border: 0; border-top: 1px solid #eee; margin: 30px 0;">
 
@@ -428,25 +439,15 @@
             <div class="sidebar-card">
                 <h3 style="margin-top:0; color:var(--text-dark);">Aksi Cepat</h3>
                 <p style="font-size:13px;">Gunakan tombol di bawah ini untuk memulai proses atau mengunduh panduan.</p>
-<<<<<<< Updated upstream
-=======
-                
->>>>>>> Stashed changes
                 <div style="margin-top: 20px;">
-                    
-                    
-                    <a id="btnPanduan" id="btnPanduan" href="#" class="btn-download" target="_blank" target="_blank">
+                    <a href="#" class="btn-download">
                         <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
                         Panduan Teknis.pdf
                     </a>
-        
-        
-                    <a id="btnFormulir" id="btnFormulir" href="#" class="btn-download" target="_blank" target="_blank">
+                    <a href="#" class="btn-download">
                         <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
                         Formulir Manual
                     </a>
-        
-        
                 </div>
             </div>
         </div>
@@ -551,74 +552,7 @@
             }
         }
     </script>
-<<<<<<< Updated upstream
     <script src="TTS_Adaptif.js"></script>
 
-=======
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
-    
-    <script>
-        // 1. CONFIG FIREBASE (Sama seperti di Admin)
-        const firebaseConfig = {
-            apiKey: "AIzaSyDUeIg9Zn_xndPXtChO8KufXFp6EMtqBJ0",
-            authDomain: "admin-pelayanan-balmon.firebaseapp.com",
-            databaseURL: "https://admin-pelayanan-balmon-default-rtdb.firebaseio.com",
-            projectId: "admin-pelayanan-balmon",
-            appId: "1:1071557110255:web:bff7087da1feacccb7ee1a"
-        };
-    
-        if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
-        const db = firebase.database();
-    
-        // 2. SCRIPT PENCARI LINK OTOMATIS
-        db.ref('arsip_drive').on('value', snap => {
-            if(!snap.exists()) return;
-    
-            // Ambil semua data dokumen
-            let docs = [];
-            snap.forEach(c => docs.push(c.val()));
-            
-            // Urutkan dari yang terbaru (agar file revisi terbaru yang terambil)
-            docs.reverse();
-    
-            // Cari file berdasarkan kata kunci di JUDUL
-            const panduanDoc = docs.find(d => d.judul.toLowerCase().includes('panduan teknis'));
-            const formulirDoc = docs.find(d => d.judul.toLowerCase().includes('formulir'));
-    
-            // Jika ketemu, tempel link-nya ke tombol
-            if (panduanDoc) {
-                const btn = document.getElementById('btnPanduan');
-                if(btn) {
-                    btn.href = panduanDoc.url;
-                    // Opsional: Ganti teks tombol sesuai judul asli file
-                    // btn.innerHTML = '<svg ...></svg> ' + panduanDoc.judul; 
-                }
-            }
-    
-            if (formulirDoc) {
-                const btn = document.getElementById('btnFormulir');
-                if(btn) {
-                    btn.href = formulirDoc.url;
-                }
-            }
-        });
-
-        function toggleMobileMenu() {
-            const hamburger = document.getElementById('hamburgerBtn');
-            const mobileNav = document.getElementById('mobileNavDropdown');
-            hamburger.classList.toggle('active');
-            mobileNav.classList.toggle('active');
-        }
-
-        function toggleMobileSubmenu(element) {
-            const submenu = element.nextElementSibling;
-            element.classList.toggle('active');
-            if (submenu && submenu.classList.contains('mobile-submenu')) {
-                submenu.classList.toggle('active');
-            }
-        }
-    </script>
->>>>>>> Stashed changes
 </body>
 </html>

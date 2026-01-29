@@ -4,8 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kontak & Media Sosial - Balmon Samarinda</title>
-    
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/png" href="logo-ikon.png" sizes="32x32">
+    <link rel="icon" type="image/svg+xml" href="balmonsmd1.png">
+    <link rel="apple-touch-icon" href="logo-180x180.png">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
     <style>
         /* --- 1. SETUP WARNA & GLOBAL --- */
@@ -405,15 +410,39 @@
             font-size: 15px;
         }
 
-        /* --- FOOTER STYLE --- */
-        footer { background-color: var(--primary-color); color: white; padding-top: 70px; font-size: 14px; position: relative; padding-bottom: 120px; }
-        .footer-grid { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 40px; padding-bottom: 50px; }
+        /* --- FOOTER (Samakan dengan Index) --- */
+        footer { 
+            background-color: var(--primary-color); 
+            color: white; 
+            padding-top: 70px; 
+            font-size: 14px; 
+            position: relative; 
+            width: 100%; /* Pastikan lebar penuh */
+        }
+
+        .footer-grid { 
+            display: flex; 
+            flex-wrap: wrap; 
+            justify-content: space-between; 
+            gap: 40px; 
+            padding-bottom: 50px; 
+        }
+
         .footer-col { flex: 1; min-width: 250px; }
         .footer-col h3 { color: var(--accent-yellow); margin-bottom: 25px; font-size: 18px; font-weight: 700; }
+
         .footer-links a { color: rgba(255,255,255,0.8); display: block; margin-bottom: 12px; transition: 0.2s; }
         .footer-links a:hover { color: #fff; transform: translateX(5px); }
-        .copyright { background-color: rgba(0,0,0,0.1); text-align: center; padding: 25px 0; color: rgba(255,255,255,0.6); border-top: 1px solid rgba(255,255,255,0.1); }
 
+        /* Bagian Copyright: Background gelap, text tengah, padding cukup */
+        .copyright { 
+            background-color: rgba(0,0,0,0.1); 
+            text-align: center; 
+            padding: 25px 0; 
+            color: rgba(255,255,255,0.6); 
+            border-top: 1px solid rgba(255,255,255,0.1); 
+            width: 100%;
+        }
         /* Chat Widget */
         .chat-toggle-btn { position: fixed; bottom: 30px; right: 30px; width: 65px; height: 65px; background: linear-gradient(135deg, var(--primary-color), var(--primary-dark)); color: #fff; border: none; border-radius: 50%; box-shadow: 0 8px 25px rgba(0, 111, 176, 0.4); cursor: pointer; z-index: 9999; display: flex; align-items: center; justify-content: center; transition: 0.3s; }
         .chat-toggle-btn:hover { transform: scale(1.1); }
@@ -471,9 +500,12 @@
                         </ul>
                     </li>
                     <li class="menu-item" onclick="window.location.href='galeri.html'">Publikasi</li>
-
+                    <li class="menu-item" onclick="window.location.href='arsip.html'">Download</li>
                     <li class="menu-item" onclick="window.location.href='kontak.html'">Kontak</li>
                 </ul>
+                <button style="margin-left:10px; border:none; background:transparent; color:var(--primary-color); cursor:pointer;">
+                    <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                </button>
             </nav>
 
             <!-- HAMBURGER BUTTON (MOBILE) -->

@@ -4,9 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Arsip Digital - Balmon Samarinda</title>
-    
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.min.css">
+    <link rel="icon" type="image/png" href="logo-ikon.png" sizes="32x32">
+    <link rel="icon" type="image/svg+xml" href="balmonsmd1.png">
+    <link rel="apple-touch-icon" href="logo-180x180.png">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
     <style>
         /* ========================================= */
@@ -244,9 +248,13 @@
                             <li><a href="fm.html">Izin Penyiaran FM</a></li>
                         </ul>
                     </li>
-                    <li class="menu-item">Arsip</li>
-                    <li class="menu-item">Kontak</li>
+                    <li class="menu-item" onclick="window.location.href='galeri.html'">Publikasi</li>
+                    <li class="menu-item" onclick="window.location.href='arsip.html'">Download</li>
+                    <li class="menu-item" onclick="window.location.href='kontak.html'">Kontak</li>
                 </ul>
+                <button style="margin-left:10px; border:none; background:transparent; color:var(--primary-color); cursor:pointer;">
+                    <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                </button>
             </nav>
         </div>
     </header>
@@ -268,7 +276,7 @@
             
             <!-- SEARCH BAR (Hanya Judul) -->
             <div class="search-wrapper">
-                <input type="text" id="searchInput" class="search-input" placeholder="Cari dokumen (judul)...">
+                <input type="text" id="searchInput" class="search-input" placeholder="Cari dokumen...">
                 <button class="search-btn"><i class="bi bi-search"></i></button>
             </div>
 

@@ -1,0 +1,580 @@
+<!doctype html>
+<html lang="id">
+  <!--begin::Head-->
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Admin Balmon | Dashboard Utama</title>
+    <!--begin::Primary Meta Tags-->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="title" content="Admin Balmon | Dashboard Utama" />
+    <meta name="author" content="Balmon Samarinda" />
+    <meta
+      name="description"
+      content="Dashboard Admin Pelayanan Balai Monitor Spektrum Frekuensi Radio Kelas I Samarinda"
+    />
+    <!--end::Primary Meta Tags-->
+    
+    <!--begin::Fonts-->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/@fontsource/source-sans-3@5.0.12/index.css"
+      integrity="sha256-tXJfXfp6Ewt1ilPzLDt3n5eMIhJDwyUk18a504E13FW="
+      crossorigin="anonymous"
+    />
+    <!--end::Fonts-->
+    
+    <!--begin::Third Party Plugin(OverlayScrollbars)-->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/overlayscrollbars@2.3.0/styles/overlayscrollbars.min.css"
+      integrity="sha256-dSokZseQZM08dIGmFGWL0sXz1ZkfKXR8qSAdOR76t9E="
+      crossorigin="anonymous"
+    />
+    <!--end::Third Party Plugin(OverlayScrollbars)-->
+    
+    <!--begin::Third Party Plugin(Bootstrap Icons)-->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.min.css"
+      integrity="sha256-Qsx5lrGnflb136q+6lFctxp/wZEChiN7B5z371ps+85="
+      crossorigin="anonymous"
+    />
+    <!--end::Third Party Plugin(Bootstrap Icons)-->
+    
+    <!--begin::Required Plugin(AdminLTE)-->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/admin-lte@4.0.0-beta2/dist/css/adminlte.min.css" />
+    <!--end::Required Plugin(AdminLTE)-->
+
+    <!-- apexcharts -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/apexcharts@3.37.1/dist/apexcharts.css"
+      integrity="sha256-4MX+61mt9NVvvuPjUwdUdyfZfxSB1/Rf9WtqRBg+rxw="
+      crossorigin="anonymous"
+    />
+
+    <style>
+        /* Custom Style untuk Balmon */
+        .brand-link .brand-image {
+            float: left;
+            line-height: .8;
+            margin-left: .8rem;
+            margin-right: .5rem;
+            margin-top: -3px;
+            max-height: 33px;
+            width: auto;
+        }
+        /* Override warna sidebar agar senada dengan Balmon */
+        [data-bs-theme="dark"] .app-sidebar {
+            background-color: #343a40 !important; /* Dark Grey standar AdminLTE */
+        }
+    </style>
+  </head>
+  <!--end::Head-->
+  
+  <!--begin::Body-->
+  <body class="layout-fixed sidebar-expand-lg bg-body-tertiary">
+    <!--begin::App Wrapper-->
+    <div class="app-wrapper">
+      
+      <!--begin::Header-->
+      <nav class="app-header navbar navbar-expand bg-body">
+        <!--begin::Container-->
+        <div class="container-fluid">
+          <!--begin::Start Navbar Links-->
+          <ul class="navbar-nav">
+            <li class="nav-item">
+              <a class="nav-link" data-lte-toggle="sidebar" href="#" role="button">
+                <i class="bi bi-list"></i>
+              </a>
+            </li>
+            <li class="nav-item d-none d-md-block">
+              <span class="nav-link fw-bold text-primary">Sistem Admin Pelayanan Balmon</span>
+            </li>
+          </ul>
+          <!--end::Start Navbar Links-->
+
+          <!--begin::End Navbar Links-->
+          <ul class="navbar-nav ms-auto">
+            <!--begin::User Menu Dropdown-->
+            <li class="nav-item dropdown user-menu">
+              <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
+                <img
+                  src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png"
+                  class="user-image rounded-circle shadow"
+                  alt="User Image"
+                />
+                <span class="d-none d-md-inline">Administrator</span>
+              </a>
+              <ul class="dropdown-menu dropdown-menu-lg dropdown-menu-end">
+                <!--begin::User Image-->
+                <li class="user-header text-bg-primary">
+                  <img
+                    src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png"
+                    class="rounded-circle shadow"
+                    alt="User Image"
+                  />
+                  <p>
+                    Admin Balmon
+                    <small>Petugas Pelayanan</small>
+                  </p>
+                </li>
+                <!--end::User Image-->
+                <!--begin::Menu Footer-->
+                <li class="user-footer">
+                  <a href="#" class="btn btn-default btn-flat">Profile</a>
+                  <a href="#" class="btn btn-default btn-flat float-end">Sign out</a>
+                </li>
+                <!--end::Menu Footer-->
+              </ul>
+            </li>
+            <!--end::User Menu Dropdown-->
+          </ul>
+          <!--end::End Navbar Links-->
+        </div>
+        <!--end::Container-->
+      </nav>
+      <!--end::Header-->
+      
+      <!--begin::Sidebar-->
+      <aside class="app-sidebar bg-body-secondary shadow" data-bs-theme="dark">
+        <!--begin::Sidebar Brand-->
+        <div class="sidebar-brand">
+          <!--begin::Brand Link-->
+          <a href="./index.html" class="brand-link">
+            <!--begin::Brand Image-->
+            <img
+              src="https://cdn-icons-png.flaticon.com/512/900/900782.png"
+              alt="AdminLTE Logo"
+              class="brand-image opacity-75 shadow"
+            />
+            <!--end::Brand Image-->
+            <!--begin::Brand Text-->
+            <span class="brand-text fw-light">Admin Balmon</span>
+            <!--end::Brand Text-->
+          </a>
+          <!--end::Brand Link-->
+        </div>
+        <!--end::Sidebar Brand-->
+        
+        <!--begin::Sidebar Wrapper-->
+        <div class="sidebar-wrapper">
+          <nav class="mt-2">
+            <!--begin::Sidebar Menu-->
+            <ul
+              class="nav sidebar-menu flex-column"
+              data-lte-toggle="treeview"
+              role="menu"
+              data-accordion="false"
+            >
+                <li class="nav-item">
+                    <a href="./index.html" class="nav-link active">
+                      <i class="nav-icon bi bi-speedometer"></i>
+                      <p>Dashboard Utama</p>
+                    </a>
+                </li>
+
+                <li class="nav-header">OPERASIONAL</li>
+                <li class="nav-item">
+                    <a href="admin-balmon.html" class="nav-link">
+                      <i class="nav-icon bi bi-broadcast"></i>
+                      <p>Data Frekuensi</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="admin-balmon.html" class="nav-link">
+                      <i class="nav-icon bi bi-hdd-network"></i>
+                      <p>Kelola Layanan</p>
+                    </a>
+                </li>
+                
+                <li class="nav-header">ADMINISTRASI</li>
+                <li class="nav-item">
+                    <a href="dokumen.html" class="nav-link">
+                      <i class="nav-icon bi bi-folder2-open"></i>
+                      <p>Arsip Digital (Drive)</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link">
+                      <i class="nav-icon bi bi-images"></i>
+                      <p>Galeri Kegiatan</p>
+                    </a>
+                </li>
+
+                <li class="nav-header">LAINNYA</li>
+                <li class="nav-item">
+                    <a href="../../../index.html" target="_blank" class="nav-link">
+                      <i class="nav-icon bi bi-box-arrow-up-right"></i>
+                      <p>Lihat Website Utama</p>
+                    </a>
+                </li>
+            </ul>
+            <!--end::Sidebar Menu-->
+          </nav>
+        </div>
+        <!--end::Sidebar Wrapper-->
+      </aside>
+      <!--end::Sidebar-->
+      
+      <!--begin::App Main-->
+      <main class="app-main">
+        <!--begin::App Content Header-->
+        <div class="app-content-header">
+          <!--begin::Container-->
+          <div class="container-fluid">
+            <!--begin::Row-->
+            <div class="row">
+              <div class="col-sm-6">
+                <h3 class="mb-0">Ringkasan Pelayanan</h3>
+              </div>
+              <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-end">
+                  <li class="breadcrumb-item"><a href="#">Home</a></li>
+                  <li class="breadcrumb-item active" aria-current="page">Dashboard</li>
+                </ol>
+              </div>
+            </div>
+            <!--end::Row-->
+          </div>
+          <!--end::Container-->
+        </div>
+        <!--end::App Content Header-->
+        
+        <!--begin::App Content-->
+        <div class="app-content">
+          <!--begin::Container-->
+          <div class="container-fluid">
+            
+            <!--begin::Row (Statistik Utama)-->
+            <div class="row">
+              <!-- Widget: Layanan -->
+              <div class="col-lg-3 col-6">
+                <div class="small-box text-bg-primary">
+                  <div class="inner">
+                    <h3 id="stat-layanan-count">0</h3>
+                    <p>Total Layanan</p>
+                  </div>
+                  <div class="icon">
+                    <i class="bi bi-router-fill"></i>
+                  </div>
+                  <a href="admin-balmon.html" class="small-box-footer link-light link-underline-opacity-0 link-underline-opacity-50-hover">
+                    Selengkapnya <i class="bi bi-link-45deg"></i>
+                  </a>
+                </div>
+              </div>
+
+              <!-- Widget: Dokumen -->
+              <div class="col-lg-3 col-6">
+                <div class="small-box text-bg-success">
+                  <div class="inner">
+                    <h3 id="stat-dokumen-count">0</h3>
+                    <p>Arsip Dokumen</p>
+                  </div>
+                  <div class="icon">
+                    <i class="bi bi-file-earmark-pdf-fill"></i>
+                  </div>
+                  <a href="dokumen.html" class="small-box-footer link-light link-underline-opacity-0 link-underline-opacity-50-hover">
+                    Kelola Arsip <i class="bi bi-link-45deg"></i>
+                  </a>
+                </div>
+              </div>
+
+              <!-- Widget: Pengaduan (Warning) -->
+              <div class="col-lg-3 col-6">
+                <div class="small-box text-bg-warning">
+                  <div class="inner">
+                    <h3 id="stat-aduan-count">0</h3>
+                    <p>Pengaduan Masuk</p>
+                  </div>
+                  <div class="icon">
+                    <i class="bi bi-exclamation-triangle-fill"></i>
+                  </div>
+                  <a href="admin-balmon.html" class="small-box-footer link-dark link-underline-opacity-0 link-underline-opacity-50-hover">
+                    Cek Laporan <i class="bi bi-link-45deg"></i>
+                  </a>
+                </div>
+              </div>
+
+              <!-- Widget: Pengunjung (Danger/Red) -->
+              <div class="col-lg-3 col-6">
+                <div class="small-box text-bg-danger">
+                  <div class="inner">
+                    <h3>150</h3> <!-- Data dummy untuk visitor -->
+                    <p>Pengunjung Web</p>
+                  </div>
+                  <div class="icon">
+                    <i class="bi bi-people-fill"></i>
+                  </div>
+                  <a href="#" class="small-box-footer link-light link-underline-opacity-0 link-underline-opacity-50-hover">
+                    Analitik <i class="bi bi-link-45deg"></i>
+                  </a>
+                </div>
+              </div>
+            </div>
+            <!--end::Row-->
+
+            <!--begin::Row (Chart & Table)-->
+            <div class="row">
+              
+              <!-- Left col: Grafik -->
+              <div class="col-lg-7 connectedSortable">
+                <div class="card mb-4">
+                  <div class="card-header border-0">
+                    <div class="d-flex justify-content-between">
+                      <h3 class="card-title">Statistik Pengunjung & Layanan</h3>
+                      <a href="javascript:void(0);" class="link-primary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">Lihat Laporan</a>
+                    </div>
+                  </div>
+                  <div class="card-body">
+                    <div class="d-flex">
+                      <p class="d-flex flex-column">
+                        <span class="fw-bold fs-5">820</span>
+                        <span>Pengunjung Bulan Ini</span>
+                      </p>
+                      <p class="ms-auto d-flex flex-column text-end">
+                        <span class="text-success"> <i class="bi bi-arrow-up"></i> 12.5% </span>
+                        <span class="text-secondary">Sejak bulan lalu</span>
+                      </p>
+                    </div>
+                    <!-- Chart Container -->
+                    <div class="position-relative mb-4">
+                      <div id="visitors-chart"></div>
+                    </div>
+                    <div class="d-flex flex-row justify-content-end">
+                      <span class="me-2">
+                        <i class="bi bi-square-fill text-primary"></i> Pengunjung
+                      </span>
+                      <span>
+                        <i class="bi bi-square-fill text-secondary"></i> Pengaduan
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- /.Left col -->
+
+              <!-- Right col: Aktivitas Terbaru -->
+              <div class="col-lg-5 connectedSortable">
+                <div class="card mb-4">
+                    <div class="card-header border-0">
+                        <h3 class="card-title">Aktivitas Terakhir</h3>
+                    </div>
+                    <div class="card-body table-responsive p-0">
+                        <table class="table table-striped table-valign-middle">
+                            <thead>
+                            <tr>
+                                <th>Aktivitas</th>
+                                <th>Waktu</th>
+                                <th>Status</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td>
+                                    <i class="bi bi-cloud-upload text-success me-2"></i>
+                                    Upload Dokumen Baru
+                                </td>
+                                <td>Baru Saja</td>
+                                <td><span class="badge text-bg-success">Sukses</span></td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <i class="bi bi-exclamation-circle text-warning me-2"></i>
+                                    Pengaduan Masuk
+                                </td>
+                                <td>10 Menit lalu</td>
+                                <td><span class="badge text-bg-warning">Pending</span></td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <i class="bi bi-pencil-square text-primary me-2"></i>
+                                    Update Layanan ISR
+                                </td>
+                                <td>1 Jam lalu</td>
+                                <td><span class="badge text-bg-primary">Updated</span></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                <!-- Info Box Simple -->
+                 <div class="card text-white bg-info mb-3">
+                    <div class="card-header">Info Sistem</div>
+                    <div class="card-body">
+                        <h5 class="card-title">Versi Admin</h5>
+                        <p class="card-text">Anda menggunakan versi Admin v1.0 yang terintegrasi dengan Firebase Realtime Database dan Google Drive API.</p>
+                    </div>
+                </div>
+
+              </div>
+              <!-- /.Right col -->
+            </div>
+            <!--end::Row-->
+          </div>
+          <!--end::Container-->
+        </div>
+        <!--end::App Content-->
+      </main>
+      <!--end::App Main-->
+      
+      <!--begin::Footer-->
+      <footer class="app-footer">
+        <strong>Copyright &copy; 2025 Balmon Samarinda.</strong> All rights reserved.
+      </footer>
+      <!--end::Footer-->
+    </div>
+    <!--end::App Wrapper-->
+
+    <!--begin::Script-->
+    <!-- Third Party Plugin(OverlayScrollbars) -->
+    <script
+      src="https://cdn.jsdelivr.net/npm/overlayscrollbars@2.3.0/browser/overlayscrollbars.browser.es6.min.js"
+      integrity="sha256-H2VM7BKda+v2Z4+DRy69uknwxjyDRhszjXFhsL4gD3w="
+      crossorigin="anonymous"
+    ></script>
+    
+    <!-- Required Plugin(popperjs for Bootstrap 5) -->
+    <script
+      src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+      integrity="sha256-whL0tQWoY1Ku1iskqPFvmZ+CHsvmRWx/KantoD47U+8="
+      crossorigin="anonymous"
+    ></script>
+    
+    <!-- Required Plugin(Bootstrap 5) -->
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js"
+      integrity="sha256-YMa+w76OvJe15jfb524h++O7OS+pKmD7tLeTE43CCZk="
+      crossorigin="anonymous"
+    ></script>
+    
+    <!-- Required Plugin(AdminLTE) -->
+    <script src="https://cdn.jsdelivr.net/npm/admin-lte@4.0.0-beta2/dist/js/adminlte.min.js"></script>
+    
+    <!-- Third Party Plugin(ApexCharts) -->
+    <script
+      src="https://cdn.jsdelivr.net/npm/apexcharts@3.37.1/dist/apexcharts.min.js"
+      integrity="sha256-+vh8GkaU7C9/wbSLIcwq82tQ2wTf44aOHA8HlBMwRI8="
+      crossorigin="anonymous"
+    ></script>
+
+    <!-- FIREBASE SDK -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+
+    <script>
+      // ----------------------------------------------------
+      // 1. KONFIGURASI FIREBASE
+      // ----------------------------------------------------
+      const firebaseConfig = {
+        apiKey: "AIzaSyDUeIg9Zn_xndPXtChO8KufXFp6EMtqBJ0",
+        authDomain: "admin-pelayanan-balmon.firebaseapp.com",
+        databaseURL: "https://admin-pelayanan-balmon-default-rtdb.firebaseio.com",
+        projectId: "admin-pelayanan-balmon",
+        storageBucket: "admin-pelayanan-balmon.appspot.com",
+        messagingSenderId: "1071557110255",
+        appId: "1:1071557110255:web:bff7087da1feacccb7ee1a",
+        measurementId: "G-V19CNH48LK"
+      };
+
+      if (!firebase.apps.length) {
+        firebase.initializeApp(firebaseConfig);
+      }
+      const db = firebase.database();
+
+      // ----------------------------------------------------
+      // 2. HITUNG STATISTIK REALTIME
+      // ----------------------------------------------------
+      
+      // A. Hitung Layanan Aktif
+      db.ref('layanan_publik').on('value', snap => {
+          const count = snap.numChildren();
+          document.getElementById('stat-layanan-count').innerText = count;
+      });
+
+      // B. Hitung Arsip Dokumen (Drive)
+      db.ref('arsip_drive').on('value', snap => {
+          const count = snap.numChildren();
+          document.getElementById('stat-dokumen-count').innerText = count;
+      });
+
+      // C. Hitung Pengaduan Masuk
+      db.ref('pengaduan_masyarakat').on('value', snap => {
+          const count = snap.numChildren();
+          document.getElementById('stat-aduan-count').innerText = count;
+      });
+
+      // ----------------------------------------------------
+      // 3. APEXCHARTS CONFIGURATION
+      // ----------------------------------------------------
+      const visitors_chart_options = {
+        series: [
+          {
+            name: 'Pengunjung',
+            data: [100, 120, 170, 167, 180, 177, 160],
+          },
+          {
+            name: 'Pengaduan',
+            data: [2, 5, 3, 8, 4, 6, 9],
+          },
+        ],
+        chart: {
+          height: 200,
+          type: 'line',
+          toolbar: {
+            show: false,
+          },
+        },
+        colors: ['#0d6efd', '#adb5bd'], // Primary Blue & Grey
+        stroke: {
+          curve: 'smooth',
+        },
+        grid: {
+          borderColor: '#e7e7e7',
+          row: {
+            colors: ['#f3f3f3', 'transparent'], // takes an array which will be repeated on columns
+            opacity: 0.5,
+          },
+        },
+        legend: {
+          show: false,
+        },
+        markers: {
+          size: 1,
+        },
+        xaxis: {
+          categories: ['Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab', 'Min'],
+        },
+      };
+
+      const visitors_chart = new ApexCharts(
+        document.querySelector('#visitors-chart'),
+        visitors_chart_options,
+      );
+      visitors_chart.render();
+
+      // Sidebar overlay scrollbar
+      const SELECTOR_SIDEBAR_WRAPPER = '.sidebar-wrapper';
+      const Default = {
+        scrollbarTheme: 'os-theme-light',
+        scrollbarAutoHide: 'leave',
+        scrollbarClickScroll: true,
+      };
+      document.addEventListener('DOMContentLoaded', function () {
+        const sidebarWrapper = document.querySelector(SELECTOR_SIDEBAR_WRAPPER);
+        if (sidebarWrapper && typeof OverlayScrollbarsGlobal?.OverlayScrollbars !== 'undefined') {
+          OverlayScrollbarsGlobal.OverlayScrollbars(sidebarWrapper, {
+            scrollbars: {
+              theme: Default.scrollbarTheme,
+              autoHide: Default.scrollbarAutoHide,
+              clickScroll: Default.scrollbarClickScroll,
+            },
+          });
+        }
+      });
+    </script>
+    <!--end::Script-->
+  </body>
+  <!--end::Body-->
+</html>
