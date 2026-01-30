@@ -4,144 +4,218 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Galeri Publikasi - Balmon Samarinda</title>
+    
     <link rel="icon" type="image/png" href="logo-ikon.png" sizes="32x32">
     <link rel="icon" type="image/svg+xml" href="balmonsmd1.png">
     <link rel="apple-touch-icon" href="logo-180x180.png">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Albert+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
     <style>
         /* ========================================= */
-        /* --- 1. GLOBAL STYLE & VARIABLES --- */
+        /* --- 1. SETUP WARNA & GLOBAL --- */
         /* ========================================= */
         :root {
-            --primary-color: #006fb0;
-            --primary-dark: #005082;
-            --secondary-color: #00ace0;
-            --accent-yellow: #ecbb1d;
-            --accent-red: #de262a;
-            --bg-light-blue: #f4f9fc;
+            --primary-color: #006fb0;   /* Biru Utama */
+            --primary-dark: #005082;    /* Biru Gelap untuk Hover */
+            --secondary-color: #00ace0; /* Cyan/Biru Langit */
+            --accent-yellow: #ecbb1d;   /* Kuning Emas */
+            --accent-red: #de262a;      /* Merah */
+            --bg-light-blue: #f4f9fc;   
             --bg-white: #ffffff;
             --text-dark: #1e293b;
             --text-gray: #64748b;
+            --shadow-soft: 0 10px 30px -5px rgba(0, 0, 0, 0.05);
             --radius-md: 12px;
-            --radius-lg: 16px;
-            --shadow-card: 0 10px 40px -10px rgba(0,0,0,0.08);
-            --transition-smooth: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
+        /* --- RESET --- */
         body { 
             margin: 0; padding: 0; 
-            font-family: 'Inter', sans-serif; 
+            font-family: 'Albert Sans', sans-serif; 
             background-color: var(--bg-light-blue);
             color: var(--text-dark); 
             line-height: 1.6; 
             overflow-x: hidden; 
+            -webkit-font-smoothing: antialiased;
         }
-        a { text-decoration: none; color: inherit; transition: 0.3s; }
+        
+        a { text-decoration: none; color: inherit; transition: color 0.3s ease, transform 0.3s ease; }
         ul { list-style: none; padding: 0; margin: 0; }
         * { box-sizing: border-box; }
 
         .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; width: 100%; }
 
-        /* --- PAGE LOADER --- */
+        /* --- LOADER --- */
         .page-loader {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background-color: #ffffff; z-index: 99999; 
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: #ffffff; z-index: 99999; 
             display: flex; flex-direction: column; align-items: center; justify-content: center;
-            transition: opacity 0.5s ease, visibility 0.5s ease;
+            transition: opacity 0.5s ease, visibility 0.5s ease; opacity: 1; visibility: visible;
         }
         .page-loader.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
         .loader-spinner {
-            width: 50px; height: 50px; border: 4px solid rgba(0, 111, 176, 0.1);
-            border-left-color: var(--primary-color); border-radius: 50%;
-            animation: spin 1s linear infinite; margin-bottom: 15px;
+            width: 50px; height: 50px; border: 4px solid rgba(0, 111, 176, 0.1); border-left-color: var(--primary-color);
+            border-radius: 50%; animation: spin 1s linear infinite; margin-bottom: 15px; will-change: transform;
+        }
+        .loader-text {
+            color: var(--primary-color); font-weight: 600; font-size: 14px; letter-spacing: 1px; animation: pulseText 1.5s infinite ease-in-out;
         }
         @keyframes spin { 100% { transform: rotate(360deg); } }
+        @keyframes pulseText { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
 
         /* ========================================= */
-        /* --- 2. HEADER STYLE (Konsisten) --- */
+        /* --- 2. HEADER STYLE (SAMA DENGAN KONSESI) --- */
         /* ========================================= */
         header {
-            background-color: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            height: 80px; 
-            position: fixed; top: 0; left: 0; width: 100%; z-index: 1000;
-            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.04);
-            transition: var(--transition-smooth);
+            background-color: transparent;
+            backdrop-filter: none; -webkit-backdrop-filter: none;
+            box-shadow: none;
+            height: 80px; position: fixed; top: 0; left: 0; width: 100%; z-index: 1000;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            will-change: transform, height, background-color;
         }
-        header.header-minimal { height: 70px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); }
-
         .header-content { display: flex; align-items: center; justify-content: space-between; height: 100%; }
         
-        .brand-area { display: flex; align-items: center; gap: 12px; cursor: pointer; }
-        .brand-logo-img { height: 45px; width: auto; transition: 0.3s; }
-        .brand-text { font-size: 18px; font-weight: 800; color: var(--primary-color); line-height: 1.2; display: flex; flex-direction: column; }
-        .brand-text span { font-size: 11px; font-weight: 500; color: var(--text-gray); }
+        /* A. BRAND AREA (DEFAULT: GLASS EFFECT) */
+        .brand-area { 
+            display: flex; align-items: center; gap: 12px; transition: all 0.4s ease; cursor: pointer;
+            background-color: rgba(255, 255, 255, 0.1); 
+            backdrop-filter: blur(8px);                 
+            -webkit-backdrop-filter: blur(8px);         
+            padding: 8px 20px;                          
+            border-radius: 50px;                        
+            border: 1px solid rgba(255, 255, 255, 0.2); 
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);  
+        }
+        .brand-area:hover {
+            background-color: rgba(255, 255, 255, 0.2); 
+            transform: translateY(-2px);                
+            box-shadow: 0 8px 20px rgba(0, 111, 176, 0.3); 
+        }
+        .brand-logo-img { 
+            height: 50px; width: auto; 
+            filter: drop-shadow(0 2px 5px rgba(0, 0, 0, 0.5)); 
+            transition: all 0.3s;
+        }
+        .brand-text { 
+            font-size: 18px; font-weight: 800; color: #ffffff; 
+            line-height: 1.2; display: flex; flex-direction: column; 
+            transition: color 0.3s; 
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.6); 
+        }
+        .brand-text span { 
+            font-size: 11px; font-weight: 500; color: rgba(255,255,255,0.9); 
+            letter-spacing: 0.5px; transition: color 0.3s; 
+            text-shadow: 0 1px 5px rgba(0, 0, 0, 0.6);
+        }
 
-        .nav-menu { height: 100%; display: flex; align-items: center; }
+        /* B. HEADER SAAT SCROLL (CLASS: .header-minimal) */
+        header.header-minimal {
+            background-color: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.08);
+            height: 70px;
+        }
+        header.header-minimal .brand-text { color: var(--primary-color); text-shadow: none; }
+        header.header-minimal .brand-text span { color: var(--text-gray); text-shadow: none; }
+        header.header-minimal .brand-logo-img { filter: none; }
+        header.header-minimal .menu-item { color: var(--text-dark); text-shadow: none; }
+        header.header-minimal .menu-item:hover { color: var(--primary-color); }
+        header.header-minimal .brand-area { 
+            background: transparent; box-shadow: none; border: none; padding-left: 0;
+            backdrop-filter: none; -webkit-backdrop-filter: none;
+        }
+        header.header-minimal .hamburger-btn span { background-color: var(--primary-color); }
+        header.header-minimal .nav-search-btn { color: var(--primary-color) !important; }
+
+        /* C. MENU NAVIGASI */
+        .nav-menu { height: 100%; display: flex; align-items: center; transition: all 0.4s ease; }
         .menu-list { display: flex; gap: 8px; height: 100%; align-items: center; }
         .menu-item { 
             position: relative; height: 100%; display: flex; align-items: center; 
-            padding: 0 14px; font-size: 14px; font-weight: 600; color: var(--text-dark); cursor: pointer; 
+            padding: 0 12px; font-size: 14px; font-weight: 600; 
+            color: #ffffff; 
+            cursor: pointer; transition: color 0.3s;
+            text-shadow: 0 1px 5px rgba(0, 0, 0, 0.4); 
         }
-        .menu-item:hover { color: var(--primary-color); }
-        .menu-item::after { 
-            content: ''; position: absolute; bottom: 0; left: 0; width: 0%; height: 3px; 
-            background: var(--accent-yellow); transition: 0.3s; 
+        .menu-item:hover { color: var(--accent-yellow); opacity: 1; }
+        .menu-item::after {
+            content: ''; position: absolute; bottom: 0; left: 0; width: 0%; height: 3px; background: var(--accent-yellow); transition: width 0.3s ease;
         }
         .menu-item:hover::after { width: 100%; }
+        .nav-search-btn { margin-left:10px; border:none; background:transparent; color:#ffffff; cursor:pointer; transition: color 0.3s; }
 
         /* Dropdown */
         .dropdown-content { 
-            display: none; position: absolute; top: 100%; left: 0; 
-            background-color: #ffffff; min-width: 240px; 
-            box-shadow: 0 15px 30px rgba(0,0,0,0.1); border-radius: 0 0 8px 8px; 
-            padding: 10px 0; border-top: 3px solid var(--primary-color); animation: slideDown 0.3s ease;
+            display: none; position: absolute; top: 100%; left: 0; background-color: #ffffff; min-width: 240px; 
+            box-shadow: 0 15px 30px rgba(0,0,0,0.1); border-radius: 0 0 8px 8px; z-index: 1000; padding: 10px 0; border-top: 3px solid var(--primary-color); animation: slideDown 0.3s ease;
         }
         .menu-item:hover .dropdown-content { display: block; }
-        .dropdown-content li a { display: block; padding: 10px 20px; color: var(--text-dark); font-weight: 400; font-size: 14px; }
+        .dropdown-content li a { display: block; padding: 10px 20px; color: var(--text-dark); font-weight: 400; font-size: 14px; font-family: 'Albert Sans', sans-serif; text-shadow: none; }
         .dropdown-content li a:hover { background-color: var(--bg-light-blue); color: var(--primary-color); padding-left: 25px; }
-
-        /* Hamburger & Mobile Menu */
-        .hamburger-btn { display: none; background: none; border: none; cursor: pointer; padding: 10px; flex-direction: column; gap: 5px; }
-        .hamburger-btn span { width: 25px; height: 3px; background: var(--primary-color); border-radius: 2px; transition: 0.3s; }
-        
-        .mobile-nav-dropdown {
-            display: none; position: fixed; top: 80px; left: 0; width: 100%; background: #fff;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.1); flex-direction: column; z-index: 999;
-            max-height: calc(100vh - 80px); overflow-y: auto;
-        }
-        .mobile-nav-dropdown.active { display: flex; }
-        .mobile-menu-item { padding: 15px 20px; border-bottom: 1px solid #eee; font-weight: 600; }
-        .mobile-submenu a { display: block; padding: 10px 40px; background: #f9f9f9; border-bottom: 1px solid #eee; font-size: 14px; }
-
         @keyframes slideDown { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* ========================================= */
-        /* --- 3. GALLERY HERO SECTION --- */
-        /* ========================================= */
-        .page-header {
-            padding-top: 140px; padding-bottom: 80px;
-            background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
-            color: white; text-align: center; position: relative; overflow: hidden;
+        /* HAMBURGER */
+        .hamburger-btn { display: none; flex-direction: column; gap: 6px; background: none; border: none; cursor: pointer; padding: 8px; z-index: 1001; }
+        .hamburger-btn span { width: 24px; height: 2.5px; background-color: white; border-radius: 2px; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); transform-origin: center; }
+        .hamburger-btn.active span:nth-child(1) { transform: translateY(8.5px) rotate(45deg); }
+        .hamburger-btn.active span:nth-child(2) { opacity: 0; transform: translateX(10px); }
+        .hamburger-btn.active span:nth-child(3) { transform: translateY(-8.5px) rotate(-45deg); }
+        .hamburger-btn.active span { background-color: var(--primary-color) !important; }
+
+        .mobile-nav-dropdown {
+            display: none; position: fixed; top: 80px; left: 0; width: 100%; max-height: calc(100vh - 80px); background-color: #ffffff;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1); flex-direction: column; overflow-y: auto; z-index: 999; animation: slideDownMobile 0.3s ease;
         }
-        .ph-bg-decor {
-            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            width: 120%; height: 200%;
-            background: radial-gradient(circle, rgba(255,255,255,0.05) 0%, transparent 60%);
-            pointer-events: none;
-        }
-        .page-title { font-size: 38px; font-weight: 800; margin: 0 0 10px 0; position: relative; }
-        .page-subtitle { font-size: 16px; opacity: 0.9; font-weight: 300; max-width: 600px; margin: 0 auto; position: relative; }
+        .mobile-nav-dropdown.active { display: flex; }
+        @keyframes slideDownMobile { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
+
+        .mobile-menu-item { font-family: 'Albert Sans', sans-serif; padding: 16px 20px; border-bottom: 1px solid #eee; color: var(--text-dark); font-weight: 600; font-size: 15px; cursor: pointer; transition: all 0.3s ease; display: flex; justify-content: space-between; align-items: center; }
+        .mobile-menu-item:hover { background-color: var(--bg-light-blue); color: var(--primary-color); }
+        .mobile-menu-item.has-submenu::after { content: '▼'; font-size: 12px; transition: transform 0.3s ease; }
+        .mobile-menu-item.has-submenu.active::after { transform: rotate(-180deg); }
+        .mobile-submenu { max-height: 0; overflow: hidden; background-color: #f8f9fa; transition: max-height 0.3s ease; }
+        .mobile-submenu.active { max-height: 500px; }
+        .mobile-submenu a { display: block; padding: 12px 40px; color: var(--text-gray); font-size: 14px; font-weight: 500; border-bottom: 1px solid #eee; transition: all 0.2s ease; }
+        .mobile-submenu a:hover { background-color: #ffffff; color: var(--primary-color); padding-left: 48px; }
+
 
         /* ========================================= */
-        /* --- 4. GALLERY CONTROLS & GRID --- */
+        /* --- 3. PAGE HEADER (PARALLAX HERO) --- */
+        /* ========================================= */
+        .page-header {
+            padding-top: 150px; padding-bottom: 80px;
+            /* Background: Dokumentasi/Galeri */
+            background: linear-gradient(135deg, rgba(0, 111, 176, 0.9) 0%, rgba(0, 80, 130, 0.8) 100%),
+                        url('https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=1600&q=80');
+            
+            background-repeat: no-repeat;
+            background-position: center center;
+            background-size: cover; 
+            background-attachment: fixed; /* Parallax */
+
+            color: white; position: relative; overflow: hidden;
+            text-align: center;
+        }
+
+        .breadcrumb { font-size: 14px; opacity: 0.9; margin-bottom: 15px; font-weight: 500; }
+        .breadcrumb a { color: #fff; text-decoration: none; border-bottom: 1px solid rgba(255,255,255,0.4); transition: 0.3s; }
+        .breadcrumb a:hover { border-bottom-color: #fff; }
+        
+        .page-title { 
+            font-size: 48px; font-weight: 800; margin: 0; letter-spacing: -1px; 
+            text-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+        .page-subtitle { font-size: 16px; opacity: 0.9; font-weight: 300; max-width: 600px; margin: 10px auto 0 auto; position: relative; }
+
+
+        /* ========================================= */
+        /* --- 4. GALLERY STYLES --- */
         /* ========================================= */
         .gallery-section { padding: 60px 0 100px 0; min-height: 80vh; }
-        
+
         /* Filter Tabs */
         .filter-container {
             display: flex; justify-content: center; flex-wrap: wrap; gap: 15px; margin-bottom: 50px;
@@ -149,8 +223,8 @@
         .filter-btn {
             background: #fff; border: 1px solid #e2e8f0;
             padding: 10px 25px; border-radius: 30px;
-            font-size: 14px; font-weight: 600; color: var(--text-gray);
-            cursor: pointer; transition: var(--transition-smooth);
+            font-size: 14px; font-weight: 600; color: var(--text-gray); font-family: 'Albert Sans', sans-serif;
+            cursor: pointer; transition: 0.3s;
             box-shadow: 0 2px 10px rgba(0,0,0,0.03);
         }
         .filter-btn:hover { border-color: var(--primary-color); color: var(--primary-color); transform: translateY(-2px); }
@@ -159,7 +233,7 @@
             box-shadow: 0 5px 15px rgba(0, 111, 176, 0.3);
         }
 
-        /* Grid Layout */
+        /* Grid */
         .gallery-grid {
             display: grid; 
             grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); 
@@ -167,24 +241,19 @@
         }
 
         .gallery-item {
-            background: #fff; border-radius: var(--radius-lg); overflow: hidden;
-            box-shadow: var(--shadow-card); cursor: pointer;
-            transition: var(--transition-smooth); position: relative;
+            background: #fff; border-radius: 16px; overflow: hidden;
+            box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.05); cursor: pointer;
+            transition: 0.3s ease; position: relative;
             animation: fadeIn 0.6s ease;
             display: flex; flex-direction: column;
         }
-        .gallery-item.hidden { display: none; } /* Untuk Filter */
+        .gallery-item.hidden { display: none; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
-        .gallery-item:hover { transform: translateY(-8px); box-shadow: 0 20px 50px rgba(0,0,0,0.12); }
+        .gallery-item:hover { transform: translateY(-8px); box-shadow: 0 20px 50px rgba(0,0,0,0.1); }
 
-        .media-wrapper {
-            position: relative; width: 100%; aspect-ratio: 4/3; overflow: hidden;
-        }
-        .media-wrapper img {
-            width: 100%; height: 100%; object-fit: cover;
-            transition: transform 0.6s ease;
-        }
+        .media-wrapper { position: relative; width: 100%; aspect-ratio: 4/3; overflow: hidden; }
+        .media-wrapper img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.6s ease; }
         .gallery-item:hover .media-wrapper img { transform: scale(1.08); }
 
         /* Overlay & Icon */
@@ -212,7 +281,7 @@
             font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;
             z-index: 2;
         }
-        .badge-video { background: rgba(222, 38, 42, 0.9); } /* Merah untuk Video */
+        .badge-video { background: rgba(222, 38, 42, 0.9); }
 
         /* Info Content */
         .item-info { padding: 20px; flex-grow: 1; display: flex; flex-direction: column; justify-content: space-between; }
@@ -220,19 +289,20 @@
         .item-title { font-size: 16px; font-weight: 700; color: var(--text-dark); margin: 0; line-height: 1.4; }
         .item-desc { font-size: 13px; color: var(--text-gray); margin-top: 8px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
 
+
         /* ========================================= */
-        /* --- 5. LIGHTBOX (MODAL) --- */
+        /* --- 5. LIGHTBOX --- */
         /* ========================================= */
         .lightbox {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.9); z-index: 99999;
+            background: rgba(0, 0, 0, 0.95); z-index: 99999;
             display: flex; align-items: center; justify-content: center;
             opacity: 0; visibility: hidden; transition: 0.3s;
         }
         .lightbox.active { opacity: 1; visibility: visible; }
         
         .lightbox-content { 
-            position: relative; max-width: 90%; max-height: 85vh; 
+            position: relative; max-width: 90%; max-height: 90vh; 
             width: auto; height: auto; display: flex; flex-direction: column; align-items: center;
         }
         .lightbox-media {
@@ -244,16 +314,15 @@
             border: none; border-radius: 4px; background: #000;
         }
         .lightbox-caption {
-            color: #fff; margin-top: 15px; font-size: 16px; text-align: center; font-weight: 500;
+            color: #fff; margin-top: 15px; font-size: 16px; text-align: center; font-weight: 500; font-family: 'Albert Sans', sans-serif;
         }
         .close-lightbox {
             position: absolute; top: -40px; right: 0; color: #fff; font-size: 30px; cursor: pointer; transition: 0.3s;
         }
         .close-lightbox:hover { transform: rotate(90deg); color: var(--accent-yellow); }
 
-        /* ========================================= */
-        /* --- 6. FOOTER & CHAT --- */
-        /* ========================================= */
+
+        /* --- FOOTER & CHAT --- */
         footer { background-color: var(--primary-color); color: white; padding-top: 70px; font-size: 14px; }
         .footer-grid { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 40px; padding-bottom: 50px; }
         .footer-col { flex: 1; min-width: 250px; }
@@ -264,13 +333,33 @@
 
         .chat-toggle-btn { position: fixed; bottom: 30px; right: 30px; width: 65px; height: 65px; background: linear-gradient(135deg, var(--primary-color), var(--primary-dark)); color: #ffffff; border: none; border-radius: 50%; box-shadow: 0 8px 25px rgba(0, 111, 176, 0.4); cursor: pointer; z-index: 9999; display: flex; align-items: center; justify-content: center; transition: transform 0.3s; }
         .chat-toggle-btn:hover { transform: scale(1.1); }
+        .chat-toggle-btn svg { position: absolute; width: 28px; height: 28px; transition: all 0.4s; pointer-events: none; }
+        .icon-message { opacity: 1; transform: scale(1); fill: currentColor; }
+        .icon-close { opacity: 0; transform: scale(0) rotate(-180deg); fill: none; stroke: currentColor; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+        .chat-toggle-btn.active .icon-message { opacity: 0; transform: scale(0); }
+        .chat-toggle-btn.active .icon-close { opacity: 1; transform: scale(1) rotate(0deg); }
         .chat-box-container { position: fixed; bottom: 110px; right: 30px; width: 400px; height: 600px; max-height: 75vh; background: #fff; border-radius: 16px; box-shadow: 0 20px 50px rgba(0,0,0,0.2); z-index: 9998; opacity: 0; visibility: hidden; transform: translateY(20px); transition: 0.3s; border: 1px solid #eee; overflow: hidden; display: flex; flex-direction: column; }
         .chat-box-container.active { opacity: 1; visibility: visible; transform: translateY(0); }
+        .chat-header { background: linear-gradient(135deg, var(--primary-color), var(--primary-dark)); padding: 15px 20px; color: #fff; display: flex; align-items: center; gap: 15px; }
+        .chat-logo-bg { width: 42px; height: 42px; background: rgba(255, 255, 255, 0.15); backdrop-filter: blur(4px); border: 1px solid rgba(255, 255, 255, 0.3); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #fff; }
+        .chat-title h4 { margin: 0; font-size: 16px; font-weight: 700; }
+        .chat-title span { font-size: 12px; opacity: 0.9; }
 
+        @media (max-width: 900px) {
+            .content-grid { grid-template-columns: 1fr; margin-top: 0; }
+            .sidebar-card { position: relative; top: 0; order: -1; }
+            .page-header { padding-bottom: 40px; }
+        }
+        
         @media (max-width: 768px) {
             .hamburger-btn { display: flex; }
             .menu-list { display: none; }
-            .page-title { font-size: 28px; }
+            .nav-menu { display: flex; }
+            .page-header { background-attachment: scroll; }
+            header.header-minimal { background-color: #fff; }
+            .brand-area {
+                background: transparent !important; backdrop-filter: none !important; -webkit-backdrop-filter: none !important; border: none !important; box-shadow: none !important; padding-left: 0 !important;
+            }
             .gallery-grid { grid-template-columns: 1fr; }
         }
     </style>
@@ -279,13 +368,13 @@
 
     <div id="pageLoader" class="page-loader">
         <div class="loader-spinner"></div>
-        <div class="loader-text" style="color:var(--primary-color); font-weight:700;">MEMUAT...</div>
+        <div class="loader-text">MEMUAT...</div>
     </div>
 
     <header id="mainHeader">
         <div class="container header-content">
             <div class="brand-area" onclick="window.location.href='index.html'">
-                <img src="balmonsmd.png" alt="Logo" class="brand-logo-img">
+                <img src="balmonsmd.png" alt="Logo Balmon" class="brand-logo-img">
                 <div class="brand-text">
                     BALMON SAMARINDA
                     <span>Kementerian Komunikasi & Digital</span>
@@ -306,26 +395,40 @@
                     <li class="menu-item" onclick="window.location.href='arsip.html'">Download</li>
                     <li class="menu-item" onclick="window.location.href='kontak.html'">Kontak</li>
                 </ul>
-                <button style="margin-left:10px; border:none; background:transparent; color:var(--primary-color); cursor:pointer;">
+                <button class="nav-search-btn">
                     <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
                 </button>
             </nav>
-
+            
             <button class="hamburger-btn" id="hamburgerBtn" onclick="toggleMobileMenu()">
-                <span></span><span></span><span></span>
+                <span></span>
+                <span></span>
+                <span></span>
             </button>
         </div>
 
         <div class="mobile-nav-dropdown" id="mobileNavDropdown">
-            <div class="mobile-menu-item" onclick="window.location.href='index.html'">Beranda</div>
-            <div class="mobile-menu-item" onclick="window.location.href='galeri.html'">Publikasi</div>
-            <div class="mobile-menu-item" onclick="window.location.href='kontak.html'">Kontak</div>
+            <div class="mobile-menu-item" onclick="handleMobileMenuItem(this, 'beranda')">Beranda</div>
+            <div class="mobile-menu-item has-submenu" onclick="toggleMobileSubmenu(this)">Layanan</div>
+            <div class="mobile-submenu">
+                <a href="konsesi.html" onclick="closeMobileMenu()">Izin Konsesi</a>
+                <a href="maritim.html" onclick="closeMobileMenu()">Izin Maritim</a>
+                <a href="fm.html" onclick="closeMobileMenu()">Izin Penyiaran FM</a>
+            </div>
+            <div class="mobile-menu-item has-submenu" onclick="toggleMobileSubmenu(this)">Publikasi</div>
+            <div class="mobile-submenu">
+                <a href="galeri.html" onclick="closeMobileMenu()">Galeri Foto</a>
+                <a href="#">Galeri Video</a>
+            </div>
+            <div class="mobile-menu-item" onclick="handleMobileMenuItem(this, 'kontak')">Kontak</div>
         </div>
     </header>
 
     <div class="page-header">
-        <div class="ph-bg-decor"></div>
         <div class="container">
+            <div class="breadcrumb">
+                <a href="index.html">Beranda</a> / Publikasi
+            </div>
             <h1 class="page-title">Galeri Kegiatan</h1>
             <p class="page-subtitle">Dokumentasi kegiatan, monitoring, dan layanan Balai Monitor Spektrum Frekuensi Radio Kelas I Samarinda.</p>
         </div>
@@ -450,6 +553,23 @@
                 </div>
             </div>
 
+            <div class="gallery-item" data-category="video" data-video-src="https://www.youtube.com/embed/lOBsmNJ3R_s?si=UyYr8fkENFBkftqs" onclick="openLightbox(this, 'video')">
+                <div class="media-wrapper">
+                    <span class="media-badge badge-video">Video</span>
+                    <img src="https://i.ytimg.com/vi/lOBsmNJ3R_s/hq720.jpg?sqp=-oaymwEcCNAFEJQDSFXyq4qpAw4IARUAAIhCGAFwAcABBg==&rs=AOn4CLC4b3syt9a-ZCDBZAlRBe2iwiqZnA" alt="UNAR" class="g-img">
+                    <div class="overlay">
+                        <div class="icon-box">
+                            <svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                        </div>
+                    </div>
+                </div>
+                <div class="item-info">
+                    <div class="item-date">15 November 2023</div>
+                    <h3 class="item-title">Ujian Negara Amatir Radio (UNAR)</h3>
+                    <p class="item-desc">Pelaksanaan ujian CAT untuk anggota ORARI di Balai Monitor Samarinda.</p>
+                </div>
+            </div>
+
         </div>
     </div>
 
@@ -458,7 +578,6 @@
         <div class="lightbox-content">
             <img id="lightboxImg" src="" class="lightbox-media" style="display:none;">
             <iframe id="lightboxVideo" class="lightbox-iframe" src="" allow="autoplay; encrypted-media" allowfullscreen style="display:none;"></iframe>
-            
             <div id="lightboxCaption" class="lightbox-caption">Judul Kegiatan</div>
         </div>
     </div>
@@ -483,7 +602,9 @@
                 </div>
                 <div class="footer-col">
                     <h3>Jam Pelayanan</h3>
-                    <p style="color:rgba(255,255,255,0.7);">Senin - Kamis: 08.00 - 16.00<br>Jumat: 08.00 - 16.30</p>
+                    <p style="color:rgba(255,255,255,0.7);">
+                        Senin - Kamis: 08.00 - 16.00<br>Jumat: 08.00 - 16.30
+                    </p>
                 </div>
             </div>
         </div>
@@ -491,28 +612,108 @@
     </footer>
 
     <div class="chat-box-container" id="chatBox">
-        <div class="chat-header" style="background:linear-gradient(135deg, var(--primary-color), var(--primary-dark)); padding:15px; color:#fff; font-weight:700; display:flex; align-items:center; gap:10px;">
-            <div style="width:10px; height:10px; background:#4ade80; border-radius:50%;"></div> Sobat Digi
+        <div class="chat-header">
+            <div class="chat-logo-bg">
+                <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>
+            </div>
+            <div class="chat-title">
+                <h4>Sobat Digi</h4>
+                <span style="font-size: 12px; opacity: 0.9;">Online - Siap Membantu</span>
+            </div>
         </div>
-        <iframe src="https://MagangBalmon2619-Chat-Balmon.hf.space" style="width: 100%; height: 100%; border: none; background: #fff;"></iframe>
+        <iframe src="https://MagangBalmon2619-Chat-Balmon.hf.space" style="width: 100%; height: 100%; border: none; background: #fff;" allow="clipboard-write; microphone"></iframe>
     </div>
 
-    <button class="chat-toggle-btn" id="toggleBtn" onclick="toggleChat()">
-        <svg width="28" height="28" fill="currentColor" viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 9h12v2H6V9zm8 5H6v-2h8v2zm4-6H6V6h12v2z"/></svg>
+    <button class="chat-toggle-btn" id="toggleBtn" onclick="animateChatToggle()">
+        <svg class="icon-message" viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 9h12v2H6V9zm8 5H6v-2h8v2zm4-6H6V6h12v2z"/></svg>
+        <svg class="icon-close" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
     </button>
 
     <script>
-        // --- LOADER ---
         window.addEventListener('load', () => {
-            document.getElementById('pageLoader').classList.add('hidden');
+            const loader = document.getElementById('pageLoader');
+            if(loader) loader.classList.add('hidden');
         });
 
-        // --- MOBILE MENU ---
-        function toggleMobileMenu() {
-            document.getElementById('mobileNavDropdown').classList.toggle('active');
+        window.addEventListener('pageshow', (event) => {
+            const loader = document.getElementById('pageLoader');
+            if (event.persisted && loader) loader.classList.add('hidden');
+        });
+
+        document.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', function(e) {
+                const href = this.getAttribute('href');
+                const target = this.getAttribute('target');
+                if (href && href !== '#' && !href.startsWith('javascript') && target !== '_blank') {
+                    e.preventDefault(); 
+                    const loader = document.getElementById('pageLoader');
+                    loader.classList.remove('hidden'); 
+                    setTimeout(() => { window.location.href = href; }, 500);
+                }
+            });
+        });
+
+        /* LOGIKA SCROLL: Header Transparan ke Minimal */
+        let lastScrollY = window.scrollY;
+        let ticking = false;
+        function updateScroll() {
+            const scrollY = window.scrollY;
+            const header = document.getElementById('mainHeader');
+            
+            if (scrollY > 50) {
+                header.classList.add('header-minimal');
+            } else {
+                header.classList.remove('header-minimal');
+            }
+            ticking = false;
+        }
+        window.addEventListener('scroll', function() {
+            if (!ticking) {
+                window.requestAnimationFrame(updateScroll);
+                ticking = true;
+            }
+        }, { passive: true });
+
+        function animateChatToggle() {
+            const btn = document.getElementById("toggleBtn");
+            const box = document.getElementById("chatBox");
+            if (btn.classList.contains("active")) {
+                btn.classList.remove("active"); box.classList.remove("active"); return;
+            }
+            btn.classList.add("active"); box.classList.add("active");
         }
 
-        // --- FILTER GALLERY ---
+        /* MOBILE MENU LOGIC */
+        function toggleMobileMenu() {
+            document.getElementById('hamburgerBtn').classList.toggle('active');
+            document.getElementById('mobileNavDropdown').classList.toggle('active');
+        }
+        function closeMobileMenu() {
+            document.getElementById('hamburgerBtn').classList.remove('active');
+            document.getElementById('mobileNavDropdown').classList.remove('active');
+            document.querySelectorAll('.mobile-submenu').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.mobile-menu-item.has-submenu').forEach(i => i.classList.remove('active'));
+        }
+        function toggleMobileSubmenu(element) {
+            const submenu = element.nextElementSibling;
+            element.classList.toggle('active');
+            if (submenu && submenu.classList.contains('mobile-submenu')) {
+                submenu.classList.toggle('active');
+            }
+        }
+        function handleMobileMenuItem(element, action) {
+            if (action === 'beranda') window.location.href = 'index.html';
+            else if (action === 'kontak') window.location.href = 'kontak.html';
+            closeMobileMenu();
+        }
+        
+        document.addEventListener('click', function(event) {
+            const header = document.getElementById('mainHeader');
+            const nav = document.getElementById('mobileNavDropdown');
+            if (!header.contains(event.target) && nav.classList.contains('active')) closeMobileMenu();
+        });
+
+        /* --- FILTER GALLERY --- */
         function filterGallery(category, btn) {
             // Update Active Button
             document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
@@ -532,7 +733,7 @@
             });
         }
 
-        // --- LIGHTBOX ---
+        /* --- LIGHTBOX --- */
         const lightbox = document.getElementById('lightbox');
         const lightboxImg = document.getElementById('lightboxImg');
         const lightboxVideo = document.getElementById('lightboxVideo');
@@ -571,22 +772,7 @@
                 lightboxVideo.src = "";
             }
         });
-
-        // --- CHAT & HEADER SCROLL ---
-        function toggleChat() {
-            const btn = document.getElementById('toggleBtn');
-            const box = document.getElementById('chatBox');
-            btn.classList.toggle('active'); // Add transformation logic if needed in CSS
-            box.classList.toggle('active');
-        }
-
-        window.addEventListener('scroll', function() {
-            const header = document.getElementById('mainHeader');
-            if (window.scrollY > 20) header.classList.add('header-minimal');
-            else header.classList.remove('header-minimal');
-        });
     </script>
-    
     <script src="TTS_Adaptif.js"></script>
 
 </body>
