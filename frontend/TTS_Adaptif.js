@@ -1,7 +1,12 @@
 /**
  * ------------------------------------------------------------------
- * BALMON ACCESSIBILITY SUITE - ULTIMATE MOBILE FIX
- * Perbaikan: Z-Index Maksimal, Safe Area Support, & Touch Target
+ * BALMON ACCESSIBILITY SUITE - ULTIMATE PRO + HOVER SPEAK
+ * Fitur: 
+ * 1. TTS Full Article (Baca Artikel Utama)
+ * 2. TTS Cursor Mode (Baca elemen yang ditunjuk mouse) - BARU
+ * 3. Visual Slider (Zoom, Brightness, Contrast)
+ * 4. Highlight Mode (Sorot Link & Judul)
+ * 5. Extended Color Blind Modes
  * ------------------------------------------------------------------
  */
 
@@ -10,7 +15,7 @@
 
     // --- 1. KONFIGURASI ---
     const CONFIG = {
-        apiKey: 'lGwezgDw', 
+        apiKey: 'lGwezgDw', // Key ResponsiveVoice Anda
         voiceName: "Indonesian Female",
         themeColor: '#006fb0',
         selectors: [
@@ -26,48 +31,36 @@
         document.head.appendChild(script);
     }
 
-    // --- 3. CSS STYLING (MOBILE OPTIMIZED) ---
+    // --- 3. CSS STYLING ---
     const style = document.createElement('style');
     style.innerHTML = `
-        /* --- 1. FAB BUTTON (FIXED POSITION) --- */
+        /* --- 1. FAB BUTTON --- */
         #access-fab {
-            position: fixed; 
-            /* Gunakan 'max' agar aman di iPhone/Android berponi */
-            bottom: max(30px, env(safe-area-inset-bottom) + 20px); 
-            left: 30px; 
-            /* Z-Index level 'Dewa' (Maksimum Integer Browser) agar selalu di paling atas */
-            z-index: 2147483647 !important; 
+            position: fixed; bottom: 30px; left: 30px; z-index: 999999;
             width: 55px; height: 55px;
             background: linear-gradient(135deg, ${CONFIG.themeColor}, #004e7c);
             border-radius: 50%;
-            box-shadow: 0 4px 15px rgba(0, 111, 176, 0.5);
+            box-shadow: 0 4px 15px rgba(0, 111, 176, 0.4);
             display: flex; align-items: center; justify-content: center;
-            cursor: pointer; border: 2px solid rgba(255,255,255,0.4);
+            cursor: pointer; border: 2px solid rgba(255,255,255,0.3);
             transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             outline: none;
-            -webkit-tap-highlight-color: transparent;
         }
         #access-fab:hover { transform: scale(1.1) rotate(15deg); }
         #access-fab svg { width: 28px; height: 28px; fill: white; }
 
         /* --- 2. PANEL SIDEBAR --- */
         #access-panel {
-            position: fixed; top: 0; 
-            left: -120%; /* Geser jauh keluar layar */
-            width: 320px; 
-            max-width: 85vw; /* Jangan penuhi layar HP, sisakan celah buat klik tutup */
-            height: 100vh;
-            /* Tambahkan padding bawah untuk scroll di HP */
-            padding-bottom: 80px; 
-            background: rgba(255, 255, 255, 0.98);
+            position: fixed; top: 0; left: -360px;
+            width: 320px; height: 100vh;
+            background: rgba(255, 255, 255, 0.96);
             backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
-            box-shadow: 10px 0 40px rgba(0,0,0,0.2);
-            z-index: 2147483646 !important; /* Tepat di bawah tombol FAB */
-            transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 5px 0 30px rgba(0,0,0,0.15);
+            z-index: 999998;
+            transition: left 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             display: flex; flex-direction: column;
             border-right: 1px solid rgba(255,255,255,0.5);
-            overflow-y: auto; overflow-x: hidden;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            overflow-y: auto; font-family: 'Segoe UI', sans-serif;
         }
         #access-panel.is-open { left: 0; }
 
@@ -75,102 +68,92 @@
         .panel-header {
             padding: 18px 20px; background: #f8f9fa; border-bottom: 1px solid #eee;
             display: flex; justify-content: space-between; align-items: center;
-            position: sticky; top: 0; z-index: 10;
         }
         .panel-title { font-weight: 800; color: #333; font-size: 15px; letter-spacing: 0.5px; }
         .btn-reset { 
-            font-size: 11px; color: #dc3545; cursor: pointer; font-weight: bold; 
-            border: 1px solid #dc3545; padding: 6px 12px; border-radius: 4px; background: transparent; 
+            font-size: 10px; color: #dc3545; cursor: pointer; font-weight: bold; 
+            border: 1px solid #dc3545; padding: 4px 8px; border-radius: 4px; background: transparent; 
         }
+        .btn-reset:hover { background: #dc3545; color: white; }
+        .panel-section { padding: 15px 20px; border-bottom: 1px solid #eee; }
+        .section-label { font-size: 11px; font-weight: 700; color: #888; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 1px; }
 
         /* --- 3. WIDGETS --- */
-        .panel-section { padding: 15px 20px; border-bottom: 1px solid #eee; }
-        .section-label { font-size: 11px; font-weight: 700; color: #999; margin-bottom: 12px; text-transform: uppercase; letter-spacing: 1px; }
-
+        
+        /* TOMBOL TOGGLE (Kotak) */
         .access-toggle-btn {
             display: flex; align-items: center; justify-content: space-between;
-            background: #fff; border: 1px solid #e0e0e0; padding: 14px 16px; border-radius: 10px; cursor: pointer;
-            margin-bottom: 10px; transition: all 0.2s;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+            background: #fff; border: 1px solid #ddd; padding: 10px 12px; border-radius: 8px; cursor: pointer;
+            margin-bottom: 8px; transition: all 0.2s;
         }
-        .access-toggle-btn:active { transform: scale(0.98); } /* Efek klik di HP */
-        .access-toggle-btn.active { background: #eeffff; border-color: ${CONFIG.themeColor}; }
-        .access-toggle-btn.active .toggle-icon { fill: ${CONFIG.themeColor}; }
+        .access-toggle-btn:hover { border-color: ${CONFIG.themeColor}; background: #fdfdfd; }
         
-        .toggle-icon { width: 24px; height: 24px; fill: #666; flex-shrink: 0; }
-        .toggle-text { font-size: 14px; font-weight: 600; color: #444; flex-grow: 1; margin-left: 14px; }
-        .toggle-status { width: 12px; height: 12px; border-radius: 50%; background: #ddd; flex-shrink: 0; }
-        .access-toggle-btn.active .toggle-status { background: ${CONFIG.themeColor}; box-shadow: 0 0 6px ${CONFIG.themeColor}; }
+        /* State Active untuk Toggle */
+        .access-toggle-btn.active { background: #e3f2fd; border-color: ${CONFIG.themeColor}; }
+        .access-toggle-btn.active .toggle-icon { fill: ${CONFIG.themeColor}; }
+        .toggle-icon { width: 20px; height: 20px; fill: #555; }
+        .toggle-text { font-size: 13px; font-weight: 600; color: #333; flex-grow: 1; margin-left: 10px; }
+        .toggle-status { width: 10px; height: 10px; border-radius: 50%; background: #ccc; }
+        .access-toggle-btn.active .toggle-status { background: ${CONFIG.themeColor}; box-shadow: 0 0 5px ${CONFIG.themeColor}; }
 
-        /* Khusus Tombol Play Artikel */
-        #btn-tts.active { background: #fff5f5; border-color: #dc3545; }
-        #btn-tts.active .toggle-status { background: #dc3545; box-shadow: 0 0 6px #dc3545; }
+        /* Khusus Tombol Play Artikel (Merah jika aktif) */
+        #btn-tts.active { background: #fee2e2; border-color: #dc3545; }
+        #btn-tts.active .toggle-status { background: #dc3545; box-shadow: 0 0 5px #dc3545; }
         #btn-tts.active .toggle-icon { fill: #dc3545; }
 
-        /* Wave Animation */
-        .wave { display: none; align-items: flex-end; gap: 3px; height: 14px; margin-left: auto; margin-right: 12px; }
+        /* Wave Animation Kecil */
+        .wave { display: none; align-items: flex-end; gap: 2px; height: 12px; }
         .bar { width: 3px; background: #dc3545; animation: sound 1s infinite ease-in-out; }
         .bar:nth-child(2) { animation-delay: 0.1s; } .bar:nth-child(3) { animation-delay: 0.2s; }
         @keyframes sound { 0%, 100% { height: 30%; } 50% { height: 100%; } }
 
         /* SLIDERS */
-        .control-group { margin-bottom: 18px; }
-        .control-header { display: flex; justify-content: space-between; font-size: 13px; font-weight: 600; color: #555; margin-bottom: 10px; }
-        input[type=range] { width: 100%; -webkit-appearance: none; background: transparent; padding: 5px 0; }
+        .control-group { margin-bottom: 12px; }
+        .control-header { display: flex; justify-content: space-between; font-size: 12px; font-weight: 600; color: #555; margin-bottom: 5px; }
+        input[type=range] { width: 100%; -webkit-appearance: none; background: transparent; }
         input[type=range]::-webkit-slider-thumb {
-            -webkit-appearance: none; height: 20px; width: 20px; border-radius: 50%;
-            background: ${CONFIG.themeColor}; cursor: pointer; margin-top: -8px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2); border: 2px solid #fff;
+            -webkit-appearance: none; height: 14px; width: 14px; border-radius: 50%;
+            background: ${CONFIG.themeColor}; cursor: pointer; margin-top: -5px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.3);
         }
         input[type=range]::-webkit-slider-runnable-track {
-            width: 100%; height: 4px; cursor: pointer; background: #ddd; border-radius: 2px;
+            width: 100%; height: 4px; cursor: pointer; background: #e0e0e0; border-radius: 2px;
         }
 
         /* COLOR BLIND GRID */
-        .cb-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .cb-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
         .cb-btn {
-            padding: 12px 5px; border: 1px solid #ddd; border-radius: 8px; background: #fff;
-            text-align: center; font-size: 12px; font-weight: 600; color: #555; cursor: pointer;
-            transition: all 0.2s; min-height: 48px; display: flex; align-items: center; justify-content: center;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+            padding: 8px; border: 1px solid #ddd; border-radius: 6px; background: #fff;
+            text-align: center; font-size: 11px; font-weight: 600; color: #555; cursor: pointer;
+            transition: all 0.2s;
         }
-        .cb-btn.active { background: ${CONFIG.themeColor}; color: white; border-color: ${CONFIG.themeColor}; box-shadow: 0 4px 8px rgba(0, 111, 176, 0.3); }
+        .cb-btn:hover { border-color: ${CONFIG.themeColor}; background: #f0f8ff; }
+        .cb-btn.active { background: ${CONFIG.themeColor}; color: white; border-color: ${CONFIG.themeColor}; }
 
-        /* --- 4. MODES --- */
+        /* --- 4. CSS CLASSES FOR MODES --- */
+        
+        /* Highlight Mode */
         body.acc-highlight a {
             background-color: #ffeb3b !important; color: #000 !important;
-            text-decoration: underline !important; box-shadow: 0 0 0 3px #ffeb3b !important;
+            text-decoration: underline !important; box-shadow: 0 0 0 2px #ffeb3b !important;
         }
-        .speaking-hover {
-            outline: 4px solid #f39c12 !important;
-            background-color: rgba(243, 156, 18, 0.2) !important;
-            cursor: help !important;
+        body.acc-highlight h1, body.acc-highlight h2, body.acc-highlight h3 {
+            border-left: 5px solid ${CONFIG.themeColor}; padding-left: 10px; background: rgba(0,0,0,0.05);
         }
 
-        /* --- 5. RESPONSIVE MEDIA QUERIES --- */
-        @media only screen and (max-width: 600px) {
-            #access-fab {
-                width: 50px; height: 50px;
-                /* Posisi disesuaikan agar tidak mepet layar bawah HP */
-                bottom: max(25px, env(safe-area-inset-bottom) + 25px); 
-                left: 20px;
-            }
-            #access-fab svg { width: 24px; height: 24px; }
-            
-            #access-panel {
-                width: 100%; 
-                max-width: 90vw; /* Lebih lebar sedikit di HP kecil */
-            }
+        /* Hover Speak Visual Cue */
+        .speaking-hover {
+            outline: 2px solid #f39c12 !important;
+            background-color: rgba(243, 156, 18, 0.1) !important;
+            cursor: help !important;
         }
     `;
     document.head.appendChild(style);
 
-    // --- 4. HTML STRUCTURE ---
+    // --- 5. HTML STRUCTURE ---
     const container = document.createElement('div');
-    // PENTING: ID 'balmon-acc-root' agar tidak konflik dengan style lain
-    container.id = 'balmon-acc-root'; 
     container.innerHTML = `
-        <button id="access-fab" title="Menu Aksesibilitas" aria-label="Buka Menu Aksesibilitas">
+        <button id="access-fab" title="Menu Aksesibilitas">
             <svg viewBox="0 0 24 24"><path d="M12 2c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2zm9 7h-6v13h-2v-6h-2v6H9V9H3V7h18v2z"/></svg>
         </button>
 
@@ -187,8 +170,8 @@
                     <svg class="toggle-icon" viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>
                     <div class="toggle-text">
                         <span id="txt-tts">Baca Artikel</span>
+                        <div class="wave" id="tts-wave"><div class="bar"></div><div class="bar"></div><div class="bar"></div></div>
                     </div>
-                    <div class="wave" id="tts-wave"><div class="bar"></div><div class="bar"></div><div class="bar"></div></div>
                     <div class="toggle-status"></div>
                 </div>
 
@@ -238,17 +221,14 @@
                 </div>
             </div>
             
-            <div style="margin-top:auto; padding:20px; text-align:center; color:#ccc; font-size:10px;">
+            <div style="margin-top:auto; padding:15px; text-align:center; color:#ccc; font-size:10px;">
                 Balmon Accessibility
             </div>
         </div>
     `;
-    
-    // --- PENEMPATAN KONTEN YANG LEBIH AMAN ---
-    // Menggunakan append ke HTML, bukan BODY untuk menghindari 'transform' dari template
-    document.documentElement.appendChild(container);
+    document.body.appendChild(container);
 
-    // --- 5. LOGIC ENGINE ---
+    // --- 6. LOGIC ENGINE ---
     
     // Elements
     const fab = document.getElementById('access-fab');
@@ -261,11 +241,9 @@
         if(panel.classList.contains('is-open')){
              fab.innerHTML = '<svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>';
              fab.style.background = '#333';
-             fab.setAttribute('aria-label', 'Tutup Menu');
         } else {
              fab.innerHTML = '<svg viewBox="0 0 24 24"><path d="M12 2c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2zm9 7h-6v13h-2v-6h-2v6H9V9H3V7h18v2z"/></svg>';
              fab.style.background = `linear-gradient(135deg, ${CONFIG.themeColor}, #004e7c)`;
-             fab.setAttribute('aria-label', 'Buka Menu');
         }
     };
     fab.addEventListener('click', (e) => { e.stopPropagation(); togglePanel(); });
@@ -273,7 +251,7 @@
         if (!panel.contains(e.target) && !fab.contains(e.target) && panel.classList.contains('is-open')) togglePanel();
     });
 
-    // B. TTS LOGIC
+    // B. TTS LOGIC (BACA ARTIKEL)
     const btnTts = document.getElementById('btn-tts');
     const txtTts = document.getElementById('txt-tts');
     const wave = document.getElementById('tts-wave');
@@ -289,7 +267,9 @@
     }
 
     btnTts.addEventListener('click', () => {
+        // Matikan cursor mode jika aktif
         if(isCursorMode) { btnCursor.click(); }
+
         if (typeof responsiveVoice === 'undefined') return alert("Memuat suara...");
         
         if (isSpeakingArticle) {
@@ -319,61 +299,73 @@
         }
     });
 
-    // C. CURSOR HOVER SPEAK LOGIC
+    // C. CURSOR HOVER SPEAK LOGIC (BACA KURSOR)
     const btnCursor = document.getElementById('btn-cursor');
     let isCursorMode = false;
     let lastSpeakText = '';
 
     btnCursor.addEventListener('click', () => {
+        // Matikan baca artikel jika aktif
         if(isSpeakingArticle) { btnTts.click(); }
+
         isCursorMode = !isCursorMode;
         if(isCursorMode) {
             btnCursor.classList.add('active');
-            responsiveVoice.speak("Mode kursor aktif.", CONFIG.voiceName);
+            responsiveVoice.speak("Mode kursor aktif. Arahkan ke teks.", CONFIG.voiceName);
         } else {
             btnCursor.classList.remove('active');
             responsiveVoice.cancel();
+            // Hapus style hover dari elemen terakhir
             document.querySelectorAll('.speaking-hover').forEach(el => el.classList.remove('speaking-hover'));
         }
     });
 
-    document.body.addEventListener('touchstart', (e) => {
-        // Support touch untuk mode kursor di HP
-        if(isCursorMode && e.target.innerText && e.target.innerText.length > 2) {
-             responsiveVoice.cancel();
-             responsiveVoice.speak(e.target.innerText, CONFIG.voiceName);
-        }
-    }, {passive: true});
-
+    // Event Listener Mouseover untuk Body
     document.body.addEventListener('mouseover', (e) => {
         if (!isCursorMode) return;
+
+        // Daftar tag HTML yang layak dibaca
         const validTags = ['P', 'H1', 'H2', 'H3', 'H4', 'H5', 'H6', 'A', 'LI', 'SPAN', 'BUTTON', 'TD', 'TH', 'BLOCKQUOTE', 'LABEL'];
         let target = e.target;
         
+        // Cek apakah elemen valid, punya teks, dan bukan bagian dalam panel ini sendiri (kecuali teks panel)
+        // Kita izinkan baca panel agar user tunanetra bisa menavigasi menu ini juga
         if (validTags.includes(target.tagName) && target.innerText.trim().length > 0) {
+            
+            // Hindari pengulangan cepat di elemen yang sama
             if(lastSpeakText === target.innerText) return;
+
+            // Visual feedback
             document.querySelectorAll('.speaking-hover').forEach(el => el.classList.remove('speaking-hover'));
             target.classList.add('speaking-hover');
-            responsiveVoice.cancel();
+
+            // Speak
+            responsiveVoice.cancel(); // Stop suara sebelumnya
             responsiveVoice.speak(target.innerText, CONFIG.voiceName);
             lastSpeakText = target.innerText;
         }
-    }, true);
+    }, true); // Use capture phase for better performance
 
     document.body.addEventListener('mouseout', (e) => {
         if(isCursorMode) {
             e.target.classList.remove('speaking-hover');
-            lastSpeakText = ''; 
+            lastSpeakText = ''; // Reset agar bisa dibaca ulang jika hover kembali
         }
     });
+
 
     // D. HIGHLIGHT MODE LOGIC
     const btnHighlight = document.getElementById('btn-highlight');
     let isHighlight = false;
     btnHighlight.addEventListener('click', () => {
         isHighlight = !isHighlight;
-        isHighlight ? document.body.classList.add('acc-highlight') : document.body.classList.remove('acc-highlight');
-        isHighlight ? btnHighlight.classList.add('active') : btnHighlight.classList.remove('active');
+        if(isHighlight) {
+            btnHighlight.classList.add('active');
+            document.body.classList.add('acc-highlight');
+        } else {
+            btnHighlight.classList.remove('active');
+            document.body.classList.remove('acc-highlight');
+        }
     });
 
     // E. VISUAL SLIDERS & FILTERS
@@ -386,11 +378,7 @@
     const cbButtons = document.querySelectorAll('.cb-btn');
     let currentMode = 'none';
 
-    // Fix: Gunakan transform scale untuk zoom agar lebih mulus di mobile
-    rangeZoom.addEventListener('input', (e) => { 
-        valZoom.innerText = e.target.value + "%"; 
-        document.body.style.zoom = e.target.value + "%";
-    });
+    rangeZoom.addEventListener('input', (e) => { valZoom.innerText = e.target.value + "%"; document.body.style.zoom = e.target.value + "%"; });
     rangeBright.addEventListener('input', (e) => { valBright.innerText = e.target.value + "%"; updateAllFilters(); });
     rangeContrast.addEventListener('input', (e) => { valContrast.innerText = e.target.value + "%"; updateAllFilters(); });
 
@@ -407,6 +395,7 @@
         const b = rangeBright.value;
         const c = rangeContrast.value;
         let filters = `brightness(${b}%) contrast(${c}%) `;
+
         switch(currentMode) {
             case 'achromatopsia': filters += 'grayscale(100%)'; break;
             case 'invert': filters += 'invert(100%)'; break;
@@ -421,12 +410,21 @@
 
     // F. RESET ALL
     document.getElementById('btn-reset').addEventListener('click', () => {
+        // Reset Sliders
         rangeZoom.value = 100; valZoom.innerText = "100%"; document.body.style.zoom = "100%";
         rangeBright.value = 100; valBright.innerText = "100%";
         rangeContrast.value = 100; valContrast.innerText = "100%";
+        
+        // Reset Modes
         isHighlight = false; btnHighlight.classList.remove('active'); document.body.classList.remove('acc-highlight');
+        
+        // Reset Cursor Mode
         isCursorMode = false; btnCursor.classList.remove('active'); document.querySelectorAll('.speaking-hover').forEach(el => el.classList.remove('speaking-hover'));
+        
+        // Reset Color
         currentMode = 'none'; cbButtons.forEach(b => b.classList.remove('active')); document.querySelector('.cb-btn[data-filter="none"]').classList.add('active');
+        
+        // Apply & Stop Sound
         updateAllFilters();
         if(isSpeakingArticle || responsiveVoice.isPlaying()) {
             responsiveVoice.cancel();
