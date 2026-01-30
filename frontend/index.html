@@ -706,6 +706,32 @@
         .search-item:hover { background: var(--bg-light-blue); border-color: var(--primary-color); transform: translateX(5px); }
         .search-item h4 { margin: 0 0 5px 0; color: var(--primary-color); font-size: 16px; }
         .search-item p { margin: 0; font-size: 13px; color: var(--text-gray); }
+    
+        /* --- SURVEY MODAL (POPUP) --- */
+        #age-survey-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 50, 90, 0.7); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+            z-index: 99999; display: flex; align-items: center; justify-content: center; opacity: 0; visibility: hidden; transition: all 0.4s ease;
+        }
+        #age-survey-overlay.active { opacity: 1; visibility: visible; }
+        .survey-card {
+            background: #fff; width: 90%; max-width: 420px; border-radius: 20px; overflow: hidden; box-shadow: 0 25px 50px rgba(0,0,0,0.25);
+            transform: scale(0.9) translateY(20px); transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); position: relative;
+        }
+        #age-survey-overlay.active .survey-card { transform: scale(1) translateY(0); }
+        .survey-header { background: linear-gradient(135deg, var(--primary-color), var(--primary-dark)); padding: 25px 20px; text-align: center; color: white; position: relative; }
+        .survey-header h3 { margin: 0; font-size: 20px; font-weight: 700; }
+        .survey-header p { margin: 5px 0 0; font-size: 13px; opacity: 0.9; }
+        .survey-icon { width: 60px; height: 60px; background: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+        .survey-body { padding: 30px 25px; }
+        .input-group-survey { margin-bottom: 20px; }
+        .input-group-survey label { display: block; font-size: 14px; font-weight: 600; color: var(--text-dark); margin-bottom: 8px; }
+        .input-survey { width: 100%; padding: 12px 15px; border: 2px solid #e0e0e0; border-radius: 10px; font-size: 16px; transition: border-color 0.3s; outline: none; }
+        .input-survey:focus { border-color: var(--primary-color); }
+        .btn-submit-survey { width: 100%; padding: 14px; background: var(--secondary-color); color: white; border: none; border-radius: 10px; font-size: 16px; font-weight: 700; cursor: pointer; transition: 0.3s; }
+        .btn-submit-survey:hover { background: #009ac9; transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0, 172, 224, 0.3); }
+        .survey-close { position: absolute; top: 15px; right: 15px; background: rgba(255,255,255,0.2); border: none; color: white; width: 30px; height: 30px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 18px; transition: 0.3s; }
+        .survey-close:hover { background: rgba(255,255,255,0.4); transform: rotate(90deg); }
+
     </style>
 </head>
 <body>
@@ -714,7 +740,25 @@
         <div class="loader-spinner"></div>
         <div class="loader-text">MEMUAT...</div>
     </div>
-
+    <div id="age-survey-overlay">
+        <div class="survey-card">
+            <button class="survey-close" id="closeSurvey">&times;</button>
+            <div class="survey-header">
+                <div class="survey-icon">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="#006fb0"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+                </div>
+                <h3>Survei Pengunjung</h3>
+                <p>Bantu kami mengenal Anda lebih baik</p>
+            </div>
+            <div class="survey-body">
+                <div class="input-group-survey">
+                    <label>Berapa Umur Anda?</label>
+                    <input type="number" id="inputAge" class="input-survey" placeholder="Contoh: 25" min="5" max="100">
+                </div>
+                <button id="submitAge" class="btn-submit-survey">Kirim Data</button>
+            </div>
+        </div>
+    </div>
 <header id="mainHeader">
     <div class="container header-content">
         <div class="brand-area" onclick="scrollToTop()">
@@ -1147,5 +1191,99 @@
         <div id="searchResults" class="search-results"></div>
     </div>
 </div>
+
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { getDatabase, ref, push, serverTimestamp, get, runTransaction } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+
+    // Konfigurasi Firebase
+    const firebaseConfig = {
+        apiKey: "AIzaSyDUeIg9Zn_xndPXtChO8KufXFp6EMtqBJ0",
+        authDomain: "admin-pelayanan-balmon.firebaseapp.com",
+        databaseURL: "https://admin-pelayanan-balmon-default-rtdb.firebaseio.com",
+        projectId: "admin-pelayanan-balmon",
+        appId: "1:1071557110255:web:bff7087da1feacccb7ee1a"
+    };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+
+    // --- 1. PENCATAT TOTAL KUNJUNGAN (TRAFFIC) ---
+    // Kode ini otomatis menambah angka kunjungan setiap kali halaman dimuat
+    const visitRef = ref(db, 'statistik_web/total_kunjungan');
+    runTransaction(visitRef, (currentData) => {
+        return (currentData || 0) + 1;
+    }).then(() => {
+        console.log("Traffic recorded +1");
+    }).catch((err) => console.error("Traffic error:", err));
+    // ---------------------------------------------
+
+    // --- 2. LOGIKA POPUP SURVEI UMUR ---
+    const overlay = document.getElementById('age-survey-overlay');
+    const btnSubmit = document.getElementById('submitAge');
+    const inputAge = document.getElementById('inputAge');
+    const btnClose = document.getElementById('closeSurvey');
+
+    // Cek LocalStorage (Apakah user sudah pernah isi?)
+    // const hasFilled = localStorage.getItem('balmon_age_filled'); 
+    // Uncomment baris di atas jika ingin survei muncul sekali saja seumur hidup per browser.
+    // Saat ini dimatikan agar Anda bisa mengetesnya berulang kali.
+    
+    // Tampilkan Popup setelah 2 detik
+    setTimeout(() => {
+        // if (!hasFilled) { // Gunakan ini nanti saat produksi
+            overlay.style.display = 'flex';
+            // Sedikit delay biar transisi CSS jalan
+            setTimeout(() => overlay.classList.add('active'), 50);
+        // }
+    }, 2000);
+
+    btnClose.addEventListener('click', () => {
+        overlay.classList.remove('active');
+        setTimeout(() => { overlay.style.display = 'none'; }, 400);
+    });
+
+    btnSubmit.addEventListener('click', () => {
+        const age = parseInt(inputAge.value);
+        if (!age || age < 5 || age > 100) {
+            alert("Mohon isi umur dengan benar (5-100 tahun).");
+            return;
+        }
+
+        btnSubmit.innerText = "Mengirim...";
+        btnSubmit.disabled = true;
+
+        // Kirim ke Firebase
+        push(ref(db, 'statistik_web/demografi_umur'), {
+            umur: age,
+            kategori: getCategory(age),
+            waktu: serverTimestamp(),
+            device: /Mobi|Android/i.test(navigator.userAgent) ? 'Mobile' : 'Desktop'
+        })
+        .then(() => {
+            // Sukses
+            localStorage.setItem('balmon_age_filled', 'true'); // Tandai sudah isi
+            overlay.classList.remove('active'); // Hilangkan animasi
+            setTimeout(() => { overlay.style.display = 'none'; }, 400); // Hilangkan elemen
+            alert("Terima kasih! Data tersimpan.");
+        })
+        .catch((err) => {
+            console.error("Firebase Error:", err);
+            alert("Gagal mengirim data. Cek koneksi internet.");
+            btnSubmit.innerText = "Kirim Data";
+            btnSubmit.disabled = false;
+        });
+    });
+
+    // Helper: Tentukan kategori umur
+    function getCategory(age) {
+        if(age < 18) return "Remaja";
+        if(age < 25) return "Dewasa Muda";
+        if(age < 45) return "Dewasa";
+        if(age < 60) return "Pra-Lansia";
+        return "Lansia";
+    }
+</script>
 </body>
 </html>
