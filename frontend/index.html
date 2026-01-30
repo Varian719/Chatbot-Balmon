@@ -710,14 +710,26 @@
 
         // --- 1. PENCATAT TOTAL KUNJUNGAN (TRAFFIC) ---
         // Kode ini otomatis menambah angka kunjungan setiap kali halaman dimuat
-        const visitRef = ref(db, 'statistik_web/total_kunjungan');
-        runTransaction(visitRef, (currentData) => {
-            return (currentData || 0) + 1;
-        }).then(() => {
-            console.log("Traffic recorded +1");
-        }).catch((err) => console.error("Traffic error:", err));
-        // ---------------------------------------------
+        // ... di dalam script module index.html ...
 
+// 1. PENCATAT TOTAL KUNJUNGAN (TRAFFIC GLOBAL)
+const visitRef = ref(db, 'statistik_web/total_kunjungan');
+runTransaction(visitRef, (currentData) => {
+    return (currentData || 0) + 1;
+});
+
+// === TAMBAHKAN KODE INI UNTUK GRAFIK BULANAN ===
+const date = new Date();
+// Format key: "2024-01", "2024-02", dst.
+const yearMonth = date.getFullYear() + "-" + (date.getMonth() + 1).toString().padStart(2, '0');
+
+const monthlyRef = ref(db, `statistik_web/kunjungan_bulanan/${yearMonth}`);
+runTransaction(monthlyRef, (currentData) => {
+    return (currentData || 0) + 1;
+}).then(() => {
+    console.log("Traffic Bulanan Tercatat: " + yearMonth);
+});
+// ===============================================
         // --- 2. LOGIKA POPUP SURVEI UMUR ---
         const overlay = document.getElementById('age-survey-overlay');
         const btnSubmit = document.getElementById('submitAge');
