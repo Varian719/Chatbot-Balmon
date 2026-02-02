@@ -1,0 +1,917 @@
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Balmon Samarinda - DJID Official</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        /* --- 1. SETUP WARNA (Branding Guideline DJID) --- */
+        :root {
+            --primary-color: #006fb0;   /* Biru Utama */
+            --primary-dark: #005082;    /* Biru Gelap untuk Hover */
+            --secondary-color: #00ace0; /* Cyan/Biru Langit */
+            --accent-yellow: #ecbb1d;   /* Kuning Emas */
+            --accent-red: #de262a;      /* Merah */
+            --bg-light-blue: #f4f9fc;   
+            --bg-white: #ffffff;
+            --text-dark: #1e293b;
+            --text-gray: #64748b;
+            --shadow-soft: 0 10px 30px -5px rgba(0, 0, 0, 0.05);
+            --radius-md: 12px;
+        }
+
+        /* --- RESET & GLOBAL --- */
+        body { 
+            margin: 0; padding: 0; 
+            font-family: 'Inter', sans-serif; 
+            background-color: var(--bg-light-blue);
+            color: var(--text-dark); 
+            line-height: 1.6; 
+            overflow-x: hidden; 
+        }
+        a { text-decoration: none; color: inherit; transition: 0.3s; }
+        ul { list-style: none; padding: 0; margin: 0; }
+        * { box-sizing: border-box; }
+
+        .container {
+            max-width: 1200px; margin: 0 auto; padding: 0 20px; width: 100%;
+        }
+
+        /* --- HEADER & NAVIGATION --- */
+        header {
+            background-color: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            height: 80px; 
+            position: fixed; top: 0; left: 0; width: 100%; z-index: 1000;
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.04);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); /* Transisi halus */
+        }
+
+        .header-content { display: flex; align-items: center; justify-content: space-between; height: 100%; }
+        
+        /* Brand Area (Logo & Teks) */
+        .brand-area { 
+            display: flex; 
+            align-items: center; 
+            gap: 12px; 
+            transition: all 0.4s ease; /* Animasi perubahan posisi/bentuk */
+            padding: 5px;
+            border-radius: 50px;
+        }
+
+        .brand-logo-img {
+            height: 50px; 
+            width: auto; 
+            object-fit: contain;
+            transition: 0.3s;
+        }
+
+        .brand-text { 
+            font-size: 18px; 
+            font-weight: 800; 
+            color: var(--primary-color); 
+            line-height: 1.2;
+            display: flex; 
+            flex-direction: column;
+            transition: 0.3s;
+        }
+
+        .brand-text span { 
+            font-size: 11px; 
+            font-weight: 500; 
+            color: var(--text-gray); 
+            letter-spacing: 0.5px;
+            transition: 0.3s;
+        }
+
+        /* NAVIGASI */
+        .nav-menu { 
+            height: 100%; 
+            display: flex; 
+            align-items: center; 
+            transition: all 0.4s ease; /* Animasi hilang */
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .menu-list { display: flex; gap: 8px; height: 100%; align-items: center; }
+        
+        .menu-item { 
+            position: relative; height: 100%; display: flex; align-items: center; 
+            padding: 0 12px; font-size: 14px; font-weight: 600; 
+            color: var(--text-dark); 
+            cursor: pointer; 
+        }
+        
+        .menu-item:hover { color: var(--primary-color); }
+        .menu-item::after {
+            content: ''; position: absolute; bottom: 0; left: 0; width: 0%; height: 3px;
+            background: var(--accent-yellow); transition: 0.3s;
+        }
+        .menu-item:hover::after { width: 100%; }
+        
+        /* Dropdown */
+        .dropdown-content { 
+            display: none; position: absolute; top: 100%; left: 0; 
+            background-color: #ffffff; 
+            min-width: 240px; 
+            box-shadow: 0 15px 30px rgba(0,0,0,0.1); 
+            border-radius: 0 0 8px 8px; z-index: 1000; 
+            padding: 10px 0; 
+            border-top: 3px solid var(--primary-color);
+            animation: slideDown 0.3s ease;
+        }
+        .menu-item:hover .dropdown-content { display: block; }
+        .dropdown-content li a { 
+            display: block; padding: 10px 20px; color: var(--text-dark); font-weight: 400; font-size: 14px;
+        }
+        .dropdown-content li a:hover { background-color: var(--bg-light-blue); color: var(--primary-color); padding-left: 25px; }
+        
+        @keyframes slideDown { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* --- STYLE KHUSUS HEADER SAAT SCROLL (MINIMALIS) --- */
+        header.header-minimal {
+            background-color: transparent; /* Latar belakang header hilang */
+            backdrop-filter: none;
+            box-shadow: none;
+            height: 0; /* Secara visual mengecil agar tidak menghalangi klik */
+            overflow: visible; /* Biarkan logo tetap terlihat */
+        }
+
+        /* Sembunyikan Navigasi saat scroll */
+        header.header-minimal .nav-menu {
+            opacity: 0;
+            transform: translateY(-20px);
+            pointer-events: none; /* Agar tidak bisa diklik saat hilang */
+        }
+
+        /* Logo Transformasi jadi Kapsul Floating */
+        header.header-minimal .brand-area {
+            position: fixed; /* Kunci posisi */
+            top: 20px;
+            left: 20px; /* Pojok kiri */
+            background: rgba(255, 255, 255, 0.95); /* Beri background putih pada logo saja */
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            padding: 8px 20px 8px 12px;
+            transform: scale(0.9); /* Sedikit mengecil */
+            border: 1px solid rgba(0,0,0,0.05);
+        }
+        
+        /* Opsional: Jika ingin teks sub-judul hilang saat discroll agar lebih ringkas */
+        header.header-minimal .brand-text span {
+            display: none;
+        }
+        header.header-minimal .brand-text {
+            font-size: 16px; /* Sedikit mengecilkan font */
+        }
+
+        /* --- HERO SECTION --- */
+        .hero-section {
+            padding-top: 100px; padding-bottom: 80px;
+            background: linear-gradient(135deg, #ffffff 0%, #f0f7ff 100%);
+            position: relative; overflow: hidden;
+        }
+        /* Dekorasi latar belakang */
+        .hero-bg-blob {
+            position: absolute; width: 600px; height: 600px;
+            background: radial-gradient(circle, rgba(0,172,224,0.08) 0%, rgba(255,255,255,0) 70%);
+            top: -100px; right: -100px; border-radius: 50%; z-index: 0;
+        }
+
+        .hero-grid {
+            display: flex; align-items: center; gap: 60px; position: relative; z-index: 1;
+        }
+
+        /* Hero Text */
+        .hero-text-side { flex: 1; }
+
+        .hero-badge {
+            background-color: rgba(0, 111, 176, 0.1);
+            color: var(--primary-color);
+            padding: 6px 14px; border-radius: 50px;
+            font-size: 13px; font-weight: 700;
+            display: inline-flex; align-items: center; gap: 8px;
+            margin-bottom: 20px;
+        }
+        .hero-badge::before { content: ''; width: 8px; height: 8px; background: var(--accent-yellow); border-radius: 50%; }
+
+        .hero-text-side h1 {
+            font-size: 42px; line-height: 1.2; color: var(--text-dark); margin: 0 0 20px 0;
+            font-weight: 800;
+        }
+        .hero-text-side h1 span { color: var(--primary-color); }
+        .hero-text-side p { color: var(--text-gray); font-size: 17px; margin-bottom: 35px; max-width: 90%; }
+
+        .hero-btn-group { display: flex; gap: 15px; }
+
+        .btn-primary {
+            background: var(--primary-color); color: white;
+            padding: 14px 28px; border-radius: 8px; font-weight: 600;
+            box-shadow: 0 5px 15px rgba(0, 111, 176, 0.25);
+        }
+        .btn-primary:hover { background: var(--primary-dark); transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0, 111, 176, 0.35); }
+
+        .btn-secondary {
+            background: transparent; color: var(--primary-color);
+            border: 2px solid rgba(0, 111, 176, 0.15);
+            padding: 14px 28px; border-radius: 8px; font-weight: 600;
+        }
+        .btn-secondary:hover { border-color: var(--primary-color); background: rgba(0, 111, 176, 0.05); }
+
+        /* Hero Slider */
+        .hero-slider-side {
+            flex: 1.2;
+            width: 100%;
+            border-radius: 20px;
+            background: #fff;
+            padding: 10px;
+            box-shadow: var(--shadow-soft);
+            transform: rotate(-2deg); /* Sedikit miring agar artistik */
+            transition: 0.5s;
+        }
+        .hero-slider-side:hover { transform: rotate(0deg) scale(1.02); }
+
+        .slider-window { overflow: hidden; border-radius: 16px; position: relative; }
+        
+        .slider-track {
+            display: flex; width: max-content; 
+            animation: scrollHorizontal 40s linear infinite; 
+        }
+        .slider-track:hover { animation-play-state: paused; }
+
+        .slide-card {
+            width: 320px; height: 280px; position: relative; flex-shrink: 0; 
+            margin-right: 10px; border-radius: 12px; overflow: hidden;
+        }
+        .slide-card img { width: 100%; height: 100%; object-fit: cover; transition: 0.5s; }
+        .slide-card:hover img { transform: scale(1.1); }
+        
+        .text-caption { 
+            position: absolute; bottom: 0; left: 0; width: 100%;
+            background: linear-gradient(to top, rgba(0,0,0,0.8), transparent); 
+            color: #fff; padding: 20px; font-size: 14px; font-weight: 600;
+        }
+
+        @keyframes scrollHorizontal {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); } 
+        }
+
+        /* --- PARALLAX BANNER --- */
+        .parallax-banner {
+            background-image: url('https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=1600&q=80');
+            background-attachment: fixed; background-position: center; background-size: cover;
+            min-height: 350px; position: relative; display: flex;
+            align-items: center; justify-content: center; text-align: center; color: white;
+        }
+        .parallax-overlay { position: absolute; inset: 0; background: rgba(0, 50, 90, 0.85); z-index: 1; }
+        .parallax-content { position: relative; z-index: 2; padding: 20px; max-width: 800px; }
+        .parallax-content h2 { 
+            font-size: 36px; font-weight: 800; margin-bottom: 10px; letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+        .tagline-berakhlak { 
+            font-size: 18px; color: var(--accent-yellow); font-weight: 500; display: block; margin-top: 15px; 
+            border-top: 1px solid rgba(255,255,255,0.2); padding-top: 15px;
+        }
+
+        /* --- CONTENT SECTION --- */
+        .main-section { padding: 80px 0; }
+        .content-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
+
+        .content-card { 
+            background: var(--bg-white); padding: 40px; border-radius: 16px; 
+            box-shadow: var(--shadow-soft); border-left: 5px solid var(--secondary-color);
+            transition: 0.3s;
+        }
+        .content-card:hover { transform: translateY(-5px); box-shadow: 0 15px 30px rgba(0,0,0,0.08); }
+        
+        .content-card h2 { 
+            color: var(--primary-color); margin-top: 0; font-size: 24px; 
+            display: flex; align-items: center; gap: 10px;
+        }
+        .content-card p { color: var(--text-gray); }
+        .content-card ul li {
+            padding: 8px 0; border-bottom: 1px dashed #eee; color: var(--text-dark);
+            display: flex; gap: 10px;
+        }
+        .content-card ul li::before { content: '✓'; color: var(--primary-color); font-weight: bold; }
+
+        /* --- FOOTER --- */
+        footer { 
+            background-color: var(--primary-color); color: white; 
+            padding-top: 70px; font-size: 14px; position: relative;
+        }
+        .footer-grid { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 40px; padding-bottom: 50px; }
+        .footer-col { flex: 1; min-width: 250px; }
+        
+        .footer-col h3 { 
+            color: var(--accent-yellow); margin-bottom: 25px; font-size: 18px; font-weight: 700;
+        }
+        .footer-links a { 
+            color: rgba(255,255,255,0.8); display: block; margin-bottom: 12px; 
+            transition: 0.2s; 
+        }
+        .footer-links a:hover { color: #fff; transform: translateX(5px); }
+        
+        .copyright { 
+            background-color: rgba(0,0,0,0.1); text-align: center; padding: 25px 0; 
+            color: rgba(255,255,255,0.6); border-top: 1px solid rgba(255,255,255,0.1);
+        }
+
+        /* ========================================= */
+        /* --- CHAT WIDGET & ANIMASI TOMBOL --- */
+        /* ========================================= */
+        
+        .chat-toggle-btn { 
+            position: fixed; bottom: 30px; right: 30px; 
+            width: 65px; height: 65px; 
+            background-color: #ffffff; 
+            border: none; 
+            border-radius: 50%; 
+            box-shadow: 0 8px 25px rgba(0, 111, 176, 0.3); 
+            cursor: pointer; z-index: 9999; 
+            display: flex; align-items: center; justify-content: center; 
+            transition: transform 0.3s ease, background-color 0.3s;
+            overflow: hidden; 
+        }
+
+        /* SVG Styles */
+        .chat-toggle-btn svg {
+            position: absolute;
+            width: 32px; height: 32px;
+            transition: all 0.4s ease-in-out;
+            pointer-events: none;
+        }
+        
+        /* Ikon Pesan (Biru) */
+        .icon-message {
+            opacity: 1; transform: scale(1) rotate(0deg); color: var(--primary-color); fill: currentColor;
+        }
+        /* Ikon Close (Merah/Biru) */
+        .icon-close {
+            opacity: 0; transform: scale(0) rotate(-180deg); color: var(--accent-red); fill: currentColor;
+        }
+
+        /* 1. STATE LOADING (Berputar) */
+        .chat-toggle-btn.loading {
+            animation: pulseWidth 0.6s forwards;
+            background-color: var(--bg-light-blue);
+        }
+        
+        /* Icon berputar saat loading */
+        .chat-toggle-btn.loading .icon-message {
+            animation: spinLoad 0.6s cubic-bezier(0.68, -0.55, 0.27, 1.55) forwards;
+        }
+
+        @keyframes spinLoad {
+            0% { transform: rotate(0deg) scale(1); }
+            50% { transform: rotate(180deg) scale(0.8); opacity: 0.5; } 
+            100% { transform: rotate(360deg) scale(0); opacity: 0; }
+        }
+
+        /* 2. STATE ACTIVE (Terbuka) */
+        .chat-toggle-btn.active .icon-message { opacity: 0; transform: scale(0); }
+        
+        .chat-toggle-btn.active .icon-close {
+            opacity: 1; transform: scale(1) rotate(0deg);
+        }
+        .chat-toggle-btn.active { background-color: #fff; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+        .chat-toggle-btn:hover:not(.active):not(.loading) { transform: scale(1.1); }
+
+        /* DETEKSI FOOTER (Tombol berubah warna) */
+        .chat-toggle-btn.on-footer { background-color: var(--accent-yellow); }
+        .chat-toggle-btn.on-footer .icon-message { color: var(--primary-color); }
+
+        /* CHAT BOX CONTAINER */
+       /* CHAT BOX CONTAINER (UKURAN DIPERBESAR) */
+       .chat-box-container { 
+            position: fixed; 
+            bottom: 110px; 
+            right: 30px; 
+            
+            /* --- UKURAN BARU --- */
+            width: 450px;       /* Lebih Lebar */
+            height: 600px;      /* Lebih Tinggi */
+            max-height: 80vh;   /* Jaga-jaga agar tidak mentok atas layar di laptop kecil */
+            /* ------------------- */
+
+            background-color: #fff; 
+            border-radius: 16px; 
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2); 
+            z-index: 9998; 
+            opacity: 0; 
+            visibility: hidden; 
+            transform: translateY(20px) scale(0.95); 
+            transition: all 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
+            overflow: hidden;
+            display: flex;       /* Agar layout header & iframe rapi */
+            flex-direction: column;
+        }
+
+        .chat-box-container.active { 
+            opacity: 1; visibility: visible; transform: translateY(0) scale(1); 
+        }
+
+        /* Responsive untuk HP (Agar tidak melebar ke luar layar) */
+        @media (max-width: 500px) {
+            .chat-box-container {
+                width: 90%;     /* Di HP pakai persentase */
+                right: 5%;      /* Posisi tengah */
+                height: 70vh;   /* Tinggi 70% layar HP */
+                bottom: 100px;
+            }
+        }
+        /* Logo SVG di Chat Header */
+        .chat-logo-bg { 
+            width: 45px; height: 45px; background: rgba(255,255,255,0.2); 
+            border-radius: 50%; display: flex; align-items: center; justify-content: center; 
+        }
+        
+        .chat-header {
+            background: var(--primary-color); color: white; padding: 15px 20px;
+            display: flex; align-items: center; gap: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .chat-title h4 { margin: 0; font-size: 16px; font-weight: 700; }
+        .chat-title span { font-size: 12px; opacity: 0.9; }
+        
+        /* ========================================= */
+        /* --- TTS (TEXT TO SPEECH) WIDGET STYLE --- */
+        /* ========================================= */
+        .tts-widget {
+            position: fixed;
+            bottom: 30px;
+            left: 30px;
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: white;
+            padding: 8px;
+            border-radius: 50px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+            transition: 0.3s;
+            border: 1px solid #eee;
+        }
+        
+        .tts-widget.speaking {
+            background: #eef9ff;
+            border-color: var(--secondary-color);
+            box-shadow: 0 5px 25px rgba(0, 172, 224, 0.3);
+        }
+
+        .tts-btn-main {
+            width: 50px; height: 50px;
+            border-radius: 50%;
+            background: var(--secondary-color);
+            border: none;
+            color: white;
+            cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            transition: 0.3s;
+        }
+        .tts-btn-main:hover { transform: scale(1.1); background: var(--primary-color); }
+        
+        .tts-controls {
+            display: none; /* Hidden by default */
+            gap: 8px;
+            padding-right: 10px;
+            animation: fadeInRight 0.3s ease;
+        }
+        .tts-widget.active .tts-controls { display: flex; }
+
+        .tts-btn-control {
+            background: none; border: none; cursor: pointer;
+            color: var(--text-gray); padding: 5px;
+            border-radius: 50%; transition: 0.2s;
+        }
+        .tts-btn-control:hover { background: #ddd; color: var(--primary-color); }
+
+        .audio-wave {
+            display: flex; gap: 3px; height: 15px; align-items: center; margin-left: 5px;
+        }
+        .bar {
+            width: 3px; background: var(--secondary-color);
+            animation: soundWave 0s infinite ease-in-out;
+        }
+        .tts-widget.speaking .bar { animation-duration: 0.8s; }
+        
+        .bar:nth-child(1) { height: 6px; }
+        .bar:nth-child(2) { height: 10px; animation-delay: 0.1s; }
+        .bar:nth-child(3) { height: 14px; animation-delay: 0.2s; }
+        .bar:nth-child(4) { height: 8px; animation-delay: 0.3s; }
+
+        @keyframes soundWave {
+            0%, 100% { height: 4px; }
+            50% { height: 14px; }
+        }
+        @keyframes fadeInRight { from { opacity: 0; transform: translateX(-10px); } to { opacity: 1; transform: translateX(0); } }
+
+
+        /* RESPONSIVE */
+        @media (max-width: 900px) {
+            .hero-grid { flex-direction: column; text-align: center; }
+            .hero-text-side { margin-bottom: 30px; }
+            .hero-btn-group { justify-content: center; }
+            .hero-slider-side { transform: rotate(0deg); width: 100%; max-width: 500px; margin: 0 auto; }
+            .content-grid { grid-template-columns: 1fr; }
+        }
+        
+        @media (max-width: 600px) {
+            .brand-text { font-size: 14px; }
+            .brand-logo-svg { height: 35px; }
+            .menu-list { display: none; } /* Mobile Menu Simpel (Hilang dulu) */
+            .hero-text-side h1 { font-size: 32px; }
+            
+            /* Di Mobile, TTS widget agak mengecil */
+            .tts-widget { bottom: 100px; left: 20px; padding: 5px; } 
+            .tts-btn-main { width: 40px; height: 40px; }
+        }
+    </style>
+</head>
+<body>
+
+    <header id="mainHeader">
+        <div class="container header-content">
+            <div class="brand-area">
+                <img 
+                    src="balmonsmd.png" 
+                    alt="Logo Balmon" 
+                    class="brand-logo-img"
+                    onerror="this.src='https://via.placeholder.com/50x50?text=LOGO'"
+                >
+                
+                <div class="brand-text">
+                    BALMON SAMARINDA
+                    <span>Kementerian Komunikasi & Digital</span>
+                </div>
+            </div>
+            <nav class="nav-menu">
+                <ul class="menu-list">
+                    <li class="menu-item">Beranda</li>
+                    <li class="menu-item">
+                        Layanan
+                        <ul class="dropdown-content">
+                            <li><a href="#">Izin Konsesi</a></li>
+                            <li><a href="#">Izin Maritim</a></li>
+                            <li><a href="#">Izin Penyiaran FM</a></li>
+                        </ul>
+                    </li>
+                    <li class="menu-item">Publikasi
+                        <ul class="dropdown-content">
+                            <li><a href="#">Galeri Foto</a></li>
+                            <li><a href="#">Galeri Video</a></li>
+                        </ul>
+                    </li>
+                    <li class="menu-item">Kontak</li>
+                </ul>
+                <button style="margin-left:10px; border:none; background:transparent; color:var(--primary-color); cursor:pointer;">
+                    <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                </button>
+            </nav>
+        </div>
+    </header>
+
+    <div class="hero-section" id="section-hero">
+        <div class="hero-bg-blob"></div>
+        <div class="container hero-grid">
+            
+            <div class="hero-text-side">
+                <div class="hero-badge">Portal Resmi Pelayanan Publik</div>
+                <h1>Pengawasan Spektrum<br><span>Frekuensi Radio</span></h1>
+                <p>
+                    Mewujudkan frekuensi radio yang tertib, efisien, dan bebas gangguan di Kalimantan Timur. Ajukan perizinan dan pengaduan Anda secara online.
+                </p>
+                <div class="hero-btn-group">
+                    <a href="#" class="btn-primary">Layanan</a>
+                    <a href="#" class="btn-secondary">Kontak</a>
+                </div>
+            </div>
+
+            <div class="hero-slider-side">
+                <div class="slider-window">
+                    <div class="slider-track" id="sliderTrack">
+                        </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="parallax-banner" id="section-banner">
+        <div class="parallax-overlay"></div>
+        <div class="parallax-content">
+            <h2>ASN BerAKHLAK</h2>
+            <p style="font-size: 16px; opacity: 0.9;">Bangga Melayani Bangsa</p>
+            <span class="tagline-berakhlak">Berorientasi Pelayanan • Akuntabel • Kompeten • Harmonis • Loyal • Adaptif • Kolaboratif</span>
+        </div>
+    </div>
+
+    <div class="container main-section" id="section-content">
+        <div class="content-grid">
+            <div class="content-card">
+                <h2>
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+                    Tentang Balmon
+                </h2>
+                <p>Unit Pelaksana Teknis (UPT) di bawah Ditjen SDPPI Kemkomdigi RI yang bertugas melaksanakan pengawasan dan pengendalian spektrum frekuensi radio di wilayah Provinsi Kalimantan Timur.</p>
+                <a href="#" style="color:var(--primary-color); font-weight:600; font-size:14px;">Selengkapnya &rarr;</a>
+            </div>
+            <div class="content-card">
+                <h2>
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
+                    Tugas & Fungsi
+                </h2>
+                <ul>
+                    <li>Monitoring penggunaan frekuensi radio.</li>
+                    <li>Penertiban gangguan spektrum.</li>
+                    <li>Pelayanan ujian amatir radio (UNAR).</li>
+                    <li>Sosialisasi regulasi telekomunikasi.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <footer id="mainFooter">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <h3>Balmon Samarinda</h3>
+                    <p style="color:rgba(255,255,255,0.7); line-height:1.8;">
+                        Jalan Sultan Sulaiman No. 123<br>
+                        Samarinda, Kalimantan Timur.<br><br>
+                        <strong>Telp:</strong> 0856-4828-3012<br>
+                        <strong>Email:</strong> pelayananuptbalmonsamarinda@gmail.com
+                    </p>
+                </div>
+                <div class="footer-col">
+                    <h3>Tautan Cepat</h3>
+                    <div class="footer-links">
+                        <a href="#">Profil Organisasi</a>
+                        <a href="#">Standar Pelayanan</a>
+                        <a href="#">Pengaduan Masyarakat</a>
+                        <a href="#">Peta Sebaran Menara</a>
+                    </div>
+                </div>
+                <div class="footer-col">
+                    <h3>Jam Pelayanan</h3>
+                    <p style="color:rgba(255,255,255,0.7);">
+                        Senin - Kamis: 08.00 - 16.00<br>
+                        Jumat: 08.00 - 16.30<br>
+                        Sabtu - Minggu: Libur
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="copyright">Copyright@2024 Balai Monitor Spektrum Frekuensi Radio Kelas I Samarinda</div>
+    </footer>
+
+    <div class="chat-box-container" id="chatBox">
+        <div class="chat-header">
+            <div class="chat-logo-bg">
+                <svg width="24" height="24" fill="white" viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg>
+            </div>
+            <div class="chat-title"><h4>Sobat Digi</h4><span>Online - Siap Membantu</span></div>
+        </div>
+        <iframe 
+            src="https://magangbalmon2619-chat-balmon.hf.space" 
+            style="width: 100%; height: calc(100% - 85px); border: none; background: white;"
+            allow="clipboard-write; microphone"
+        ></iframe>
+    </div>
+
+    <button class="chat-toggle-btn" id="toggleBtn" onclick="animateChatToggle()">
+        <svg class="icon-message" viewBox="0 0 24 24">
+            <path d="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 9h12v2H6V9zm8 5H6v-2h8v2zm4-6H6V6h12v2z"/>
+        </svg>
+        <svg class="icon-close" viewBox="0 0 24 24">
+            <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+        </svg>
+    </button>
+
+    <div class="tts-widget" id="ttsWidget">
+        <div class="tts-controls">
+            <button class="tts-btn-control" onclick="stopTTS()" title="Berhenti">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="6" width="12" height="12"></rect></svg>
+            </button>
+            <button class="tts-btn-control" onclick="pauseResumeTTS()" id="pauseBtn" title="Jeda/Lanjut">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16"></rect><rect x="14" y="4" width="4" height="16"></rect></svg>
+            </button>
+        </div>
+        
+        <div class="audio-wave">
+            <div class="bar"></div>
+            <div class="bar"></div>
+            <div class="bar"></div>
+            <div class="bar"></div>
+        </div>
+
+        <button class="tts-btn-main" onclick="toggleTTS()" title="Bacakan Halaman">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg>
+        </button>
+    </div>
+
+    <script>
+        // --- 1. SLIDER ---
+        const slideData = [
+            { img: 's1.jpg', caption: 'Monitoring Spektrum' },
+            { img: 's2.jpg', caption: 'Pelayanan Publik' },
+            { img: 's3.jpg', caption: 'Ujian Amatir Radio' },
+            { img: 's4.jpg', caption: 'Penertiban Lapangan' }
+        ];
+
+        function initSlider() {
+            const track = document.getElementById('sliderTrack');
+            // Cek jika track ada (menghindari error)
+            if(!track) return; 
+
+            let contentHTML = '';
+            const createCard = (item) => `
+                <div class="slide-card">
+                    <img src="${item.img}" alt="${item.caption}" onerror="this.src='https://via.placeholder.com/320x280?text=Balmon+Image'">
+                    <div class="text-caption">${item.caption}</div>
+                </div>
+            `;
+            // Duplikasi data agar looping halus
+            [...slideData, ...slideData, ...slideData].forEach(item => {
+                contentHTML += createCard(item);
+            });
+            track.innerHTML = contentHTML;
+        }
+
+        // --- 2. LOGIKA CHAT ---
+        function animateChatToggle() {
+            const btn = document.getElementById("toggleBtn");
+            const box = document.getElementById("chatBox");
+
+            if (btn.classList.contains("active")) {
+                btn.classList.remove("active");
+                box.classList.remove("active");
+                return;
+            }
+            if (btn.classList.contains("loading")) return;
+            btn.classList.add("loading");
+            setTimeout(() => {
+                btn.classList.remove("loading");
+                btn.classList.add("active");
+                box.classList.add("active");
+            }, 600);
+        }
+
+        // --- 3. SCROLL EFFECTS ---
+        window.addEventListener('scroll', function() {
+            const chatBtn = document.getElementById('toggleBtn');
+            const footer = document.getElementById('mainFooter');
+            const header = document.getElementById('mainHeader');
+            
+            // Header Minimalis
+            if (window.scrollY > 50) {
+                header.classList.add('header-minimal');
+            } else {
+                header.classList.remove('header-minimal');
+            }
+
+            // Chat Button Color Change
+            if(footer && chatBtn) {
+                const btnRect = chatBtn.getBoundingClientRect();
+                const footerRect = footer.getBoundingClientRect();
+                if (footerRect.top < window.innerHeight && btnRect.bottom > footerRect.top) {
+                    chatBtn.classList.add('on-footer'); 
+                } else {
+                    chatBtn.classList.remove('on-footer'); 
+                }
+            }
+        });
+
+        // ==========================================
+        // --- 4. LOGIKA TEXT TO SPEECH (BAHASA INDO) ---
+        // ==========================================
+        
+        let synth = window.speechSynthesis;
+        let utterance = null;
+        let isPaused = false;
+        
+        // Pilihan suara Indonesia
+        let voices = [];
+        
+        // Pastikan suara termuat (Browser Chrome kadang butuh ini)
+        if (speechSynthesis.onvoiceschanged !== undefined) {
+            speechSynthesis.onvoiceschanged = () => {
+                voices = synth.getVoices();
+            };
+        }
+
+        function getIndonesianVoice() {
+            voices = synth.getVoices();
+            // 1. Cari suara Google Bahasa Indonesia (Paling natural di Android/Chrome)
+            let selectedVoice = voices.find(voice => voice.name.includes("Google Bahasa Indonesia") || voice.name.includes("Indonesian"));
+            
+            // 2. Jika tidak ada, cari apapun yang lang="id-ID"
+            if (!selectedVoice) {
+                selectedVoice = voices.find(voice => voice.lang === 'id-ID' || voice.lang === 'id_ID');
+            }
+
+            return selectedVoice;
+        }
+
+        function getTextToRead() {
+            // Kita hanya ambil teks dari Hero dan Konten Utama (Abaikan Menu & Footer)
+            const heroText = document.getElementById('section-hero')?.innerText || "";
+            const bannerText = document.getElementById('section-banner')?.innerText || "";
+            const contentText = document.getElementById('section-content')?.innerText || "";
+
+            // Bersihkan teks (hapus baris baru berlebih)
+            return `Selamat datang di website Balmon Samarinda. ${heroText}. ${bannerText}. ${contentText}`.replace(/\s+/g, ' ');
+        }
+
+        function toggleTTS() {
+            const widget = document.getElementById('ttsWidget');
+
+            if (synth.speaking && !isPaused) {
+                // Jika sedang bicara, kita stop (toggle close)
+                stopTTS();
+            } else if (isPaused) {
+                // Jika pause, lanjutkan
+                pauseResumeTTS();
+            } else {
+                // Mulai baru
+                startTTS();
+            }
+        }
+
+        function startTTS() {
+            const widget = document.getElementById('ttsWidget');
+            
+            // Stop kalau ada yang nyangkut
+            synth.cancel();
+
+            const text = getTextToRead();
+            utterance = new SpeechSynthesisUtterance(text);
+            
+            // Set Bahasa & Suara
+            utterance.lang = 'id-ID';
+            utterance.rate = 1.0; // Kecepatan normal
+            utterance.pitch = 1.0;
+            
+            const indoVoice = getIndonesianVoice();
+            if (indoVoice) {
+                utterance.voice = indoVoice;
+            }
+
+            // Event Listeners untuk UI
+            utterance.onstart = () => {
+                widget.classList.add('active');
+                widget.classList.add('speaking');
+            };
+            
+            utterance.onend = () => {
+                widget.classList.remove('speaking');
+                widget.classList.remove('active');
+                isPaused = false;
+            };
+
+            synth.speak(utterance);
+        }
+
+        function stopTTS() {
+            synth.cancel();
+            isPaused = false;
+            const widget = document.getElementById('ttsWidget');
+            widget.classList.remove('speaking');
+            widget.classList.remove('active');
+        }
+
+        function pauseResumeTTS() {
+            const widget = document.getElementById('ttsWidget');
+            const pauseBtnIcon = document.getElementById('pauseBtn');
+
+            if (synth.speaking && !isPaused) {
+                synth.pause();
+                isPaused = true;
+                widget.classList.remove('speaking'); // Matikan animasi gelombang
+                // Ubah ikon jadi Play
+                pauseBtnIcon.innerHTML = '<svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>';
+            } else if (isPaused) {
+                synth.resume();
+                isPaused = false;
+                widget.classList.add('speaking'); // Nyalakan animasi
+                // Ubah ikon jadi Pause
+                pauseBtnIcon.innerHTML = '<svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16"></rect><rect x="14" y="4" width="4" height="16"></rect></svg>';
+            }
+        }
+
+        // Jalankan Slider
+        initSlider();
+
+    </script>
+
+</body>
+</html>
+
+```

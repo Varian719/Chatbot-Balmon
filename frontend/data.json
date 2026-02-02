@@ -1,0 +1,17 @@
+[
+  {
+    "judul": "Beranda",
+    "url": "index.html",
+    "isi": "Selamat datang di Balmon Samarinda monitoring spektrum frekuensi radio."
+  },
+  {
+    "judul": "Izin Konsesi",
+    "url": "konsesi.html",
+    "isi": "Informasi tentang layanan perizinan konsesi dan tata cara pengajuannya."
+  },
+  {
+    "judul": "Galeri Kegiatan",
+    "url": "galeri.html",
+    "isi": "Dokumentasi foto dan video kegiatan monitoring lapangan dan sosialisasi."
+  }
+]
