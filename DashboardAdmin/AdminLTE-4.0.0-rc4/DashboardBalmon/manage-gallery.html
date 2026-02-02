@@ -1,0 +1,292 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <title>Admin Balmon | Manajemen Galeri</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/source-sans-3@5.0.12/index.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.min.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/admin-lte@4.0.0-beta2/dist/css/adminlte.min.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" />
+  
+  <style>
+      .table-responsive { max-height: 500px; overflow-y: auto; }
+      thead th { position: sticky; top: 0; background: #fff; z-index: 1; border-top: none; }
+      .img-thumbnail-admin { width: 60px; height: 60px; object-fit: cover; border-radius: 8px; }
+  </style>
+</head>
+
+<body class="layout-fixed sidebar-expand-lg bg-body-tertiary">
+
+  <div class="app-wrapper">
+
+    <nav class="app-header navbar navbar-expand bg-body shadow-sm">
+      <div class="container-fluid">
+        <ul class="navbar-nav">
+          <li class="nav-item"><a class="nav-link" data-lte-toggle="sidebar" href="#"><i class="bi bi-list"></i></a></li>
+          <li class="nav-item"><span class="nav-link fw-bold text-primary">MANAJEMEN GALERI</span></li>
+        </ul>
+        <ul class="navbar-nav ms-auto">
+            <li class="nav-item d-none d-md-block me-3">
+                <span class="nav-link text-muted" id="user-display">Checking...</span>
+            </li>
+            <li class="nav-item">
+                <button id="btnSystemLogout" class="btn btn-danger btn-sm shadow-sm">
+                    <i class="bi bi-power"></i> Keluar
+                </button>
+            </li>
+        </ul>
+      </div>
+    </nav>
+
+    <aside class="app-sidebar bg-body-secondary shadow" data-bs-theme="dark">
+      <div class="sidebar-brand">
+        <a href="#" class="brand-link text-center">
+          <span class="brand-text fw-bold">BALMON SAMARINDA</span>
+        </a>
+      </div>
+      <div class="sidebar-wrapper">
+        <nav class="mt-2">
+          <ul class="nav sidebar-menu flex-column">
+            <li class="nav-item"><a href="admin-balmon.html" class="nav-link"><i class="nav-icon bi bi-speedometer"></i><p>Dashboard</p></a></li>
+            <li class="nav-item"><a href="manage_gallery.html" class="nav-link active"><i class="nav-icon bi bi-images"></i><p>Kelola Galeri</p></a></li>
+            <li class="nav-item"><a href="dokumen.html" class="nav-link"><i class="nav-icon bi bi-folder-fill"></i><p>Arsip Digital</p></a></li>
+            <li class="nav-item"><a href="history_chatbot.html" class="nav-link"><i class="nav-icon bi bi-chat-fill"></i><p>History Chatbot</p></a></li>
+            <li class="nav-item"><a href="gform_management.html" class="nav-link"><i class="nav-icon bi bi-ui-checks"></i><p>Manajemen GForm</p></a></li>
+            <li class="nav-item"><a href="../../../frontend/index.html" target="_blank" class="nav-link"><i class="nav-icon bi bi-globe"></i><p>Lihat Website</p></a></li>
+          </ul>
+        </nav>
+      </div>
+    </aside>
+
+    <main class="app-main">
+      <div class="app-content-header">
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col-sm-6"><h3 class="mb-0">Input Konten Baru</h3></div>
+            <div class="col-sm-6 text-end"><small class="text-muted" id="date-display"></small></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="app-content">
+        <div class="container-fluid">
+          
+          <div class="row">
+            <div class="col-lg-4 mb-4">
+              <div class="card shadow-sm border-0 h-100">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="card-title fw-bold mb-0"><i class="bi bi-plus-circle me-2"></i> Tambah Galeri</h5>
+                </div>
+                <div class="card-body">
+                    <form id="galleryForm">
+                        <div class="mb-3">
+                            <label class="form-label small fw-bold">Judul Kegiatan</label>
+                            <input type="text" id="inpTitle" class="form-control" required placeholder="Contoh: Monitoring Frekuensi...">
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label small fw-bold">Tanggal Kegiatan</label>
+                            <input type="date" id="inpDate" class="form-control" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label small fw-bold">Kategori</label>
+                            <select id="inpCategory" class="form-control">
+                                <option value="foto">Foto Kegiatan</option>
+                                <option value="video">Video</option>
+                                <option value="infografis">Infografis</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label small fw-bold">Link Gambar (URL)</label>
+                            <input type="url" id="inpImage" class="form-control" required placeholder="https://...">
+                            <div class="form-text">Paste link gambar dari Imgur/Drive/Hosting.</div>
+                        </div>
+
+                        <div class="mb-3" id="videoField" style="display:none;">
+                            <label class="form-label small fw-bold text-danger">Link Video (Embed URL)</label>
+                            <input type="url" id="inpVideo" class="form-control" placeholder="https://www.youtube.com/embed/ID_VIDEO">
+                            <div class="form-text">Gunakan link embed YouTube.</div>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary w-100 mt-2">
+                            <i class="bi bi-save me-1"></i> Simpan Konten
+                        </button>
+                    </form>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-lg-8">
+                <div class="card shadow-sm border-0 h-100">
+                    <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                        <h5 class="card-title fw-bold text-dark"><i class="bi bi-table me-2"></i> Daftar Konten Aktif</h5>
+                        <span class="badge bg-secondary" id="total-gallery">0 Item</span>
+                    </div>
+                    <div class="card-body p-0">
+                        <div class="table-responsive">
+                            <table class="table table-striped table-hover align-middle mb-0">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th class="ps-4">No</th>
+                                        <th>Thumbnail</th>
+                                        <th>Detail Konten</th>
+                                        <th>Kategori</th>
+                                        <th>Aksi</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="gallery-table-body">
+                                    <tr><td colspan="5" class="text-center py-4 text-muted">Memuat data...</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </main>
+
+    <footer class="app-footer text-center">
+      <strong>Copyright &copy; 2025 <a href="#" class="text-decoration-none">Balmon Samarinda</a>.</strong> All rights reserved.
+    </footer>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/admin-lte@4.0.0-beta2/dist/js/adminlte.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+  <script type="module">
+    import { initAdminPage } from "./security.js";
+    import { ref, push, onValue, remove } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+    import { signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+
+    // Set Tanggal Header
+    const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+    document.getElementById('date-display').innerText = new Date().toLocaleDateString('id-ID', options);
+
+    // Toggle Input Video
+    const catSelect = document.getElementById('inpCategory');
+    const videoField = document.getElementById('videoField');
+    catSelect.addEventListener('change', () => {
+        if(catSelect.value === 'video') {
+            videoField.style.display = 'block';
+            document.getElementById('inpVideo').setAttribute('required', 'true');
+        } else {
+            videoField.style.display = 'none';
+            document.getElementById('inpVideo').removeAttribute('required');
+            document.getElementById('inpVideo').value = "";
+        }
+    });
+
+    // --- LOGIKA UTAMA ---
+    initAdminPage((user, db, auth) => {
+        console.log("Gallery Admin Ready");
+        document.getElementById('user-display').innerText = user.email;
+
+        // 1. TAMBAH DATA (CREATE)
+        document.getElementById('galleryForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            const newData = {
+                title: document.getElementById('inpTitle').value,
+                date: document.getElementById('inpDate').value,
+                category: document.getElementById('inpCategory').value,
+                imageUrl: document.getElementById('inpImage').value,
+                videoUrl: document.getElementById('inpVideo').value || "",
+                timestamp: Date.now() // timestamp negatif agar sort descending mudah di firebase, tapi kita pakai JS sort saja
+            };
+
+            push(ref(db, 'galeri'), newData)
+                .then(() => {
+                    Swal.fire({icon: 'success', title: 'Berhasil!', text: 'Konten telah ditambahkan ke website.', timer: 1500, showConfirmButton: false});
+                    document.getElementById('galleryForm').reset();
+                    videoField.style.display = 'none';
+                })
+                .catch(err => Swal.fire('Error', err.message, 'error'));
+        });
+
+        // 2. TAMPILKAN DATA (READ)
+        onValue(ref(db, 'galeri'), (snapshot) => {
+            const tbody = document.getElementById('gallery-table-body');
+            const totalBadge = document.getElementById('total-gallery');
+            tbody.innerHTML = "";
+            
+            if (!snapshot.exists()) {
+                tbody.innerHTML = `<tr><td colspan="5" class="text-center py-4 text-muted">Belum ada konten galeri.</td></tr>`;
+                totalBadge.innerText = "0 Item";
+                return;
+            }
+
+            const data = snapshot.val();
+            const items = Object.keys(data).map(k => ({id: k, ...data[k]}));
+            
+            // Sort: Terbaru di atas
+            items.sort((a,b) => b.timestamp - a.timestamp);
+            totalBadge.innerText = `${items.length} Item`;
+
+            items.forEach((item, index) => {
+                const dateStr = new Date(item.date).toLocaleDateString('id-ID');
+                
+                // Badge Kategori
+                let badgeClass = 'bg-secondary';
+                if(item.category === 'foto') badgeClass = 'bg-primary';
+                if(item.category === 'video') badgeClass = 'bg-danger';
+                if(item.category === 'infografis') badgeClass = 'bg-success';
+
+                tbody.innerHTML += `
+                    <tr>
+                        <td class="ps-4 fw-bold text-secondary">${index + 1}</td>
+                        <td>
+                            <img src="${item.imageUrl}" class="img-thumbnail-admin shadow-sm" alt="thumb">
+                        </td>
+                        <td>
+                            <div class="fw-bold text-dark">${item.title}</div>
+                            <small class="text-muted"><i class="bi bi-calendar-event me-1"></i> ${dateStr}</small>
+                        </td>
+                        <td><span class="badge ${badgeClass}">${item.category.toUpperCase()}</span></td>
+                        <td>
+                            <button class="btn btn-sm btn-outline-danger" onclick="hapusItem('${item.id}')">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            });
+        });
+
+        // 3. FUNGSI HAPUS (DELETE)
+        window.hapusItem = (key) => {
+            Swal.fire({
+                title: 'Hapus Konten?',
+                text: "Data akan hilang dari website publik.",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                confirmButtonText: 'Ya, Hapus'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    remove(ref(db, `galeri/${key}`));
+                    Swal.fire('Terhapus!', 'Konten berhasil dihapus.', 'success');
+                }
+            });
+        }
+
+        // LOGOUT SYSTEM
+        document.getElementById('btnSystemLogout').addEventListener('click', () => {
+             Swal.fire({
+                title: 'Keluar?', text: "Sesi akan diakhiri.", icon: 'warning',
+                showCancelButton: true, confirmButtonText: 'Ya, Keluar'
+            }).then((result) => {
+                if (result.isConfirmed) signOut(auth).then(() => window.location.replace("login_balmon.html"));
+            });
+        });
+    });
+  </script>
+</body>
+</html>
