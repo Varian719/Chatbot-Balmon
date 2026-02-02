@@ -793,6 +793,32 @@
                 resultContainer.innerHTML = '<div style="text-align:center; color:#888;">Tidak ditemukan hasil yang cocok.</div>';
             }
         }
+        window.addEventListener('DOMContentLoaded', () => {
+            // 1. Ambil parameter dari URL
+            const urlParams = new URLSearchParams(window.location.search);
+            const searchQuery = urlParams.get('search');
+
+            if (searchQuery) {
+                // 2. Gunakan ID 'searchInput' (sesuai dengan id input di body kamu)
+                const sInput = document.getElementById('searchInput'); 
+                
+                if (sInput) {
+                    // 3. Masukkan teks ke dalam input
+                    sInput.value = searchQuery;
+
+                    // 4. Karena data Firebase butuh waktu untuk loading, 
+                    // kita tunggu sebentar sebelum menjalankan filter.
+                    setTimeout(() => {
+                        // Trigger event 'keyup' agar fungsi filter arsip berjalan
+                        const event = new Event('keyup');
+                        sInput.dispatchEvent(event);
+                        
+                        // Opsional: Scroll otomatis ke bagian search agar user tahu sedang terfilter
+                        sInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    }, 1000); // Tunggu 1 detik agar data Firebase siap
+                }
+            }
+        });
 
         document.addEventListener('keydown', function(event) {
             if (event.key === "Escape") closeSearch();
