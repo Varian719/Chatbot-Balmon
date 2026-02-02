@@ -4,36 +4,47 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kontak & Media Sosial - Balmon Samarinda</title>
+    
     <link rel="icon" type="image/png" href="logo-ikon.png" sizes="32x32">
     <link rel="icon" type="image/svg+xml" href="balmonsmd1.png">
     <link rel="apple-touch-icon" href="logo-180x180.png">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Albert+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
     <style>
+        /* ========================================= */
         /* --- 1. SETUP WARNA & GLOBAL --- */
+        /* ========================================= */
         :root {
-            --primary-color: #006fb0;
-            --primary-dark: #005082;
-            --secondary-color: #00ace0;
-            --accent-yellow: #ecbb1d;
-            --bg-light-blue: #f4f9fc;
+            --primary-color: #006fb0;   /* Biru Utama */
+            --primary-dark: #005082;    /* Biru Gelap untuk Hover */
+            --secondary-color: #00ace0; /* Cyan/Biru Langit */
+            --accent-yellow: #ecbb1d;   /* Kuning Emas */
+            --accent-red: #de262a;      /* Merah */
+            --bg-light-blue: #f4f9fc;   
             --bg-white: #ffffff;
             --text-dark: #1e293b;
             --text-gray: #64748b;
-            --shadow-soft: 0 8px 30px rgba(0,0,0,0.08);
+            --shadow-soft: 0 10px 30px -5px rgba(0, 0, 0, 0.05);
+            --radius-md: 12px;
+            --wa-green: #25D366;
         }
 
+        /* --- RESET & GLOBAL --- */
         body { 
             margin: 0; padding: 0; 
-            font-family: 'Inter', sans-serif; 
+            font-family: 'Albert Sans', sans-serif; 
             background-color: var(--bg-light-blue);
             color: var(--text-dark); 
             line-height: 1.6; 
+            overflow-x: hidden; 
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
         }
-        a { text-decoration: none; color: inherit; transition: 0.3s; }
+        
+        a { text-decoration: none; color: inherit; transition: color 0.3s ease, transform 0.3s ease; }
         ul { list-style: none; padding: 0; margin: 0; }
         * { box-sizing: border-box; }
 
@@ -66,151 +77,154 @@
         @keyframes spin { 100% { transform: rotate(360deg); } }
         @keyframes pulseText { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
 
-        /* --- HEADER STYLE --- */
+        /* ========================================= */
+        /* --- 2. HEADER STYLE (TEMPLATE STANDARD) --- */
+        /* ========================================= */
+        /* Default: Putih Transparan (Bukan Full Transparan) agar konten kontak terbaca */
         header {
-            background-color: rgba(255, 255, 255, 0.98); backdrop-filter: blur(10px);
+            background-color: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
             height: 80px; position: fixed; top: 0; left: 0; width: 100%; z-index: 1000;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05); transition: all 0.3s ease;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            will-change: transform, background-color, backdrop-filter;
         }
-        header.header-minimal { height: 60px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08); }
         .header-content { display: flex; align-items: center; justify-content: space-between; height: 100%; }
-        .brand-area { display: flex; align-items: center; gap: 12px; cursor: pointer; }
-        .brand-logo-img { height: 45px; width: auto; object-fit: contain; }
-        .brand-text { font-size: 18px; font-weight: 800; color: var(--primary-color); line-height: 1.2; display: flex; flex-direction: column; }
-        .brand-text span { font-size: 11px; font-weight: 500; color: var(--text-gray); }
-
-        /* Navigasi */
-        .nav-menu { height: 100%; display: flex; align-items: center; }
-        .menu-list { display: flex; gap: 25px; height: 100%; align-items: center; }
-        .menu-item { font-size: 14px; font-weight: 600; color: var(--text-dark); cursor: pointer; transition: 0.3s; height: 100%; display: flex; align-items: center; position: relative; }
-        .menu-item:hover { color: var(--primary-color); }
-        .menu-item:hover::after { width: 100%; }
-        .menu-item::after { content: ''; position: absolute; bottom: 0; left: 0; width: 0%; height: 3px; background: var(--accent-yellow); transition: 0.3s; }
         
-        .dropdown-content { display: none; position: absolute; top: 100%; left: 0; background-color: #ffffff; min-width: 220px; box-shadow: 0 15px 30px rgba(0,0,0,0.1); border-radius: 0 0 8px 8px; z-index: 1000; padding: 10px 0; border-top: 3px solid var(--primary-color); animation: slideDown 0.3s ease; }
+        /* Brand Area (Logo) */
+        .brand-area { 
+            display: flex; align-items: center; gap: 12px; transition: all 0.4s ease; cursor: pointer;
+            padding: 8px 0; border-radius: 50px; 
+        }
+        .brand-logo-img { 
+            height: 50px; width: auto; filter: none; transition: all 0.3s;
+        }
+        .brand-text { 
+            font-size: 18px; font-weight: 800; color: var(--primary-color); 
+            line-height: 1.2; display: flex; flex-direction: column; transition: color 0.3s; 
+        }
+        .brand-text span { 
+            font-size: 11px; font-weight: 500; color: var(--text-gray); 
+            letter-spacing: 0.5px; transition: color 0.3s; 
+        }
+
+        /* Header Minimal (Saat Scroll) */
+        header.header-minimal {
+            background-color: rgba(255, 255, 255, 0.98);
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.08);
+            height: 70px;
+        }
+
+        /* HEADER SOCIALS (NEW FROM INDEX) */
+        .header-socials {
+            display: flex; align-items: center; gap: 15px; margin-left: auto; margin-right: 30px; padding-right: 30px;
+            border-right: 1px solid #e2e8f0; height: 40px;
+        }
+        .social-icon { display: flex; align-items: center; justify-content: center; transition: transform 0.3s ease; }
+        .social-icon svg { width: 20px; height: 20px; fill: var(--text-gray); transition: all 0.3s ease; opacity: 0.9; }
+        .social-icon:hover { transform: translateY(-2px); }
+        .social-icon:hover svg { opacity: 1; fill: var(--primary-color); }
+        .social-icon.wa-icon:hover svg { fill: #25D366; }
+
+        @media (max-width: 992px) { .header-socials { display: none; } }
+
+        /* NAVIGASI DESKTOP */
+        .nav-menu { height: 100%; display: flex; align-items: center; transition: all 0.4s ease; }
+        .menu-list { display: flex; gap: 8px; height: 100%; align-items: center; }
+        
+        .menu-item { 
+            position: relative; height: 100%; display: flex; align-items: center; 
+            padding: 0 12px; font-size: 14px; font-weight: 600; 
+            color: var(--text-dark); /* Di halaman ini text gelap */
+            cursor: pointer; transition: color 0.3s;
+        }
+        .menu-item:hover { color: var(--primary-color); }
+        
+        .menu-item::after {
+            content: ''; position: absolute; bottom: 0; left: 0; width: 0%; height: 3px; background: var(--accent-yellow); transition: width 0.3s ease;
+        }
+        .menu-item:hover::after { width: 100%; }
+        
+        .dropdown-content { 
+            display: none; position: absolute; top: 100%; left: 0; background-color: #ffffff; min-width: 240px; 
+            box-shadow: 0 15px 30px rgba(0,0,0,0.1); border-radius: 0 0 8px 8px; z-index: 1000; padding: 10px 0; border-top: 3px solid var(--primary-color); animation: slideDown 0.3s ease;
+        }
         .menu-item:hover .dropdown-content { display: block; }
-        .dropdown-content li a { display: block; padding: 12px 20px; color: var(--text-dark); font-weight: 400; font-size: 14px; }
+        .dropdown-content li a { display: block; padding: 10px 20px; color: var(--text-dark); font-weight: 400; font-size: 14px; font-family: 'Albert Sans', sans-serif; }
         .dropdown-content li a:hover { background-color: var(--bg-light-blue); color: var(--primary-color); padding-left: 25px; }
         @keyframes slideDown { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* HAMBURGER MENU (MOBILE) */
+        /* HAMBURGER */
         .hamburger-btn {
-            display: none;
-            flex-direction: column;
-            gap: 6px;
-            background: none;
-            border: none;
-            cursor: pointer;
-            padding: 8px;
-            z-index: 1001;
+            display: none; flex-direction: column; gap: 6px; background: none; border: none; cursor: pointer; padding: 8px; z-index: 1001;
         }
-
         .hamburger-btn span {
-            width: 24px;
-            height: 2.5px;
-            background-color: var(--primary-color);
-            border-radius: 2px;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            width: 24px; height: 2.5px; background-color: var(--primary-color); border-radius: 2px; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); transform-origin: center;
         }
+        .hamburger-btn.active span:nth-child(1) { transform: translateY(8.5px) rotate(45deg); }
+        .hamburger-btn.active span:nth-child(2) { opacity: 0; transform: translateX(10px); }
+        .hamburger-btn.active span:nth-child(3) { transform: translateY(-8.5px) rotate(-45deg); }
 
-        .hamburger-btn.active span:nth-child(1) {
-            transform: rotate(45deg) translate(10px, 10px);
-        }
-
-        .hamburger-btn.active span:nth-child(2) {
-            opacity: 0;
-        }
-
-        .hamburger-btn.active span:nth-child(3) {
-            transform: rotate(-45deg) translate(8px, -8px);
-        }
-
-        /* MOBILE NAV DROPDOWN */
+        /* MOBILE NAV */
         .mobile-nav-dropdown {
-            display: none;
-            position: fixed;
-            top: 80px;
-            left: 0;
-            width: 100%;
-            max-height: calc(100vh - 80px);
-            background-color: #ffffff;
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-            flex-direction: column;
-            overflow-y: auto;
-            z-index: 999;
-            animation: slideDownMobile 0.3s ease;
+            display: none; position: fixed; top: 80px; left: 0; width: 100%; max-height: calc(100vh - 80px); background-color: #ffffff;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1); flex-direction: column; overflow-y: auto; z-index: 999; animation: slideDownMobile 0.3s ease;
         }
-
-        .mobile-nav-dropdown.active {
-            display: flex;
-        }
-
-        @keyframes slideDownMobile {
-            from {
-                opacity: 0;
-                transform: translateY(-20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
+        .mobile-nav-dropdown.active { display: flex; }
+        @keyframes slideDownMobile { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
 
         .mobile-menu-item {
-            padding: 16px 20px;
-            border-bottom: 1px solid #eee;
-            color: var(--text-dark);
-            font-weight: 600;
-            font-size: 15px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+            font-family: 'Albert Sans', sans-serif;
+            padding: 16px 20px; border-bottom: 1px solid #eee; color: var(--text-dark); font-weight: 600; font-size: 15px; cursor: pointer; transition: all 0.3s ease; display: flex; justify-content: space-between; align-items: center;
+        }
+        .mobile-menu-item:hover { background-color: var(--bg-light-blue); color: var(--primary-color); }
+        .mobile-menu-item.has-submenu::after { content: '▼'; font-size: 12px; transition: transform 0.3s ease; }
+        .mobile-menu-item.has-submenu.active::after { transform: rotate(-180deg); }
+        .mobile-submenu { max-height: 0; overflow: hidden; background-color: #f8f9fa; transition: max-height 0.3s ease; }
+        .mobile-submenu.active { max-height: 500px; }
+        .mobile-submenu a { display: block; padding: 12px 40px; color: var(--text-gray); font-size: 14px; font-weight: 500; border-bottom: 1px solid #eee; transition: all 0.2s ease; }
+        .mobile-submenu a:hover { background-color: #ffffff; color: var(--primary-color); padding-left: 48px; }
+
+        /* SEARCH OVERLAY STYLE */
+        .search-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+            z-index: 99999;
+            display: flex; justify-content: center; align-items: flex-start;
+            padding-top: 100px;
+            opacity: 0; visibility: hidden; transition: all 0.3s ease;
         }
 
-        .mobile-menu-item:hover {
-            background-color: var(--bg-light-blue);
-            color: var(--primary-color);
-        }
+        .search-overlay.active { opacity: 1; visibility: visible; }
 
-        .mobile-menu-item.has-submenu::after {
-            content: '▼';
-            font-size: 12px;
-            transition: transform 0.3s ease;
+        .search-content {
+            width: 100%; max-width: 600px; position: relative; padding: 0 20px;
+            transform: translateY(-20px); transition: 0.4s ease;
         }
+        .search-overlay.active .search-content { transform: translateY(0); }
 
-        .mobile-menu-item.has-submenu.active::after {
-            transform: rotate(-180deg);
+        .close-search {
+            position: absolute; top: -50px; right: 0; font-size: 40px; border: none; background: none; cursor: pointer; color: var(--text-dark); transition: 0.3s;
         }
+        .close-search:hover { color: var(--accent-red); transform: rotate(90deg); }
 
-        /* SUBMENU MOBILE */
-        .mobile-submenu {
-            max-height: 0;
-            overflow: hidden;
-            background-color: #f8f9fa;
-            transition: max-height 0.3s ease;
+        #searchInput {
+            width: 100%; padding: 20px; font-size: 18px; border: 2px solid #eee; border-radius: 12px; outline: none; transition: 0.3s; font-family: 'Albert Sans', sans-serif;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.05);
         }
+        #searchInput:focus { border-color: var(--primary-color); box-shadow: 0 5px 20px rgba(0, 111, 176, 0.2); }
 
-        .mobile-submenu.active {
-            max-height: 500px;
-        }
+        .search-results { margin-top: 20px; max-height: 60vh; overflow-y: auto; }
 
-        .mobile-submenu a {
-            display: block;
-            padding: 12px 40px;
-            color: var(--text-gray);
-            font-size: 14px;
-            font-weight: 500;
-            border-bottom: 1px solid #eee;
-            transition: all 0.2s ease;
+        .search-item {
+            background: #fff; padding: 15px; border-radius: 8px; margin-bottom: 10px;
+            border: 1px solid #eee; transition: 0.2s; cursor: pointer; display: block; text-decoration: none; color: var(--text-dark);
         }
-
-        .mobile-submenu a:hover {
-            background-color: #ffffff;
-            color: var(--primary-color);
-            padding-left: 48px;
-        }
+        .search-item:hover { background: var(--bg-light-blue); border-color: var(--primary-color); transform: translateX(5px); }
+        .search-item h4 { margin: 0 0 5px 0; color: var(--primary-color); font-size: 16px; }
+        .search-item p { margin: 0; font-size: 13px; color: var(--text-gray); }
 
         /* ========================================= */
         /* --- [KHUSUS HALAMAN KONTAK] --- */
@@ -233,22 +247,19 @@
             align-items: stretch;
         }
 
-        /* --- [UPDATED] SOCIAL BUTTON STYLE (OUTLINE) --- */
+        /* --- SOCIAL BUTTON STYLE (OUTLINE) --- */
         .social-btn {
             display: flex;
             align-items: center;
-            
-            /* Warna Dasar (Normal State) */
-            background-color: #ffffff;      /* Background Putih */
-            color: var(--primary-color);    /* Teks Biru */
-            border: 2px solid var(--primary-color); /* Garis Pinggir Biru */
-            
+            background-color: #ffffff;      
+            color: var(--primary-color);    
+            border: 2px solid var(--primary-color); 
             padding: 12px 16px;
             border-radius: 12px;
             text-decoration: none;
             font-weight: 600;
             font-size: 16px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05); /* Shadow halus */
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
             transition: all 0.3s ease;
             position: relative;
             overflow: hidden;
@@ -259,8 +270,8 @@
 
         /* Efek Hover (Saat Disorot) */
         .social-btn:hover {
-            background-color: var(--primary-color); /* Jadi Biru Penuh */
-            color: #ffffff;                         /* Teks Jadi Putih */
+            background-color: var(--primary-color); 
+            color: #ffffff;                         
             transform: translateY(-3px);
             box-shadow: 0 8px 20px rgba(0, 111, 176, 0.3);
         }
@@ -332,100 +343,18 @@
             transform: translateY(-5px);
         }
 
-        .location-info-card {
-            background: #ffffff;
-            border-radius: 20px;
-            padding: 35px;
-            box-shadow: 0 10px 35px rgba(0, 0, 0, 0.08);
-            border-left: 5px solid var(--primary-color);
-            transition: all 0.3s ease;
-            grid-column: 1 / -1;
-        }
-
-        .location-info-card:hover {
-            box-shadow: 0 20px 50px rgba(0, 111, 176, 0.12);
-            transform: translateY(-3px);
-        }
-
-        .location-info-card h3 {
-            color: var(--primary-color);
-            font-size: 20px;
-            margin-bottom: 25px;
-            font-weight: 700;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .location-info-card h3::before {
-            content: '📍';
-            font-size: 24px;
-        }
-
-        .info-row {
-            display: flex;
-            align-items: flex-start;
-            gap: 15px;
-            margin-bottom: 22px;
-            padding-bottom: 15px;
-            border-bottom: 1px solid #eee;
-        }
-
-        .info-row:last-child {
-            border-bottom: none;
-            margin-bottom: 0;
-        }
-
-        .info-icon {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 18px;
-            flex-shrink: 0;
-        }
-
-        .info-content {
-            flex: 1;
-        }
-
-        .info-content strong {
-            display: block;
-            color: var(--primary-color);
-            font-size: 14px;
-            font-weight: 600;
-            margin-bottom: 4px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .info-content p {
-            color: var(--text-dark);
-            margin: 0;
-            line-height: 1.6;
-            font-size: 15px;
-        }
-
-        /* --- FOOTER (Samakan dengan Index) --- */
+        /* --- FOOTER --- */
         footer { 
             background-color: var(--primary-color); 
             color: white; 
             padding-top: 70px; 
             font-size: 14px; 
             position: relative; 
-            width: 100%; /* Pastikan lebar penuh */
+            width: 100%;
         }
 
         .footer-grid { 
-            display: flex; 
-            flex-wrap: wrap; 
-            justify-content: space-between; 
-            gap: 40px; 
-            padding-bottom: 50px; 
+            display: flex; flex-wrap: wrap; justify-content: space-between; gap: 40px; padding-bottom: 50px; 
         }
 
         .footer-col { flex: 1; min-width: 250px; }
@@ -434,7 +363,6 @@
         .footer-links a { color: rgba(255,255,255,0.8); display: block; margin-bottom: 12px; transition: 0.2s; }
         .footer-links a:hover { color: #fff; transform: translateX(5px); }
 
-        /* Bagian Copyright: Background gelap, text tengah, padding cukup */
         .copyright { 
             background-color: rgba(0,0,0,0.1); 
             text-align: center; 
@@ -443,13 +371,46 @@
             border-top: 1px solid rgba(255,255,255,0.1); 
             width: 100%;
         }
-        /* Chat Widget */
-        .chat-toggle-btn { position: fixed; bottom: 30px; right: 30px; width: 65px; height: 65px; background: linear-gradient(135deg, var(--primary-color), var(--primary-dark)); color: #fff; border: none; border-radius: 50%; box-shadow: 0 8px 25px rgba(0, 111, 176, 0.4); cursor: pointer; z-index: 9999; display: flex; align-items: center; justify-content: center; transition: 0.3s; }
-        .chat-toggle-btn:hover { transform: scale(1.1); }
+        
+        /* CHAT WIDGET (SESUAI REQUEST: LOGO ASLI DARI INDEX) */
+        .chat-toggle-btn { 
+            position: fixed; bottom: 30px; right: 30px; width: 65px; height: 65px; 
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark)); color: #ffffff; 
+            border: none; border-radius: 50%; box-shadow: 0 8px 25px rgba(0, 111, 176, 0.4); 
+            cursor: pointer; z-index: 9999; display: flex; align-items: center; justify-content: center; 
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.3s, background 0.3s; overflow: hidden; will-change: transform;
+        }
+        .chat-toggle-btn:hover { transform: scale(1.1); box-shadow: 0 12px 30px rgba(0, 111, 176, 0.5); }
         .chat-toggle-btn.on-footer { background: var(--accent-yellow); color: var(--text-dark); }
-        .chat-box-container { position: fixed; bottom: 110px; right: 30px; width: 400px; height: 600px; max-height: 75vh; background: #fff; border-radius: 16px; box-shadow: 0 20px 50px rgba(0,0,0,0.2); z-index: 9998; opacity: 0; visibility: hidden; transform: translateY(20px); transition: 0.3s; overflow: hidden; display: flex; flex-direction: column; }
-        .chat-box-container.active { opacity: 1; visibility: visible; transform: translateY(0); }
-        .chat-header-widget { background: linear-gradient(135deg, var(--primary-color), var(--primary-dark)); padding: 15px; color: #fff; font-weight: bold; display: flex; align-items: center; gap: 10px; }
+        .chat-toggle-btn svg { position: absolute; width: 28px; height: 28px; transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); pointer-events: none; }
+        .icon-message { opacity: 1; transform: scale(1) rotate(0deg); fill: currentColor; }
+        .icon-close { opacity: 0; transform: scale(0) rotate(-180deg); fill: none; stroke: currentColor; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+        .chat-toggle-btn.active .icon-message { opacity: 0; transform: scale(0) rotate(90deg); }
+        .chat-toggle-btn.active .icon-close { opacity: 1; transform: scale(1) rotate(0deg); }
+
+        .chat-box-container { 
+            position: fixed; bottom: 110px; right: 30px; width: 400px; height: 600px; max-height: 75vh;
+            background-color: #fff; border-radius: 16px; box-shadow: 0 20px 50px -10px rgba(0, 60, 100, 0.25);
+            border: 1px solid rgba(0, 111, 176, 0.1); z-index: 9998; opacity: 0; visibility: hidden; 
+            transform: translateY(20px) scale(0.95); transition: all 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
+            overflow: hidden; display: flex; flex-direction: column;
+        }
+        .chat-box-container.active { opacity: 1; visibility: visible; transform: translateY(0) scale(1); }
+        .chat-header {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+            padding: 18px 20px; display: flex; align-items: center; gap: 15px; border-bottom: 2px solid var(--accent-yellow); color: #fff; flex-shrink: 0;
+        }
+        .chat-logo-bg { 
+            width: 42px; height: 42px; background: rgba(255, 255, 255, 0.15); backdrop-filter: blur(4px); 
+            border: 1px solid rgba(255, 255, 255, 0.3); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #fff;
+        }
+        .chat-title { display: flex; flex-direction: column; }
+        .chat-title h4 { margin: 0; font-size: 16px; font-weight: 700; letter-spacing: 0.5px; }
+        .chat-status { display: flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 400; color: rgba(255,255,255,0.9); margin-top: 2px; }
+        .status-dot {
+            width: 8px; height: 8px; background-color: #00ff88; border-radius: 50%; box-shadow: 0 0 8px rgba(0, 255, 136, 0.6); animation: pulseDot 2s infinite;
+        }
+        @keyframes pulseDot { 0% { transform: scale(0.95); opacity: 0.7; } 50% { transform: scale(1.2); opacity: 1; } 100% { transform: scale(0.95); opacity: 0.7; } }
 
         @media (max-width: 768px) {
             .menu-list { display: none; }
@@ -460,6 +421,7 @@
             .map-frame { height: 260px; }
             footer { padding-bottom: 180px; }
             .chat-box-container { right: 14px; left: 14px; width: auto; max-width: calc(100% - 28px); bottom: 100px; }
+            .hamburger-btn { display: flex; }
         }
     </style>
 </head>
@@ -489,6 +451,27 @@
                     <span>Kementerian Komunikasi & Digital</span>
                 </div>
             </div>
+
+            <div class="header-socials">
+                <a href="https://wa.me/6285648283012" target="_blank" class="social-icon wa-icon" aria-label="WhatsApp">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></path></svg>
+                </a>
+                <a href="https://www.instagram.com/balmonsamarinda/" class="social-icon" aria-label="Instagram">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></path></svg>
+                </a>
+                <a href="https://www.facebook.com/profile.php?id=100068963927418" class="social-icon" aria-label="Facebook">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9 8h-3v4h3v12h5v-12h3.642l.358-4h-4v-1.667c0-.955.192-1.333 1.115-1.333h2.885v-5h-3.808c-3.596 0-5.192 1.583-5.192 4.615v3.385z"/></path></svg>
+                </a>
+                <a href="https://youtube.com/@balmonsamarindaa?si=EZUAjSarJaMD-7R9" class="social-icon" aria-label="YouTube">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z"/></path></svg>
+                </a>
+                <a href="https://www.tiktok.com/@balmon.samarinda?lang=en" class="social-icon" aria-label="TikTok">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" stroke="none">
+                        <path d="M12.53.02C13.84 0 15.14.01 16.44 0c.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.65-1.58-1.09-.1-.09-.19-.2-.29-.3v6.52c.02 4.07-3.23 7.49-7.29 7.49-3.93.04-7.3-3.13-7.48-7.05-.07-1.84.58-3.66 1.83-5.01 1.25-1.35 3.03-2.14 4.86-2.16v4.03c-1.11-.02-2.19.46-2.95 1.29a4.106 4.106 0 0 0-1.1 2.89c.04 2.22 1.84 4.02 4.06 4.02 2.22 0 4.02-1.8 4.02-4.02V.02h.22z"/>
+                    </svg>
+                </a>
+            </div>
+
             <nav class="nav-menu">
                 <ul class="menu-list">
                     <li class="menu-item" onclick="window.location.href='index.html'">Beranda</li>
@@ -503,12 +486,14 @@
                     <li class="menu-item" onclick="window.location.href='arsip.html'">Download</li>
                     <li class="menu-item" onclick="window.location.href='kontak.html'">Kontak</li>
                 </ul>
-                <button style="margin-left:10px; border:none; background:transparent; color:var(--primary-color); cursor:pointer;">
-                    <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                <button class="nav-search-btn" onclick="openSearch()" style="margin-left:10px; border:none; background:transparent; color:var(--primary-color); cursor:pointer;">
+                    <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                    </svg>
                 </button>
             </nav>
 
-            <!-- HAMBURGER BUTTON (MOBILE) -->
             <button class="hamburger-btn" id="hamburgerBtn" onclick="toggleMobileMenu()">
                 <span></span>
                 <span></span>
@@ -516,32 +501,20 @@
             </button>
         </div>
 
-        <!-- MOBILE NAV DROPDOWN -->
         <div class="mobile-nav-dropdown" id="mobileNavDropdown">
-            <div class="mobile-menu-item" onclick="handleMobileMenuItem(this, 'beranda')">
-                Beranda
-            </div>
-            
-            <div class="mobile-menu-item has-submenu" onclick="toggleMobileSubmenu(this)">
-                Layanan
-            </div>
+            <div class="mobile-menu-item" onclick="handleMobileMenuItem(this, 'beranda')">Beranda</div>
+            <div class="mobile-menu-item has-submenu" onclick="toggleMobileSubmenu(this)">Layanan</div>
             <div class="mobile-submenu" id="submenu-layanan">
                 <a href="konsesi.html" onclick="closeMobileMenu()">Izin Konsesi</a>
                 <a href="maritim.html" onclick="closeMobileMenu()">Izin Maritim</a>
                 <a href="fm.html" onclick="closeMobileMenu()">Izin Penyiaran FM</a>
             </div>
-
-            <div class="mobile-menu-item has-submenu" onclick="toggleMobileSubmenu(this)">
-                Publikasi
-            </div>
+            <div class="mobile-menu-item has-submenu" onclick="toggleMobileSubmenu(this)">Publikasi</div>
             <div class="mobile-submenu" id="submenu-publikasi">
-                <a href="#" onclick="closeMobileMenu()">Galeri Foto</a>
+                <a href="galeri.html" onclick="closeMobileMenu()">Galeri Foto</a>
                 <a href="#" onclick="closeMobileMenu()">Galeri Video</a>
             </div>
-
-            <div class="mobile-menu-item" onclick="handleMobileMenuItem(this, 'kontak')">
-                Kontak
-            </div>
+            <div class="mobile-menu-item" onclick="handleMobileMenuItem(this, 'kontak')">Kontak</div>
         </div>
     </header>
 
@@ -648,16 +621,31 @@
     </footer>
 
     <div class="chat-box-container" id="chatBox">
-        <div class="chat-header-widget">
-            <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>
-            Sobat Digi
+        <div class="chat-header">
+            <div class="chat-logo-bg">
+                <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>
+            </div>
+            <div class="chat-title">
+                <h4>Sobat Digi</h4>
+                <div class="chat-status"><span class="status-dot"></span>Online - Siap Membantu</div>
+            </div>
         </div>
-        <iframe src="https://MagangBalmon2619-Chat-Balmon.hf.space" style="width: 100%; height: 100%; border: none;"></iframe>
+        <iframe src="https://MagangBalmon2619-Chat-Balmon.hf.space" style="width: 100%; height: 100%; border: none; background: #fff;" allow="clipboard-write; microphone"></iframe>
     </div>
 
     <button class="chat-toggle-btn" id="toggleBtn" onclick="toggleChat()">
-        <svg width="30" height="30" viewBox="0 0 24 24" fill="#fff"><path d="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg>
+        <svg class="icon-message" viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 9h12v2H6V9zm8 5H6v-2h8v2zm4-6H6V6h12v2z"/></svg>
+        <svg class="icon-close" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
     </button>
+
+    <div id="searchOverlay" class="search-overlay">
+        <div class="search-content">
+            <button class="close-search" onclick="closeSearch()">×</button>
+            <h2 style="color:var(--primary-color); margin-bottom:20px;">Pencarian</h2>
+            <input type="text" id="searchInput" placeholder="Ketik kata kunci (misal: Izin, Maritim)..." onkeyup="performSearch()">
+            <div id="searchResults" class="search-results"></div>
+        </div>
+    </div>
 
     <script>
         // --- LOGIKA PAGE TRANSITION (LOADING) ---
@@ -682,36 +670,51 @@
             });
         });
 
-        // Chat Toggle
+        // Chat Toggle Animation
         function toggleChat() {
-            var box = document.getElementById("chatBox");
-            box.classList.toggle("active");
+            const btn = document.getElementById("toggleBtn");
+            const box = document.getElementById("chatBox");
+            if (btn.classList.contains("active")) {
+                btn.classList.remove("active"); box.classList.remove("active"); return;
+            }
+            btn.classList.add("active"); box.classList.add("active");
         }
 
-        // Scroll Logic
-        window.addEventListener('scroll', function() {
+        // Scroll Logic & Header Minimal
+        let lastScrollY = window.scrollY;
+        let ticking = false;
+        function updateScroll() {
+            const scrollY = window.scrollY;
             const chatBtn = document.getElementById('toggleBtn');
             const footer = document.getElementById('mainFooter');
             const header = document.getElementById('mainHeader');
             
-            if (window.scrollY > 50) header.classList.add('header-minimal');
+            if (scrollY > 50) header.classList.add('header-minimal');
             else header.classList.remove('header-minimal');
 
-            const btnRect = chatBtn.getBoundingClientRect();
-            const footerRect = footer.getBoundingClientRect();
-            
-            if (footerRect.top < window.innerHeight && btnRect.bottom > footerRect.top) {
-                chatBtn.classList.add('on-footer'); 
-            } else {
-                chatBtn.classList.remove('on-footer'); 
+            if (footer) {
+                const footerRect = footer.getBoundingClientRect();
+                const windowHeight = window.innerHeight;
+                if (footerRect.top < windowHeight) {
+                    chatBtn.classList.add('on-footer');
+                } else {
+                    chatBtn.classList.remove('on-footer');
+                }
             }
-        });
+            ticking = false;
+        }
+        
+        window.addEventListener('scroll', function() {
+            if (!ticking) {
+                window.requestAnimationFrame(updateScroll);
+                ticking = true;
+            }
+        }, { passive: true });
 
         // --- HAMBURGER & MOBILE MENU LOGIC ---
         function toggleMobileMenu() {
             const hamburger = document.getElementById('hamburgerBtn');
             const mobileNav = document.getElementById('mobileNavDropdown');
-            
             hamburger.classList.toggle('active');
             mobileNav.classList.toggle('active');
         }
@@ -724,17 +727,12 @@
             
             hamburger.classList.remove('active');
             mobileNav.classList.remove('active');
-            
-            // Close all submenus
             submenus.forEach(submenu => submenu.classList.remove('active'));
             submenuItems.forEach(item => item.classList.remove('active'));
         }
 
         function toggleMobileSubmenu(element) {
-            // Get the submenu that follows this menu item
             const submenu = element.nextElementSibling;
-            
-            // Toggle active class
             element.classList.toggle('active');
             if (submenu && submenu.classList.contains('mobile-submenu')) {
                 submenu.classList.toggle('active');
@@ -742,23 +740,71 @@
         }
 
         function handleMobileMenuItem(element, action) {
-            if (action === 'beranda') {
-                window.location.href = 'index.html';
-            } else if (action === 'kontak') {
-                window.location.href = 'kontak.html';
-            }
+            if (action === 'beranda') window.location.href = 'index.html';
+            else if (action === 'kontak') window.location.href = 'kontak.html';
             closeMobileMenu();
         }
 
-        // Close mobile menu when clicking outside
         document.addEventListener('click', function(event) {
             const header = document.getElementById('mainHeader');
             const mobileNav = document.getElementById('mobileNavDropdown');
-            const hamburger = document.getElementById('hamburgerBtn');
-            
             if (!header.contains(event.target) && mobileNav.classList.contains('active')) {
                 closeMobileMenu();
             }
+        });
+
+        /* --- SEARCH FUNCTIONALITY --- */
+        const pages = [
+            { title: "Beranda", url: "index.html", desc: "Halaman utama Balmon Samarinda" },
+            { title: "Izin Konsesi", url: "konsesi.html", desc: "Layanan perizinan frekuensi untuk perusahaan/konsesi." },
+            { title: "Izin Maritim (Kapal)", url: "maritim.html", desc: "Pengurusan izin stasiun radio kapal dan laut." },
+            { title: "Izin Penyiaran FM", url: "fm.html", desc: "Prosedur perizinan untuk stasiun radio FM/Penyiaran." },
+            { title: "Galeri Kegiatan", url: "galeri.html", desc: "Dokumentasi foto dan video kegiatan Balmon." },
+            { title: "Arsip & Regulasi", url: "arsip.html", desc: "Download dokumen, SOP, dan regulasi terbaru." },
+            { title: "Kontak Kami", url: "kontak.html", desc: "Alamat kantor, email, dan nomor pengaduan." }
+        ];
+
+        function openSearch() {
+            document.getElementById('searchOverlay').classList.add('active');
+            setTimeout(() => document.getElementById('searchInput').focus(), 300);
+        }
+
+        function closeSearch() {
+            document.getElementById('searchOverlay').classList.remove('active');
+            document.getElementById('searchInput').value = '';
+            document.getElementById('searchResults').innerHTML = '';
+        }
+
+        function performSearch() {
+            const input = document.getElementById('searchInput').value.toLowerCase();
+            const resultContainer = document.getElementById('searchResults');
+            resultContainer.innerHTML = '';
+
+            if (input.length < 2) return;
+
+            const results = pages.filter(page => 
+                page.title.toLowerCase().includes(input) || 
+                page.desc.toLowerCase().includes(input)
+            );
+
+            if (results.length > 0) {
+                results.forEach(page => {
+                    const item = document.createElement('a');
+                    item.href = page.url;
+                    item.className = 'search-item';
+                    item.innerHTML = `
+                        <h4>${page.title}</h4>
+                        <p>${page.desc}</p>
+                    `;
+                    resultContainer.appendChild(item);
+                });
+            } else {
+                resultContainer.innerHTML = '<div style="text-align:center; color:#888;">Tidak ditemukan hasil yang cocok.</div>';
+            }
+        }
+
+        document.addEventListener('keydown', function(event) {
+            if (event.key === "Escape") closeSearch();
         });
     </script>
     <script src="TTS_Adaptif.js"></script>

@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
   <meta charset="utf-8" />
-  <title>Admin Balmon | Manajemen Arsip</title>
+  <title>Admin Balmon | Manajemen Arsip Aman</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/source-sans-3@5.0.12/index.css" />
@@ -11,18 +11,21 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
 
   <style>
-    /* Efek hover pada kartu dokumen */
+    /* Styling Tambahan */
     .card-doc { transition: transform 0.2s, box-shadow 0.2s; cursor: default; }
     .card-doc:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.1) !important; }
-    /* Styling scrollbar agar lebih rapi */
     ::-webkit-scrollbar { width: 8px; }
     ::-webkit-scrollbar-track { background: #f1f1f1; }
     ::-webkit-scrollbar-thumb { background: #ccc; border-radius: 4px; }
     ::-webkit-scrollbar-thumb:hover { background: #aaa; }
+    
+    /* Tombol Google di Navbar */
+    #authorize_button, #signout_button { transition: all 0.3s; }
   </style>
 </head>
 
 <body class="layout-fixed sidebar-expand-lg bg-body-tertiary">
+
   <div class="app-wrapper">
 
     <nav class="app-header navbar navbar-expand bg-body shadow-sm">
@@ -32,19 +35,26 @@
           <li class="nav-item"><span class="nav-link fw-bold text-primary">Panel Admin Arsip</span></li>
         </ul>
         <ul class="navbar-nav ms-auto">
+            <li class="nav-item d-none d-md-block me-3">
+                <span class="nav-link text-muted" id="user-display">Checking...</span>
+            </li>
             <li class="nav-item">
                 <button id="authorize_button" class="btn btn-primary btn-sm me-2 shadow-sm" style="display: none;">
-                    <i class="bi bi-google"></i> Login Google Drive
+                    <i class="bi bi-google"></i> Login Drive
                 </button>
-                <button id="signout_button" class="btn btn-outline-danger btn-sm shadow-sm" style="display: none;">
-                    <i class="bi bi-box-arrow-right"></i> Logout
+                <button id="signout_button" class="btn btn-outline-secondary btn-sm me-2 shadow-sm" style="display: none;">
+                    <i class="bi bi-cloud-slash"></i> Logout Drive
+                </button>
+                
+                <button id="btnSystemLogout" class="btn btn-danger btn-sm shadow-sm">
+                    <i class="bi bi-power"></i> Keluar
                 </button>
             </li>
         </ul>
       </div>
     </nav>
 
-    <aside class="app-sidebar bg-dark shadow" data-bs-theme="dark">
+    <aside class="app-sidebar bg-body-secondary shadow" data-bs-theme="dark">
       <div class="sidebar-brand">
         <a href="#" class="brand-link text-center">
           <span class="brand-text fw-bold">BALMON SAMARINDA</span>
@@ -55,6 +65,8 @@
           <ul class="nav sidebar-menu flex-column">
             <li class="nav-item"><a href="admin-balmon.html" class="nav-link"><i class="nav-icon bi bi-speedometer"></i><p>Dashboard</p></a></li>
             <li class="nav-item"><a href="dokumen.html" class="nav-link active"><i class="nav-icon bi bi-folder-fill"></i><p>Arsip Digital</p></a></li>
+            <li class="nav-item"><a href="history_chatbot.html" class="nav-link"><i class="nav-icon bi bi-chat-fill"></i><p>History Chatbot</p></a></li>
+            <li class="nav-item"><a href="gform_management.html" class="nav-link"><i class="nav-icon bi bi-ui-checks"></i><p>Manajemen GForm</p></a></li>
             <li class="nav-item"><a href="../../../frontend/index.html" target="_blank" class="nav-link"><i class="nav-icon bi bi-globe"></i><p>Lihat Website</p></a></li>
           </ul>
         </nav>
@@ -104,7 +116,7 @@
           <div class="row" id="gridDokumen">
              <div class="col-12 text-center py-5">
                  <div class="spinner-border text-primary" role="status"></div>
-                 <p class="mt-2 text-muted">Mengambil data dari Firebase...</p>
+                 <p class="mt-2 text-muted">Mengambil data aman dari Firebase...</p>
              </div>
           </div>
 
@@ -117,60 +129,83 @@
   <script src="https://cdn.jsdelivr.net/npm/admin-lte@4.0.0-beta2/dist/js/adminlte.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   
-  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
-
   <script async defer src="https://apis.google.com/js/api.js" onload="gapiLoaded()"></script>
   <script async defer src="https://accounts.google.com/gsi/client" onload="gisLoaded()"></script>
 
-  <script>
-    // ============================================================
-    // 1. KONFIGURASI (JANGAN UBAH ID FOLDER INI)
-    // ============================================================
-    const TARGET_FOLDER_ID = '1EUgbh4L8nh9J8X2EDc1s0KhnrqQGQmzL'; // ID Folder Anda
-    
-    const firebaseConfig = {
-      apiKey: "AIzaSyDUeIg9Zn_xndPXtChO8KufXFp6EMtqBJ0",
-      authDomain: "admin-pelayanan-balmon.firebaseapp.com",
-      databaseURL: "https://admin-pelayanan-balmon-default-rtdb.firebaseio.com",
-      projectId: "admin-pelayanan-balmon",
-      appId: "1:1071557110255:web:bff7087da1feacccb7ee1a"
-    };
+  <script type="module">
+    // 1. Import Modul Keamanan & Firebase Modular
+    import { initAdminPage } from "./security.js";
+    import { ref, push, onValue, remove, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+    import { signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
+    // 2. Variabel Global untuk Halaman Ini
+    let dbInstance; 
+    let authInstance;
+    let allDocs = [];
+    const TARGET_FOLDER_ID = '1EUgbh4L8nh9J8X2EDc1s0KhnrqQGQmzL'; // ID Folder Drive Anda
     const CLIENT_ID = '1053263347737-g32v5386cnfl8dbe49i0t9i9pv9fg44t.apps.googleusercontent.com'; 
     const API_KEY = 'AIzaSyAcIVdG6dQxewbNNlvRCWb0yGjCWoeqdE4'; 
     const DISCOVERY_DOC = 'https://www.googleapis.com/discovery/v1/apis/drive/v3/rest';
     const SCOPES = 'https://www.googleapis.com/auth/drive.file';
-
-    // Inisialisasi Firebase
-    if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
-    const db = firebase.database();
-    let allDocs = []; // Menyimpan data lokal untuk pencarian
-
-    // ============================================================
-    // 2. LOGIKA FIREBASE (TAMPILKAN & CARI DATA)
-    // ============================================================
     
-    // Ambil Data Realtime
-    db.ref('arsip_drive').on('value', snap => {
-        const grid = document.getElementById('gridDokumen');
+    // =========================================================
+    // 3. JALANKAN LOGIKA UTAMA SETELAH LOGIN AMAN
+    // =========================================================
+    initAdminPage((user, db, auth) => {
+        console.log("Halaman Dokumen Siap. User: " + user.email);
         
-        if(!snap.exists()) {
-            allDocs = [];
-            renderGrid(allDocs);
-            return;
-        }
+        // --- PERBAIKAN DI SINI: Update teks "Checking..." menjadi email user ---
+        const userDisplay = document.getElementById('user-display');
+        if(userDisplay) userDisplay.innerText = user.email;
+        // ----------------------------------------------------------------------
 
-        allDocs = [];
-        snap.forEach(child => { allDocs.push({ key: child.key, ...child.val() }); });
+        dbInstance = db; 
+        authInstance = auth;
         
-        // Urutkan Terbaru di Atas
-        allDocs.sort((a, b) => b.timestamp - a.timestamp);
-        
-        renderGrid(allDocs);
+        // Load Data dari Firebase (Realtime)
+        const arsipRef = ref(db, 'arsip_drive');
+        onValue(arsipRef, (snapshot) => {
+            const grid = document.getElementById('gridDokumen');
+            if(!snapshot.exists()) {
+                allDocs = [];
+                renderGrid(allDocs);
+                return;
+            }
+
+            allDocs = [];
+            snapshot.forEach(child => { 
+                allDocs.push({ key: child.key, ...child.val() }); 
+            });
+            
+            // Urutkan Terbaru di Atas
+            allDocs.sort((a, b) => b.timestamp - a.timestamp);
+            renderGrid(allDocs);
+        });
     });
 
-    // Fungsi Render ke HTML
+    // Logout Button Logic (Manual Binding karena module)
+    document.getElementById('btnSystemLogout').addEventListener('click', () => {
+        if(authInstance) {
+             Swal.fire({
+                title: 'Keluar Sistem?',
+                text: "Sesi anda akan diakhiri.",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Ya, Keluar',
+                cancelButtonText: 'Batal'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    signOut(authInstance).then(() => {
+                        window.location.replace("login_balmon.html");
+                    });
+                }
+            });
+        }
+    });
+
+    // =========================================================
+    // 4. FUNGSI RENDER TAMPILAN
+    // =========================================================
     function renderGrid(dataList) {
         const grid = document.getElementById('gridDokumen');
         if(dataList.length === 0) {
@@ -180,10 +215,9 @@
 
         let html = '';
         dataList.forEach(d => {
-            // Deteksi Tipe File untuk Ikon
             let isPdf = d.tipe && d.tipe.toLowerCase().includes('pdf');
             let iconClass = isPdf ? 'bi-file-earmark-pdf-fill text-danger' : 'bi-file-earmark-word-fill text-primary';
-            let dateStr = new Date(d.timestamp).toLocaleDateString('id-ID', {day: 'numeric', month: 'short', year: 'numeric'});
+            let dateStr = new Date(d.timestamp || Date.now()).toLocaleDateString('id-ID', {day: 'numeric', month: 'short', year: 'numeric'});
 
             html += `
                 <div class="col-md-4 col-lg-3 mb-4">
@@ -217,37 +251,22 @@
         renderGrid(filtered);
     });
 
-    // Fungsi Hapus Data
-    function hapusData(key) {
-        Swal.fire({
-            title: 'Hapus Arsip?',
-            text: "Link akan dihapus dari aplikasi. File asli di Google Drive TIDAK otomatis terhapus (harus dihapus manual jika perlu).",
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#d33',
-            cancelButtonText: 'Batal',
-            confirmButtonText: 'Ya, Hapus!'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                db.ref(`arsip_drive/${key}`).remove();
-                const Toast = Swal.mixin({ toast: true, position: 'top-end', showConfirmButton: false, timer: 3000 });
-                Toast.fire({ icon: 'success', title: 'Data berhasil dihapus' });
-            }
-        });
-    }
-
-    // ============================================================
-    // 3. LOGIKA GOOGLE DRIVE (AUTH & UPLOAD)
-    // ============================================================
+    // =========================================================
+    // 5. GOOGLE DRIVE & UPLOAD LOGIC (Perlu Window Global)
+    // =========================================================
+    
     let tokenClient;
     let gapiInited = false, gisInited = false;
 
-    function gapiLoaded() { gapi.load('client', async () => {
-        await gapi.client.init({ apiKey: API_KEY, discoveryDocs: [DISCOVERY_DOC] });
-        gapiInited = true; checkAuth();
-    });}
-    
-    function gisLoaded() {
+    // Ekspos fungsi ke window agar bisa dipanggil script Google
+    window.gapiLoaded = function() {
+        gapi.load('client', async () => {
+            await gapi.client.init({ apiKey: API_KEY, discoveryDocs: [DISCOVERY_DOC] });
+            gapiInited = true; checkAuth();
+        });
+    }
+
+    window.gisLoaded = function() {
         tokenClient = google.accounts.oauth2.initTokenClient({
             client_id: CLIENT_ID, scope: SCOPES, callback: '',
         });
@@ -255,30 +274,33 @@
     }
 
     function checkAuth() {
-        if (gapiInited && gisInited) {
-            // Default state: Minta login
-            updateUI(false);
-        }
+        if (gapiInited && gisInited) updateUI(false);
     }
 
-    // Tombol Login
-    document.getElementById('authorize_button').onclick = () => {
-        tokenClient.callback = async (resp) => {
-            if (resp.error) throw (resp);
-            updateUI(true);
+    // Tombol Login Drive
+    const authBtn = document.getElementById('authorize_button');
+    if(authBtn) {
+        authBtn.onclick = () => {
+            tokenClient.callback = async (resp) => {
+                if (resp.error) throw (resp);
+                updateUI(true);
+            };
+            tokenClient.requestAccessToken({prompt: 'consent'});
         };
-        tokenClient.requestAccessToken({prompt: 'consent'});
-    };
+    }
 
-    // Tombol Logout
-    document.getElementById('signout_button').onclick = () => {
-        const token = gapi.client.getToken();
-        if (token) {
-            google.accounts.oauth2.revoke(token.access_token);
-            gapi.client.setToken('');
-            updateUI(false);
-        }
-    };
+    // Tombol Logout Drive
+    const signoutBtn = document.getElementById('signout_button');
+    if(signoutBtn) {
+        signoutBtn.onclick = () => {
+            const token = gapi.client.getToken();
+            if (token) {
+                google.accounts.oauth2.revoke(token.access_token);
+                gapi.client.setToken('');
+                updateUI(false);
+            }
+        };
+    }
 
     function updateUI(isLoggedIn) {
         const btnLogin = document.getElementById('authorize_button');
@@ -288,23 +310,22 @@
 
         if(isLoggedIn) {
             btnLogin.style.display = 'none';
-            btnLogout.style.display = 'block';
+            btnLogout.style.display = 'inline-block';
             btnUpload.disabled = false;
             statusDiv.className = 'alert alert-success border py-2 mb-3';
-            statusDiv.innerHTML = '<small><i class="bi bi-check-circle-fill"></i> <b>Terkoneksi.</b> File akan disimpan ke folder Arsip Balmon.</small>';
+            statusDiv.innerHTML = '<small><i class="bi bi-check-circle-fill"></i> <b>Terkoneksi Drive.</b> Siap upload.</small>';
         } else {
-            btnLogin.style.display = 'block';
+            btnLogin.style.display = 'inline-block';
             btnLogout.style.display = 'none';
             btnUpload.disabled = true;
             statusDiv.className = 'alert alert-warning border py-2 mb-3';
-            statusDiv.innerHTML = '<small><i class="bi bi-exclamation-triangle"></i> Silakan <b>Login Google Drive</b> untuk mengupload file.</small>';
+            statusDiv.innerHTML = '<small><i class="bi bi-exclamation-triangle"></i> Silakan <b>Login Drive</b> untuk mengupload file.</small>';
         }
     }
 
-    // ============================================================
-    // 4. FUNGSI UPLOAD FILE KE FOLDER SPESIFIK
-    // ============================================================
-    async function uploadToDrive() {        const fileInput = document.getElementById('docFile');
+    // --- FUNGSI UPLOAD (GLOBAL) ---
+    window.uploadToDrive = async function() { 
+        const fileInput = document.getElementById('docFile');
         const judul = document.getElementById('docJudul').value;
         const file = fileInput.files[0];
 
@@ -312,7 +333,6 @@
             return Swal.fire({ title: 'Data Belum Lengkap', text: 'Mohon isi judul dan pilih file.', icon: 'warning' });
         }
 
-        // Tampilkan Loading
         Swal.fire({
             title: 'Sedang Mengupload...',
             html: 'Mengirim file ke folder Google Drive...',
@@ -323,11 +343,10 @@
         try {
             const accessToken = gapi.client.getToken().access_token;
             
-            // --- INTI UPLOAD ---
             const metadata = { 
                 'name': file.name, 
                 'mimeType': file.type,
-                'parents': [TARGET_FOLDER_ID] // Mengarahkan ke Folder Anda
+                'parents': [TARGET_FOLDER_ID]
             };
 
             const form = new FormData();
@@ -343,18 +362,17 @@
             const driveData = await response.json();
             if(driveData.error) throw new Error(driveData.error.message);
 
-            // Simpan Metadata ke Firebase
-            await db.ref('arsip_drive').push({
+            // Simpan ke Firebase (Pakai dbInstance yang didapat dari initAdminPage)
+            if(!dbInstance) throw new Error("Koneksi Database belum siap.");
+
+            await push(ref(dbInstance, 'arsip_drive'), {
                 judul: judul,
                 drive_id: driveData.id,
                 tipe: file.type,
-                timestamp: firebase.database.ServerValue.TIMESTAMP
+                timestamp: serverTimestamp()
             });
 
-            // Sukses
-            Swal.fire('Berhasil Upload!', 'Dokumen sudah tersimpan dan dapat diakses publik.', 'success');
-            
-            // Reset Form
+            Swal.fire('Berhasil Upload!', 'Dokumen sudah tersimpan.', 'success');
             document.getElementById('docJudul').value = '';
             document.getElementById('docFile').value = '';
 
@@ -363,6 +381,28 @@
             Swal.fire('Gagal Upload', 'Terjadi kesalahan: ' + err.message, 'error');
         }
     }
+
+    // --- FUNGSI HAPUS (GLOBAL) ---
+    window.hapusData = function(key) {
+        Swal.fire({
+            title: 'Hapus Arsip?',
+            text: "Link akan dihapus dari aplikasi. File di Drive harus dihapus manual.",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonText: 'Batal',
+            confirmButtonText: 'Ya, Hapus!'
+        }).then((result) => {
+            if (result.isConfirmed && dbInstance) {
+                remove(ref(dbInstance, `arsip_drive/${key}`))
+                .then(() => {
+                    const Toast = Swal.mixin({ toast: true, position: 'top-end', showConfirmButton: false, timer: 3000 });
+                    Toast.fire({ icon: 'success', title: 'Data berhasil dihapus' });
+                });
+            }
+        });
+    }
+
   </script>
 </body>
 </html>

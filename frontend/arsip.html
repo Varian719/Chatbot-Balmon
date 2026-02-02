@@ -17,7 +17,7 @@
 
     <style>
         /* ========================================= */
-        /* --- 1. SETUP WARNA (SAMA DENGAN KONSESI) --- */
+        /* --- 1. SETUP WARNA --- */
         /* ========================================= */
         :root {
             --primary-color: #006fb0;   /* Biru Utama */
@@ -31,6 +31,7 @@
             --text-gray: #64748b;
             --shadow-soft: 0 10px 30px -5px rgba(0, 0, 0, 0.05);
             --radius-md: 12px;
+            --wa-green: #25D366;
         }
 
         /* --- RESET & GLOBAL --- */
@@ -71,7 +72,7 @@
         @keyframes pulseText { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
 
         /* ========================================= */
-        /* --- 2. HEADER STYLE (SAMA DENGAN KONSESI) --- */
+        /* --- 2. HEADER STYLE (TEMPLATE STANDARD) --- */
         /* ========================================= */
         header {
             background-color: transparent;
@@ -83,20 +84,18 @@
         }
         .header-content { display: flex; align-items: center; justify-content: space-between; height: 100%; }
         
-        /* A. BRAND AREA (DEFAULT: GLASS EFFECT) */
+        /* A. BRAND AREA */
         .brand-area { 
             display: flex; align-items: center; gap: 12px; transition: all 0.4s ease; cursor: pointer;
             background-color: rgba(255, 255, 255, 0.1); 
-            backdrop-filter: blur(8px);                 
-            -webkit-backdrop-filter: blur(8px);         
-            padding: 8px 20px;                          
-            border-radius: 50px;                        
+            backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);         
+            padding: 8px 20px; border-radius: 50px;                        
             border: 1px solid rgba(255, 255, 255, 0.2); 
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);  
         }
         .brand-area:hover {
             background-color: rgba(255, 255, 255, 0.2); 
-            transform: translateY(-2px);                
+            transform: translateY(-2px);                 
             box-shadow: 0 8px 20px rgba(0, 111, 176, 0.3); 
         }
         .brand-logo-img { 
@@ -134,6 +133,24 @@
         }
         header.header-minimal .hamburger-btn span { background-color: var(--primary-color); }
         header.header-minimal .nav-search-btn { color: var(--primary-color) !important; }
+        
+        /* HEADER SOCIALS (NEW) */
+        .header-socials {
+            display: flex; align-items: center; gap: 15px; margin-left: auto; margin-right: 30px; padding-right: 30px;
+            border-right: 1px solid rgba(255, 255, 255, 0.3); height: 40px;
+        }
+        .social-icon { display: flex; align-items: center; justify-content: center; transition: transform 0.3s ease; }
+        .social-icon svg { width: 20px; height: 20px; fill: #ffffff; transition: all 0.3s ease; opacity: 0.9; }
+        .social-icon:hover { transform: translateY(-2px); }
+        .social-icon:hover svg { opacity: 1; fill: var(--accent-yellow); }
+        
+        /* Socials Color Change on Scroll */
+        header.header-minimal .header-socials { border-right-color: #e2e8f0; }
+        header.header-minimal .social-icon svg { fill: var(--text-gray); }
+        header.header-minimal .social-icon:hover svg { fill: var(--primary-color); }
+        header.header-minimal .social-icon.wa-icon:hover svg { fill: #25D366; }
+
+        @media (max-width: 992px) { .header-socials { display: none; } }
 
         /* C. MENU NAVIGASI */
         .nav-menu { height: 100%; display: flex; align-items: center; transition: all 0.4s ease; }
@@ -150,6 +167,7 @@
             content: ''; position: absolute; bottom: 0; left: 0; width: 0%; height: 3px; background: var(--accent-yellow); transition: width 0.3s ease;
         }
         .menu-item:hover::after { width: 100%; }
+        
         .nav-search-btn { margin-left:10px; border:none; background:transparent; color:#ffffff; cursor:pointer; transition: color 0.3s; }
 
         /* Dropdown */
@@ -186,20 +204,59 @@
         .mobile-submenu.active { max-height: 500px; }
         .mobile-submenu a { display: block; padding: 12px 40px; color: var(--text-gray); font-size: 14px; font-weight: 500; border-bottom: 1px solid #eee; transition: all 0.2s ease; }
         .mobile-submenu a:hover { background-color: #ffffff; color: var(--primary-color); padding-left: 48px; }
+        
+        /* SEARCH OVERLAY STYLE */
+        .search-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+            z-index: 99999;
+            display: flex; justify-content: center; align-items: flex-start;
+            padding-top: 100px;
+            opacity: 0; visibility: hidden; transition: all 0.3s ease;
+        }
 
+        .search-overlay.active { opacity: 1; visibility: visible; }
+
+        .search-content {
+            width: 100%; max-width: 600px; position: relative; padding: 0 20px;
+            transform: translateY(-20px); transition: 0.4s ease;
+        }
+        .search-overlay.active .search-content { transform: translateY(0); }
+
+        .close-search {
+            position: absolute; top: -50px; right: 0; font-size: 40px; border: none; background: none; cursor: pointer; color: var(--text-dark); transition: 0.3s;
+        }
+        .close-search:hover { color: var(--accent-red); transform: rotate(90deg); }
+
+        /* ID diganti menjadi globalSearchInput agar tidak bentrok dengan search arsip */
+        #globalSearchInput {
+            width: 100%; padding: 20px; font-size: 18px; border: 2px solid #eee; border-radius: 12px; outline: none; transition: 0.3s; font-family: 'Albert Sans', sans-serif;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+        }
+        #globalSearchInput:focus { border-color: var(--primary-color); box-shadow: 0 5px 20px rgba(0, 111, 176, 0.2); }
+
+        .search-results { margin-top: 20px; max-height: 60vh; overflow-y: auto; }
+
+        .search-item {
+            background: #fff; padding: 15px; border-radius: 8px; margin-bottom: 10px;
+            border: 1px solid #eee; transition: 0.2s; cursor: pointer; display: block; text-decoration: none; color: var(--text-dark);
+        }
+        .search-item:hover { background: var(--bg-light-blue); border-color: var(--primary-color); transform: translateX(5px); }
+        .search-item h4 { margin: 0 0 5px 0; color: var(--primary-color); font-size: 16px; }
+        .search-item p { margin: 0; font-size: 13px; color: var(--text-gray); }
 
         /* ========================================= */
         /* --- 3. PAGE HEADER (PARALLAX HERO) --- */
         /* ========================================= */
         .page-header {
             padding-top: 150px; padding-bottom: 80px;
-            /* Background: Gradient Biru + Gambar URL */
             background: linear-gradient(135deg, rgba(0, 111, 176, 0.9) 0%, rgba(0, 80, 130, 0.8) 100%),
                         url('https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=1600&q=80');
             background-repeat: no-repeat;
             background-position: center center;
             background-size: cover; 
-            background-attachment: fixed; /* Parallax */
+            background-attachment: fixed;
             color: white; position: relative; overflow: hidden;
             text-align: center;
         }
@@ -218,8 +275,7 @@
         }
 
         /* --- STYLING KHUSUS ARSIP --- */
-        
-        /* 1. Search Bar */
+        /* 1. Archive Search Bar */
         .search-wrapper {
             background: #fff; padding: 15px 20px; border-radius: 50px; 
             box-shadow: 0 5px 20px rgba(0,0,0,0.05); margin-bottom: 25px;
@@ -251,7 +307,7 @@
         .doc-info h3 { font-size: 16px; font-weight: 700; margin: 0 0 5px 0; color: var(--text-dark); }
         .doc-info span { font-size: 13px; color: var(--text-gray); display: flex; align-items: center; gap: 8px; }
 
-        /* Tombol Unduh (Kecil di dalam list) */
+        /* Tombol Unduh */
         .btn-dl {
             padding: 8px 20px; border-radius: 50px; border: 1px solid var(--primary-color);
             color: var(--primary-color); font-size: 13px; font-weight: 600; background: transparent;
@@ -259,14 +315,12 @@
         }
         .btn-dl:hover { background: var(--primary-color); color: #fff; text-decoration: none; }
 
-
-        /* --- SIDEBAR STYLE (MATCH KONSESI) --- */
+        /* --- SIDEBAR STYLE --- */
         .sidebar-card {
             background: #fff; border-radius: 16px; padding: 30px;
             box-shadow: 0 5px 20px rgba(0,0,0,0.05); margin-bottom: 20px;
             position: static; top: 100px; border: 1px solid #f0f0f0;
         }
-        /* Tombol Sidebar Besar */
         .btn-download-sidebar {
             display: flex; align-items: center; justify-content: center; gap: 10px;
             width: 100%; padding: 14px; background: var(--bg-light-blue);
@@ -274,7 +328,6 @@
             margin-bottom: 10px; border: 1px solid transparent; transition: all 0.3s;
         }
         .btn-download-sidebar:hover { background: var(--primary-color); color: #fff; transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0, 111, 176, 0.2); }
-
 
         /* --- FOOTER & CHAT --- */
         footer { background-color: var(--primary-color); color: white; padding-top: 70px; font-size: 14px; }
@@ -285,7 +338,7 @@
         .footer-links a:hover { color: #fff; transform: translateX(5px); }
         .copyright { background-color: rgba(0,0,0,0.1); text-align: center; padding: 25px 0; color: rgba(255,255,255,0.6); border-top: 1px solid rgba(255,255,255,0.1); }
 
-        /* Chat Widget */
+        /* Chat Widget (LOGO TETAP SESUAI REQUEST) */
         .chat-toggle-btn { position: fixed; bottom: 30px; right: 30px; width: 65px; height: 65px; background: linear-gradient(135deg, var(--primary-color), var(--primary-dark)); color: #ffffff; border: none; border-radius: 50%; box-shadow: 0 8px 25px rgba(0, 111, 176, 0.4); cursor: pointer; z-index: 9999; display: flex; align-items: center; justify-content: center; transition: transform 0.3s; }
         .chat-toggle-btn:hover { transform: scale(1.1); }
         .chat-toggle-btn svg { position: absolute; width: 28px; height: 28px; transition: all 0.4s; pointer-events: none; }
@@ -293,6 +346,7 @@
         .icon-close { opacity: 0; transform: scale(0) rotate(-180deg); fill: none; stroke: currentColor; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
         .chat-toggle-btn.active .icon-message { opacity: 0; transform: scale(0); }
         .chat-toggle-btn.active .icon-close { opacity: 1; transform: scale(1) rotate(0deg); }
+        
         .chat-box-container { position: fixed; bottom: 110px; right: 30px; width: 400px; height: 600px; max-height: 75vh; background: #fff; border-radius: 16px; box-shadow: 0 20px 50px rgba(0,0,0,0.2); z-index: 9998; opacity: 0; visibility: hidden; transform: translateY(20px); transition: 0.3s; border: 1px solid #eee; overflow: hidden; display: flex; flex-direction: column; }
         .chat-box-container.active { opacity: 1; visibility: visible; transform: translateY(0); }
         .chat-header { background: linear-gradient(135deg, var(--primary-color), var(--primary-dark)); padding: 15px 20px; color: #fff; display: flex; align-items: center; gap: 15px; }
@@ -309,16 +363,12 @@
             .page-header { padding-bottom: 40px; }
         }
         
-        /* FIX UNTUK MOBILE: Parallax dimatikan karena sering glitch di HP */
         @media (max-width: 768px) {
             .hamburger-btn { display: flex; }
             .menu-list { display: none; }
             .nav-menu { display: flex; }
             .page-header { background-attachment: scroll; }
-            /* Pada mobile, header minimalis lebih aman dikasih background agar menu terlihat */
             header.header-minimal { background-color: #fff; }
-            
-            /* Fix Logo di Mobile */
             .brand-area {
                 background: transparent !important; backdrop-filter: none !important; -webkit-backdrop-filter: none !important; border: none !important; box-shadow: none !important; padding-left: 0 !important;
             }
@@ -342,6 +392,26 @@
                 </div>
             </div>
             
+            <div class="header-socials">
+                <a href="https://wa.me/6285648283012" target="_blank" class="social-icon wa-icon" aria-label="WhatsApp">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></path></svg>
+                </a>
+                <a href="https://www.instagram.com/balmonsamarinda/" class="social-icon" aria-label="Instagram">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></path></svg>
+                </a>
+                <a href="https://www.facebook.com/profile.php?id=100068963927418" class="social-icon" aria-label="Facebook">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9 8h-3v4h3v12h5v-12h3.642l.358-4h-4v-1.667c0-.955.192-1.333 1.115-1.333h2.885v-5h-3.808c-3.596 0-5.192 1.583-5.192 4.615v3.385z"/></path></svg>
+                </a>
+                <a href="https://youtube.com/@balmonsamarindaa?si=EZUAjSarJaMD-7R9" class="social-icon" aria-label="YouTube">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z"/></path></svg>
+                </a>
+                <a href="https://www.tiktok.com/@balmon.samarinda?lang=en" class="social-icon" aria-label="TikTok">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" stroke="none">
+                        <path d="M12.53.02C13.84 0 15.14.01 16.44 0c.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.65-1.58-1.09-.1-.09-.19-.2-.29-.3v6.52c.02 4.07-3.23 7.49-7.29 7.49-3.93.04-7.3-3.13-7.48-7.05-.07-1.84.58-3.66 1.83-5.01 1.25-1.35 3.03-2.14 4.86-2.16v4.03c-1.11-.02-2.19.46-2.95 1.29a4.106 4.106 0 0 0-1.1 2.89c.04 2.22 1.84 4.02 4.06 4.02 2.22 0 4.02-1.8 4.02-4.02V.02h.22z"/>
+                    </svg>
+                </a>
+            </div>
+            
             <nav class="nav-menu">
                 <ul class="menu-list">
                     <li class="menu-item" onclick="window.location.href='index.html'">Beranda</li>
@@ -356,7 +426,7 @@
                     <li class="menu-item" onclick="window.location.href='arsip.html'">Download</li>
                     <li class="menu-item" onclick="window.location.href='kontak.html'">Kontak</li>
                 </ul>
-                <button class="nav-search-btn">
+                <button class="nav-search-btn" onclick="openSearch()">
                     <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
                 </button>
             </nav>
@@ -371,15 +441,15 @@
         <div class="mobile-nav-dropdown" id="mobileNavDropdown">
             <div class="mobile-menu-item" onclick="handleMobileMenuItem(this, 'beranda')">Beranda</div>
             <div class="mobile-menu-item has-submenu" onclick="toggleMobileSubmenu(this)">Layanan</div>
-            <div class="mobile-submenu">
+            <div class="mobile-submenu" id="submenu-layanan">
                 <a href="konsesi.html" onclick="closeMobileMenu()">Izin Konsesi</a>
                 <a href="maritim.html" onclick="closeMobileMenu()">Izin Maritim</a>
                 <a href="fm.html" onclick="closeMobileMenu()">Izin Penyiaran FM</a>
             </div>
             <div class="mobile-menu-item has-submenu" onclick="toggleMobileSubmenu(this)">Publikasi</div>
-            <div class="mobile-submenu">
+            <div class="mobile-submenu" id="submenu-publikasi">
                 <a href="galeri.html" onclick="closeMobileMenu()">Galeri Foto</a>
-                <a href="#">Galeri Video</a>
+                <a href="#" onclick="closeMobileMenu()">Galeri Video</a>
             </div>
             <div class="mobile-menu-item" onclick="handleMobileMenuItem(this, 'kontak')">Kontak</div>
         </div>
@@ -486,11 +556,20 @@
         <svg class="icon-close" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
     </button>
 
+    <div id="searchOverlay" class="search-overlay">
+        <div class="search-content">
+            <button class="close-search" onclick="closeSearch()">×</button>
+            <h2 style="color:var(--primary-color); margin-bottom:20px;">Pencarian Website</h2>
+            <input type="text" id="globalSearchInput" placeholder="Ketik kata kunci (misal: Izin, Maritim)..." onkeyup="performGlobalSearch()">
+            <div id="searchResults" class="search-results"></div>
+        </div>
+    </div>
+
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 
     <script>
-        // 1. CONFIG FIREBASE
+        // --- 1. CONFIG FIREBASE ---
         const firebaseConfig = {
             apiKey: "AIzaSyDUeIg9Zn_xndPXtChO8KufXFp6EMtqBJ0",
             authDomain: "admin-pelayanan-balmon.firebaseapp.com",
@@ -502,13 +581,13 @@
         if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
 
-        // 2. VARIABEL
+        // --- 2. VARIABEL ARSIP ---
         const container = document.getElementById('docListContainer');
         const searchInput = document.getElementById('searchInput');
         const totalDocsLabel = document.getElementById('totalDocs');
         let allDocs = [];
 
-        // 3. AMBIL DATA DARI FIREBASE (Realtime)
+        // --- 3. AMBIL DATA DARI FIREBASE ---
         db.ref('arsip_drive').on('value', snap => {
             if(!snap.exists()) {
                 container.innerHTML = `<div style="text-align:center; padding:40px;"><p>Belum ada dokumen.</p></div>`;
@@ -535,7 +614,7 @@
             renderDocs(allDocs);
         });
 
-        // 4. FUNGSI RENDER (TAMPILKAN DATA)
+        // --- 4. RENDER DATA ARSIP ---
         function renderDocs(dataList) {
             container.innerHTML = '';
 
@@ -554,7 +633,6 @@
                 let typeClass = 'doc';
                 let iconClass = 'bi-file-earmark-text-fill text-primary';
                 
-                // Cek tipe file
                 if(d.tipe && d.tipe.toLowerCase().includes('pdf')) {
                     typeClass = 'pdf';
                     iconClass = 'bi-file-earmark-pdf-fill text-danger'; 
@@ -589,14 +667,14 @@
             container.innerHTML = htmlBuffer;
         }
 
-        // 5. FUNGSI PENCARIAN
+        // --- 5. PENCARIAN ARSIP (LOCAL FILTER) ---
         searchInput.addEventListener('keyup', (e) => {
             const keyword = e.target.value.toLowerCase();
             const filtered = allDocs.filter(doc => doc.judul.toLowerCase().includes(keyword));
             renderDocs(filtered);
         });
 
-        // --- UTILS (Loader & Scroll Header & Chat) ---
+        // --- UTILS (Loader & Scroll) ---
         window.addEventListener('load', () => {
             const loader = document.getElementById('pageLoader');
             if(loader) loader.classList.add('hidden');
@@ -607,14 +685,12 @@
             if (event.persisted && loader) loader.classList.add('hidden');
         });
 
-        /* LOGIKA SCROLL: Header Transparan ke Minimal (Sama persis Index) */
         let lastScrollY = window.scrollY;
         let ticking = false;
         function updateScroll() {
             const scrollY = window.scrollY;
             const header = document.getElementById('mainHeader');
             
-            // Logika Header Minimalis
             if (scrollY > 50) {
                 header.classList.add('header-minimal');
             } else {
@@ -629,6 +705,7 @@
             }
         }, { passive: true });
 
+        // CHAT TOGGLE (Logic Existing)
         function animateChatToggle() {
             const btn = document.getElementById("toggleBtn");
             const box = document.getElementById("chatBox");
@@ -638,7 +715,7 @@
             btn.classList.add("active"); box.classList.add("active");
         }
 
-        /* MOBILE MENU LOGIC */
+        // MOBILE MENU LOGIC
         function toggleMobileMenu() {
             document.getElementById('hamburgerBtn').classList.toggle('active');
             document.getElementById('mobileNavDropdown').classList.toggle('active');
@@ -661,12 +738,64 @@
             else if (action === 'kontak') window.location.href = 'kontak.html';
             closeMobileMenu();
         }
-        
-        // Klik di luar menu menutup dropdown
         document.addEventListener('click', function(event) {
             const header = document.getElementById('mainHeader');
             const nav = document.getElementById('mobileNavDropdown');
             if (!header.contains(event.target) && nav.classList.contains('active')) closeMobileMenu();
+        });
+
+        /* --- GLOBAL WEBSITE SEARCH FUNCTIONALITY --- */
+        const pages = [
+            { title: "Beranda", url: "index.html", desc: "Halaman utama Balmon Samarinda" },
+            { title: "Izin Konsesi", url: "konsesi.html", desc: "Layanan perizinan frekuensi untuk perusahaan/konsesi." },
+            { title: "Izin Maritim (Kapal)", url: "maritim.html", desc: "Pengurusan izin stasiun radio kapal dan laut." },
+            { title: "Izin Penyiaran FM", url: "fm.html", desc: "Prosedur perizinan untuk stasiun radio FM/Penyiaran." },
+            { title: "Galeri Kegiatan", url: "galeri.html", desc: "Dokumentasi foto dan video kegiatan Balmon." },
+            { title: "Arsip & Regulasi", url: "arsip.html", desc: "Download dokumen, SOP, dan regulasi terbaru." },
+            { title: "Kontak Kami", url: "kontak.html", desc: "Alamat kantor, email, dan nomor pengaduan." }
+        ];
+
+        function openSearch() {
+            document.getElementById('searchOverlay').classList.add('active');
+            setTimeout(() => document.getElementById('globalSearchInput').focus(), 300);
+        }
+
+        function closeSearch() {
+            document.getElementById('searchOverlay').classList.remove('active');
+            document.getElementById('globalSearchInput').value = '';
+            document.getElementById('searchResults').innerHTML = '';
+        }
+
+        function performGlobalSearch() {
+            const input = document.getElementById('globalSearchInput').value.toLowerCase();
+            const resultContainer = document.getElementById('searchResults');
+            resultContainer.innerHTML = '';
+
+            if (input.length < 2) return;
+
+            const results = pages.filter(page => 
+                page.title.toLowerCase().includes(input) || 
+                page.desc.toLowerCase().includes(input)
+            );
+
+            if (results.length > 0) {
+                results.forEach(page => {
+                    const item = document.createElement('a');
+                    item.href = page.url;
+                    item.className = 'search-item';
+                    item.innerHTML = `
+                        <h4>${page.title}</h4>
+                        <p>${page.desc}</p>
+                    `;
+                    resultContainer.appendChild(item);
+                });
+            } else {
+                resultContainer.innerHTML = '<div style="text-align:center; color:#888;">Tidak ditemukan hasil yang cocok.</div>';
+            }
+        }
+
+        document.addEventListener('keydown', function(event) {
+            if (event.key === "Escape") closeSearch();
         });
     </script>
     <script src="TTS_Adaptif.js"></script>
