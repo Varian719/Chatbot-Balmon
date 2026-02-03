@@ -15,7 +15,7 @@
 
     <style>
         /* ========================================= */
-        /* --- 1. SETUP GLOBAL (STYLE DARI DRAF) --- */
+        /* --- 1. SETUP GLOBAL --- */
         /* ========================================= */
         :root {
             --primary-color: #006fb0;
@@ -29,6 +29,7 @@
 
         body { margin: 0; padding: 0; font-family: 'Albert Sans', sans-serif; background-color: var(--bg-light-blue); color: var(--text-dark); overflow-x: hidden; }
         a { text-decoration: none; color: inherit; transition: 0.3s; }
+        ul { list-style: none; padding: 0; margin: 0; }
         * { box-sizing: border-box; }
 
         /* --- LOADER --- */
@@ -40,13 +41,14 @@
         @keyframes pulse { 50% { opacity: 0.5; } }
 
         /* ========================================= */
-        /* --- 2. HEADER & NAVIGASI (PERSIS DRAF) --- */
+        /* --- 2. HEADER & NAVIGASI --- */
         /* ========================================= */
         header { position: fixed; top: 0; width: 100%; height: 80px; z-index: 1000; transition: 0.4s; }
         header.header-minimal { background: rgba(255,255,255,0.95); backdrop-filter: blur(10px); box-shadow: 0 5px 20px rgba(0,0,0,0.05); height: 70px; }
         
-        .header-content { display: flex; align-items: center; justify-content: space-between; height: 100%; max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+        .header-content { display: flex; align-items: center; justify-content: space-between; height: 100%; max-width: 1280px; margin: 0 auto; padding: 0 20px; }
         
+        /* Brand */
         .brand-area { display: flex; align-items: center; gap: 12px; padding: 8px 15px; border-radius: 50px; background: rgba(255,255,255,0.1); backdrop-filter: blur(5px); border: 1px solid rgba(255,255,255,0.2); cursor: pointer; }
         .brand-logo-img { height: 45px; }
         .brand-text { color: #fff; font-weight: 800; font-size: 18px; line-height: 1.2; }
@@ -56,232 +58,266 @@
         header.header-minimal .brand-text span { color: var(--text-gray); }
         header.header-minimal .brand-area { background: transparent; border: none; backdrop-filter: none; padding: 0; }
 
-        /* Menu */
-        .nav-menu { height: 100%; display: flex; align-items: center; transition: all 0.4s ease; }
-        .menu-list { display: flex; gap: 8px; height: 100%; align-items: center; margin: 0; padding: 0; list-style: none; }
-        .menu-item { 
-            position: relative; height: 100%; display: flex; align-items: center; 
-            padding: 0 12px; font-size: 14px; font-weight: 600; color: #ffffff; 
-            cursor: pointer; transition: color 0.3s;
-        }
+        /* Nav Container */
+        .nav-container { display: flex; align-items: center; gap: 20px; }
+
+        /* Menu Utama */
+        .nav-menu { display: flex; align-items: center; height: 100%; }
+        .menu-list { display: flex; gap: 5px; height: 100%; }
+        .menu-item { position: relative; height: 100%; display: flex; align-items: center; padding: 0 12px; font-size: 14px; font-weight: 600; color: #fff; cursor: pointer; }
         .menu-item:hover { color: var(--accent-yellow); }
         header.header-minimal .menu-item { color: var(--text-dark); }
         header.header-minimal .menu-item:hover { color: var(--primary-color); }
-        
-        .nav-search-btn { margin-left:10px; border:none; background:transparent; color:#ffffff; cursor:pointer; transition: color 0.3s; }
-        header.header-minimal .nav-search-btn { color: var(--primary-color); }
 
         /* Dropdown */
-        .dropdown-content { 
-            display: none; position: absolute; top: 100%; left: 0; background-color: #ffffff; min-width: 240px; 
-            box-shadow: 0 15px 30px rgba(0,0,0,0.1); border-radius: 0 0 8px 8px; z-index: 1000; padding: 10px 0; border-top: 3px solid var(--primary-color);
+        .dropdown-content { display: none; position: absolute; top: 100%; left: 0; background-color: #fff; min-width: 220px; box-shadow: 0 15px 30px rgba(0,0,0,0.1); border-radius: 0 0 8px 8px; border-top: 3px solid var(--primary-color); z-index: 1000; }
+        .menu-item:hover .dropdown-content { display: block; animation: slideUp 0.3s ease; }
+        .dropdown-content li a { display: block; padding: 12px 20px; color: var(--text-dark); font-size: 14px; font-weight: 500; border-bottom: 1px solid #f5f5f5; }
+        .dropdown-content li a:hover { background: var(--bg-light-blue); color: var(--primary-color); padding-left: 25px; }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Social Shortcuts */
+        .nav-socials { display: flex; align-items: center; gap: 10px; padding-left: 20px; border-left: 1px solid rgba(255,255,255,0.3); margin-left: 10px; }
+        .soc-link { width: 32px; height: 32px; border-radius: 50%; background: rgba(255,255,255,0.15); display: flex; align-items: center; justify-content: center; color: #fff; transition: 0.3s; font-size: 14px; }
+        .soc-link:hover { background: var(--accent-yellow); color: var(--text-dark); transform: translateY(-3px); }
+        
+        header.header-minimal .nav-socials { border-left-color: #eee; }
+        header.header-minimal .soc-link { background: #f0f2f5; color: var(--text-dark); }
+        header.header-minimal .soc-link:hover { background: var(--primary-color); color: #fff; }
+
+        /* Mobile Hamburger */
+        .hamburger-btn { display: none; background: none; border: none; cursor: pointer; padding: 10px; flex-direction: column; gap: 6px; }
+        .hamburger-btn span { display: block; width: 25px; height: 3px; background: #fff; border-radius: 2px; transition: 0.3s; }
+        header.header-minimal .hamburger-btn span { background: var(--primary-color); }
+        @media (max-width: 992px) { 
+            .nav-container { display: none; } 
+            .hamburger-btn { display: flex; } 
         }
-        .menu-item:hover .dropdown-content { display: block; }
-        .dropdown-content li { list-style: none; }
-        .dropdown-content li a { display: block; padding: 10px 20px; color: var(--text-dark); font-weight: 400; font-size: 14px; }
-        .dropdown-content li a:hover { background-color: var(--bg-light-blue); color: var(--primary-color); padding-left: 25px; }
 
-        /* Hamburger */
-        .hamburger-btn { display: none; flex-direction: column; gap: 6px; background: none; border: none; cursor: pointer; padding: 8px; }
-        .hamburger-btn span { width: 24px; height: 2.5px; background-color: white; border-radius: 2px; transition: 0.3s; }
-        header.header-minimal .hamburger-btn span { background-color: var(--primary-color); }
-        @media (max-width: 768px) { .menu-list { display: none; } .hamburger-btn { display: flex; } }
-
-        /* Mobile Dropdown */
-        .mobile-nav-dropdown { display: none; position: fixed; top: 80px; left: 0; width: 100%; background-color: #ffffff; box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1); flex-direction: column; z-index: 999; }
+        /* Mobile Menu Content */
+        .mobile-nav-dropdown { position: fixed; top: 70px; left: 0; width: 100%; background: #fff; box-shadow: 0 10px 20px rgba(0,0,0,0.1); display: none; flex-direction: column; z-index: 999; }
         .mobile-nav-dropdown.active { display: flex; }
-        .mobile-menu-item { padding: 16px 20px; border-bottom: 1px solid #eee; color: var(--text-dark); font-weight: 600; font-size: 15px; cursor: pointer; }
-        .mobile-submenu { display: none; background-color: #f8f9fa; }
-        .mobile-submenu.active { display: block; }
-        .mobile-submenu a { display: block; padding: 12px 40px; color: var(--text-gray); font-size: 14px; border-bottom: 1px solid #eee; }
+        .mobile-menu-item { padding: 15px 20px; border-bottom: 1px solid #f0f0f0; font-weight: 600; color: var(--text-dark); }
 
         /* ========================================= */
-        /* --- 3. PAGE HEADER & FILTER --- */
+        /* --- 3. PAGE HEADER --- */
         /* ========================================= */
         .page-header {
-            padding: 160px 20px 80px; text-align: center; color: #fff;
+            padding: 180px 20px 80px; text-align: center; color: #fff;
             background: linear-gradient(135deg, rgba(0, 111, 176, 0.9), rgba(0, 80, 130, 0.8)), url('https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=1600&q=80');
             background-size: cover; background-position: center; background-attachment: fixed;
         }
-        .page-title { font-size: 48px; font-weight: 800; margin: 0; text-shadow: 0 4px 10px rgba(0,0,0,0.1); }
-        .page-subtitle { font-size: 16px; opacity: 0.9; margin-top: 10px; }
-        .breadcrumb { font-size: 14px; opacity: 0.9; margin-bottom: 15px; }
+        .page-title { font-size: 42px; font-weight: 800; margin: 0; text-shadow: 0 5px 15px rgba(0,0,0,0.2); }
+        .breadcrumb { margin-bottom: 15px; opacity: 0.9; font-size: 14px; letter-spacing: 0.5px; }
 
-        .gallery-section { padding: 60px 20px 100px; max-width: 1200px; margin: 0 auto; }
-        .filter-container { display: flex; justify-content: center; flex-wrap: wrap; gap: 15px; margin-bottom: 50px; }
-        .filter-btn {
-            background: #fff; border: 1px solid #e2e8f0; padding: 10px 25px; border-radius: 30px;
-            font-size: 14px; font-weight: 600; color: var(--text-gray); cursor: pointer; transition: 0.3s;
+        /* ========================================= */
+        /* --- 4. FILTER KATEGORI (CARD VIEW) --- */
+        /* ========================================= */
+        .category-wrapper {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+            gap: 15px; max-width: 900px; margin: -50px auto 50px; padding: 0 20px; position: relative; z-index: 10;
         }
-        .filter-btn:hover, .filter-btn.active { background: var(--primary-color); color: #fff; border-color: var(--primary-color); transform: translateY(-2px); }
+        .cat-card {
+            background: #ffffff; border-radius: 12px; padding: 20px 10px; text-align: center; cursor: pointer;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08); border: 2px solid transparent; transition: 0.3s;
+            display: flex; flex-direction: column; align-items: center; gap: 10px;
+        }
+        .cat-card:hover { transform: translateY(-5px); box-shadow: 0 15px 40px rgba(0, 111, 176, 0.15); }
+        .cat-card.active { border-color: var(--primary-color); background-color: #f0f9ff; }
+        
+        .cat-icon-svg { width: 32px; height: 32px; color: var(--text-gray); transition: 0.3s; }
+        .cat-card.active .cat-icon-svg { color: var(--primary-color); transform: scale(1.1); }
+        .cat-title { font-size: 14px; font-weight: 600; color: var(--text-gray); }
+        .cat-card.active .cat-title { color: var(--primary-color); font-weight: 700; }
 
         /* ========================================= */
-        /* --- 4. GALLERY GRID --- */
+        /* --- 5. GALLERY GRID --- */
         /* ========================================= */
-        .gallery-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 30px; }
+        .gallery-section { max-width: 1200px; margin: 0 auto; padding: 0 20px 100px; }
+        .gallery-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 30px; }
         
         .gallery-item {
-            background: #fff; border-radius: 16px; overflow: hidden; box-shadow: 0 10px 30px -5px rgba(0,0,0,0.05);
-            transition: 0.3s; cursor: pointer; display: flex; flex-direction: column; animation: fadeIn 0.6s ease;
+            background: #fff; border-radius: 16px; overflow: hidden; box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            transition: 0.3s; display: flex; flex-direction: column; animation: fadeIn 0.6s ease;
         }
-        .gallery-item:hover { transform: translateY(-8px); box-shadow: 0 20px 50px rgba(0,0,0,0.1); }
+        .gallery-item:hover { transform: translateY(-5px); box-shadow: 0 15px 30px rgba(0,0,0,0.1); }
         .gallery-item.hidden { display: none; }
-
-        .media-wrapper { position: relative; aspect-ratio: 4/3; overflow: hidden; }
-        .media-wrapper img { width: 100%; height: 100%; object-fit: cover; transition: 0.6s; }
-        .gallery-item:hover .media-wrapper img { transform: scale(1.08); }
-
+        
+        /* Media Image */
+        .media-wrapper { position: relative; aspect-ratio: 4/3; overflow: hidden; cursor: pointer; }
+        .media-wrapper img { width: 100%; height: 100%; object-fit: cover; transition: 0.5s; }
+        .gallery-item:hover .media-wrapper img { transform: scale(1.05); }
+        
+        /* Overlay */
         .overlay {
             position: absolute; inset: 0; background: rgba(0,0,0,0.3); opacity: 0;
             display: flex; align-items: center; justify-content: center; transition: 0.3s;
         }
         .gallery-item:hover .overlay { opacity: 1; }
-        
-        .icon-box { width: 50px; height: 50px; background: rgba(255,255,255,0.9); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--primary-color); transform: scale(0.8); transition: 0.3s; }
+        .icon-box {
+            width: 50px; height: 50px; background: rgba(255,255,255,0.95); border-radius: 50%;
+            display: flex; align-items: center; justify-content: center; color: var(--primary-color); font-size: 24px;
+            transform: scale(0.8); transition: 0.3s;
+        }
         .gallery-item:hover .icon-box { transform: scale(1); }
 
-        .media-badge { position: absolute; top: 15px; right: 15px; background: rgba(0,0,0,0.6); backdrop-filter: blur(4px); color: #fff; padding: 5px 12px; border-radius: 20px; font-size: 11px; font-weight: 600; text-transform: uppercase; z-index: 2; }
-        .badge-video { background: rgba(222, 38, 42, 0.9); }
+        /* Badge */
+        .media-badge {
+            position: absolute; top: 15px; right: 15px; padding: 5px 12px; border-radius: 20px;
+            font-size: 11px; font-weight: 700; color: #fff; text-transform: uppercase; background: rgba(0,0,0,0.6); backdrop-filter: blur(4px);
+        }
+        .badge-video { background: rgba(220, 53, 69, 0.9); }
+        .badge-infografis { background: rgba(25, 135, 84, 0.9); }
+        .badge-foto { background: rgba(0, 111, 176, 0.9); }
 
-        .item-info { padding: 20px; flex-grow: 1; display: flex; flex-direction: column; }
-        .item-date { font-size: 12px; color: var(--text-gray); margin-bottom: 6px; display: flex; align-items: center; gap: 5px; }
-        .item-title { font-size: 16px; font-weight: 700; color: var(--text-dark); margin: 0; line-height: 1.4; }
+        /* Info & Description */
+        .item-info { padding: 20px; flex: 1; display: flex; flex-direction: column; }
+        .item-date { font-size: 12px; color: var(--text-gray); margin-bottom: 8px; display: flex; align-items: center; gap: 6px; }
+        .item-title { font-size: 16px; font-weight: 700; margin: 0; line-height: 1.4; color: var(--text-dark); }
         
+        /* CSS BARU UNTUK DESKRIPSI */
+        .item-desc {
+            font-size: 13px;
+            color: var(--text-gray);
+            line-height: 1.5;
+            margin-top: 8px;
+            /* Batasi 3 baris lalu titik-titik */
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
         @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
         /* ========================================= */
-        /* --- 5. LIGHTBOX & FOOTER --- */
+        /* --- 6. LIGHTBOX --- */
         /* ========================================= */
-        .lightbox { position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 99999; display: flex; align-items: center; justify-content: center; opacity: 0; visibility: hidden; transition: 0.3s; }
+        .lightbox { position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 10000; display: flex; align-items: center; justify-content: center; opacity: 0; visibility: hidden; transition: 0.3s; }
         .lightbox.active { opacity: 1; visibility: visible; }
-        .lightbox-content { position: relative; max-width: 90%; max-height: 90vh; text-align: center; }
-        .lightbox-media { max-width: 100%; max-height: 80vh; border-radius: 4px; }
-        .lightbox-iframe { width: 80vw; height: 45vw; max-width: 1000px; max-height: 562px; border: none; background: #000; }
-        .lightbox-caption { color: #fff; margin-top: 15px; font-size: 16px; font-weight: 500; }
-        .close-lightbox { position: absolute; top: -40px; right: 0; color: #fff; font-size: 30px; cursor: pointer; }
+        .lightbox-content { position: relative; max-width: 90vw; max-height: 80vh; text-align: center; }
+        .lightbox-media { max-width: 100%; max-height: 80vh; border-radius: 8px; }
+        .lightbox-iframe { width: 80vw; height: 45vw; max-width: 1000px; max-height: 560px; border: none; background: #000; }
+        .close-lightbox { position: absolute; top: -50px; right: 0; color: #fff; font-size: 30px; cursor: pointer; transition: 0.3s; }
+        .close-lightbox:hover { color: var(--accent-yellow); transform: rotate(90deg); }
+        #lightboxCaption { color: #fff; margin-top: 15px; font-weight: 500; font-size: 16px; }
 
-        footer { background-color: var(--primary-color); color: white; padding-top: 70px; font-size: 14px; }
-        .footer-grid { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 40px; padding: 0 20px 50px; max-width: 1200px; margin: 0 auto; }
-        .footer-col { flex: 1; min-width: 250px; }
-        .footer-col h3 { color: var(--accent-yellow); margin-bottom: 25px; font-size: 18px; }
-        .footer-links a { color: rgba(255,255,255,0.8); display: block; margin-bottom: 12px; }
-        .copyright { background-color: rgba(0,0,0,0.1); text-align: center; padding: 25px 0; border-top: 1px solid rgba(255,255,255,0.1); }
+        /* --- FOOTER --- */
+        footer { background: var(--primary-color); color: #fff; padding: 30px 20px; text-align: center; font-size: 14px; margin-top: auto; }
     </style>
 </head>
 <body>
 
     <div id="pageLoader" class="page-loader">
         <div class="loader-spinner"></div>
-        <div class="loader-text">MEMUAT...</div>
+        <div class="loader-text">MEMUAT GALERI...</div>
     </div>
 
     <header id="mainHeader">
         <div class="header-content">
             <div class="brand-area" onclick="window.location.href='index.html'">
-                <img src="balmonsmd1.png" alt="Logo Balmon" class="brand-logo-img">
-                <div class="brand-text">
-                    BALMON SAMARINDA
-                    <span>Kementerian Komunikasi & Digital</span>
+                <img src="balmonsmd1.png" alt="Logo" class="brand-logo-img">
+                <div class="brand-text">BALMON SAMARINDA <span>Kominfo RI</span></div>
+            </div>
+            
+            <div class="nav-container">
+                <nav class="nav-menu">
+                    <ul class="menu-list">
+                        <li class="menu-item" onclick="window.location.href='index.html'">Beranda</li>
+                        <li class="menu-item">
+                            Layanan
+                            <ul class="dropdown-content">
+                                <li><a href="konsesi.html">Izin Konsesi</a></li>
+                                <li><a href="maritim.html">Izin Maritim</a></li>
+                                <li><a href="fm.html">Izin Penyiaran FM</a></li>
+                            </ul>
+                        </li>
+                        <li class="menu-item" onclick="window.location.href='galeri.html'">Publikasi</li>
+                        <li class="menu-item" onclick="window.location.href='arsip.html'">Download</li>
+                        <li class="menu-item" onclick="window.location.href='kontak.html'">Kontak</li>
+                    </ul>
+                </nav>
+
+                <div class="nav-socials">
+                    <a href="#" class="soc-link" title="Instagram"><i class="bi bi-instagram"></i></a>
+                    <a href="#" class="soc-link" title="Facebook"><i class="bi bi-facebook"></i></a>
+                    <a href="#" class="soc-link" title="YouTube"><i class="bi bi-youtube-fill"></i></a>
+                    <a href="#" class="soc-link" title="TikTok"><i class="bi bi-tiktok"></i></a>
                 </div>
             </div>
             
-            <nav class="nav-menu">
-                <ul class="menu-list">
-                    <li class="menu-item" onclick="window.location.href='index.html'">Beranda</li>
-                    <li class="menu-item">Layanan
-                        <ul class="dropdown-content">
-                            <li><a href="konsesi.html">Izin Konsesi</a></li>
-                            <li><a href="maritim.html">Izin Maritim</a></li>
-                            <li><a href="fm.html">Izin Penyiaran FM</a></li>
-                        </ul>
-                    </li>
-                    <li class="menu-item" onclick="window.location.href='galeri.html'">Publikasi</li>
-                    <li class="menu-item" onclick="window.location.href='arsip.html'">Download</li>
-                    <li class="menu-item" onclick="window.location.href='kontak.html'">Kontak</li>
-                </ul>
-                <button class="nav-search-btn">
-                    <i class="bi bi-search" style="font-size: 18px;"></i>
-                </button>
-            </nav>
-            
-            <button class="hamburger-btn" id="hamburgerBtn" onclick="toggleMobileMenu()">
+            <button class="hamburger-btn" onclick="toggleMobileMenu()">
                 <span></span><span></span><span></span>
             </button>
         </div>
-
-        <div class="mobile-nav-dropdown" id="mobileNavDropdown">
-            <div class="mobile-menu-item" onclick="window.location.href='index.html'">Beranda</div>
-            <div class="mobile-menu-item" onclick="toggleMobileSubmenu(this)">Layanan</div>
-            <div class="mobile-submenu">
-                <a href="konsesi.html">Izin Konsesi</a>
-                <a href="maritim.html">Izin Maritim</a>
-                <a href="fm.html">Izin Penyiaran FM</a>
-            </div>
-            <div class="mobile-menu-item" onclick="window.location.href='galeri.html'">Publikasi</div>
-            <div class="mobile-menu-item" onclick="window.location.href='arsip.html'">Download</div>
-            <div class="mobile-menu-item" onclick="window.location.href='kontak.html'">Kontak</div>
-        </div>
     </header>
 
-    <div class="page-header">
-        <div class="container">
-            <div class="breadcrumb">
-                <a href="index.html">Beranda</a> / Publikasi
-            </div>
-            <h1 class="page-title">Galeri Kegiatan</h1>
-            <p class="page-subtitle">Dokumentasi kegiatan, monitoring, dan layanan Balai Monitor Spektrum Frekuensi Radio Kelas I Samarinda.</p>
+    <div id="mobileMenu" class="mobile-nav-dropdown">
+        <div class="mobile-menu-item" onclick="window.location.href='index.html'">Beranda</div>
+        <div class="mobile-menu-item">Layanan</div>
+        <div class="mobile-menu-item" onclick="window.location.href='galeri.html'">Publikasi</div>
+        <div class="mobile-menu-item" onclick="window.location.href='arsip.html'">Download</div>
+        <div class="mobile-menu-item" onclick="window.location.href='kontak.html'">Kontak</div>
+    </div>
+
+    <section class="page-header">
+        <div class="breadcrumb">
+            <a href="index.html">Beranda</a> / <span style="color:var(--accent-yellow)">Galeri</span>
+        </div>
+        <h1 class="page-title">Galeri Publikasi</h1>
+        <p style="opacity: 0.9; margin-top: 10px;">Dokumentasi kegiatan dan informasi Balai Monitor Samarinda</p>
+    </section>
+
+    <div class="category-wrapper">
+        <div class="cat-card active" onclick="filterGallery('all', this)">
+            <svg class="cat-icon-svg" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                <rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect>
+                <rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect>
+            </svg>
+            <span class="cat-title">Semua</span>
+        </div>
+        <div class="cat-card" onclick="filterGallery('foto', this)">
+            <svg class="cat-icon-svg" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
+                <circle cx="12" cy="13" r="4"></circle>
+            </svg>
+            <span class="cat-title">Foto</span>
+        </div>
+        <div class="cat-card" onclick="filterGallery('video', this)">
+            <svg class="cat-icon-svg" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                <rect x="2" y="2" width="20" height="20" rx="2.18" ry="2.18"></rect>
+                <line x1="12" y1="2" x2="12" y2="22"></line><line x1="2" y1="12" x2="22" y2="12"></line>
+            </svg>
+            <span class="cat-title">Video</span>
+        </div>
+        <div class="cat-card" onclick="filterGallery('infografis', this)">
+            <svg class="cat-icon-svg" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                <polyline points="14 2 14 8 20 8"></polyline><line x1="12" y1="18" x2="12" y2="12"></line>
+            </svg>
+            <span class="cat-title">Infografis</span>
         </div>
     </div>
 
     <div class="gallery-section">
-        <div class="filter-container">
-            <button class="filter-btn active" onclick="filterGallery('all', this)">Semua</button>
-            <button class="filter-btn" onclick="filterGallery('foto', this)">Foto Kegiatan</button>
-            <button class="filter-btn" onclick="filterGallery('video', this)">Video</button>
-            <button class="filter-btn" onclick="filterGallery('infografis', this)">Infografis</button>
-        </div>
-
-        <div class="gallery-grid" id="galleryGrid">
+        <div class="gallery-grid" id="galleryContainer">
             <div style="grid-column: 1/-1; text-align: center; padding: 40px; color: #888;">
-                Sedang menghubungkan ke server...
+                Sedang memuat data dari server...
             </div>
         </div>
     </div>
 
     <div id="lightbox" class="lightbox" onclick="closeLightbox(event)">
-        <div class="close-lightbox" onclick="closeLightbox(event)">&times;</div>
         <div class="lightbox-content">
-            <img id="lightboxImg" src="" class="lightbox-media" style="display:none;">
-            <iframe id="lightboxVideo" class="lightbox-iframe" src="" allowfullscreen style="display:none;"></iframe>
-            <div id="lightboxCaption" class="lightbox-caption">Judul Kegiatan</div>
+            <span class="close-lightbox" onclick="closeLightbox(event)">&times;</span>
+            <img id="lightboxImg" class="lightbox-media" src="" style="display: none;">
+            <iframe id="lightboxVideo" class="lightbox-iframe" src="" allowfullscreen style="display: none;"></iframe>
+            <div id="lightboxCaption" class="lightbox-caption"></div>
         </div>
     </div>
 
-    <footer id="mainFooter">
-        <div class="footer-grid">
-            <div class="footer-col">
-                <h3>Balmon Samarinda</h3>
-                <p style="color:rgba(255,255,255,0.7); line-height:1.8;">
-                    Jalan Sultan Sulaiman No. 123<br>Samarinda, Kalimantan Timur.<br><br>
-                    <strong>Email:</strong> pelayananuptbalmonsamarinda@gmail.com
-                </p>
-            </div>
-            <div class="footer-col">
-                <h3>Tautan Cepat</h3>
-                <div class="footer-links">
-                    <a href="#">Profil Organisasi</a>
-                    <a href="#">Standar Pelayanan</a>
-                    <a href="#">Pengaduan Masyarakat</a>
-                </div>
-            </div>
-            <div class="footer-col">
-                <h3>Jam Pelayanan</h3>
-                <p style="color:rgba(255,255,255,0.7);">
-                    Senin - Kamis: 08.00 - 16.00<br>Jumat: 08.00 - 16.30
-                </p>
-            </div>
-        </div>
-        <div class="copyright">Copyright@2024 Balai Monitor Spektrum Frekuensi Radio Kelas I Samarinda</div>
+    <footer>
+        <strong>Copyright &copy; 2025 Balai Monitor SFR Kelas I Samarinda.</strong> All rights reserved.
     </footer>
 
     <script>
@@ -298,16 +334,13 @@
 
         // 2. Mobile Menu
         function toggleMobileMenu() {
-            document.getElementById('mobileNavDropdown').classList.toggle('active');
-        }
-        function toggleMobileSubmenu(el) {
-            el.nextElementSibling.classList.toggle('active');
+            document.getElementById('mobileMenu').classList.toggle('active');
         }
 
-        // 3. Filter Gallery
-        window.filterGallery = function(category, btn) {
-            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
+        // 3. Filter UI Logic
+        window.filterGallery = function(category, btnElement) {
+            document.querySelectorAll('.cat-card').forEach(c => c.classList.remove('active'));
+            if(btnElement) btnElement.classList.add('active');
 
             const items = document.querySelectorAll('.gallery-item');
             items.forEach(item => {
@@ -320,38 +353,68 @@
                     item.classList.add('hidden');
                 }
             });
-        }
+        };
 
-        // 4. Lightbox Logic
-        const lb = document.getElementById('lightbox');
+        // 4. Lightbox Logic dengan YOUTUBE FIX
+        const lightbox = document.getElementById('lightbox');
         const lbImg = document.getElementById('lightboxImg');
         const lbVid = document.getElementById('lightboxVideo');
         const lbCap = document.getElementById('lightboxCaption');
 
-        window.openLightbox = function(el, type) {
-            // el = .media-wrapper, parent = .gallery-item
-            const parent = el.closest('.gallery-item');
-            lbCap.innerText = parent.querySelector('.item-title').innerText;
-            lb.classList.add('active');
+        // Fungsi Helper untuk Convert Link YouTube ke Embed
+        function getEmbedUrl(url) {
+            if (!url) return "";
+            let videoId = "";
+            
+            // Cek Link Pendek (youtu.be)
+            if (url.includes("youtu.be/")) {
+                videoId = url.split("youtu.be/")[1].split("?")[0];
+            } 
+            // Cek Link Panjang (youtube.com/watch?v=)
+            else if (url.includes("v=")) {
+                videoId = url.split("v=")[1].split("&")[0];
+            }
+            // Cek jika sudah format Embed
+            else if (url.includes("embed/")) {
+                return url; 
+            }
+
+            // Kembalikan format Embed yang benar + Autoplay
+            if (videoId) {
+                return `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0`;
+            }
+            return url; // Jika bukan youtube, kembalikan link asli
+        }
+
+        window.openLightbox = function(element, type) {
+            const parentItem = element.closest('.gallery-item');
+            const title = parentItem.querySelector('.item-title').innerText;
+            lbCap.innerText = title;
+            lightbox.classList.add('active');
 
             if (type === 'image') {
-                lbImg.src = el.querySelector('img').src;
+                const imgTag = element.querySelector('img');
+                lbImg.src = imgTag.src;
                 lbImg.style.display = 'block';
                 lbVid.style.display = 'none';
-                lbVid.src = ""; 
+                lbVid.src = "";
             } else if (type === 'video') {
-                lbVid.src = parent.dataset.videoSrc;
+                const rawVideoUrl = parentItem.dataset.videoSrc;
+                // FIX: Gunakan fungsi converter sebelum pasang ke iframe
+                const embedUrl = getEmbedUrl(rawVideoUrl);
+                
+                lbVid.src = embedUrl;
                 lbVid.style.display = 'block';
                 lbImg.style.display = 'none';
             }
-        }
+        };
 
         window.closeLightbox = function(e) {
             if (e.target.id === 'lightbox' || e.target.classList.contains('close-lightbox')) {
-                lb.classList.remove('active');
-                lbVid.src = "";
+                lightbox.classList.remove('active');
+                lbVid.src = ""; 
             }
-        }
+        };
     </script>
 
     <script type="module">
@@ -359,7 +422,7 @@
         import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
         // ================================================================
-        // PENTING: ISI BAGIAN INI DENGAN CONFIG FIREBASE ANDA
+        // PENTING: CONFIG FIREBASE
         // ================================================================
         const firebaseConfig = {
             apiKey: "AIzaSyDUeIg9Zn_xndPXtChO8KufXFp6EMtqBJ0",
@@ -372,16 +435,16 @@
 
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
-        const container = document.getElementById('galleryGrid');
+        const container = document.getElementById('galleryContainer');
         const galeriRef = ref(db, 'galeri');
 
         onValue(galeriRef, (snapshot) => {
             if (!snapshot.exists()) {
-                container.innerHTML = `<div style="grid-column: 1/-1; text-align: center; padding: 50px;">Belum ada konten. Silakan input dari Admin.</div>`;
+                container.innerHTML = `<div style="grid-column: 1/-1; text-align: center; padding: 50px;">Belum ada konten galeri. Silakan input dari Admin.</div>`;
                 return;
             }
 
-            container.innerHTML = ""; // Bersihkan loader
+            container.innerHTML = ""; 
             
             const data = snapshot.val();
             let items = Object.values(data).sort((a, b) => b.timestamp - a.timestamp);
@@ -392,34 +455,38 @@
                 
                 const isVideo = item.category === 'video';
                 const typeParam = isVideo ? "'video'" : "'image'";
+                const iconClass = isVideo ? 'bi-play-circle-fill' : 'bi-arrows-angle-expand';
                 
-                // Menyesuaikan HTML agar persis dengan template Draf
+                const descText = item.description || ""; 
+
                 const html = `
                     <div class="gallery-item" data-category="${item.category}" data-video-src="${item.videoUrl}">
                         <div class="media-wrapper" onclick="openLightbox(this, ${typeParam})">
-                            <span class="media-badge badge-${item.category}">${item.category}</span>
-                            <img src="${item.imageUrl}" alt="${item.title}" class="g-img">
+                            <img src="${item.imageUrl}" alt="${item.title}" loading="lazy">
                             <div class="overlay">
                                 <div class="icon-box">
-                                    <i class="bi ${isVideo ? 'bi-play-fill' : 'bi-zoom-in'}" style="font-size: 24px;"></i>
+                                    <i class="bi ${iconClass}"></i>
                                 </div>
+                            </div>
+                            <div class="media-badge badge-${item.category}">
+                                ${item.category.toUpperCase()}
                             </div>
                         </div>
                         <div class="item-info">
-                            <div class="item-date">
-                                <i class="bi bi-calendar-event"></i> ${dateStr}
-                            </div>
+                            <div class="item-date"><i class="bi bi-calendar-event"></i> ${dateStr}</div>
                             <h3 class="item-title">${item.title}</h3>
+                            <p class="item-desc">${descText}</p>
                         </div>
                     </div>
                 `;
                 container.insertAdjacentHTML('beforeend', html);
             });
 
-            // Re-apply filter jika ada tombol filter yang sedang aktif
-            const activeBtn = document.querySelector('.filter-btn.active');
+            // Re-apply filter
+            const activeBtn = document.querySelector('.cat-card.active');
             if(activeBtn) {
-                const catMatch = activeBtn.getAttribute('onclick').match(/'([^']+)'/);
+                const clickAttr = activeBtn.getAttribute('onclick');
+                const catMatch = clickAttr.match(/'([^']+)'/);
                 if(catMatch && window.filterGallery) {
                     window.filterGallery(catMatch[1], activeBtn);
                 }
