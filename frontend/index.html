@@ -372,7 +372,7 @@
             padding: 80px 0; width: 100%; background-color: var(--fc-white); position: relative; overflow: hidden;
         }
         .feature-bg-decor {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: radial-gradient(circle at top right, rgba(0, 86, 179, 0.08), transparent 60%); z-index: 0; pointer-events: none;
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-color: white; z-index: 0; pointer-events: none;
         }
         .fc-wrapper { position: relative; max-width: 1200px; margin: 0 auto; padding: 0 20px; }
         .fc-window { width: 100%; overflow: visible; padding: 10px 5px; }
@@ -605,19 +605,36 @@
         @media (max-width: 900px) {
             .news-container {
                 flex-direction: column-reverse;
-                gap: 30px;
-                height: auto; /* Di HP biarkan auto agar tidak kepotong */
-                min-height: auto;
+                gap: 0; /* Menghapus gap agar tidak ada ruang kosong antar elemen */
+                height: auto; 
+                min-height: 550px; /* Memberikan tinggi minimum agar tidak naik turun */
             }
+
             .news-image-col {
-                height: 300px; /* Fixed height di HP */
+                height: 250px; /* Ukuran tetap untuk gambar di mobile */
                 flex: none;
                 width: 100%;
             }
+
             .news-text-col {
-                text-align: left;
-                padding: 0 20px 30px 20px;
-                height: auto;
+                padding: 25px 20px;
+                height: 300px; /* KUNCI DI SINI: Tinggi tetap untuk area teks */
+                display: flex;
+                flex-direction: column;
+                justify-content: flex-start;
+                overflow: hidden; /* Mencegah teks meluap jika terlalu panjang */
+            }
+
+            /* Memastikan deskripsi tidak merusak layout */
+            .news-desc-anim {
+                font-size: 14px;
+                -webkit-line-clamp: 3; /* Maksimal 3 baris di mobile */
+                margin-bottom: 15px;
+            }
+            
+            .news-title-anim {
+                font-size: 22px; /* Ukuran judul lebih kecil di mobile */
+                min-height: 60px; /* Jaga ruang untuk judul (sekitar 2 baris) */
             }
         }
 
@@ -952,6 +969,33 @@
         </div>
     </div>
 
+    <div class="news-section fade-in-section">
+        <div class="container news-container">
+            <div class="news-text-col">
+                <h2 class="news-title-anim" id="newsTitle">Memuat Berita...</h2>
+                <div class="news-date" id="newsDate">Memuat Tanggal...</div>
+                <p class="news-desc-anim" id="newsDesc">Memuat deskripsi berita...</p>
+                
+                <div class="news-controls">
+                    <button class="news-btn-nav" onclick="prevNews()">
+                        <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
+                    </button>
+                    <button class="news-btn-nav" onclick="nextNews()">
+                        <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+                    </button>
+                    <a href="galeri.html" class="news-btn-readmore">Selengkapnya</a>
+                </div>
+            </div>
+
+            <div class="news-image-col">
+                <div class="news-slider-track" id="newsTrack">
+                    </div>
+                <div class="news-progress" id="newsProgress"></div>
+            </div>
+        </div>
+    </div>
+
+    
     <div class="feature-carousel-section fade-in-section">
         <div class="feature-bg-decor"></div>
         <div class="fc-wrapper">
@@ -1026,32 +1070,6 @@
                         </div>
                     </div>
                 </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="news-section fade-in-section">
-        <div class="container news-container">
-            <div class="news-text-col">
-                <h2 class="news-title-anim" id="newsTitle">Memuat Berita...</h2>
-                <div class="news-date" id="newsDate">Memuat Tanggal...</div>
-                <p class="news-desc-anim" id="newsDesc">Memuat deskripsi berita...</p>
-                
-                <div class="news-controls">
-                    <button class="news-btn-nav" onclick="prevNews()">
-                        <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
-                    </button>
-                    <button class="news-btn-nav" onclick="nextNews()">
-                        <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
-                    </button>
-                    <a href="galeri.html" class="news-btn-readmore">Selengkapnya</a>
-                </div>
-            </div>
-
-            <div class="news-image-col">
-                <div class="news-slider-track" id="newsTrack">
-                    </div>
-                <div class="news-progress" id="newsProgress"></div>
             </div>
         </div>
     </div>
@@ -1326,19 +1344,19 @@
                 title: "Penertiban Perangkat Ilegal",
                 date: "20 Maret 2024",
                 desc: "Dalam upaya menjaga spektrum frekuensi bersih dari interferensi, Balmon Samarinda melakukan operasi penertiban perangkat radio yang tidak sesuai standar teknis.",
-                img: "g3.jpg"
+                img: "g4.jpg"
             },
             {
                 title: "Penertiban Perangkat Ilegal",
                 date: "20 Maret 2024",
                 desc: "Dalam upaya menjaga spektrum frekuensi bersih dari interferensi, Balmon Samarinda melakukan operasi penertiban perangkat radio yang tidak sesuai standar teknis.",
-                img: "g3.jpg"
+                img: "g5.jpg"
             },
             {
                 title: "Penertiban Perangkat Ilegal",
                 date: "20 Maret 2024",
                 desc: "Dalam upaya menjaga spektrum frekuensi bersih dari interferensi, Balmon Samarinda melakukan operasi penertiban perangkat radio yang tidak sesuai standar teknis.",
-                img: "g3.jpg"
+                img: "g6.jpg"
             }
         ];
 
@@ -1347,7 +1365,8 @@
 
         function initNewsCarousel() {
             const track = document.getElementById('newsTrack');
-            // Inject images
+            
+            // 1. Masukkan semua gambar asli
             newsData.forEach(news => {
                 const img = document.createElement('img');
                 img.src = news.img;
@@ -1355,6 +1374,10 @@
                 img.alt = news.title;
                 track.appendChild(img);
             });
+
+            // 2. CLONE: Ambil gambar pertama dan tambahkan ke akhir track
+            const firstClone = track.children[0].cloneNode(true);
+            track.appendChild(firstClone);
 
             updateNewsDisplay();
             startAutoNews();
@@ -1407,12 +1430,22 @@
         }
 
         // TAMBAHAN: Agar saat layar di-resize (diputar/diubah ukuran), gambar tetap pas
+        // Tambahkan atau ganti fungsi resize yang ada di bagian bawah script Anda
         window.addEventListener('resize', () => {
-             const track = document.getElementById('newsTrack');
-             const containerWidth = document.querySelector('.news-image-col').clientWidth;
-             track.style.transition = 'none'; // Matikan animasi saat resize agar tidak aneh
-             track.style.transform = `translateX(-${currentNewsIndex * containerWidth}px)`;
-             setTimeout(() => track.style.transition = 'transform 0.6s cubic-bezier(0.25, 1, 0.5, 1)', 100);
+            const track = document.getElementById('newsTrack');
+            const container = document.querySelector('.news-image-col');
+            
+            if (track && container) {
+                const containerWidth = container.clientWidth;
+                track.style.transition = 'none'; // Matikan animasi saat resize
+                track.style.transform = `translateX(-${currentNewsIndex * containerWidth}px)`;
+                
+                // Update lebar setiap gambar di dalam track
+                const images = track.querySelectorAll('.news-slide-img');
+                images.forEach(img => {
+                    img.style.width = `${containerWidth}px`;
+                });
+            }
         });
 
         function startAutoNews() {
@@ -1422,10 +1455,62 @@
             }, 5000); // 5 Detik per slide
         }
 
+        let isTransitioning = false; // Mencegah klik ganda saat animasi berjalan
+
         function nextNews() {
-            currentNewsIndex = (currentNewsIndex + 1) % newsData.length;
-            updateNewsDisplay();
-            startAutoNews(); // Reset timer saat klik manual
+            if (isTransitioning) return;
+            
+            currentNewsIndex++;
+            updateNewsDisplay(true); // true artinya gunakan animasi
+        }
+
+        function updateNewsDisplay(useAnimation = true) {
+            const titleEl = document.getElementById('newsTitle');
+            const dateEl = document.getElementById('newsDate');
+            const descEl = document.getElementById('newsDesc');
+            const progressEl = document.getElementById('newsProgress');
+            const track = document.getElementById('newsTrack');
+            const containerWidth = document.querySelector('.news-image-col').clientWidth;
+
+            isTransitioning = true;
+            
+            // Atur transisi
+            track.style.transition = useAnimation ? 'transform 0.6s cubic-bezier(0.25, 1, 0.5, 1)' : 'none';
+            track.style.transform = `translateX(-${currentNewsIndex * containerWidth}px)`;
+
+            // Logika Reset ke Awal (Infinite Loop)
+            if (currentNewsIndex >= newsData.length) {
+                setTimeout(() => {
+                    track.style.transition = 'none'; // Matikan animasi
+                    currentNewsIndex = 0; // Reset index ke 0
+                    track.style.transform = `translateX(0px)`;
+                    isTransitioning = false;
+                }, 600); // 600ms sesuai durasi transisi CSS
+            } else {
+                setTimeout(() => { isTransitioning = false; }, 600);
+            }
+
+            // --- Update Teks (Gunakan index yang sudah dimodulasi agar tidak error saat di clone) ---
+            const textIndex = currentNewsIndex % newsData.length;
+
+            titleEl.classList.add('text-fade-out');
+            descEl.classList.add('text-fade-out');
+
+            setTimeout(() => {
+                titleEl.textContent = newsData[textIndex].title;
+                dateEl.textContent = newsData[textIndex].date;
+                descEl.textContent = newsData[textIndex].desc;
+
+                titleEl.classList.remove('text-fade-out');
+                titleEl.classList.add('text-fade-in');
+                descEl.classList.remove('text-fade-out');
+                descEl.classList.add('text-fade-in');
+            }, 300);
+
+            // Progress Bar
+            progressEl.classList.remove('active');
+            void progressEl.offsetWidth; 
+            progressEl.classList.add('active');
         }
 
         function prevNews() {
