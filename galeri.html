@@ -15,182 +15,262 @@
 
     <style>
         /* ========================================= */
-        /* --- 1. SETUP GLOBAL --- */
+        /* --- 1. SETUP WARNA & GLOBAL (DARI INDEX.HTML) --- */
         /* ========================================= */
         :root {
-            --primary-color: #006fb0;
-            --primary-dark: #005082;
-            --secondary-color: #00ace0;
-            --accent-yellow: #ecbb1d;
+            --primary-color: #006fb0;   /* Biru Utama */
+            --primary-dark: #005082;    /* Biru Gelap */
+            --secondary-color: #00ace0; /* Cyan */
+            --accent-yellow: #ecbb1d;   /* Kuning Emas */
+            --bg-light-blue: #f4f9fc;
             --text-dark: #1e293b;
             --text-gray: #64748b;
-            --bg-light-blue: #f4f9fc;
         }
 
-        body { margin: 0; padding: 0; font-family: 'Albert Sans', sans-serif; background-color: var(--bg-light-blue); color: var(--text-dark); overflow-x: hidden; }
+        body { 
+            margin: 0; padding: 0; 
+            font-family: 'Albert Sans', sans-serif; 
+            background-color: var(--bg-light-blue); 
+            color: var(--text-dark); 
+            overflow-x: hidden; 
+        }
+        
         a { text-decoration: none; color: inherit; transition: 0.3s; }
+        ul { list-style: none; padding: 0; margin: 0; }
         * { box-sizing: border-box; }
 
-        /* --- LOADER --- */
-        .page-loader { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #fff; z-index: 99999; display: flex; flex-direction: column; align-items: center; justify-content: center; transition: opacity 0.5s; }
-        .page-loader.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
-        .loader-spinner { width: 50px; height: 50px; border: 4px solid rgba(0,111,176,0.1); border-left-color: var(--primary-color); border-radius: 50%; animation: spin 1s linear infinite; margin-bottom: 15px; }
-        .loader-text { color: var(--primary-color); font-weight: 700; letter-spacing: 1px; animation: pulse 1.5s infinite; }
-        @keyframes spin { 100% { transform: rotate(360deg); } }
-        @keyframes pulse { 50% { opacity: 0.5; } }
-
         /* ========================================= */
-        /* --- 2. HEADER & NAVIGASI --- */
+        /* --- 2. HEADER & NAVBAR (PERSIS INDEX.HTML) --- */
         /* ========================================= */
-        header { position: fixed; top: 0; width: 100%; height: 80px; z-index: 1000; transition: 0.4s; }
-        header.header-minimal { background: rgba(255,255,255,0.95); backdrop-filter: blur(10px); box-shadow: 0 5px 20px rgba(0,0,0,0.05); height: 70px; }
+        header {
+            background-color: transparent;
+            backdrop-filter: none;
+            -webkit-backdrop-filter: none;
+            box-shadow: none;
+            height: 80px; position: fixed; top: 0; left: 0; width: 100%; z-index: 1000;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
         
         .header-content { display: flex; align-items: center; justify-content: space-between; height: 100%; max-width: 1200px; margin: 0 auto; padding: 0 20px; }
         
-        .brand-area { display: flex; align-items: center; gap: 12px; padding: 8px 15px; border-radius: 50px; background: rgba(255,255,255,0.1); backdrop-filter: blur(5px); border: 1px solid rgba(255,255,255,0.2); cursor: pointer; }
-        .brand-logo-img { height: 45px; }
-        .brand-text { color: #fff; font-weight: 800; font-size: 18px; line-height: 1.2; }
-        .brand-text span { display: block; font-size: 10px; font-weight: 500; opacity: 0.9; }
+        /* BRAND LOGO */
+        .brand-area { 
+            display: flex; align-items: center; gap: 12px; cursor: pointer;
+            padding: 8px 20px; border-radius: 50px;
+            background-color: rgba(255, 255, 255, 0.1); 
+            backdrop-filter: blur(8px); border: 1px solid rgba(255, 255, 255, 0.2); 
+            transition: all 0.4s ease;
+        }
+        .brand-area:hover { background-color: rgba(255, 255, 255, 0.2); transform: translateY(-2px); }
         
-        header.header-minimal .brand-text { color: var(--primary-color); }
+        .brand-logo-img { height: 45px; width: auto; filter: drop-shadow(0 2px 5px rgba(0, 0, 0, 0.5)); transition: all 0.3s; }
+        .brand-text { font-size: 18px; font-weight: 800; color: #ffffff; line-height: 1.2; text-shadow: 0 2px 10px rgba(0, 0, 0, 0.6); }
+        .brand-text span { display: block; font-size: 11px; font-weight: 500; color: rgba(255,255,255,0.9); letter-spacing: 0.5px; }
+
+        /* HEADER SAAT SCROLL (Style Putih) */
+        header.header-minimal {
+            background-color: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.08); height: 70px;
+        }
+        header.header-minimal .brand-text { color: var(--primary-color); text-shadow: none; }
         header.header-minimal .brand-text span { color: var(--text-gray); }
-        header.header-minimal .brand-area { background: transparent; border: none; backdrop-filter: none; padding: 0; }
-
-        /* Menu */
-        .nav-menu { display: flex; align-items: center; height: 100%; }
-        .menu-list { display: flex; gap: 5px; height: 100%; }
-        .menu-item { color: #fff; font-weight: 600; font-size: 14px; padding: 0 15px; display: flex; align-items: center; height: 100%; position: relative; }
-        .menu-item:hover { color: var(--accent-yellow); }
-        header.header-minimal .menu-item { color: var(--text-dark); }
+        header.header-minimal .brand-logo-img { filter: none; }
+        header.header-minimal .brand-area { background: transparent; border: none; padding-left: 0; box-shadow: none; }
+        header.header-minimal .menu-item { color: var(--text-dark); text-shadow: none; }
         header.header-minimal .menu-item:hover { color: var(--primary-color); }
+        header.header-minimal .nav-icons { color: var(--primary-color); }
+        header.header-minimal .hamburger-btn span { background-color: var(--primary-color); }
 
-        /* Mobile Hamburger */
-        .hamburger-btn { display: none; background: none; border: none; cursor: pointer; padding: 10px; flex-direction: column; gap: 6px; }
-        .hamburger-btn span { display: block; width: 25px; height: 3px; background: #fff; border-radius: 2px; transition: 0.3s; }
-        header.header-minimal .hamburger-btn span { background: var(--primary-color); }
-        @media (max-width: 768px) { .menu-list { display: none; } .hamburger-btn { display: flex; } }
+        /* MENU NAVIGASI */
+        .nav-menu { display: flex; align-items: center; height: 100%; gap: 20px; }
+        .menu-list { display: flex; gap: 5px; height: 100%; align-items: center; }
+        
+        .menu-item { 
+            position: relative; height: 100%; display: flex; align-items: center; 
+            padding: 0 15px; font-size: 14px; font-weight: 600; color: #ffffff; 
+            cursor: pointer; transition: color 0.3s; text-shadow: 0 1px 5px rgba(0, 0, 0, 0.4); 
+        }
+        .menu-item:hover { color: var(--accent-yellow); }
+        .menu-item::after {
+            content: ''; position: absolute; bottom: 0; left: 0; width: 0%; height: 3px; 
+            background: var(--accent-yellow); transition: width 0.3s ease;
+        }
+        .menu-item:hover::after { width: 100%; }
 
-        /* Mobile Dropdown */
-        .mobile-nav-dropdown { position: fixed; top: 70px; left: 0; width: 100%; background: #fff; box-shadow: 0 10px 20px rgba(0,0,0,0.1); display: none; flex-direction: column; z-index: 999; }
+        /* DROPDOWN */
+        .dropdown-content { 
+            display: none; position: absolute; top: 100%; left: 0; 
+            background-color: #ffffff; min-width: 240px; box-shadow: 0 15px 30px rgba(0,0,0,0.1); 
+            border-radius: 0 0 8px 8px; border-top: 3px solid var(--primary-color); padding: 10px 0;
+            animation: slideDown 0.3s ease;
+        }
+        .menu-item:hover .dropdown-content { display: block; }
+        .dropdown-content li a { display: block; padding: 10px 20px; color: var(--text-dark); font-size: 14px; font-weight: 400; text-shadow: none; }
+        .dropdown-content li a:hover { background-color: var(--bg-light-blue); color: var(--primary-color); padding-left: 25px; }
+        @keyframes slideDown { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* ICONS & SEARCH */
+        .nav-icons { display: flex; align-items: center; gap: 15px; color: #fff; margin-left: 10px; cursor: pointer; transition: 0.3s; }
+        .search-trigger:hover { transform: scale(1.1); color: var(--accent-yellow); }
+
+        /* HAMBURGER MENU */
+        .hamburger-btn { display: none; flex-direction: column; gap: 6px; background: none; border: none; cursor: pointer; padding: 10px; }
+        .hamburger-btn span { width: 25px; height: 3px; background: #fff; border-radius: 2px; transition: 0.3s; }
+        @media (max-width: 992px) { 
+            .menu-list { display: none; } 
+            .hamburger-btn { display: flex; } 
+            .nav-icons { display: none; } /* Search di mobile pindah ke dropdown */
+        }
+
+        /* MOBILE DROPDOWN */
+        .mobile-nav-dropdown { 
+            display: none; position: fixed; top: 80px; left: 0; width: 100%; background: #ffffff; 
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1); flex-direction: column; z-index: 999; 
+            animation: slideDown 0.3s ease;
+        }
         .mobile-nav-dropdown.active { display: flex; }
-        .mobile-menu-item { padding: 15px 20px; border-bottom: 1px solid #f0f0f0; font-weight: 600; color: var(--text-dark); }
+        .mobile-menu-item { padding: 15px 20px; border-bottom: 1px solid #eee; font-weight: 600; color: var(--text-dark); }
 
         /* ========================================= */
-        /* --- 3. HERO SECTION --- */
+        /* --- 3. PAGE CONTENT (GALERI) --- */
         /* ========================================= */
         .page-header {
-            padding: 160px 20px 80px; text-align: center; color: #fff;
+            padding: 160px 20px 100px; text-align: center; color: #fff;
             background: linear-gradient(135deg, rgba(0, 111, 176, 0.9), rgba(0, 80, 130, 0.8)), url('https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=1600&q=80');
             background-size: cover; background-position: center; background-attachment: fixed;
         }
         .page-title { font-size: 42px; font-weight: 800; margin: 0; text-shadow: 0 5px 15px rgba(0,0,0,0.2); }
-        .breadcrumb { margin-bottom: 15px; opacity: 0.8; font-size: 14px; }
+        .breadcrumb { margin-bottom: 15px; opacity: 0.9; font-size: 14px; }
 
-        /* ========================================= */
-        /* --- 4. FILTER KATEGORI (CARD VIEW) --- */
-        /* ========================================= */
+        /* FILTER CARDS */
         .category-wrapper {
-            display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
             gap: 20px; max-width: 1000px; margin: -50px auto 50px; padding: 0 20px; position: relative; z-index: 10;
         }
         .cat-card {
             background: #ffffff; border-radius: 16px; padding: 20px 10px; text-align: center; cursor: pointer;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.08); border: 2px solid transparent; transition: 0.3s;
-            display: flex; flex-direction: column; align-items: center; gap: 10px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08); border: 2px solid transparent; 
+            display: flex; flex-direction: column; align-items: center; gap: 10px; transition: 0.3s;
         }
         .cat-card:hover { transform: translateY(-5px); box-shadow: 0 15px 40px rgba(0, 111, 176, 0.15); }
         .cat-card.active { border-color: var(--primary-color); background-color: #f0f9ff; }
-        
         .cat-icon-svg { width: 32px; height: 32px; color: var(--text-gray); transition: 0.3s; }
         .cat-card.active .cat-icon-svg { color: var(--primary-color); transform: scale(1.1); }
         .cat-title { font-size: 14px; font-weight: 600; color: var(--text-gray); }
         .cat-card.active .cat-title { color: var(--primary-color); font-weight: 700; }
 
-        /* ========================================= */
-        /* --- 5. GALLERY GRID --- */
-        /* ========================================= */
+        /* GALLERY GRID */
         .gallery-section { max-width: 1200px; margin: 0 auto; padding: 0 20px 100px; }
         .gallery-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 30px; }
         
         .gallery-item {
             background: #fff; border-radius: 16px; overflow: hidden; box-shadow: 0 5px 15px rgba(0,0,0,0.05);
-            transition: 0.3s; display: flex; flex-direction: column; animation: fadeIn 0.6s ease;
+            display: flex; flex-direction: column; animation: fadeIn 0.6s ease; transition: 0.3s;
         }
         .gallery-item:hover { transform: translateY(-5px); box-shadow: 0 15px 30px rgba(0,0,0,0.1); }
         .gallery-item.hidden { display: none; }
         
-        /* Media Image Wrapper */
         .media-wrapper { position: relative; aspect-ratio: 4/3; overflow: hidden; cursor: pointer; }
         .media-wrapper img { width: 100%; height: 100%; object-fit: cover; transition: 0.5s; }
         .gallery-item:hover .media-wrapper img { transform: scale(1.05); }
         
-        /* Overlay Icon */
-        .overlay {
-            position: absolute; inset: 0; background: rgba(0,0,0,0.3); opacity: 0;
-            display: flex; align-items: center; justify-content: center; transition: 0.3s;
-        }
-        .gallery-item:hover .overlay { opacity: 1; }
-        .icon-box {
-            width: 50px; height: 50px; background: rgba(255,255,255,0.95); border-radius: 50%;
-            display: flex; align-items: center; justify-content: center; color: var(--primary-color); font-size: 24px;
-            transform: scale(0.8); transition: 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-        }
-        .gallery-item:hover .icon-box { transform: scale(1); }
-
-        /* Badge */
         .media-badge {
             position: absolute; top: 15px; right: 15px; padding: 5px 12px; border-radius: 20px;
-            font-size: 11px; font-weight: 700; color: #fff; text-transform: uppercase; background: rgba(0,0,0,0.6); backdrop-filter: blur(4px);
+            font-size: 10px; font-weight: 800; color: #fff; text-transform: uppercase; 
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2); letter-spacing: 0.5px;
         }
+        /* Badge Colors */
         .badge-video { background: rgba(220, 53, 69, 0.9); }
         .badge-infografis { background: rgba(25, 135, 84, 0.9); }
         .badge-foto { background: rgba(0, 111, 176, 0.9); }
+        .badge-news { background: rgba(33, 37, 41, 0.9); }
 
-        /* Info */
+        .overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.3); opacity: 0; display: flex; align-items: center; justify-content: center; transition: 0.3s; }
+        .gallery-item:hover .overlay { opacity: 1; }
+        .icon-box { width: 50px; height: 50px; background: rgba(255,255,255,0.95); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--primary-color); font-size: 24px; }
+
         .item-info { padding: 20px; flex: 1; display: flex; flex-direction: column; }
         .item-date { font-size: 12px; color: var(--text-gray); margin-bottom: 8px; display: flex; align-items: center; gap: 6px; }
         .item-title { font-size: 16px; font-weight: 700; margin: 0; line-height: 1.4; color: var(--text-dark); }
-
+        
         @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
+        /* FOOTER */
+        footer { background: var(--primary-color); color: #fff; padding: 30px 20px; text-align: center; font-size: 14px; margin-top: auto; }
+
         /* ========================================= */
-        /* --- 6. LIGHTBOX --- */
+        /* --- 4. SEARCH OVERLAY (DARI INDEX.HTML) --- */
         /* ========================================= */
+        .search-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(255, 255, 255, 0.98); z-index: 2000;
+            display: flex; justify-content: center; align-items: center;
+            opacity: 0; visibility: hidden; transition: all 0.3s ease;
+        }
+        .search-overlay.active { opacity: 1; visibility: visible; }
+        .search-content { width: 100%; max-width: 600px; padding: 20px; text-align: center; position: relative; }
+        .close-search {
+            position: absolute; top: -50px; right: 0; font-size: 40px; border: none; background: none; 
+            color: var(--text-dark); cursor: pointer; transition: 0.3s;
+        }
+        .close-search:hover { color: var(--accent-red); transform: rotate(90deg); }
+        #searchInput {
+            width: 100%; padding: 20px; font-size: 24px; border: none; border-bottom: 2px solid #ddd;
+            background: transparent; outline: none; text-align: center; color: var(--primary-color); font-weight: 700;
+        }
+        .search-results { margin-top: 30px; text-align: left; max-height: 300px; overflow-y: auto; }
+        .search-item { display: block; padding: 15px; border-bottom: 1px solid #eee; transition: 0.2s; }
+        .search-item:hover { background: #f9f9f9; padding-left: 20px; color: var(--primary-color); }
+
+        /* LIGHTBOX */
         .lightbox { position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 10000; display: flex; align-items: center; justify-content: center; opacity: 0; visibility: hidden; transition: 0.3s; }
         .lightbox.active { opacity: 1; visibility: visible; }
-        .lightbox-content { position: relative; max-width: 90vw; max-height: 80vh; text-align: center; }
+        .lightbox-content { max-width: 90vw; text-align: center; position: relative; }
         .lightbox-media { max-width: 100%; max-height: 80vh; border-radius: 8px; }
         .lightbox-iframe { width: 80vw; height: 45vw; max-width: 1000px; max-height: 560px; border: none; background: #000; }
-        .close-lightbox { position: absolute; top: -50px; right: 0; color: #fff; font-size: 30px; cursor: pointer; transition: 0.3s; }
-        .close-lightbox:hover { color: var(--accent-yellow); transform: rotate(90deg); }
+        .close-lightbox { position: absolute; top: -50px; right: 0; color: #fff; font-size: 30px; cursor: pointer; }
         #lightboxCaption { color: #fff; margin-top: 15px; font-weight: 500; font-size: 16px; }
-
-        /* --- FOOTER --- */
-        footer { background: var(--primary-color); color: #fff; padding: 30px 20px; text-align: center; font-size: 14px; margin-top: auto; }
     </style>
 </head>
 <body>
-
-    <div id="pageLoader" class="page-loader">
-        <div class="loader-spinner"></div>
-        <div class="loader-text">MEMUAT GALERI...</div>
-    </div>
 
     <header id="mainHeader">
         <div class="header-content">
             <div class="brand-area" onclick="window.location.href='index.html'">
                 <img src="balmonsmd1.png" alt="Logo" class="brand-logo-img">
-                <div class="brand-text">BALMON SAMARINDA <span>Kominfo RI</span></div>
+                <div class="brand-text">BALMON SAMARINDA <span>DITJEN SDPPI - KOMINFO</span></div>
             </div>
             
             <nav class="nav-menu">
-                <div class="menu-list">
-                    <a href="index.html" class="menu-item">Beranda</a>
-                    <a href="#" class="menu-item">Profil</a>
-                    <a href="#" class="menu-item">Layanan</a>
-                    <a href="galeri.html" class="menu-item" style="color:var(--accent-yellow);">Galeri</a>
-                    <a href="#" class="menu-item">Kontak</a>
+                <ul class="menu-list">
+                    <li><a href="index.html" class="menu-item">Beranda</a></li>
+                    <li class="menu-item">
+                        Profil <i class="bi bi-chevron-down" style="font-size:10px; margin-left:5px;"></i>
+                        <ul class="dropdown-content">
+                            <li><a href="#">Tentang Kami</a></li>
+                            <li><a href="#">Visi Misi</a></li>
+                            <li><a href="#">Struktur Organisasi</a></li>
+                        </ul>
+                    </li>
+                    <li class="menu-item">
+                        Layanan <i class="bi bi-chevron-down" style="font-size:10px; margin-left:5px;"></i>
+                        <ul class="dropdown-content">
+                            <li><a href="#">Izin Frekuensi</a></li>
+                            <li><a href="#">Sertifikasi Operator</a></li>
+                            <li><a href="#">Pengaduan</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="galeri.html" class="menu-item" style="color:var(--accent-yellow);">Publikasi</a></li>
+                    <li><a href="#kontak" class="menu-item">Kontak</a></li>
+                </ul>
+                
+                <div class="nav-icons">
+                    <div class="search-trigger" onclick="openSearch()">
+                        <i class="bi bi-search" style="font-size: 18px;"></i>
+                    </div>
                 </div>
+
                 <button class="hamburger-btn" onclick="toggleMobileMenu()">
                     <span></span><span></span><span></span>
                 </button>
@@ -200,8 +280,10 @@
 
     <div id="mobileMenu" class="mobile-nav-dropdown">
         <a href="index.html" class="mobile-menu-item">Beranda</a>
-        <a href="galeri.html" class="mobile-menu-item">Galeri Publikasi</a>
-        <a href="#" class="mobile-menu-item">Kontak Kami</a>
+        <a href="#" class="mobile-menu-item">Profil</a>
+        <a href="#" class="mobile-menu-item">Layanan</a>
+        <a href="galeri.html" class="mobile-menu-item">Publikasi</a>
+        <a href="#kontak" class="mobile-menu-item">Kontak</a>
     </div>
 
     <section class="page-header">
@@ -213,6 +295,13 @@
     </section>
 
     <div class="category-wrapper">
+        <div class="cat-card" onclick="filterGallery('news', this)">
+            <svg class="cat-icon-svg" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z" />
+            </svg>
+            <span class="cat-title">News</span>
+        </div>
+
         <div class="cat-card active" onclick="filterGallery('all', this)">
             <svg class="cat-icon-svg" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
                 <rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect>
@@ -246,7 +335,8 @@
     <div class="gallery-section">
         <div class="gallery-grid" id="galleryContainer">
             <div style="grid-column: 1/-1; text-align: center; padding: 40px; color: #888;">
-                Sedang memuat data dari server...
+                <div class="spinner-border text-primary" role="status"></div>
+                <p>Memuat Data...</p>
             </div>
         </div>
     </div>
@@ -256,7 +346,16 @@
             <span class="close-lightbox" onclick="closeLightbox(event)">&times;</span>
             <img id="lightboxImg" class="lightbox-media" src="" style="display: none;">
             <iframe id="lightboxVideo" class="lightbox-iframe" src="" allowfullscreen style="display: none;"></iframe>
-            <div id="lightboxCaption" class="lightbox-caption"></div>
+            <div id="lightboxCaption"></div>
+        </div>
+    </div>
+
+    <div id="searchOverlay" class="search-overlay">
+        <div class="search-content">
+            <button class="close-search" onclick="closeSearch()">&times;</button>
+            <h2 style="color:var(--primary-color); margin-bottom:20px;">Pencarian</h2>
+            <input type="text" id="searchInput" placeholder="Ketik kata kunci (misal: Izin, Maritim)..." onkeyup="performSearch()">
+            <div id="searchResults" class="search-results"></div>
         </div>
     </div>
 
@@ -265,36 +364,70 @@
     </footer>
 
     <script>
-        // 1. Loader & Header Scroll
-        window.addEventListener('load', () => {
-            const loader = document.getElementById('pageLoader');
-            if(loader) loader.classList.add('hidden');
-        });
+        // 1. HEADER SCROLL & MOBILE MENU
         window.addEventListener('scroll', () => {
             const header = document.getElementById('mainHeader');
             if (window.scrollY > 50) header.classList.add('header-minimal');
             else header.classList.remove('header-minimal');
         });
 
-        // 2. Mobile Menu
         function toggleMobileMenu() {
             document.getElementById('mobileMenu').classList.toggle('active');
         }
 
-        // 3. Filter UI Logic
+        // 2. SEARCH FUNCTIONALITY (Dari Index.html)
+        function openSearch() { document.getElementById('searchOverlay').classList.add('active'); document.getElementById('searchInput').focus(); }
+        function closeSearch() { document.getElementById('searchOverlay').classList.remove('active'); }
+        
+        // Data Dummy untuk Pencarian (Bisa diganti Realtime DB)
+        const sitePages = [
+            { title: "Beranda", url: "index.html", desc: "Halaman Utama Balmon Samarinda" },
+            { title: "Galeri Publikasi", url: "galeri.html", desc: "Dokumentasi Foto, Video, dan Infografis" },
+            { title: "Layanan Izin", url: "#", desc: "Informasi Perizinan Frekuensi Radio" },
+            { title: "Kontak Kami", url: "#", desc: "Alamat dan Kontak Balmon" }
+        ];
+
+        function performSearch() {
+            const input = document.getElementById('searchInput').value.toLowerCase();
+            const resultContainer = document.getElementById('searchResults');
+            resultContainer.innerHTML = '';
+
+            if (input.length < 2) return;
+
+            const results = sitePages.filter(page => 
+                page.title.toLowerCase().includes(input) || 
+                page.desc.toLowerCase().includes(input)
+            );
+
+            if (results.length > 0) {
+                results.forEach(page => {
+                    const item = document.createElement('a');
+                    item.href = page.url;
+                    item.className = 'search-item';
+                    item.innerHTML = `<h4>${page.title}</h4><p style="font-size:12px; color:#666;">${page.desc}</p>`;
+                    resultContainer.appendChild(item);
+                });
+            } else {
+                resultContainer.innerHTML = '<div style="text-align:center; color:#888;">Tidak ditemukan.</div>';
+            }
+        }
+
+        // Close Search on ESC
+        document.addEventListener('keydown', function(event) {
+            if (event.key === "Escape") closeSearch();
+        });
+
+        // 3. FILTER LOGIC
         window.filterGallery = function(category, btnElement) {
-            // Update Active Button
             document.querySelectorAll('.cat-card').forEach(c => c.classList.remove('active'));
             if(btnElement) btnElement.classList.add('active');
 
-            // Filter Logic
             const items = document.querySelectorAll('.gallery-item');
             items.forEach(item => {
                 if (category === 'all' || item.dataset.category === category) {
                     item.classList.remove('hidden');
-                    // Reset Animation
                     item.style.animation = 'none';
-                    item.offsetHeight; /* trigger reflow */
+                    item.offsetHeight; 
                     item.style.animation = 'fadeIn 0.6s ease';
                 } else {
                     item.classList.add('hidden');
@@ -302,29 +435,32 @@
             });
         };
 
-        // 4. Lightbox Logic
+        // 4. LIGHTBOX LOGIC
         const lightbox = document.getElementById('lightbox');
         const lbImg = document.getElementById('lightboxImg');
         const lbVid = document.getElementById('lightboxVideo');
         const lbCap = document.getElementById('lightboxCaption');
 
+        function getEmbedUrl(url) {
+            if (!url) return "";
+            if (url.includes("youtu.be/")) return `https://www.youtube.com/embed/${url.split("youtu.be/")[1].split("?")[0]}?autoplay=1`;
+            if (url.includes("v=")) return `https://www.youtube.com/embed/${url.split("v=")[1].split("&")[0]}?autoplay=1`;
+            return url;
+        }
+
         window.openLightbox = function(element, type) {
-            // Element adalah .media-wrapper, kita perlu title dari sibling
             const parentItem = element.closest('.gallery-item');
-            const title = parentItem.querySelector('.item-title').innerText;
-            lbCap.innerText = title;
+            lbCap.innerText = parentItem.querySelector('.item-title').innerText;
             lightbox.classList.add('active');
 
             if (type === 'image') {
-                const imgTag = element.querySelector('img');
-                lbImg.src = imgTag.src;
+                lbImg.src = element.querySelector('img').src;
                 lbImg.style.display = 'block';
                 lbVid.style.display = 'none';
                 lbVid.src = "";
             } else if (type === 'video') {
-                // Ambil data-video-src dari parent
-                const videoUrl = parentItem.dataset.videoSrc;
-                lbVid.src = videoUrl;
+                const rawVideoUrl = parentItem.dataset.videoSrc;
+                lbVid.src = getEmbedUrl(rawVideoUrl);
                 lbVid.style.display = 'block';
                 lbImg.style.display = 'none';
             }
@@ -333,7 +469,7 @@
         window.closeLightbox = function(e) {
             if (e.target.id === 'lightbox' || e.target.classList.contains('close-lightbox')) {
                 lightbox.classList.remove('active');
-                lbVid.src = ""; // Stop video
+                lbVid.src = ""; 
             }
         };
     </script>
@@ -341,74 +477,61 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
-        // Import config dari security.js agar konsisten
-        import { firebaseConfig } from "./security.js"; 
+        
+        const firebaseConfig = {
+            apiKey: "AIzaSyDUeIg9Zn_xndPXtChO8KufXFp6EMtqBJ0",
+            authDomain: "admin-pelayanan-balmon.firebaseapp.com",
+            databaseURL: "https://admin-pelayanan-balmon-default-rtdb.firebaseio.com",
+            projectId: "admin-pelayanan-balmon",
+            appId: "1:1071557110255:web:bff7087da1feacccb7ee1a"
+        };
 
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
-
         const container = document.getElementById('galleryContainer');
         const galeriRef = ref(db, 'galeri');
 
         onValue(galeriRef, (snapshot) => {
             if (!snapshot.exists()) {
-                container.innerHTML = `<div style="grid-column: 1/-1; text-align: center; padding: 50px;">Belum ada konten galeri. Silakan input dari Admin.</div>`;
+                container.innerHTML = `<div style="text-align:center; grid-column:1/-1;">Belum ada data.</div>`;
                 return;
             }
 
-            container.innerHTML = ""; // Bersihkan loader/konten lama
-            
-            // Convert object to array
+            container.innerHTML = "";
             const data = snapshot.val();
-            let items = Object.keys(data).map(key => data[key]);
-            
-            // Sort Descending (Terbaru di atas)
-            items.sort((a, b) => b.timestamp - a.timestamp);
+            let items = Object.values(data).sort((a, b) => b.timestamp - a.timestamp);
 
             items.forEach(item => {
-                // Format Tanggal
                 const dateObj = new Date(item.date);
                 const dateStr = dateObj.toLocaleDateString('id-ID', {day:'numeric', month:'short', year:'numeric'});
                 
-                // Tentukan Icon & Tipe untuk Lightbox
                 const isVideo = item.category === 'video';
                 const typeParam = isVideo ? "'video'" : "'image'";
-                const iconClass = isVideo ? 'bi-play-circle-fill' : 'bi-arrows-angle-expand';
                 
-                // HTML Template
+                let iconClass = 'bi-zoom-in';
+                if(isVideo) iconClass = 'bi-play-circle-fill';
+                if(item.category === 'news') iconClass = 'bi-file-text';
+
                 const html = `
                     <div class="gallery-item" data-category="${item.category}" data-video-src="${item.videoUrl}">
                         <div class="media-wrapper" onclick="openLightbox(this, ${typeParam})">
                             <img src="${item.imageUrl}" alt="${item.title}" loading="lazy">
-                            <div class="overlay">
-                                <div class="icon-box">
-                                    <i class="bi ${iconClass}"></i>
-                                </div>
-                            </div>
                             <div class="media-badge badge-${item.category}">
                                 ${item.category.toUpperCase()}
                             </div>
+                            <div class="overlay">
+                                <div class="icon-box"><i class="bi ${iconClass}"></i></div>
+                            </div>
                         </div>
                         <div class="item-info">
-                            <div class="item-date"><i class="bi bi-calendar-event"></i> ${dateStr}</div>
+                            <div class="item-date"><i class="bi bi-calendar-check"></i> ${dateStr}</div>
                             <h3 class="item-title">${item.title}</h3>
                         </div>
                     </div>
                 `;
                 container.insertAdjacentHTML('beforeend', html);
             });
-
-            // Re-apply filter (Agar jika user sedang pilih "Foto", item baru terfilter otomatis)
-            const activeBtn = document.querySelector('.cat-card.active');
-            if(activeBtn) {
-                const clickAttr = activeBtn.getAttribute('onclick');
-                const catMatch = clickAttr.match(/'([^']+)'/);
-                if(catMatch && window.filterGallery) {
-                    window.filterGallery(catMatch[1], activeBtn);
-                }
-            }
         });
     </script>
-
 </body>
 </html>

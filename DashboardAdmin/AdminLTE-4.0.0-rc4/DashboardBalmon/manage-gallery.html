@@ -104,7 +104,7 @@
                                 <option value="foto">Foto Kegiatan</option>
                                 <option value="video">Video</option>
                                 <option value="infografis">Infografis</option>
-                            </select>
+                                <option value="news">News</option> </select>
                         </div>
 
                         <div class="mb-3">
@@ -175,7 +175,6 @@
 
   <script type="module">
     import { initAdminPage } from "./security.js";
-    // TAMBAHKAN 'update' PADA IMPORT
     import { ref, push, onValue, remove, update } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
     import { signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
@@ -223,7 +222,6 @@
 
             if (editId) {
                 // --- MODE UPDATE ---
-                // Kita tidak mengubah timestamp saat update agar urutan tidak berubah drastis
                 delete newData.timestamp; 
                 
                 update(ref(db, `galeri/${editId}`), newData)
@@ -258,9 +256,8 @@
             }
 
             const data = snapshot.val();
-            // Convert object to array
             const items = Object.keys(data).map(k => ({id: k, ...data[k]}));
-            galleryData = items; // Simpan ke global untuk fungsi edit
+            galleryData = items; 
             
             // Sort: Terbaru di atas
             items.sort((a,b) => b.timestamp - a.timestamp);
@@ -269,11 +266,12 @@
             items.forEach((item, index) => {
                 const dateStr = new Date(item.date).toLocaleDateString('id-ID');
                 
-                // Badge Kategori
+                // Badge Kategori (UPDATE LOGIKA WARNA NEWS)
                 let badgeClass = 'bg-secondary';
                 if(item.category === 'foto') badgeClass = 'bg-primary';
                 if(item.category === 'video') badgeClass = 'bg-danger';
                 if(item.category === 'infografis') badgeClass = 'bg-success';
+                if(item.category === 'news') badgeClass = 'bg-info text-dark'; // Biru muda untuk News
 
                 tbody.innerHTML += `
                     <tr>
@@ -304,7 +302,6 @@
             const item = galleryData.find(i => i.id === id);
             if (!item) return;
 
-            // Isi Form
             document.getElementById('inpId').value = item.id;
             document.getElementById('inpTitle').value = item.title;
             document.getElementById('inpDesc').value = item.description || "";
@@ -313,10 +310,8 @@
             document.getElementById('inpImage').value = item.imageUrl;
             document.getElementById('inpVideo').value = item.videoUrl || "";
 
-            // Cek Video Field
             checkCategory();
 
-            // Ubah Tampilan Tombol
             document.getElementById('form-title').innerHTML = `<i class="bi bi-pencil-square me-2"></i> Edit Galeri`;
             const btnSubmit = document.getElementById('btnSubmit');
             btnSubmit.innerHTML = `<i class="bi bi-check-circle me-1"></i> Update Data`;
@@ -324,19 +319,15 @@
             btnSubmit.classList.add('btn-success');
             
             document.getElementById('btnCancel').style.display = 'block';
-
-            // Scroll ke atas (ke form)
             window.scrollTo({ top: 0, behavior: 'smooth' });
         };
 
         // 4. FUNGSI BATAL EDIT
         window.batalEdit = () => {
             document.getElementById('galleryForm').reset();
-            document.getElementById('inpId').value = ""; // Kosongkan ID
-            
-            checkCategory(); // Reset field video
+            document.getElementById('inpId').value = ""; 
+            checkCategory(); 
 
-            // Kembalikan Tampilan Tombol
             document.getElementById('form-title').innerHTML = `<i class="bi bi-plus-circle me-2"></i> Tambah Galeri`;
             const btnSubmit = document.getElementById('btnSubmit');
             btnSubmit.innerHTML = `<i class="bi bi-save me-1"></i> Simpan Konten`;
@@ -359,11 +350,7 @@
                 if (result.isConfirmed) {
                     remove(ref(db, `galeri/${key}`));
                     Swal.fire('Terhapus!', 'Konten berhasil dihapus.', 'success');
-                    
-                    // Jika sedang edit item yang dihapus, batalkan edit
-                    if(document.getElementById('inpId').value === key) {
-                        window.batalEdit();
-                    }
+                    if(document.getElementById('inpId').value === key) window.batalEdit();
                 }
             });
         }
