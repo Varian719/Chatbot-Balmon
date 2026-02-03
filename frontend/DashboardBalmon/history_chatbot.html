@@ -1,0 +1,247 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <title>Admin Balmon | Riwayat Chat AI</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/source-sans-3@5.0.12/index.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.min.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/admin-lte@4.0.0-beta2/dist/css/adminlte.min.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" />
+  
+  <style>
+      .table-responsive { max-height: 600px; overflow-y: auto; }
+      thead th { position: sticky; top: 0; background: #fff; z-index: 1; border-top: none; }
+      
+      /* Styling Bubble Chat di Tabel */
+      .chat-bubble {
+          padding: 8px 12px;
+          border-radius: 8px;
+          font-size: 0.9rem;
+          margin-bottom: 5px;
+          display: block;
+      }
+      .user-msg { background-color: #e3f2fd; color: #004085; border-left: 3px solid #007bff; }
+      .bot-msg { background-color: #f8f9fa; color: #383d41; border-left: 3px solid #28a745; }
+  </style>
+</head>
+
+<body class="layout-fixed sidebar-expand-lg bg-body-tertiary">
+
+  <div class="app-wrapper">
+
+    <nav class="app-header navbar navbar-expand bg-body shadow-sm">
+      <div class="container-fluid">
+        <ul class="navbar-nav">
+          <li class="nav-item"><a class="nav-link" data-lte-toggle="sidebar" href="#"><i class="bi bi-list"></i></a></li>
+          <li class="nav-item"><span class="nav-link fw-bold text-primary">MANAJEMEN CHAT AI</span></li>
+        </ul>
+        <ul class="navbar-nav ms-auto">
+            <li class="nav-item d-none d-md-block me-3">
+                <span class="nav-link text-muted" id="user-display">Checking...</span>
+            </li>
+            <li class="nav-item">
+                <button id="btnSystemLogout" class="btn btn-danger btn-sm shadow-sm">
+                    <i class="bi bi-power"></i> Keluar
+                </button>
+            </li>
+        </ul>
+      </div>
+    </nav>
+
+    <aside class="app-sidebar bg-body-secondary shadow" data-bs-theme="dark">
+      <div class="sidebar-brand">
+        <a href="admin-balmon.html" class="brand-link text-center">
+          <span class="brand-text fw-bold">BALMON SAMARINDA</span>
+        </a>
+      </div>
+      <div class="sidebar-wrapper">
+        <nav class="mt-2">
+          <ul class="nav sidebar-menu flex-column">
+            <li class="nav-item">
+                <a href="admin-balmon.html" class="nav-link">
+                    <i class="nav-icon bi bi-speedometer"></i><p>Dashboard</p>
+                </a>
+            </li>
+           
+            <li class="nav-item">
+                <a href="dokumen.html" class="nav-link">
+                    <i class="nav-icon bi bi-folder-fill"></i><p>Arsip Digital</p>
+                </a>
+            </li>
+            <li class="nav-item">
+              <a href="history_chatbot.html" class="nav-link active">
+                  <i class="nav-icon bi bi-chat-dots-fill"></i><p>History ChatBot</p>
+              </a>
+          </li>
+            <li class="nav-item">
+                <a href="gform_management.html" class="nav-link">
+                    <i class="nav-icon bi bi-ui-checks"></i><p>Manajemen GForm</p>
+                </a>
+            </li>
+            <li class="nav-item"><a href="manage-gallery.html" class="nav-link"><i class="nav-icon bi bi-image-fill"></i><p>Manajemen Publikasi</p></a></li>
+            <li class="nav-item">
+                <a href="../../../frontend/index.html" target="_blank" class="nav-link">
+                    <i class="nav-icon bi bi-globe"></i><p>Lihat Website</p>
+                </a>
+            </li>
+          </ul>
+        </nav>
+      </div>
+    </aside>
+
+    <main class="app-main">
+      <div class="app-content-header">
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col-sm-6"><h3 class="mb-0">Log Percakapan</h3></div>
+            <div class="col-sm-6 text-end"><small class="text-muted" id="date-display"></small></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="app-content">
+        <div class="container-fluid">
+          
+          <div class="row">
+            <div class="col-12">
+              <div class="card shadow-sm border-0">
+                <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                    <h5 class="card-title fw-bold text-dark">
+                        <i class="bi bi-database-fill-gear text-primary me-2"></i> Data Riwayat Interaksi
+                    </h5>
+                    <span class="badge bg-secondary" id="total-chat">0 Percakapan</span>
+                </div>
+                <div class="card-body p-0">
+                  <div class="table-responsive">
+                    <table class="table table-striped table-hover align-middle mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th class="ps-4" width="5%">No</th>
+                                <th width="15%">Waktu</th>
+                                <th width="40%">Pertanyaan User</th>
+                                <th width="40%">Jawaban AI</th>
+                            </tr>
+                        </thead>
+                        <tbody id="chat-table-body">
+                            <tr>
+                                <td colspan="4" class="text-center py-5 text-muted">
+                                    <div class="spinner-border text-primary mb-2" role="status"></div>
+                                    <p>Sedang mengambil data dari server...</p>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </main>
+
+    <footer class="app-footer text-center">
+      <strong>Copyright &copy; 2025 <a href="#" class="text-decoration-none">Balmon Samarinda</a>.</strong> All rights reserved.
+    </footer>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/admin-lte@4.0.0-beta2/dist/js/adminlte.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+  <script type="module">
+    // Menggunakan security.js yang sama agar Auth tetap jalan
+    import { initAdminPage } from "./security.js";
+    import { ref, onValue } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+    import { signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+
+    // Set Tanggal Header
+    const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+    document.getElementById('date-display').innerText = new Date().toLocaleDateString('id-ID', options);
+
+    // --- LOGIKA HALAMAN ---
+    initAdminPage((user, db, auth) => {
+        console.log("Chat History Ready. User:", user.email);
+        const userDisplay = document.getElementById('user-display');
+        if(userDisplay) userDisplay.innerText = user.email;
+
+        // 1. Ambil Data dari 'chat_history'
+        const chatRef = ref(db, 'chat_history');
+        
+        onValue(chatRef, (snapshot) => {
+            const tbody = document.getElementById('chat-table-body');
+            const totalBadge = document.getElementById('total-chat');
+            
+            if (!snapshot.exists()) {
+                tbody.innerHTML = `<tr><td colspan="4" class="text-center py-5 text-muted">Belum ada riwayat chat.</td></tr>`;
+                totalBadge.innerText = "0 Percakapan";
+                return;
+            }
+
+            const data = snapshot.val();
+            // Ubah Object ke Array
+            let chatList = Object.keys(data).map(key => ({
+                id: key,
+                ...data[key]
+            }));
+
+            // Urutkan dari yang terbaru (Descending berdasarkan timestamp)
+            // Asumsi timestamp format string 'YYYY-MM-DD HH:mm:ss'
+            chatList.sort((a, b) => {
+                const dateA = new Date(a.timestamp);
+                const dateB = new Date(b.timestamp);
+                return dateB - dateA; // Terbaru di atas
+            });
+
+            // Update Badge Total
+            totalBadge.innerText = `${chatList.length} Percakapan`;
+
+            // Render Tabel
+            let html = '';
+            chatList.forEach((chat, index) => {
+                // Format Waktu agar lebih rapi
+                let timeStr = chat.timestamp || "-";
+                
+                // Truncate jika teks terlalu panjang (opsional)
+                // const userText = chat.user.length > 100 ? chat.user.substring(0, 100) + '...' : chat.user;
+                
+                html += `
+                    <tr>
+                        <td class="ps-4 fw-bold text-secondary">${index + 1}</td>
+                        <td class="small text-muted">
+                            <i class="bi bi-clock"></i> ${timeStr}
+                            <br><small class="text-secondary opacity-50">ID: ${chat.platform || 'Web'}</small>
+                        </td>
+                        <td>
+                            <div class="chat-bubble user-msg">
+                                <i class="bi bi-person-circle me-1"></i> ${chat.user}
+                            </div>
+                        </td>
+                        <td>
+                            <div class="chat-bubble bot-msg">
+                                <i class="bi bi-robot me-1"></i> ${chat.assistant}
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            });
+
+            tbody.innerHTML = html;
+        });
+
+        // 2. Fungsi Logout
+        document.getElementById('btnSystemLogout').addEventListener('click', () => {
+             Swal.fire({
+                title: 'Keluar?', text: "Sesi akan diakhiri.", icon: 'warning',
+                showCancelButton: true, confirmButtonText: 'Ya, Keluar'
+            }).then((result) => {
+                if (result.isConfirmed) signOut(auth).then(() => window.location.replace("login_balmon.html"));
+            });
+        });
+    });
+  </script>
+</body>
+</html>

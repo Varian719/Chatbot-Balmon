@@ -428,11 +428,8 @@
                 <a href="maritim.html" onclick="closeMobileMenu()">Izin Maritim</a>
                 <a href="fm.html" onclick="closeMobileMenu()">Izin Penyiaran FM</a>
             </div>
-            <div class="mobile-menu-item has-submenu" onclick="toggleMobileSubmenu(this)">Publikasi</div>
-            <div class="mobile-submenu" id="submenu-publikasi">
-                <a href="galeri.html" onclick="closeMobileMenu()">Galeri Foto</a>
-                <a href="#" onclick="closeMobileMenu()">Galeri Video</a>
-            </div>
+            <div class="mobile-menu-item" onclick="handleMobileMenuItem(this, 'publikasi')">Publikasi</div>
+            <div class="mobile-menu-item" onclick="handleMobileMenuItem(this, 'download')">Download</div>
             <div class="mobile-menu-item" onclick="handleMobileMenuItem(this, 'kontak')">Kontak</div>
         </div>
     </header>
@@ -440,7 +437,7 @@
     <div class="page-header">
         <div class="container">
             <div class="breadcrumb">
-                <a href="index.html">Beranda</a> / Layanan / Izin Penyiaran FM
+                <a href="index.html">Beranda</a> / Izin Penyiaran FM
             </div>
             <h1 class="page-title">Izin Stasiun Radio FM</h1>
         </div>
@@ -546,6 +543,16 @@
                     <a href="https://e-penyiaran.kominfo.go.id" target="_blank" class="btn-download btn-primary">
                         <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
                         Akses e-Penyiaran
+                    </a>
+                </div>
+                <div style="margin-top: 25px;">
+                    <a href="arsip.html?search=FM" class="btn-download">
+                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                            <polyline points="7 10 12 15 17 10"></polyline>
+                            <line x1="12" y1="15" x2="12" y2="3"></line>
+                        </svg>
+                        Panduan Penyiaran FM
                     </a>
                 </div>
             </div>
@@ -689,6 +696,8 @@
         function handleMobileMenuItem(element, action) {
             if (action === 'beranda') window.location.href = 'index.html';
             else if (action === 'kontak') window.location.href = 'kontak.html';
+            else if (action === 'publikasi') window.location.href = 'galeri.html';
+            else if (action === 'download') window.location.href = 'arsip.html';
             closeMobileMenu();
         }
         document.addEventListener('click', function(event) {

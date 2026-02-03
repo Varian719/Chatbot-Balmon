@@ -564,8 +564,7 @@
             <div id="searchResults" class="search-results"></div>
         </div>
     </div>
-
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 
     <script>
@@ -581,7 +580,7 @@
         if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
 
-        // --- 2. VARIABEL ARSIP ---
+        // --- 2. VARIABEL GLOBAL ---
         const container = document.getElementById('docListContainer');
         const searchInput = document.getElementById('searchInput');
         const totalDocsLabel = document.getElementById('totalDocs');
@@ -611,10 +610,15 @@
             
             // Update UI
             totalDocsLabel.innerText = allDocs.length;
-            renderDocs(allDocs);
+            
+            // Jalankan render awal (Cek apakah ada query di URL dulu)
+            const urlParams = new URLSearchParams(window.location.search);
+            if (!urlParams.get('search')) {
+                renderDocs(allDocs);
+            }
         });
 
-        // --- 4. RENDER DATA ARSIP ---
+        // --- 4. FUNGSI RENDER DATA ARSIP ---
         function renderDocs(dataList) {
             container.innerHTML = '';
 
@@ -628,7 +632,6 @@
             }
 
             let htmlBuffer = '';
-
             dataList.forEach(d => {
                 let typeClass = 'doc';
                 let iconClass = 'bi-file-earmark-text-fill text-primary';
@@ -649,7 +652,7 @@
                 htmlBuffer += `
                 <div class="doc-item ${typeClass}">
                     <div style="display:flex; align-items:center; gap:15px; flex:1;">
-                        <i class="bi ${iconClass}" style="font-size:32px; color:var(--primary-color);"></i>
+                        <i class="bi ${iconClass}" style="font-size:32px;"></i>
                         <div class="doc-info">
                             <h3>${d.judul}</h3>
                             <span><i class="bi bi-calendar3"></i> ${dateStr}</span>
@@ -660,62 +663,68 @@
                             <i class="bi bi-cloud-arrow-down-fill"></i> Unduh
                         </a>
                     </div>
-                </div>
-                `;
+                </div>`;
             });
-
             container.innerHTML = htmlBuffer;
         }
 
-        // --- 5. PENCARIAN ARSIP (LOCAL FILTER) ---
+        // --- 5. LOGIKA PENCARIAN (MULTI-KATA / AND LOGIC) ---
         searchInput.addEventListener('keyup', (e) => {
             const keyword = e.target.value.toLowerCase();
-            const filtered = allDocs.filter(doc => doc.judul.toLowerCase().includes(keyword));
+            const keywords = keyword.split(' ').filter(word => word.trim() !== '');
+
+            const filtered = allDocs.filter(doc => {
+                const judul = doc.judul.toLowerCase();
+                // Harus mengandung SEMUA kata yang diketik
+                return keywords.every(key => judul.includes(key));
+            });
+            
             renderDocs(filtered);
         });
 
-        // --- UTILS (Loader & Scroll) ---
+        // --- 6. HANDLE AUTO-SEARCH DARI URL PARAMETER ---
+        window.addEventListener('DOMContentLoaded', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            let searchQuery = urlParams.get('search');
+
+            if (searchQuery) {
+                searchQuery = decodeURIComponent(searchQuery.replace(/\+/g, ' '));
+                if (searchInput) {
+                    searchInput.value = searchQuery;
+                    // Beri jeda 1 detik agar data Firebase ter-load dulu
+                    setTimeout(() => {
+                        searchInput.dispatchEvent(new Event('keyup'));
+                        searchInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    }, 1000); 
+                }
+            }
+        });
+
+        // --- 7. UTILS: LOADER ---
         window.addEventListener('load', () => {
             const loader = document.getElementById('pageLoader');
             if(loader) loader.classList.add('hidden');
         });
-        
-        window.addEventListener('pageshow', (event) => {
-            const loader = document.getElementById('pageLoader');
-            if (event.persisted && loader) loader.classList.add('hidden');
-        });
 
-        let lastScrollY = window.scrollY;
-        let ticking = false;
-        function updateScroll() {
-            const scrollY = window.scrollY;
+        // --- 8. UTILS: STICKY HEADER ---
+        window.addEventListener('scroll', () => {
             const header = document.getElementById('mainHeader');
-            
-            if (scrollY > 50) {
+            if (window.scrollY > 50) {
                 header.classList.add('header-minimal');
             } else {
                 header.classList.remove('header-minimal');
             }
-            ticking = false;
-        }
-        window.addEventListener('scroll', function() {
-            if (!ticking) {
-                window.requestAnimationFrame(updateScroll);
-                ticking = true;
-            }
         }, { passive: true });
 
-        // CHAT TOGGLE (Logic Existing)
+        // --- 9. UTILS: CHAT TOGGLE ---
         function animateChatToggle() {
             const btn = document.getElementById("toggleBtn");
             const box = document.getElementById("chatBox");
-            if (btn.classList.contains("active")) {
-                btn.classList.remove("active"); box.classList.remove("active"); return;
-            }
-            btn.classList.add("active"); box.classList.add("active");
+            btn.classList.toggle("active");
+            box.classList.toggle("active");
         }
 
-        // MOBILE MENU LOGIC
+        // --- 10. UTILS: MOBILE MENU ---
         function toggleMobileMenu() {
             document.getElementById('hamburgerBtn').classList.toggle('active');
             document.getElementById('mobileNavDropdown').classList.toggle('active');
@@ -723,107 +732,54 @@
         function closeMobileMenu() {
             document.getElementById('hamburgerBtn').classList.remove('active');
             document.getElementById('mobileNavDropdown').classList.remove('active');
-            document.querySelectorAll('.mobile-submenu').forEach(s => s.classList.remove('active'));
-            document.querySelectorAll('.mobile-menu-item.has-submenu').forEach(i => i.classList.remove('active'));
         }
         function toggleMobileSubmenu(element) {
             const submenu = element.nextElementSibling;
             element.classList.toggle('active');
-            if (submenu && submenu.classList.contains('mobile-submenu')) {
-                submenu.classList.toggle('active');
-            }
+            if (submenu) submenu.classList.toggle('active');
         }
         function handleMobileMenuItem(element, action) {
             if (action === 'beranda') window.location.href = 'index.html';
             else if (action === 'kontak') window.location.href = 'kontak.html';
             closeMobileMenu();
         }
-        document.addEventListener('click', function(event) {
-            const header = document.getElementById('mainHeader');
-            const nav = document.getElementById('mobileNavDropdown');
-            if (!header.contains(event.target) && nav.classList.contains('active')) closeMobileMenu();
-        });
 
-        /* --- GLOBAL WEBSITE SEARCH FUNCTIONALITY --- */
+        // --- 11. GLOBAL WEBSITE SEARCH ---
         const pages = [
             { title: "Beranda", url: "index.html", desc: "Halaman utama Balmon Samarinda" },
-            { title: "Izin Konsesi", url: "konsesi.html", desc: "Layanan perizinan frekuensi untuk perusahaan/konsesi." },
-            { title: "Izin Maritim (Kapal)", url: "maritim.html", desc: "Pengurusan izin stasiun radio kapal dan laut." },
-            { title: "Izin Penyiaran FM", url: "fm.html", desc: "Prosedur perizinan untuk stasiun radio FM/Penyiaran." },
-            { title: "Galeri Kegiatan", url: "galeri.html", desc: "Dokumentasi foto dan video kegiatan Balmon." },
-            { title: "Arsip & Regulasi", url: "arsip.html", desc: "Download dokumen, SOP, dan regulasi terbaru." },
-            { title: "Kontak Kami", url: "kontak.html", desc: "Alamat kantor, email, dan nomor pengaduan." }
+            { title: "Izin Konsesi", url: "konsesi.html", desc: "Layanan perizinan frekuensi untuk perusahaan." },
+            { title: "Izin Maritim", url: "maritim.html", desc: "Pengurusan izin radio kapal." },
+            { title: "Izin Penyiaran FM", url: "fm.html", desc: "Prosedur perizinan radio FM." },
+            { title: "Arsip & Regulasi", url: "arsip.html", desc: "Download dokumen dan SOP." },
+            { title: "Kontak Kami", url: "kontak.html", desc: "Alamat dan kontak Balmon." }
         ];
 
         function openSearch() {
             document.getElementById('searchOverlay').classList.add('active');
             setTimeout(() => document.getElementById('globalSearchInput').focus(), 300);
         }
-
         function closeSearch() {
             document.getElementById('searchOverlay').classList.remove('active');
-            document.getElementById('globalSearchInput').value = '';
-            document.getElementById('searchResults').innerHTML = '';
         }
-
         function performGlobalSearch() {
             const input = document.getElementById('globalSearchInput').value.toLowerCase();
             const resultContainer = document.getElementById('searchResults');
             resultContainer.innerHTML = '';
-
             if (input.length < 2) return;
 
-            const results = pages.filter(page => 
-                page.title.toLowerCase().includes(input) || 
-                page.desc.toLowerCase().includes(input)
-            );
-
-            if (results.length > 0) {
-                results.forEach(page => {
-                    const item = document.createElement('a');
-                    item.href = page.url;
-                    item.className = 'search-item';
-                    item.innerHTML = `
-                        <h4>${page.title}</h4>
-                        <p>${page.desc}</p>
-                    `;
-                    resultContainer.appendChild(item);
-                });
-            } else {
-                resultContainer.innerHTML = '<div style="text-align:center; color:#888;">Tidak ditemukan hasil yang cocok.</div>';
-            }
+            const results = pages.filter(p => p.title.toLowerCase().includes(input) || p.desc.toLowerCase().includes(input));
+            results.forEach(page => {
+                const item = document.createElement('a');
+                item.href = page.url;
+                item.className = 'search-item';
+                item.innerHTML = `<h4>${page.title}</h4><p>${page.desc}</p>`;
+                resultContainer.appendChild(item);
+            });
         }
-        window.addEventListener('DOMContentLoaded', () => {
-            // 1. Ambil parameter dari URL
-            const urlParams = new URLSearchParams(window.location.search);
-            const searchQuery = urlParams.get('search');
 
-            if (searchQuery) {
-                // 2. Gunakan ID 'searchInput' (sesuai dengan id input di body kamu)
-                const sInput = document.getElementById('searchInput'); 
-                
-                if (sInput) {
-                    // 3. Masukkan teks ke dalam input
-                    sInput.value = searchQuery;
-
-                    // 4. Karena data Firebase butuh waktu untuk loading, 
-                    // kita tunggu sebentar sebelum menjalankan filter.
-                    setTimeout(() => {
-                        // Trigger event 'keyup' agar fungsi filter arsip berjalan
-                        const event = new Event('keyup');
-                        sInput.dispatchEvent(event);
-                        
-                        // Opsional: Scroll otomatis ke bagian search agar user tahu sedang terfilter
-                        sInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                    }, 1000); // Tunggu 1 detik agar data Firebase siap
-                }
-            }
-        });
-
-        document.addEventListener('keydown', function(event) {
-            if (event.key === "Escape") closeSearch();
-        });
+        document.addEventListener('keydown', e => { if (e.key === "Escape") closeSearch(); });
     </script>
+    <script src="TTS_Adaptif.js"></script>
     <script src="TTS_Adaptif.js"></script>
 </body>
 </html>
