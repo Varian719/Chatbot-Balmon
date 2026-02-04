@@ -1646,7 +1646,7 @@
                     const title = item.title || item.judul || 'Tanpa Judul';
                     const image = item.imageUrl || item.url || item.gambar || 'https://via.placeholder.com/300x180?text=No+Image';
                     const rawDate = item.date || item.tanggal || new Date();
-                    const desc = item.deskripsi || item.desc || item.content || 'Klik selengkapnya untuk membaca.';
+                    const desc = item.description || item.desc || item.content || 'Klik selengkapnya untuk membaca.';
                     
                     // Format Tanggal
                     const dateStr = new Date(rawDate).toLocaleDateString('id-ID', {
