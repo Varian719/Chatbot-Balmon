@@ -12,18 +12,19 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Albert+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.min.css" />
 
     <style>
         /* ========================================= */
-        /* --- 1. SETUP WARNA & GLOBAL (STANDARD) --- */
+        /* --- 1. SETUP WARNA & GLOBAL --- */
         /* ========================================= */
         :root {
-            --primary-color: #006fb0;   /* Biru Utama */
-            --primary-dark: #005082;    /* Biru Gelap untuk Hover */
-            --secondary-color: #00ace0; /* Cyan/Biru Langit */
-            --accent-yellow: #ecbb1d;   /* Kuning Emas */
-            --accent-red: #de262a;      /* Merah */
-            --bg-light-blue: #f4f9fc;   
+            --primary-color: #006fb0;
+            --primary-dark: #005082;
+            --secondary-color: #00ace0;
+            --accent-yellow: #ecbb1d;
+            --accent-red: #de262a;
+            --bg-light-blue: #f4f9fc;
             --bg-white: #ffffff;
             --text-dark: #1e293b;
             --text-gray: #64748b;
@@ -69,7 +70,7 @@
         @keyframes pulseText { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
 
         /* ========================================= */
-        /* --- 2. HEADER STYLE (TEMPLATE STANDARD) --- */
+        /* --- 2. HEADER STYLE (TEMPLATE GALERI/KONSESI) --- */
         /* ========================================= */
         header {
             background-color: transparent;
@@ -77,69 +78,35 @@
             box-shadow: none;
             height: 80px; position: fixed; top: 0; left: 0; width: 100%; z-index: 1000;
             transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            will-change: transform, height, background-color;
         }
         .header-content { display: flex; align-items: center; justify-content: space-between; height: 100%; }
         
-        /* BRAND AREA */
         .brand-area { 
             display: flex; align-items: center; gap: 12px; transition: all 0.4s ease; cursor: pointer;
-            background-color: rgba(255, 255, 255, 0.1); 
-            backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);         
-            padding: 8px 20px; border-radius: 50px;                        
-            border: 1px solid rgba(255, 255, 255, 0.2); 
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);  
+            background-color: rgba(255, 255, 255, 0.1); backdrop-filter: blur(8px); padding: 8px 20px; border-radius: 50px; border: 1px solid rgba(255, 255, 255, 0.2); 
         }
-        .brand-area:hover {
-            background-color: rgba(255, 255, 255, 0.2); 
-            transform: translateY(-2px);                 
-            box-shadow: 0 8px 20px rgba(0, 111, 176, 0.3); 
-        }
-        .brand-logo-img { 
-            height: 50px; width: auto; 
-            filter: drop-shadow(0 2px 5px rgba(0, 0, 0, 0.5)); 
-            transition: all 0.3s;
-        }
-        .brand-text { 
-            font-size: 18px; font-weight: 800; color: #ffffff; 
-            line-height: 1.2; display: flex; flex-direction: column; 
-            transition: color 0.3s; 
-            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.6); 
-        }
-        .brand-text span { 
-            font-size: 11px; font-weight: 500; color: rgba(255,255,255,0.9); 
-            letter-spacing: 0.5px; transition: color 0.3s; 
-            text-shadow: 0 1px 5px rgba(0, 0, 0, 0.6);
-        }
+        .brand-area:hover { background-color: rgba(255, 255, 255, 0.2); transform: translateY(-2px); }
+        .brand-logo-img { height: 50px; width: auto; filter: drop-shadow(0 2px 5px rgba(0, 0, 0, 0.5)); }
+        .brand-text { font-size: 18px; font-weight: 800; color: #ffffff; line-height: 1.2; display: flex; flex-direction: column; text-shadow: 0 2px 10px rgba(0, 0, 0, 0.6); }
+        .brand-text span { font-size: 11px; font-weight: 500; color: rgba(255,255,255,0.9); }
 
-        /* HEADER HEADER SCROLL */
+        /* Header Minimal */
         header.header-minimal {
-            background-color: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
-            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.08);
-            height: 70px;
+            background-color: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px);
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.08); height: 70px;
         }
         header.header-minimal .brand-text { color: var(--primary-color); text-shadow: none; }
-        header.header-minimal .brand-text span { color: var(--text-gray); text-shadow: none; }
+        header.header-minimal .brand-text span { color: var(--text-gray); }
         header.header-minimal .brand-logo-img { filter: none; }
         header.header-minimal .menu-item { color: var(--text-dark); text-shadow: none; }
         header.header-minimal .menu-item:hover { color: var(--primary-color); }
-        header.header-minimal .brand-area { 
-            background: transparent; box-shadow: none; border: none; padding-left: 0;
-            backdrop-filter: none; -webkit-backdrop-filter: none;
-        }
+        header.header-minimal .brand-area { background: transparent; border: none; box-shadow: none; padding-left: 0; }
         header.header-minimal .hamburger-btn span { background-color: var(--primary-color); }
         header.header-minimal .nav-search-btn { color: var(--primary-color) !important; }
 
-        /* HEADER SOCIALS */
-        .header-socials {
-            display: flex; align-items: center; gap: 15px; margin-left: auto; margin-right: 30px; padding-right: 30px;
-            border-right: 1px solid rgba(255, 255, 255, 0.3); height: 40px;
-        }
-        .social-icon { display: flex; align-items: center; justify-content: center; transition: transform 0.3s ease; }
-        .social-icon svg { width: 20px; height: 20px; fill: #ffffff; transition: all 0.3s ease; opacity: 0.9; }
-        .social-icon:hover { transform: translateY(-2px); }
-        .social-icon:hover svg { opacity: 1; fill: var(--accent-yellow); }
+        .header-socials { display: flex; align-items: center; gap: 15px; margin-left: auto; margin-right: 30px; padding-right: 30px; border-right: 1px solid rgba(255, 255, 255, 0.3); height: 40px; }
+        .social-icon svg { width: 20px; height: 20px; fill: #ffffff; transition: 0.3s; opacity: 0.9; }
+        .social-icon:hover svg { fill: var(--accent-yellow); opacity: 1; }
         
         header.header-minimal .header-socials { border-right-color: #e2e8f0; }
         header.header-minimal .social-icon svg { fill: var(--text-gray); }
@@ -148,79 +115,33 @@
 
         @media (max-width: 992px) { .header-socials { display: none; } }
 
-        /* NAVIGASI */
-        .nav-menu { height: 100%; display: flex; align-items: center; transition: all 0.4s ease; }
+        .nav-menu { height: 100%; display: flex; align-items: center; }
         .menu-list { display: flex; gap: 8px; height: 100%; align-items: center; }
-        .menu-item { 
-            position: relative; height: 100%; display: flex; align-items: center; 
-            padding: 0 12px; font-size: 14px; font-weight: 600; 
-            color: #ffffff; 
-            cursor: pointer; transition: color 0.3s;
-            text-shadow: 0 1px 5px rgba(0, 0, 0, 0.4); 
-        }
-        .menu-item:hover { color: var(--accent-yellow); opacity: 1; }
-        .menu-item::after {
-            content: ''; position: absolute; bottom: 0; left: 0; width: 0%; height: 3px; background: var(--accent-yellow); transition: width 0.3s ease;
-        }
+        .menu-item { position: relative; height: 100%; display: flex; align-items: center; padding: 0 12px; font-size: 14px; font-weight: 600; color: #ffffff; cursor: pointer; text-shadow: 0 1px 5px rgba(0,0,0,0.4); }
+        .menu-item:hover { color: var(--accent-yellow); }
+        .menu-item::after { content: ''; position: absolute; bottom: 0; left: 0; width: 0%; height: 3px; background: var(--accent-yellow); transition: width 0.3s ease; }
         .menu-item:hover::after { width: 100%; }
-        .nav-search-btn { margin-left:10px; border:none; background:transparent; color:#ffffff; cursor:pointer; transition: color 0.3s; }
 
-        /* Dropdown */
-        .dropdown-content { 
-            display: none; position: absolute; top: 100%; left: 0; background-color: #ffffff; min-width: 240px; 
-            box-shadow: 0 15px 30px rgba(0,0,0,0.1); border-radius: 0 0 8px 8px; z-index: 1000; padding: 10px 0; border-top: 3px solid var(--primary-color); animation: slideDown 0.3s ease;
-        }
+        .dropdown-content { display: none; position: absolute; top: 100%; left: 0; background-color: #ffffff; min-width: 240px; box-shadow: 0 15px 30px rgba(0,0,0,0.1); border-radius: 0 0 8px 8px; z-index: 1000; padding: 10px 0; border-top: 3px solid var(--primary-color); animation: slideDown 0.3s ease; }
         .menu-item:hover .dropdown-content { display: block; }
-        .dropdown-content li a { display: block; padding: 10px 20px; color: var(--text-dark); font-weight: 400; font-size: 14px; font-family: 'Albert Sans', sans-serif; text-shadow: none; }
+        .dropdown-content li a { display: block; padding: 10px 20px; color: var(--text-dark); font-weight: 400; font-size: 14px; }
         .dropdown-content li a:hover { background-color: var(--bg-light-blue); color: var(--primary-color); padding-left: 25px; }
         @keyframes slideDown { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* HAMBURGER & MOBILE MENU */
+        /* Mobile Menu */
         .hamburger-btn { display: none; flex-direction: column; gap: 6px; background: none; border: none; cursor: pointer; padding: 8px; z-index: 1001; }
-        .hamburger-btn span { width: 24px; height: 2.5px; background-color: white; border-radius: 2px; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); transform-origin: center; }
+        .hamburger-btn span { width: 24px; height: 2.5px; background-color: white; border-radius: 2px; transition: 0.3s; }
         .hamburger-btn.active span:nth-child(1) { transform: translateY(8.5px) rotate(45deg); }
-        .hamburger-btn.active span:nth-child(2) { opacity: 0; transform: translateX(10px); }
+        .hamburger-btn.active span:nth-child(2) { opacity: 0; }
         .hamburger-btn.active span:nth-child(3) { transform: translateY(-8.5px) rotate(-45deg); }
-        .hamburger-btn.active span { background-color: var(--primary-color) !important; }
 
-        .mobile-nav-dropdown {
-            display: none; position: fixed; top: 80px; left: 0; width: 100%; max-height: calc(100vh - 80px); background-color: #ffffff;
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1); flex-direction: column; overflow-y: auto; z-index: 999; animation: slideDownMobile 0.3s ease;
-        }
+        .mobile-nav-dropdown { display: none; position: fixed; top: 80px; left: 0; width: 100%; max-height: calc(100vh - 80px); background-color: #ffffff; box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1); flex-direction: column; overflow-y: auto; z-index: 999; animation: slideDownMobile 0.3s ease; }
         .mobile-nav-dropdown.active { display: flex; }
         @keyframes slideDownMobile { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
-
-        .mobile-menu-item { font-family: 'Albert Sans', sans-serif; padding: 16px 20px; border-bottom: 1px solid #eee; color: var(--text-dark); font-weight: 600; font-size: 15px; cursor: pointer; transition: all 0.3s ease; display: flex; justify-content: space-between; align-items: center; }
-        .mobile-menu-item:hover { background-color: var(--bg-light-blue); color: var(--primary-color); }
-        .mobile-menu-item.has-submenu::after { content: '▼'; font-size: 12px; transition: transform 0.3s ease; }
-        .mobile-menu-item.has-submenu.active::after { transform: rotate(-180deg); }
+        .mobile-menu-item { padding: 16px 20px; border-bottom: 1px solid #eee; color: var(--text-dark); font-weight: 600; display: flex; justify-content: space-between; cursor: pointer; }
         .mobile-submenu { max-height: 0; overflow: hidden; background-color: #f8f9fa; transition: max-height 0.3s ease; }
         .mobile-submenu.active { max-height: 500px; }
-        .mobile-submenu a { display: block; padding: 12px 40px; color: var(--text-gray); font-size: 14px; font-weight: 500; border-bottom: 1px solid #eee; transition: all 0.2s ease; }
-        .mobile-submenu a:hover { background-color: #ffffff; color: var(--primary-color); padding-left: 48px; }
-
-        /* SEARCH OVERLAY */
-        .search-overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
-            z-index: 99999;
-            display: flex; justify-content: center; align-items: flex-start;
-            padding-top: 100px;
-            opacity: 0; visibility: hidden; transition: all 0.3s ease;
-        }
-        .search-overlay.active { opacity: 1; visibility: visible; }
-        .search-content { width: 100%; max-width: 600px; position: relative; padding: 0 20px; transform: translateY(-20px); transition: 0.4s ease; }
-        .search-overlay.active .search-content { transform: translateY(0); }
-        .close-search { position: absolute; top: -50px; right: 0; font-size: 40px; border: none; background: none; cursor: pointer; color: var(--text-dark); transition: 0.3s; }
-        .close-search:hover { color: var(--accent-red); transform: rotate(90deg); }
-        #globalSearchInput { width: 100%; padding: 20px; font-size: 18px; border: 2px solid #eee; border-radius: 12px; outline: none; transition: 0.3s; font-family: 'Albert Sans', sans-serif; box-shadow: 0 5px 20px rgba(0,0,0,0.05); }
-        #globalSearchInput:focus { border-color: var(--primary-color); box-shadow: 0 5px 20px rgba(0, 111, 176, 0.2); }
-        .search-results { margin-top: 20px; max-height: 60vh; overflow-y: auto; }
-        .search-item { background: #fff; padding: 15px; border-radius: 8px; margin-bottom: 10px; border: 1px solid #eee; transition: 0.2s; cursor: pointer; display: block; text-decoration: none; color: var(--text-dark); }
-        .search-item:hover { background: var(--bg-light-blue); border-color: var(--primary-color); transform: translateX(5px); }
-        .search-item h4 { margin: 0 0 5px 0; color: var(--primary-color); font-size: 16px; }
-        .search-item p { margin: 0; font-size: 13px; color: var(--text-gray); }
+        .mobile-submenu a { display: block; padding: 12px 40px; color: var(--text-gray); border-bottom: 1px solid #eee; }
 
         /* ========================================= */
         /* --- 3. PAGE CONTENT (CUSTOM FOR MARITIM) --- */
@@ -252,7 +173,7 @@
             box-shadow: 0 5px 30px rgba(0,0,0,0.05); border: 1px solid rgba(0,0,0,0.03);
         }
 
-        /* --- TAB SYSTEM STYLE (NEW) --- */
+        /* --- TAB SYSTEM STYLE --- */
         .tab-container { margin-bottom: 30px; border-bottom: 2px solid #e2e8f0; display: flex; gap: 20px; }
         .tab-btn {
             padding: 15px 5px; font-size: 16px; font-weight: 600; color: var(--text-gray); font-family: 'Albert Sans', sans-serif;
@@ -301,7 +222,23 @@
         }
         .btn-download:hover { background: var(--primary-color); color: #fff; transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0, 111, 176, 0.2); }
 
-        /* FOOTER & CHAT WIDGET STYLES (STANDARD) */
+        /* Media Queries */
+        @media (max-width: 900px) {
+            .content-grid { grid-template-columns: 1fr; margin-top: 0; }
+            .sidebar-card { position: relative; top: 0; order: -1; }
+            .page-header { padding-bottom: 40px; }
+        }
+        @media (max-width: 768px) {
+            .hamburger-btn { display: flex; }
+            .menu-list { display: none; }
+            header.header-minimal { background-color: #fff; }
+            .brand-area { background: transparent !important; backdrop-filter: none !important; border: none !important; padding-left: 0 !important; }
+            .brand-logo-img { height: 35px; }
+            .brand-text { font-size: 14px; }
+            .header-socials { display: none; }
+        }
+
+        /* --- FOOTER & CHAT WIDGET STYLES --- */
         footer { background-color: var(--primary-color); color: white; padding-top: 70px; font-size: 14px; }
         .footer-grid { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 40px; padding-bottom: 50px; }
         .footer-col { flex: 1; min-width: 250px; }
@@ -349,22 +286,28 @@
         }
         @keyframes pulseDot { 0% { transform: scale(0.95); opacity: 0.7; } 50% { transform: scale(1.2); opacity: 1; } 100% { transform: scale(0.95); opacity: 0.7; } }
 
-        @media (max-width: 900px) {
-            .content-grid { grid-template-columns: 1fr; margin-top: 0; }
-            .sidebar-card { position: relative; top: 0; order: -1; }
-            .page-header { padding-bottom: 40px; }
+        /* SEARCH OVERLAY */
+        .search-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+            z-index: 99999;
+            display: flex; justify-content: center; align-items: flex-start;
+            padding-top: 100px;
+            opacity: 0; visibility: hidden; transition: all 0.3s ease;
         }
-        
-        @media (max-width: 768px) {
-            .hamburger-btn { display: flex; }
-            .menu-list { display: none; }
-            .nav-menu { display: flex; }
-            .page-header { background-attachment: scroll; }
-            header.header-minimal { background-color: #fff; }
-            .brand-area {
-                background: transparent !important; backdrop-filter: none !important; -webkit-backdrop-filter: none !important; border: none !important; box-shadow: none !important; padding-left: 0 !important;
-            }
-        }
+        .search-overlay.active { opacity: 1; visibility: visible; }
+        .search-content { width: 100%; max-width: 600px; position: relative; padding: 0 20px; transform: translateY(-20px); transition: 0.4s ease; }
+        .search-overlay.active .search-content { transform: translateY(0); }
+        .close-search { position: absolute; top: -50px; right: 0; font-size: 40px; border: none; background: none; cursor: pointer; color: var(--text-dark); transition: 0.3s; }
+        .close-search:hover { color: var(--accent-red); transform: rotate(90deg); }
+        #searchInput { width: 100%; padding: 20px; font-size: 18px; border: 2px solid #eee; border-radius: 12px; outline: none; transition: 0.3s; font-family: 'Albert Sans', sans-serif; box-shadow: 0 5px 20px rgba(0,0,0,0.05); }
+        #searchInput:focus { border-color: var(--primary-color); box-shadow: 0 5px 20px rgba(0, 111, 176, 0.2); }
+        .search-results { margin-top: 20px; max-height: 60vh; overflow-y: auto; }
+        .search-item { background: #fff; padding: 15px; border-radius: 8px; margin-bottom: 10px; border: 1px solid #eee; transition: 0.2s; cursor: pointer; display: block; text-decoration: none; color: var(--text-dark); }
+        .search-item:hover { background: var(--bg-light-blue); border-color: var(--primary-color); transform: translateX(5px); }
+        .search-item h4 { margin: 0 0 5px 0; color: var(--primary-color); font-size: 16px; }
+        .search-item p { margin: 0; font-size: 13px; color: var(--text-gray); }
     </style>
 </head>
 <body>
@@ -383,27 +326,27 @@
                     <span>Kementerian Komunikasi & Digital</span>
                 </div>
             </div>
-            
-            <div class="header-socials">
-                <a href="https://wa.me/6285648283012" target="_blank" class="social-icon wa-icon" aria-label="WhatsApp">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></path></svg>
-                </a>
-                <a href="https://www.instagram.com/balmonsamarinda/" class="social-icon" aria-label="Instagram">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></path></svg>
-                </a>
-                <a href="https://www.facebook.com/profile.php?id=100068963927418" class="social-icon" aria-label="Facebook">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9 8h-3v4h3v12h5v-12h3.642l.358-4h-4v-1.667c0-.955.192-1.333 1.115-1.333h2.885v-5h-3.808c-3.596 0-5.192 1.583-5.192 4.615v3.385z"/></path></svg>
-                </a>
-                <a href="https://youtube.com/@balmonsamarindaa?si=EZUAjSarJaMD-7R9" class="social-icon" aria-label="YouTube">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z"/></path></svg>
-                </a>
-                <a href="https://www.tiktok.com/@balmon.samarinda?lang=en" class="social-icon" aria-label="TikTok">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" stroke="none">
-                        <path d="M12.53.02C13.84 0 15.14.01 16.44 0c.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.65-1.58-1.09-.1-.09-.19-.2-.29-.3v6.52c.02 4.07-3.23 7.49-7.29 7.49-3.93.04-7.3-3.13-7.48-7.05-.07-1.84.58-3.66 1.83-5.01 1.25-1.35 3.03-2.14 4.86-2.16v4.03c-1.11-.02-2.19.46-2.95 1.29a4.106 4.106 0 0 0-1.1 2.89c.04 2.22 1.84 4.02 4.06 4.02 2.22 0 4.02-1.8 4.02-4.02V.02h.22z"/>
-                    </svg>
-                </a>
-            </div>
-            
+
+        <div class="header-socials">
+            <a href="https://wa.me/6285648283012" target="_blank" class="social-icon wa-icon" aria-label="WhatsApp">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg>
+            </a>
+            <a href="https://www.instagram.com/balmonsamarinda/" class="social-icon" aria-label="Instagram">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+            </a>
+            <a href="https://www.facebook.com/profile.php?id=100068963927418" class="social-icon" aria-label="Facebook">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9 8h-3v4h3v12h5v-12h3.642l.358-4h-4v-1.667c0-.955.192-1.333 1.115-1.333h2.885v-5h-3.808c-3.596 0-5.192 1.583-5.192 4.615v3.385z"/></svg>
+            </a>
+            <a href="https://youtube.com/@balmonsamarindaa?si=EZUAjSarJaMD-7R9" class="social-icon" aria-label="YouTube">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z"/></svg>
+            </a>
+            <a href="https://www.tiktok.com/@balmon.samarinda?lang=en" class="social-icon" aria-label="TikTok">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" stroke="none">
+                    <path d="M12.53.02C13.84 0 15.14.01 16.44 0c.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.65-1.58-1.09-.1-.09-.19-.2-.29-.3v6.52c.02 4.07-3.23 7.49-7.29 7.49-3.93.04-7.3-3.13-7.48-7.05-.07-1.84.58-3.66 1.83-5.01 1.25-1.35 3.03-2.14 4.86-2.16v4.03c-1.11-.02-2.19.46-2.95 1.29a4.106 4.106 0 0 0-1.1 2.89c.04 2.22 1.84 4.02 4.06 4.02 2.22 0 4.02-1.8 4.02-4.02V.02h.22z"/>
+                </svg>
+            </a>
+        </div>
+
             <nav class="nav-menu">
                 <ul class="menu-list">
                     <li class="menu-item" onclick="window.location.href='index.html'">Beranda</li>
@@ -418,31 +361,26 @@
                     <li class="menu-item" onclick="window.location.href='arsip.html'">Download</li>
                     <li class="menu-item" onclick="window.location.href='kontak.html'">Kontak</li>
                 </ul>
-                <button class="nav-search-btn" onclick="openSearch()">
+                <button class="nav-search-btn" onclick="openSearch()" style="margin-left:10px; border:none; background:transparent; color:white; cursor:pointer;">
                     <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
                 </button>
             </nav>
             
             <button class="hamburger-btn" id="hamburgerBtn" onclick="toggleMobileMenu()">
-                <span></span>
-                <span></span>
-                <span></span>
+                <span></span><span></span><span></span>
             </button>
         </div>
 
         <div class="mobile-nav-dropdown" id="mobileNavDropdown">
             <div class="mobile-menu-item" onclick="handleMobileMenuItem(this, 'beranda')">Beranda</div>
             <div class="mobile-menu-item has-submenu" onclick="toggleMobileSubmenu(this)">Layanan</div>
-            <div class="mobile-submenu" id="submenu-layanan">
+            <div class="mobile-submenu">
                 <a href="konsesi.html" onclick="closeMobileMenu()">Izin Konsesi</a>
                 <a href="maritim.html" onclick="closeMobileMenu()">Izin Maritim</a>
                 <a href="fm.html" onclick="closeMobileMenu()">Izin Penyiaran FM</a>
             </div>
-            <div class="mobile-menu-item has-submenu" onclick="toggleMobileSubmenu(this)">Publikasi</div>
-            <div class="mobile-submenu" id="submenu-publikasi">
-                <a href="galeri.html" onclick="closeMobileMenu()">Galeri Foto</a>
-                <a href="#" onclick="closeMobileMenu()">Galeri Video</a>
-            </div>
+            <div class="mobile-menu-item" onclick="handleMobileMenuItem(this, 'publikasi')">Publikasi</div>
+            <div class="mobile-menu-item" onclick="handleMobileMenuItem(this, 'download')">Download</div>
             <div class="mobile-menu-item" onclick="handleMobileMenuItem(this, 'kontak')">Kontak</div>
         </div>
     </header>
@@ -636,7 +574,7 @@
         <div class="search-content">
             <button class="close-search" onclick="closeSearch()">×</button>
             <h2 style="color:var(--primary-color); margin-bottom:20px;">Pencarian Website</h2>
-            <input type="text" id="globalSearchInput" placeholder="Ketik kata kunci (misal: Izin, Maritim)..." onkeyup="performGlobalSearch()">
+            <input type="text" id="searchInput" placeholder="Ketik kata kunci (misal: Izin, Maritim)..." onkeyup="performSearch()">
             <div id="searchResults" class="search-results"></div>
         </div>
     </div>
@@ -647,6 +585,7 @@
             const loader = document.getElementById('pageLoader');
             if(loader) loader.classList.add('hidden');
         });
+
         window.addEventListener('pageshow', (event) => {
             const loader = document.getElementById('pageLoader');
             if (event.persisted && loader) loader.classList.add('hidden');
@@ -724,6 +663,8 @@
         function handleMobileMenuItem(element, action) {
             if (action === 'beranda') window.location.href = 'index.html';
             else if (action === 'kontak') window.location.href = 'kontak.html';
+            else if (action === 'publikasi') window.location.href = 'galeri.html';
+            else if (action === 'download') window.location.href = 'arsip.html';
             closeMobileMenu();
         }
         document.addEventListener('click', function(event) {
@@ -732,7 +673,7 @@
             if (!header.contains(event.target) && nav.classList.contains('active')) closeMobileMenu();
         });
 
-        // --- 2. TAB LOGIC (FROM OLD CONTENT) ---
+        // --- 2. TAB LOGIC ---
         function openTab(evt, tabName) {
             var i, tabcontent, tablinks;
             tabcontent = document.getElementsByClassName("tab-content");
@@ -765,17 +706,17 @@
 
         function openSearch() {
             document.getElementById('searchOverlay').classList.add('active');
-            setTimeout(() => document.getElementById('globalSearchInput').focus(), 300);
+            setTimeout(() => document.getElementById('searchInput').focus(), 300);
         }
 
         function closeSearch() {
             document.getElementById('searchOverlay').classList.remove('active');
-            document.getElementById('globalSearchInput').value = '';
+            document.getElementById('searchInput').value = '';
             document.getElementById('searchResults').innerHTML = '';
         }
 
-        function performGlobalSearch() {
-            const input = document.getElementById('globalSearchInput').value.toLowerCase();
+        function performSearch() {
+            const input = document.getElementById('searchInput').value.toLowerCase();
             const resultContainer = document.getElementById('searchResults');
             resultContainer.innerHTML = '';
 

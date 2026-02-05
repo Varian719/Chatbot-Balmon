@@ -717,5 +717,6 @@
             wave.style.display = 'none';
         }
     });
+    
 
 })();
