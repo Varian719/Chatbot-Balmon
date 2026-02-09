@@ -385,11 +385,11 @@
                     // Coba logout bersih via Firebase
                     const auth = getAuth(); 
                     await signOut(auth);
-                    window.location.replace("login_balmon.html");
+                    window.location.replace("index.html");
                 } catch (error) {
                     console.error("Force Logout:", error);
                     // Jika Firebase error, TETAP PAKSA keluar
-                    window.location.replace("login_balmon.html");
+                    window.location.replace("index.html");
                 }
             }
         });
