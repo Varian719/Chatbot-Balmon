@@ -655,64 +655,117 @@
         }
         .news-progress.active { transition: width 5s linear; width: 100%; }
         .news-progress.reset { transition: none; width: 0%; }
-
-        /* RESPONSIVE NEWS (Mobile) - UPDATED TO FIX JUMPING HEIGHT */
+        /* RESPONSIVE NEWS (Mobile) - FIXED HEIGHT & WIDE BUTTONS */
         @media (max-width: 900px) {
             .news-container {
-                flex-direction: column-reverse;
-                /* GANTI height: auto menjadi fixed height agar tidak loncat */
-                height: 600px;
-                min-height: 0;
+                display: flex;
+                flex-direction: column-reverse; /* Gambar di atas, Teks di bawah */
+                
+                /* TINGGI FIX AGAR TIDAK LONCAT-LONCAT */
+                height: 720px !important; 
+                min-height: 720px !important;
+                
                 border-radius: 16px;
-            }
-
-            .news-image-col {
-                flex: 0 0 250px; /* Gambar fix 250px */
-                width: 100%; 
-                height: 250px; 
-            }
-
-            .news-text-col {
-                padding: 30px 24px;
-                flex: 1; /* Mengisi sisa ruang (600 - 250 = 350px) */
-                height: auto; 
-                min-height: 0;
-                justify-content: flex-start; /* Konten mulai dari atas */
-            }
-
-            .news-text-col::before {
-                right: -80px; top: -80px;
-            }
-
-            /* Batasi jumlah baris Judul dan Deskripsi agar tidak meluap */
-            .news-title-anim { 
-                font-size: 22px; 
-                display: -webkit-box;
-                -webkit-line-clamp: 2; /* Maksimal 2 baris */
-                -webkit-box-orient: vertical;
                 overflow: hidden;
+            }
+
+            /* --- 1. PENGATURAN GAMBAR (Atas) --- */
+            .news-image-col {
+                flex: 0 0 250px; /* Tinggi gambar fix 250px */
+                height: 250px !important;
+                width: 100%; 
+            }
+
+            /* --- 2. PENGATURAN TEKS (Bawah) --- */
+            .news-text-col {
+                flex: 1; /* Mengisi sisa ruang (720px - 250px) */
+                width: 100%;
+                padding: 25px 20px;
+                display: flex;
+                flex-direction: column;
+                justify-content: flex-start;
+                position: relative;
+            }
+
+            /* Hiasan background dipindah agar tidak menutupi teks */
+            .news-text-col::before {
+                right: -50px; top: -50px; width: 200px; height: 200px;
+            }
+
+            .news-header-row {
+                margin-bottom: 15px;
+            }
+
+            /* --- 3. JUDUL & DESKRIPSI (Tinggi Tetap) --- */
+            /* Kita kunci tingginya agar layout stabil */
+            .news-title-anim { 
+                font-size: 20px; 
+                line-height: 1.3;
                 margin-bottom: 10px;
-                min-height: 56px; /* Reservasi tempat untuk 2 baris */
+                
+                /* Reservasi tempat untuk persis 2 baris */
+                height: 52px; 
+                overflow: hidden;
+                display: -webkit-box;
+                -webkit-line-clamp: 2;
+                -webkit-box-orient: vertical;
             }
 
             .news-desc-anim {
                 font-size: 14px;
-                -webkit-line-clamp: 3; /* Maksimal 3 baris */
-                -webkit-box-orient: vertical;
+                line-height: 1.6;
+                margin-bottom: auto; /* Dorong footer ke paling bawah */
+                
+                /* Reservasi tempat untuk persis 3 baris */
+                height: 68px; 
                 overflow: hidden;
-                margin-bottom: 20px;
-                min-height: 72px; /* Reservasi tempat untuk 3 baris */
+                display: -webkit-box;
+                -webkit-line-clamp: 3;
+                -webkit-box-orient: vertical;
+                opacity: 0.8;
+            }
+
+            /* --- 4. TOMBOL-TOMBOL (Wide & Easy Click) --- */
+            .news-footer-row {
+                flex-direction: column; 
+                gap: 15px;
+                width: 100%;
+                margin-top: 20px;
+                padding-top: 20px;
+                border-top: 1px solid #f0f0f0;
+            }
+
+            /* Tombol Baca Selengkapnya: Full Width */
+            .news-btn-readmore { 
+                width: 100%; 
+                justify-content: center; 
+                padding: 14px; /* Area sentuh lebih besar */
+                font-size: 15px;
+            }
+
+            /* Grup Tombol Navigasi */
+            .news-nav-group { 
+                width: 100%; 
+                display: flex;
+                gap: 15px;
+                justify-content: space-between;
+            }
+
+            /* Tombol Panah Kiri/Kanan: Kotak Lebar */
+            .news-btn-nav {
+                flex: 1; /* Membagi lebar 50:50 */
+                width: auto; 
+                height: 50px; /* Lebih tinggi agar mudah diklik */
+                border-radius: 12px; /* Tidak bulat penuh, tapi rounded box */
+                background-color: #f8f9fa; /* Warna dasar abu muda */
+                font-size: 18px;
             }
             
-            .news-footer-row {
-                flex-direction: column-reverse; 
-                gap: 15px;
-                align-items: flex-start;
-                margin-top: auto; /* Dorong ke bawah */
-                padding-top: 15px;
+            /* Efek Active saat ditekan di HP */
+            .news-btn-nav:active {
+                background-color: var(--primary-color);
+                color: white;
             }
-            .news-btn-readmore { width: 100%; justify-content: center; }
-            .news-nav-group { width: 100%; justify-content: space-between; }
         }
 
         /* --- YELLOW CTA FIX --- */
@@ -931,6 +984,43 @@
                 bottom: 100px !important; /* PASTIKAN DI ATAS TOMBOL */
                 top: auto !important;
                 border-radius: 16px !important;
+            }
+        }
+
+        /* --- NEWS SECTION DESKTOP (FIXED) --- */
+        @media (min-width: 901px) {
+            .news-container {
+                /* Container utama yang memotong gambar berlebih */
+                overflow: hidden; 
+                background-color: #ffffff;
+                padding: 0; /* Pastikan tidak ada padding/jarak di dalam container */
+                border-radius: 24px; /* Lengkungan ujung luar container */
+            }
+
+            .news-image-col {
+                /* Flex grow agar mengisi sisa ruang kosong sampai mentok kanan */
+                flex: 1; 
+                height: 100%;
+                
+                /* --- LOGIKA BORDER RADIUS AGAR FULL KANAN --- */
+                /* Kiri-Atas: 40px (Melengkung estetik) */
+                /* Kanan-Atas: 0px (Lurus, nempel ke ujung kanan) */
+                /* Kanan-Bawah: 0px (Lurus, nempel ke ujung kanan) */
+                /* Kiri-Bawah: 40px (Melengkung estetik) */
+                border-radius: 24px 0 0 24px; 
+
+                overflow: hidden;
+                position: relative;
+                z-index: 2;
+                
+                /* Bayangan halus di sisi kiri lengkungan */
+                box-shadow: -10px 0 30px rgba(0, 0, 0, 0.05);
+            }
+
+            .news-slide-img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
             }
         }
         /* FIX UNTUK MENGHILANGKAN KOTAK LOGO DI HP */
@@ -1808,7 +1898,7 @@
     <div id="searchOverlay" class="search-overlay">
         <div class="search-content">
             <button class="close-search" onclick="closeSearch()">&times;</button>
-            <h2 style="color:var(--primary-color); margin-bottom:20px;">Pencarian</h2>
+            <h2 style="color:var(--primary-color); margin-bottom:20px; ">Pencarian</h2>
             <input type="text" id="searchInput" placeholder="Ketik kata kunci (misal: Izin, Maritim)..." onkeyup="performSearch()">
             <div id="searchResults" class="search-results"></div>
         </div>

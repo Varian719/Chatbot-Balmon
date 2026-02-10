@@ -345,6 +345,23 @@
         .search-item:hover { background: var(--bg-light-blue); border-color: var(--primary-color); transform: translateX(5px); }
         .search-item h4 { margin: 0 0 5px 0; color: var(--primary-color); font-size: 16px; }
         .search-item p { margin: 0; font-size: 13px; color: var(--text-gray); }
+
+        .breadcrumb {
+        color: powderblue; /* Ganti dengan kode warna yang kamu mau (misal: hitam pudar) */
+        font-size: 15px; /* Opsional: Jika ingin mengatur ukuran font */
+        }
+
+        /* Mengubah warna link (Beranda) */
+        .breadcrumb a {
+            color: white; /* Ganti dengan warna link yang kamu mau (misal: biru) */
+            text-decoration: none; /* Opsional: Menghilangkan garis bawah pada link */
+        }
+
+        /* Opsional: Warna saat link disorot mouse */
+        .breadcrumb a:hover {
+            color: white; 
+            text-decoration: x-underline;
+        }
     </style>
 </head>
 <body>
@@ -430,7 +447,7 @@
     <div class="page-header">
         <div class="container">
             <div class="breadcrumb">
-                <a href="index.html">Beranda</a> / Izin Maritim
+                <a href="index.html">Beranda</a> /<span style="color: var(--accent-yellow);"> Izin Maritim</span>
             </div>
             <h1 class="page-title">Izin Maritim & Pantai</h1>
         </div>
