@@ -14,10 +14,7 @@
   <style>
       .small-box { transition: transform 0.3s; }
       .small-box:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.15) !important; }
-      
-      /* Tinggi Grafik */
       #demography-chart, #monthly-visitor-chart { min-height: 350px !important; width: 100%; }
-      
       .table-responsive { max-height: 400px; overflow-y: auto; }
       thead th { position: sticky; top: 0; background: #fff; z-index: 1; border-top: none; }
   </style>
@@ -57,10 +54,10 @@
           <ul class="nav sidebar-menu flex-column">
             <li class="nav-item"><a href="admin-balmon.html" class="nav-link active"><i class="nav-icon bi bi-speedometer"></i><p>Dashboard</p></a></li>
             <li class="nav-item"><a href="dokumen.html" class="nav-link"><i class="nav-icon bi bi-folder-fill"></i><p>Arsip Digital</p></a></li>
-            <li class="nav-item"><a href="history_chatbot.html" class="nav-link"><i class="nav-icon bi bi-chat-fill"></i><p>History Chatbot</p></a></li>
+            <li class="nav-item"><a href="datachat.html" class="nav-link"><i class="nav-icon bi bi-chat-fill"></i><p>History Chatbot</p></a></li>
             <li class="nav-item"><a href="gform_management.html" class="nav-link"><i class="nav-icon bi bi-ui-checks"></i><p>Manajemen GForm</p></a></li>
             <li class="nav-item"><a href="manage-gallery.html" class="nav-link"><i class="nav-icon bi bi-image-fill"></i><p>Manajemen Publikasi</p></a></li>
-            <li class="nav-item"><a href="../../../frontend/index.html" target="_blank" class="nav-link"><i class="nav-icon bi bi-globe"></i><p>Lihat Website</p></a></li>
+            <li class="nav-item"><a href="../index.html" target="_blank" class="nav-link"><i class="nav-icon bi bi-globe"></i><p>Lihat Website</p></a></li>
           </ul>
         </nav>
       </div>
@@ -78,7 +75,6 @@
 
       <div class="app-content">
         <div class="container-fluid">
-          
           <div class="row">
             <div class="col-lg-3 col-6">
               <div class="small-box text-bg-success shadow-sm">
@@ -106,9 +102,7 @@
                 <div class="card-header bg-white d-flex justify-content-between align-items-center">
                     <h5 class="card-title fw-bold text-dark"><i class="bi bi-graph-up-arrow text-success me-2"></i> Tren Pengunjung Bulanan</h5>
                 </div>
-                <div class="card-body">
-                  <div id="monthly-visitor-chart"></div>
-                </div>
+                <div class="card-body"><div id="monthly-visitor-chart"></div></div>
               </div>
             </div>
           </div>
@@ -119,12 +113,9 @@
                 <div class="card-header bg-white">
                     <h5 class="card-title fw-bold text-dark"><i class="bi bi-pie-chart-fill text-primary me-2"></i> Demografi Umur</h5>
                 </div>
-                <div class="card-body">
-                  <div id="demography-chart"></div> 
-                </div>
+                <div class="card-body"><div id="demography-chart"></div></div>
               </div>
             </div>
-
             <div class="col-lg-6">
                 <div class="card shadow-sm border-0 h-100">
                     <div class="card-header bg-white">
@@ -134,16 +125,10 @@
                         <div class="table-responsive">
                             <table class="table table-striped table-hover align-middle mb-0">
                                 <thead class="table-light">
-                                    <tr>
-                                        <th class="ps-4">No</th>
-                                        <th>Umur</th>
-                                        <th>Kategori</th>
-                                        <th>Perangkat</th>
-                                        <th>Waktu</th>
-                                    </tr>
+                                    <tr><th class="ps-4">No</th><th>Umur</th><th>Kategori</th><th>Perangkat</th><th>Waktu</th></tr>
                                 </thead>
                                 <tbody id="table-demografi-body">
-                                    <tr><td colspan="5" class="text-center py-4 text-muted">Memuat data tabel...</td></tr>
+                                    <tr><td colspan="5" class="text-center py-4 text-muted">Memuat data...</td></tr>
                                 </tbody>
                             </table>
                         </div>
@@ -151,7 +136,6 @@
                 </div>
             </div>
           </div>
-
         </div>
       </div>
     </main>
@@ -167,56 +151,98 @@
   <script src="https://cdn.jsdelivr.net/npm/apexcharts@3.45.1/dist/apexcharts.min.js"></script>
 
   <script type="module">
+    // Import yang dibutuhkan
     import { initAdminPage } from "./security.js";
+    import { getAuth, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
     import { ref, onValue } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
-    import { signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
-    // Tanggal
+    // --- FITUR LOGOUT (DIPISAH DARI DASHBOARD AGAR SELALU JALAN) ---
+    // Kode ini akan jalan duluan sebelum menunggu database, jadi tombol pasti bisa diklik.
+    const setupLogout = () => {
+        const btnLogout = document.getElementById('btnSystemLogout');
+        if (!btnLogout) return;
+
+        btnLogout.addEventListener('click', async (e) => {
+            e.preventDefault();
+            
+            // Konfirmasi (Tanpa Cancel)
+            const result = await Swal.fire({
+                title: 'Keluar?', 
+                text: "Sesi akan diakhiri.", 
+                icon: 'warning',
+                showCancelButton: false, 
+                confirmButtonColor: '#d33',   
+                confirmButtonText: 'Ya, Keluar'
+            });
+
+            if (result.isConfirmed) {
+                Swal.fire({ 
+                    title: 'Keluar...', 
+                    timer: 3000,
+                    didOpen: () => Swal.showLoading() 
+                });
+
+                try {
+                    // Coba logout bersih via Firebase
+                    const auth = getAuth(); 
+                    await signOut(auth);
+                    window.location.replace("login_balmon.html");
+                } catch (error) {
+                    console.error("Force Logout:", error);
+                    // Jika Firebase error, TETAP PAKSA keluar
+                    window.location.replace("login_balmon.html");
+                }
+            }
+        });
+    };
+    // Jalankan setup logout segera
+    setupLogout();
+
+
+    // --- FUNGSI HELPER (Agar tidak error jika elemen hilang) ---
+    const safeSetText = (id, value) => {
+        const el = document.getElementById(id);
+        if (el) el.innerText = value;
+    };
+
+    // Tanggal Hari Ini
     const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-    document.getElementById('date-display').innerText = new Date().toLocaleDateString('id-ID', options);
+    safeSetText('date-display', new Date().toLocaleDateString('id-ID', options));
 
-    // --- 1. SETUP CHART DEMOGRAFI ---
-    let demoChart;
+    // --- SETUP CHART KOSONG ---
+    let demoChart, monthlyChart;
+    
+    // Chart Demografi
     const demoOptions = {
         series: [{ name: 'Responden', data: [0,0,0,0,0] }],
-        chart: { type: 'bar', height: 350, fontFamily: 'Source Sans 3, sans-serif', toolbar: { show: false } },
+        chart: { type: 'bar', height: 350, toolbar: { show: false } },
         colors: ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6'],
         plotOptions: { bar: { borderRadius: 4, distributed: true } },
         dataLabels: { enabled: false },
-        legend: { show: false },
         xaxis: { categories: ['Remaja', 'Dewasa Muda', 'Dewasa', 'Paruh Baya', 'Lansia'] }
     };
+    const elDemo = document.querySelector("#demography-chart");
+    if(elDemo) { demoChart = new ApexCharts(elDemo, demoOptions); demoChart.render(); }
 
-    // --- 2. SETUP CHART BULANAN (BARU) ---
-    let monthlyChart;
+    // Chart Bulanan
     const monthlyOptions = {
-        series: [{ name: "Total Kunjungan", data: [] }],
-        chart: { type: 'area', height: 350, fontFamily: 'Source Sans 3, sans-serif', zoom: { enabled: false } },
-        dataLabels: { enabled: false },
-        stroke: { curve: 'smooth', width: 2 },
-        fill: { type: 'gradient', gradient: { shadeIntensity: 1, opacityFrom: 0.7, opacityTo: 0.9, stops: [0, 90, 100] } },
-        xaxis: { categories: [] }, // Akan diisi otomatis
+        series: [{ name: "Kunjungan", data: [] }],
+        chart: { type: 'area', height: 350, zoom: { enabled: false } },
+        xaxis: { categories: [] },
         colors: ['#0d6efd']
     };
+    const elMonthly = document.querySelector("#monthly-visitor-chart");
+    if(elMonthly) { monthlyChart = new ApexCharts(elMonthly, monthlyOptions); monthlyChart.render(); }
 
-    // Render Grafik Kosong Saat Load
-    document.addEventListener('DOMContentLoaded', () => {
-        const elDemo = document.querySelector("#demography-chart");
-        if(elDemo) { demoChart = new ApexCharts(elDemo, demoOptions); demoChart.render(); }
 
-        const elMonthly = document.querySelector("#monthly-visitor-chart");
-        if(elMonthly) { monthlyChart = new ApexCharts(elMonthly, monthlyOptions); monthlyChart.render(); }
-    });
+    // --- LOGIKA DASHBOARD ---
+    // Menggunakan initAdminPage untuk cek login dan ambil data
+    initAdminPage((user, db) => {
+        console.log("User valid:", user.email);
+        safeSetText('user-display', user.email);
 
-    // --- LOGIKA UTAMA ---
-    initAdminPage((user, db, auth) => {
-        console.log("Dashboard Ready. User:", user.email);
-        const userDisplay = document.getElementById('user-display');
-        if(userDisplay) userDisplay.innerText = user.email;
-
-        // A. DATA DEMOGRAFI & TABEL
-        const demoRef = ref(db, 'statistik_web/demografi_umur');
-        onValue(demoRef, (snapshot) => {
+        // 1. Data Demografi
+        onValue(ref(db, 'statistik_web/demografi_umur'), (snapshot) => {
             let counts = { 'Remaja': 0, 'Dewasa Muda': 0, 'Dewasa': 0, 'Paruh Baya': 0, 'Lansia': 0 };
             let totalResponden = 0;
             let tableRows = []; 
@@ -230,64 +256,43 @@
                     else if (k.includes("Dewasa Muda")) counts['Dewasa Muda']++;
                     else if (k.includes("Dewasa")) counts['Dewasa']++;
                     else if (k.includes("Paruh Baya")) counts['Paruh Baya']++;
-                    else if (k.includes("Lanjut Usia") || k.includes("Lansia")) counts['Lansia']++;
+                    else if (k.includes("Lansia")) counts['Lansia']++;
                     tableRows.push(item);
                 });
             }
-            document.getElementById('visitor-count').innerText = totalResponden;
+            safeSetText('visitor-count', totalResponden);
             if (demoChart) demoChart.updateSeries([{ data: Object.values(counts) }]);
             renderTable(tableRows);
         });
 
-        // B. DATA KUNJUNGAN BULANAN (FITUR BARU)
-        const monthlyRef = ref(db, 'statistik_web/kunjungan_bulanan');
-        onValue(monthlyRef, (snapshot) => {
+        // 2. Data Kunjungan Bulanan
+        onValue(ref(db, 'statistik_web/kunjungan_bulanan'), (snapshot) => {
             let categories = [];
             let seriesData = [];
-
             if(snapshot.exists()) {
                 const data = snapshot.val();
-                // Urutkan key (Format YYYY-MM bisa diurutkan string biasa)
-                const sortedKeys = Object.keys(data).sort();
-                
-                sortedKeys.forEach(key => {
-                    // Ubah 2024-01 jadi Jan 2024 (Opsional)
+                Object.keys(data).sort().forEach(key => {
                     const dateObj = new Date(key + "-01");
-                    const label = dateObj.toLocaleDateString('id-ID', { month: 'short', year: 'numeric' });
-                    
-                    categories.push(label);
+                    categories.push(dateObj.toLocaleDateString('id-ID', { month: 'short', year: 'numeric' }));
                     seriesData.push(data[key]);
                 });
             }
-
             if(monthlyChart) {
                 monthlyChart.updateOptions({ xaxis: { categories: categories } });
                 monthlyChart.updateSeries([{ data: seriesData }]);
             }
         });
 
-        // C. TOTAL TRAFFIC
-        onValue(ref(db, 'statistik_web/total_kunjungan'), (snap) => {
-            const el = document.getElementById('stat-traffic-count');
-            if(el) el.innerText = (snap.val() || 0).toLocaleString('id-ID');
-        });
-
-        // D. DATA LAINNYA
-        onValue(ref(db, 'layanan_publik'), (s) => document.getElementById('stat-layanan-count').innerText = s.exists() ? Object.keys(s.val()).length : 0);
-        onValue(ref(db, 'arsip_drive'), (s) => document.getElementById('stat-dokumen-count').innerText = s.exists() ? Object.keys(s.val()).length : 0);
-        onValue(ref(db, 'pengaduan_masyarakat'), (s) => document.getElementById('stat-aduan-count').innerText = s.exists() ? Object.keys(s.val()).length : 0);
-
-        // LOGOUT
-        document.getElementById('btnSystemLogout').addEventListener('click', () => {
-             Swal.fire({
-                title: 'Keluar?', text: "Sesi akan diakhiri.", icon: 'warning',
-                showCancelButton: true, confirmButtonText: 'Ya, Keluar'
-            }).then((result) => {
-                if (result.isConfirmed) signOut(auth).then(() => window.location.replace("login_balmon.html"));
-            });
-        });
+        // 3. Statistik Lain
+        onValue(ref(db, 'statistik_web/total_kunjungan'), (snap) => 
+            safeSetText('stat-traffic-count', (snap.val() || 0).toLocaleString('id-ID'))
+        );
+        onValue(ref(db, 'arsip_drive'), (s) => 
+            safeSetText('stat-dokumen-count', s.exists() ? Object.keys(s.val()).length : 0)
+        );
     });
 
+    // Render Tabel Helper
     function renderTable(dataList) {
         const tbody = document.getElementById('table-demografi-body');
         if(!tbody) return;
@@ -297,13 +302,7 @@
         let html = '';
         dataList.forEach((d, index) => {
             let dateStr = d.waktu ? new Date(d.waktu).toLocaleString('id-ID', { day: 'numeric', month: 'short', hour: '2-digit', minute:'2-digit' }) : '-';
-            let badge = 'bg-secondary';
-            if(d.kategori === 'Remaja') badge = 'bg-primary';
-            else if(d.kategori === 'Dewasa Muda') badge = 'bg-success';
-            else if(d.kategori === 'Dewasa') badge = 'bg-warning text-dark';
-            else if(d.kategori.includes('Lansia')) badge = 'bg-danger';
-            
-            html += `<tr><td class="ps-4">${index + 1}</td><td>${d.umur} Thn</td><td><span class="badge ${badge}">${d.kategori}</span></td><td class="small">${d.device || '-'}</td><td class="small">${dateStr}</td></tr>`;
+            html += `<tr><td class="ps-4">${index + 1}</td><td>${d.umur} Thn</td><td>${d.kategori}</td><td class="small">${d.device || '-'}</td><td class="small">${dateStr}</td></tr>`;
         });
         tbody.innerHTML = html;
     }

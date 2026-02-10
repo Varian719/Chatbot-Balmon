@@ -62,7 +62,7 @@
           <ul class="nav sidebar-menu flex-column">
             <li class="nav-item"><a href="admin-balmon.html" class="nav-link"><i class="nav-icon bi bi-speedometer"></i><p>Dashboard</p></a></li>
             <li class="nav-item"><a href="dokumen.html" class="nav-link"><i class="nav-icon bi bi-folder-fill"></i><p>Arsip Digital</p></a></li>
-            <li class="nav-item"><a href="history_chatbot.html" class="nav-link"><i class="nav-icon bi bi-chat-fill"></i><p>History Chatbot</p></a></li>
+            <li class="nav-item"><a href="datachat.html" class="nav-link"><i class="nav-icon bi bi-chat-fill"></i><p>History Chatbot</p></a></li>
             <li class="nav-item"><a href="gform_management.html" class="nav-link active"><i class="nav-icon bi bi-ui-checks"></i><p>Manajemen GForm</p></a></li>
             <li class="nav-item"><a href="manage-gallery.html" class="nav-link"><i class="nav-icon bi bi-image-fill"></i><p>Manajemen Publikasi</p></a></li>
             <li class="nav-item"><a href="../../../frontend/index.html" target="_blank" class="nav-link"><i class="nav-icon bi bi-globe"></i><p>Lihat Website</p></a></li>
@@ -265,23 +265,48 @@
         });
     });
 
-    // 6. Logout System
-    document.getElementById('btnSystemLogout').addEventListener('click', () => {
-        if(authInstance) {
-             Swal.fire({
-                title: 'Keluar Sistem?',
-                text: "Sesi anda akan diakhiri.",
+    // --- FITUR LOGOUT (DIPISAH DARI DASHBOARD AGAR SELALU JALAN) ---
+    // Kode ini akan jalan duluan sebelum menunggu database, jadi tombol pasti bisa diklik.
+    const setupLogout = () => {
+        const btnLogout = document.getElementById('btnSystemLogout');
+        if (!btnLogout) return;
+
+        btnLogout.addEventListener('click', async (e) => {
+            e.preventDefault();
+            
+            // Konfirmasi (Tanpa Cancel)
+            const result = await Swal.fire({
+                title: 'Keluar?', 
+                text: "Sesi akan diakhiri.", 
                 icon: 'warning',
-                showCancelButton: true,
-                confirmButtonText: 'Ya, Keluar',
-                cancelButtonText: 'Batal'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    signOut(authInstance).then(() => window.location.replace("login_balmon.html"));
-                }
+                showCancelButton: false, 
+                confirmButtonColor: '#d33',   
+                confirmButtonText: 'Ya, Keluar'
             });
-        }
-    });
+
+            if (result.isConfirmed) {
+                Swal.fire({ 
+                    title: 'Keluar...', 
+                    timer: 3000,
+                    didOpen: () => Swal.showLoading() 
+                });
+
+                try {
+                    // Coba logout bersih via Firebase
+                    const auth = getAuth(); 
+                    await signOut(auth);
+                    window.location.replace("login_balmon.html");
+                } catch (error) {
+                    console.error("Force Logout:", error);
+                    // Jika Firebase error, TETAP PAKSA keluar
+                    window.location.replace("login_balmon.html");
+                }
+            }
+        });
+    };
+    // Jalankan setup logout segera
+    setupLogout();
+
 
     // ===========================================
     // GLOBAL FUNCTIONS (Agar bisa diklik di HTML)
