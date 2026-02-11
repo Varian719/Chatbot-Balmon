@@ -127,8 +127,8 @@
             background-color: rgba(255, 255, 255, 0.1); 
             backdrop-filter: blur(8px);                    
             -webkit-backdrop-filter: blur(8px);            
-            padding: 8px 20px;                             
-            border-radius: 50px;                             
+            padding: 8px 20px;                              
+            border-radius: 50px;                              
             border: 1px solid rgba(255, 255, 255, 0.2); 
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);  
         }
@@ -367,7 +367,7 @@
         .parallax-content h2 { font-size: 36px; font-weight: 800; margin-bottom: 10px; letter-spacing: 1px; text-transform: uppercase; }
         .tagline-berakhlak { font-size: 18px; color: var(--accent-yellow); font-weight: 500; display: block; margin-top: 15px; border-top: 1px solid rgba(255,255,255,0.2); padding-top: 15px; }
 
-        /* FEATURE CAROUSEL */
+        /* FEATURE CAROUSEL (UNTUK LAYANAN) */
         .feature-carousel-section {
             --fc-primary-blue: #0056b3; --fc-dark-blue: #003d80; --fc-accent-yellow: #ffc107; --fc-bg-light-blue: #f0f8ff; --fc-white: #ffffff; --fc-text-gray: #666666;
             padding: 80px 0; width: 100%; background-color: var(--fc-white); position: relative; overflow: hidden;
@@ -656,150 +656,286 @@
         .news-progress.active { transition: width 5s linear; width: 100%; }
         .news-progress.reset { transition: none; width: 0%; }
         /* RESPONSIVE NEWS (Mobile) - FIXED HEIGHT & WIDE BUTTONS */
+/* ========================================= */
+        /* RESPONSIVE VIDEO CAROUSEL (SWIPE MANUAL) */
+        /* ========================================= */
+/* ========================================= */
+        /* FIX: RESPONSIVE VIDEO CAROUSEL (SWIPE)   */
+        /* ========================================= */
         @media (max-width: 900px) {
-            .news-container {
+            /* 1. Layout Stack (Atas-Bawah) */
+            .video-flex-container { 
                 display: flex;
-                flex-direction: column-reverse; /* Gambar di atas, Teks di bawah */
-                
-                /* TINGGI FIX AGAR TIDAK LONCAT-LONCAT */
-                height: 720px !important; 
-                min-height: 720px !important;
-                
-                border-radius: 16px;
-                overflow: hidden;
-            }
-
-            /* --- 1. PENGATURAN GAMBAR (Atas) --- */
-            .news-image-col {
-                flex: 0 0 250px; /* Tinggi gambar fix 250px */
-                height: 250px !important;
-                width: 100%; 
-            }
-
-            /* --- 2. PENGATURAN TEKS (Bawah) --- */
-            .news-text-col {
-                flex: 1; /* Mengisi sisa ruang (720px - 250px) */
-                width: 100%;
-                padding: 25px 20px;
-                display: flex;
-                flex-direction: column;
-                justify-content: flex-start;
-                position: relative;
-            }
-
-            /* Hiasan background dipindah agar tidak menutupi teks */
-            .news-text-col::before {
-                right: -50px; top: -50px; width: 200px; height: 200px;
-            }
-
-            .news-header-row {
-                margin-bottom: 15px;
-            }
-
-            /* --- 3. JUDUL & DESKRIPSI (Tinggi Tetap) --- */
-            /* Kita kunci tingginya agar layout stabil */
-            .news-title-anim { 
-                font-size: 20px; 
-                line-height: 1.3;
-                margin-bottom: 10px;
-                
-                /* Reservasi tempat untuk persis 2 baris */
-                height: 52px; 
-                overflow: hidden;
-                display: -webkit-box;
-                -webkit-line-clamp: 2;
-                -webkit-box-orient: vertical;
-            }
-
-            .news-desc-anim {
-                font-size: 14px;
-                line-height: 1.6;
-                margin-bottom: auto; /* Dorong footer ke paling bawah */
-                
-                /* Reservasi tempat untuk persis 3 baris */
-                height: 68px; 
-                overflow: hidden;
-                display: -webkit-box;
-                -webkit-line-clamp: 3;
-                -webkit-box-orient: vertical;
-                opacity: 0.8;
-            }
-
-            /* --- 4. TOMBOL-TOMBOL (Wide & Easy Click) --- */
-            .news-footer-row {
                 flex-direction: column; 
-                gap: 15px;
-                width: 100%;
-                margin-top: 20px;
-                padding-top: 20px;
-                border-top: 1px solid #f0f0f0;
+                align-items: flex-start; 
+                gap: 30px; 
             }
-
-            /* Tombol Baca Selengkapnya: Full Width */
-            .news-btn-readmore { 
+            .video-info-col { 
                 width: 100%; 
-                justify-content: center; 
-                padding: 14px; /* Area sentuh lebih besar */
-                font-size: 15px;
+                text-align: left; 
+                padding: 0 20px; 
             }
-
-            /* Grup Tombol Navigasi */
-            .news-nav-group { 
+            .video-carousel-col { 
                 width: 100%; 
-                display: flex;
-                gap: 15px;
-                justify-content: space-between;
+                overflow: visible; /* Penting: Biarkan keluar dari container induk */
             }
 
-            /* Tombol Panah Kiri/Kanan: Kotak Lebar */
-            .news-btn-nav {
-                flex: 1; /* Membagi lebar 50:50 */
-                width: auto; 
-                height: 50px; /* Lebih tinggi agar mudah diklik */
-                border-radius: 12px; /* Tidak bulat penuh, tapi rounded box */
-                background-color: #f8f9fa; /* Warna dasar abu muda */
-                font-size: 18px;
+            /* 2. Sembunyikan Tombol Panah Desktop */
+            .vc-nav-btn-absolute { 
+                display: none !important; 
             }
             
-            /* Efek Active saat ditekan di HP */
-            .news-btn-nav:active {
-                background-color: var(--primary-color);
-                color: white;
+            /* 3. Area Scroll Utama (Window) */
+            .vc-window {
+                display: flex;
+                width: 100%;
+                /* KUNCI UTAMA AGAR BISA SCROLL: */
+                overflow-x: auto !important; 
+                overflow-y: hidden;
+                
+                /* Supaya smooth di iPhone/Android */
+                -webkit-overflow-scrolling: touch; 
+                
+                /* Padding kiri agar kartu pertama tidak nempel pinggir layar */
+                padding: 10px 20px 40px 20px !important; 
+                
+                /* Matikan scrollbar default */
+                scrollbar-width: none; 
+                -ms-overflow-style: none; 
+            }
+            
+            /* Sembunyikan scrollbar di Chrome/Safari */
+            .vc-window::-webkit-scrollbar {
+                display: none;
+            }
+
+            /* 4. Track (Wadah Kartu) */
+            .vc-track {
+                display: flex;
+                gap: 15px; /* Jarak antar kartu */
+                
+                /* Matikan Transform JS Desktop */
+                transform: none !important; 
+                width: auto !important; /* Lebar mengikuti jumlah konten */
+                margin: 0 !important;
+            }
+
+            /* 5. Kartu Video (Item) */
+            .video-card {
+                /* Paksa lebar tetap agar memicu scroll */
+                flex: 0 0 280px !important; 
+                width: 280px !important;
+                max-width: 280px !important;
+                
+                /* Hiasan */
+                margin-right: 0;
+                scroll-snap-align: center; /* Opsional: Magnet effect */
             }
         }
 
-        /* --- YELLOW CTA FIX --- */
-        .yellow-cta-section {
-            position: relative; 
-            background-image: url('g2.jpg'); 
-            background-attachment: fixed; 
-            background-position: center; 
-            background-size: cover; 
-            background-repeat: no-repeat;
-            padding: 90px 0; 
-            color: #ffffff; 
+        /* ====================================================== */
+        /* --- NEW: VIDEO SLIDER SECTION (PARALLAX DARK SPLIT) --- */
+        /* ====================================================== */
+        .video-slider-section {
+            padding: 80px 0;
+            background-color: #0f172a; /* Fallback Color */
+            /* Parallax Background Image */
+            background-image: url('https://images.unsplash.com/photo-1550751827-4bd374c3f58b?q=80&w=2070&auto=format&fit=crop'); 
+            background-attachment: fixed;
+            background-position: center;
+            background-size: cover;
+            position: relative;
             overflow: hidden;
-            transform: none !important;
-            will-change: auto !important;
         }
-        .yellow-cta-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(135deg, rgba(236, 187, 29, 0.92) 0%, rgba(210, 150, 10, 0.9) 100%); z-index: 1; }
-        .cta-content { position: relative; z-index: 2; display: flex; align-items: center; justify-content: space-between; gap: 50px; }
-        .cta-text-area { flex: 1; }
-        .cta-title { font-size: 38px; font-weight: 800; margin-bottom: 15px; line-height: 1.2; text-shadow: 0 2px 10px rgba(0,0,0,0.1); }
-        .cta-desc { font-size: 18px; font-weight: 400; margin-bottom: 30px; opacity: 0.95; max-width: 90%; }
-        .cta-stats-grid { display: flex; gap: 30px; margin-top: 20px; }
-        .cta-stat-item { border-left: 3px solid #fff; padding-left: 15px; }
-        .cta-stat-number { display: block; font-size: 32px; font-weight: 800; line-height: 1; }
-        .cta-stat-label { font-size: 13px; text-transform: uppercase; letter-spacing: 1px; margin-top: 5px; opacity: 0.9; }
-        .cta-action-area { 
-            flex-shrink: 0; background: rgba(255,255,255,0.15); backdrop-filter: blur(5px); padding: 30px; border-radius: 16px; border: 1px solid rgba(255,255,255,0.3);
-            text-align: center; width: 300px; box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        
+        /* Dark Gradient Overlay for Readability */
+        .video-slider-section::before {
+            content: '';
+            position: absolute; left: 0; top: 0; width: 100%; height: 100%;
+            background: linear-gradient(135deg, rgba(11, 22, 42, 0.95) 0%, rgba(20, 35, 60, 0.9) 100%);
+            z-index: 1;
         }
-        .cta-btn-white { 
-            display: inline-block; background: #ffffff; color: #d2960a; padding: 15px 30px; border-radius: 50px; font-weight: 700; font-size: 16px; transition: all 0.3s ease; box-shadow: 0 5px 15px rgba(0,0,0,0.1); width: 100%;
+
+        /* Layout Container Split */
+        .video-flex-container {
+            position: relative; 
+            z-index: 2; /* Di atas overlay */
+            display: flex;
+            align-items: center;
+            gap: 40px;
+            flex-wrap: wrap; /* Stack di mobile */
         }
-        .cta-btn-white:hover { transform: translateY(-3px); box-shadow: 0 8px 20px rgba(0,0,0,0.15); background: #fcfcfc; color: #b07d08; }
-        .cta-note { font-size: 12px; margin-top: 15px; opacity: 0.8; }
+
+        /* --- KOLOM KIRI (TEXT) --- */
+        .video-info-col {
+            flex: 1; 
+            min-width: 300px;
+            color: #ffffff;
+        }
+
+        .video-info-col h2 {
+            font-size: 48px;
+            font-weight: 800;
+            margin: 0 0 15px 0;
+            letter-spacing: -1px;
+        }
+
+        .video-info-col p {
+            font-size: 16px;
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+
+        .yt-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 50px; height: 50px;
+            background-color: white;
+            color: #ff0000;
+            border-radius: 12px;
+            font-size: 24px;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        .yt-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 8px 25px rgba(255, 0, 0, 0.3);
+        }
+
+        /* --- KOLOM KANAN (CAROUSEL) --- */
+        .video-carousel-col {
+            flex: 2; /* Lebih lebar dari teks */
+            min-width: 0; /* Penting agar flex item tidak overflow */
+            width: 100%; /* Fallback */
+        }
+
+        /* Container Pembungkus Relatif untuk tombol Absolute */
+        .video-slider-wrapper {
+            position: relative;
+            width: 100%;
+            padding: 0 40px; /* Memberi ruang agar tombol tidak menutupi konten di mobile */
+        }
+
+        /* Container untuk track carousel */
+        .vc-window {
+            width: 100%;
+            overflow: hidden; 
+            padding: 20px 5px;
+            position: relative;
+        }
+
+        /* Track flex untuk menampung kartu */
+        .vc-track {
+            display: flex;
+            gap: 20px; /* Jarak antar kartu */
+            width: max-content;
+            transition: transform 0.5s cubic-bezier(0.25, 1, 0.5, 1); /* Animasi geser halus */
+        }
+
+        /* Kartu Video - UKURAN LEBIH KECIL */
+        .video-card {
+            flex: 0 0 280px; /* Lebar tetap 280px (Compact) */
+            width: 280px;
+            background: #fff;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            border: none;
+            transition: all 0.3s ease;
+        }
+        .video-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Wrapper untuk iframe agar responsif 16:9 */
+        .video-card-media {
+            position: relative;
+            width: 100%;
+            padding-bottom: 56.25%; /* Aspek rasio 16:9 */
+            height: 0;
+            background: #000;
+        }
+        .video-card-media iframe {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            border: 0;
+        }
+
+        /* Konten Teks di bawah video */
+        .video-card-content {
+            padding: 20px;
+        }
+
+        .video-card-content h3 {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin: 0 0 10px 0;
+            line-height: 1.3;
+            /* Batasi 2 baris untuk judul */
+            display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+        }
+
+        .video-card-content p {
+            font-size: 13px;
+            color: var(--text-gray);
+            margin: 0;
+            line-height: 1.6;
+            /* Batasi 3 baris untuk deskripsi */
+            display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;
+        }
+        
+        /* --- TOMBOL NAVIGASI DI ATAS BACKGROUND GELAP --- */
+        .vc-nav-btn-absolute {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 45px; height: 45px;
+            border: none;
+            border-radius: 50%;
+            /* Glassmorphism Effect */
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255,255,255,0.2);
+            color: #fff;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            cursor: pointer;
+            z-index: 10;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 18px;
+            transition: all 0.2s ease;
+        }
+        
+        .vc-nav-btn-absolute:hover {
+            background: #fff;
+            color: var(--primary-color);
+            transform: translateY(-50%) scale(1.1);
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.4);
+        }
+
+        .vc-nav-btn-absolute.prev { left: -10px; }
+        .vc-nav-btn-absolute.next { right: -10px; }
+        
+        @media (max-width: 900px) {
+            .video-flex-container { flex-direction: column; align-items: flex-start; gap: 30px; }
+            .video-info-col { width: 100%; text-align: left; }
+            .video-carousel-col { width: 100%; }
+            .vc-nav-btn-absolute.prev { left: 0px; }
+            .vc-nav-btn-absolute.next { right: 0px; }
+        }
+
+        @media (max-width: 768px) {
+            .video-slider-wrapper { padding: 0; }
+            .vc-nav-btn-absolute {
+                background: rgba(255,255,255,0.9);
+                color: #333;
+                width: 35px; height: 35px; font-size: 16px;
+            }
+        }
 
         /* ARCHIVE */
         .archive-section { font-family: 'Albert Sans', sans-serif; background-color: #ffffff; padding: 120px 0; text-align: center; position: relative; overflow: hidden; }
@@ -951,10 +1087,9 @@
             .hero-bg-image { background-position: center; }
             .fc-nav-btn { display: none; } 
             .fc-window { overflow-x: auto; scroll-behavior: smooth; } 
-            .cta-content { flex-direction: column; text-align: center; }
-            .cta-desc { margin: 0 auto 30px auto; }
-            .cta-stats-grid { justify-content: center; margin-bottom: 30px; }
-            .cta-stat-item { text-align: left; }
+            
+            /* Penyesuaian untuk video carousel di mobile */
+            .video-card { flex: 0 0 280px; /* Sedikit lebih kecil di mobile */ }
         }
         @media (max-width: 600px) {
             .brand-text { font-size: 14px; }
@@ -1158,7 +1293,7 @@
             </a>
             <a href="https://www.tiktok.com/@balmon.samarinda?lang=en" class="social-icon" aria-label="TikTok">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" stroke="none">
-                    <path d="M12.53.02C13.84 0 15.14.01 16.44 0c.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.65-1.58-1.09-.1-.09-.19-.2-.29-.3v6.52c.02 4.07-3.23 7.49-7.29 7.49-3.93.04-7.3-3.13-7.48-7.05-.07-1.84.58-3.66 1.83-5.01 1.25-1.35 3.03-2.14 4.86-2.16v4.03c-1.11-.02-2.19.46-2.95 1.29a4.106 4.106 0 0 0-1.1 2.89c.04 2.22 1.84 4.02 4.06 4.02 2.22 0 4.02-1.8 4.02-4.02V.02h.22z"/>
+                    <path d="M12.53.02C13.84 0 15.14.01 16.44 0c.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.65-1.58-1.09-.1-.09-.19-.2-.29-.3v6.52c.02 4.07-3.23 7.49-7.29 7.49-3.93.04-7.3-3.13-7.48-7.05-.07-1.84.58-3.66 1.83-5.01 1.25-1.35 3.03-2.14 4.86-2.16v4.03c-1.11-.02-2.19.46-2.95 1.29a4.106 4.106 0 0 0-1.1 2.89c.04 2.22 1.84 4.02 4.02 4.02 2.22 0 4.02-1.8 4.02-4.02V.02h.22z"/>
                 </svg>
             </a>
         </div>
@@ -1220,28 +1355,19 @@
         </div>
     </div>
 
-    <div class="parallax-banner">
-        <div class="parallax-overlay"></div>
-        <div class="parallax-content fade-in-section">
-            <h2>ASN BerAKHLAK</h2>
-            <p style="font-size: 16px; opacity: 0.9;">Bangga Melayani Bangsa</p>
-            <span class="tagline-berakhlak">Berorientasi Pelayanan • Akuntabel • Kompeten • Harmonis • Loyal • Adaptif • Kolaboratif</span>
-        </div>
-    </div>
-
     <div class="news-section fade-in-section">
         <div class="container news-container">
             <div class="news-text-col">
                 <div class="news-header-row">
                     <span class="news-badge">Berita Balmon</span>
-                    <span class="news-counter" id="newsCounter">01 / 05</span>
+                    <span class="news-counter" id="newsCounter">00 / 00</span>
                 </div>
                 
                 <h2 class="news-title-anim" id="newsTitle">Memuat Berita...</h2>
                 <div class="news-meta">
                     <i class="bi bi-calendar-event"></i> <span id="newsDate">...</span>
                 </div>
-                <p class="news-desc-anim" id="newsDesc">Memuat deskripsi berita dari database...</p>
+                <p class="news-desc-anim" id="newsDesc">Menghubungkan ke database Firebase...</p>
                 
                 <div class="news-footer-row">
                     <a href="galeri.html" class="news-btn-readmore">
@@ -1267,7 +1393,15 @@
         </div>
     </div>
 
-    
+    <div class="parallax-banner">
+        <div class="parallax-overlay"></div>
+        <div class="parallax-content fade-in-section">
+            <h2>ASN BerAKHLAK</h2>
+            <p style="font-size: 16px; opacity: 0.9;">Bangga Melayani Bangsa</p>
+            <span class="tagline-berakhlak">Berorientasi Pelayanan • Akuntabel • Kompeten • Harmonis • Loyal • Adaptif • Kolaboratif</span>
+        </div>
+    </div>
+
     <div class="feature-carousel-section fade-in-section">
         <div class="feature-bg-decor"></div>
         <div class="fc-wrapper">
@@ -1346,24 +1480,34 @@
         </div>
     </div>
 
-    <div class="yellow-cta-section fade-in-section">
-        <div class="yellow-cta-overlay"></div>
-        <div class="container cta-content fade-stagger-children">
-            <div class="cta-text-area">
-                <h2 class="cta-title">Tertib Frekuensi,<br>Komunikasi Lancar.</h2>
-                <p class="cta-desc">Mari bersama wujudkan spektrum frekuensi radio yang bersih dan bebas interferensi demi keselamatan dan kemajuan bangsa. Laporkan jika Anda menemukan gangguan.</p>
-                <div class="cta-stats-grid">
-                    <div class="cta-stat-item"><span class="cta-stat-number">24/7</span><div class="cta-stat-label">Monitoring</div></div>
-                    <div class="cta-stat-item"><span class="cta-stat-number">100%</span><div class="cta-stat-label">Respon Cepat</div></div>
+    <div class="video-slider-section fade-in-section">
+        <div class="container video-flex-container">
+            
+            <div class="video-info-col">
+                <h2>Video</h2>
+                <p>Galeri video Balai Monitoring Spektrum Frekuensi Radio Kelas I Samarinda. Temukan berbagai informasi edukatif seputar spektrum frekuensi dan kegiatan kami.</p>
+            </div>
+
+            <div class="video-carousel-col">
+                <div class="video-slider-wrapper">
+                    <button class="vc-nav-btn-absolute prev" id="btnPrev" onclick="slideVideo('prev')" aria-label="Previous">
+                        <i class="bi bi-chevron-left"></i>
+                    </button>
+
+                    <div class="vc-window">
+                        <div class="vc-track fade-stagger-children" id="videoTrack">
+                            </div>
+                    </div>
+
+                    <button class="vc-nav-btn-absolute next" id="btnNext" onclick="slideVideo('next')" aria-label="Next">
+                        <i class="bi bi-chevron-right"></i>
+                    </button>
                 </div>
             </div>
-            <div class="cta-action-area">
-                <h4 style="margin:0 0 15px 0; font-size:20px;">Butuh Bantuan?</h4>
-                <a href="kontak.html" class="cta-btn-white">Hubungi Kami</a>
-                <div class="cta-note">Layanan bebas pulsa & terintegrasi</div>
-            </div>
+
         </div>
     </div>
+
 
     <div class="archive-section fade-in-section">
     <div class="archive-content fade-stagger-children">
@@ -1479,6 +1623,9 @@
                     }
                 });
             }, 100);
+            
+            // INIT VIDEO SLIDER
+            initVideoSlider();
         });
         
         window.addEventListener('pageshow', (event) => {
@@ -1595,171 +1742,98 @@
         });
 
         /* =========================================
-           LOGIKA NEWS CAROUSEL (DINAMIS DARI FIREBASE)
+           LOGIKA VIDEO SLIDER (BUTTON CONTROLLED)
            ========================================= */
-        let newsData = []; // Data awal kosong, diisi oleh Firebase
-        let currentNewsIndex = 0;
-        let newsInterval;
-
-        function initNewsCarousel() {
-            const track = document.getElementById('newsTrack');
-            
-            // Bersihkan track sebelum mengisi (penting jika reload data)
-            track.innerHTML = ''; 
-
-            if (newsData.length === 0) {
-                document.getElementById('newsTitle').textContent = "Tidak Ada Berita";
-                document.getElementById('newsDesc').textContent = "Belum ada berita yang tersedia saat ini.";
-                return;
+        
+        // Data Video
+        const videoData = [
+            {
+                id: "MhM-jKwb92g", 
+                title: "Mengenal Spektrum Frekuensi Radio",
+                desc: "Video edukasi singkat mengenai apa itu spektrum frekuensi radio."
+            },
+            {
+                id: "ScMzIvxBSi4", 
+                title: "Prosedur Perizinan ISR Online",
+                desc: "Panduan lengkap cara mengajukan Izin Stasiun Radio (ISR) melalui sistem perizinan SDPPI."
+            },
+            {
+                id: "_guOJXwJpXk", 
+                title: "Waspada Gangguan Frekuensi Penerbangan",
+                desc: "Bahaya penggunaan frekuensi ilegal yang dapat mengganggu keselamatan."
+            },
+            {
+                id: "ysz5S6PUM-U",
+                title: "Komitmen Pelayanan Publik Balmon",
+                desc: "Kami berkomitmen memberikan pelayanan prima yang transparan."
+            },
+             {
+                id: "dQw4w9WgXcQ", 
+                title: "Pentingnya Sertifikasi Alat Telekomunikasi",
+                desc: "Mengapa Anda harus menggunakan perangkat yang sudah bersertifikat."
             }
+        ];
+        
+        // State Slider
+        let videoScrollPosition = 0;
+        let videoCardWidth = 300; // Estimasi awal (Width 280 + Gap 20)
 
-            // 1. Masukkan semua gambar asli dari data Firebase
-            newsData.forEach(news => {
-                const img = document.createElement('img');
-                img.src = news.img;
-                img.className = 'news-slide-img';
-                img.alt = news.title;
-                track.appendChild(img);
+        function initVideoSlider() {
+            const track = document.getElementById('videoTrack');
+            track.innerHTML = '';
+
+            // 1. Generate Kartu
+            videoData.forEach(video => {
+                const card = document.createElement('div');
+                card.className = 'video-card';
+                card.innerHTML = `
+                    <div class="video-card-media">
+                         <iframe src="https://www.youtube.com/embed/${video.id}" loading="lazy" allowfullscreen title="${video.title}"></iframe>
+                    </div>
+                    <div class="video-card-content">
+                        <h3>${video.title}</h3>
+                        <p>${video.desc}</p>
+                    </div>
+                `;
+                track.appendChild(card);
             });
+            
+            // 2. Update status tombol saat init
+            updateVideoNavButtons();
+        }
 
-            // 2. CLONE: Ambil gambar pertama dan tambahkan ke akhir track untuk efek looping halus
-            if (newsData.length > 1) {
-                const firstClone = track.children[0].cloneNode(true);
-                track.appendChild(firstClone);
+        function slideVideo(direction) {
+            const track = document.getElementById('videoTrack');
+            // Hitung lebar kartu real-time (jika ada perubahan CSS)
+            const firstCard = track.querySelector('.video-card');
+            if(firstCard) {
+                // Width + Gap (20px defined in CSS)
+                videoCardWidth = firstCard.offsetWidth + 20; 
             }
 
-            updateNewsDisplay();
-            startAutoNews();
-        }
-
-        function updateNewsDisplay(useAnimation = true) {
-            // Update Text (Judul, Tanggal, Deskripsi)
-            const titleEl = document.getElementById('newsTitle');
-            const dateEl = document.getElementById('newsDate');
-            const descEl = document.getElementById('newsDesc');
-            const counterEl = document.getElementById('newsCounter'); // Counter Element
-            const progressEl = document.getElementById('newsProgress');
-            const track = document.getElementById('newsTrack');
+            const maxScroll = (videoData.length * videoCardWidth) - track.parentElement.offsetWidth;
             
-            // --- LOGIKA BARU UNTUK GESER GAMBAR (FIXED SNAP) ---
-            const containerWidth = document.querySelector('.news-image-col').clientWidth;
-            
-            // Geser track sejauh: Index Berita x Lebar Container
-            track.style.transform = `translateX(-${currentNewsIndex * containerWidth}px)`;
-
-            // Animasi Fade Out Text
-            titleEl.classList.add('text-fade-out');
-            titleEl.classList.remove('text-fade-in');
-            descEl.classList.add('text-fade-out');
-            descEl.classList.remove('text-fade-in');
-
-            // Ganti Teks setelah jeda 300ms (saat text hilang)
-            setTimeout(() => {
-                // Gunakan Modulo agar index selalu dalam range array data
-                const actualIndex = currentNewsIndex % newsData.length;
-                const currentItem = newsData[actualIndex];
-
-                if(currentItem) {
-                    titleEl.textContent = currentItem.title;
-                    dateEl.textContent = currentItem.date;
-                    descEl.textContent = currentItem.desc;
-                    // Update Counter (tambah 0 di depan jika < 10)
-                    const idx = actualIndex + 1;
-                    const total = newsData.length;
-                    counterEl.textContent = `${idx < 10 ? '0'+idx : idx} / ${total < 10 ? '0'+total : total}`;
-                }
-
-                // Animasi Fade In Text
-                titleEl.classList.remove('text-fade-out');
-                titleEl.classList.add('text-fade-in');
-                descEl.classList.remove('text-fade-out');
-                descEl.classList.add('text-fade-in');
-            }, 300);
-
-            // Reset Animation Progress Bar
-            progressEl.classList.remove('active');
-            progressEl.classList.add('reset');
-            
-            // Trigger reflow (reset animasi bar)
-            void progressEl.offsetWidth; 
-
-            progressEl.classList.remove('reset');
-            progressEl.classList.add('active');
-        }
-
-        // TAMBAHAN: Agar saat layar di-resize, gambar tetap pas
-        window.addEventListener('resize', () => {
-            const track = document.getElementById('newsTrack');
-            const container = document.querySelector('.news-image-col');
-            
-            if (track && container) {
-                const containerWidth = container.clientWidth;
-                track.style.transition = 'none'; // Matikan animasi saat resize
-                track.style.transform = `translateX(-${currentNewsIndex * containerWidth}px)`;
-                
-                // Update lebar setiap gambar di dalam track
-                const images = track.querySelectorAll('.news-slide-img');
-                images.forEach(img => {
-                    img.style.width = `${containerWidth}px`;
-                });
-            }
-        });
-
-        function startAutoNews() {
-            clearInterval(newsInterval);
-            if (newsData.length > 1) {
-                newsInterval = setInterval(() => {
-                    nextNews();
-                }, 5000); // 5 Detik per slide
-            }
-        }
-
-        let isTransitioning = false; // Mencegah klik ganda saat animasi berjalan
-
-        function nextNews() {
-            if (isTransitioning || newsData.length <= 1) return;
-            
-            currentNewsIndex++;
-            updateNewsLogic(true); // true artinya gunakan animasi
-        }
-
-        function updateNewsLogic(useAnimation = true) {
-            const track = document.getElementById('newsTrack');
-            const containerWidth = document.querySelector('.news-image-col').clientWidth;
-
-            isTransitioning = true;
-            
-            // Atur transisi
-            track.style.transition = useAnimation ? 'transform 0.6s cubic-bezier(0.25, 1, 0.5, 1)' : 'none';
-            track.style.transform = `translateX(-${currentNewsIndex * containerWidth}px)`;
-
-            // Logika Reset ke Awal (Infinite Loop)
-            if (currentNewsIndex >= newsData.length) {
-                setTimeout(() => {
-                    track.style.transition = 'none'; // Matikan animasi
-                    currentNewsIndex = 0; // Reset index ke 0
-                    track.style.transform = `translateX(0px)`;
-                    isTransitioning = false;
-                }, 600); // 600ms sesuai durasi transisi CSS
+            // Tentukan jarak geser
+            if (direction === 'next') {
+                videoScrollPosition += videoCardWidth;
+                // Batasi agar tidak lewat batas kanan
+                if (videoScrollPosition > maxScroll) videoScrollPosition = maxScroll; 
+                // Fix jika maxScroll negatif (layar lebar > total konten)
+                if (maxScroll < 0) videoScrollPosition = 0;
             } else {
-                setTimeout(() => { isTransitioning = false; }, 600);
+                videoScrollPosition -= videoCardWidth;
+                // Batasi agar tidak lewat batas kiri
+                if (videoScrollPosition < 0) videoScrollPosition = 0;
             }
 
-            // Update Text Display
-            updateNewsDisplay();
+            // Terapkan Transisi
+            track.style.transform = `translateX(-${videoScrollPosition}px)`;
+            
+            updateVideoNavButtons();
         }
 
-        function prevNews() {
-            if (newsData.length <= 1) return;
-            // Logika mundur sedikit beda agar loop, sederhananya kita mundur index
-            // Jika 0, kita ke element terakhir
-            if (currentNewsIndex <= 0) {
-                 currentNewsIndex = newsData.length - 1;
-            } else {
-                 currentNewsIndex--;
-            }
-            updateNewsLogic(true);
-            startAutoNews(); // Reset timer saat klik manual
+        function updateVideoNavButtons() {
+            // Opsional: Disable tombol jika mentok
         }
 
 
@@ -1820,50 +1894,204 @@
     <script src="TTS_Adaptif.js"></script>
 
     <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getDatabase, ref, runTransaction, onValue } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
-        // 1. CONFIG
+        // --- 1. KONFIGURASI FIREBASE ---
         const firebaseConfig = {
             apiKey: "AIzaSyDUeIg9Zn_xndPXtChO8KufXFp6EMtqBJ0",
             authDomain: "admin-pelayanan-balmon.firebaseapp.com",
             databaseURL: "https://admin-pelayanan-balmon-default-rtdb.firebaseio.com",
             projectId: "admin-pelayanan-balmon",
+            storageBucket: "admin-pelayanan-balmon.firebasestorage.app",
+            messagingSenderId: "1071557110255",
             appId: "1:1071557110255:web:bff7087da1feacccb7ee1a"
         };
 
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
+
+        // ============================================================
+        // BAGIAN A: VISITOR TRACKER
+        // ============================================================
+        function runVisitorTracker() {
+            if (!sessionStorage.getItem('visited_v2')) {
+                const visitRef = ref(db, 'statistik_web/total_kunjungan');
+                runTransaction(visitRef, (currentCount) => {
+                    return (currentCount || 0) + 1;
+                }).then(() => {
+                    console.log("✅ Tracker: Data kunjungan diperbarui.");
+                    sessionStorage.setItem('visited_v2', 'true');
+                }).catch((err) => console.error("❌ Tracker Error:", err));
+            }
+        }
+        runVisitorTracker();
+
+        // ============================================================
+        // BAGIAN B: LOGIKA NEWS CAROUSEL (Full Logic Disini)
+        // ============================================================
         
-        // --- TARGET TABEL 'GALERI' ---
+        // 1. Variabel Global untuk Module ini
+        let newsData = []; 
+        let currentNewsIndex = 0;
+        let newsInterval;
+        let isTransitioning = false;
+
+        // 2. Fungsi Init Carousel
+        function initNewsCarousel() {
+            const track = document.getElementById('newsTrack');
+            if (!track) return;
+
+            track.innerHTML = ''; 
+
+            if (newsData.length === 0) {
+                const titleEl = document.getElementById('newsTitle');
+                const descEl = document.getElementById('newsDesc');
+                if(titleEl) titleEl.textContent = "Data Kosong";
+                if(descEl) descEl.textContent = "Tidak ada berita ditemukan dengan kategori 'News' atau 'Berita'.";
+                return;
+            }
+
+            // Masukkan gambar asli
+            newsData.forEach(news => {
+                const img = document.createElement('img');
+                img.src = news.img;
+                img.className = 'news-slide-img';
+                img.alt = news.title;
+                // Force Style agar layout tidak berantakan
+                img.style.minWidth = "100%";
+                img.style.width = "100%";
+                img.style.objectFit = "cover";
+                // Fallback jika gambar error
+                img.onerror = function() {
+                    this.src = 'https://via.placeholder.com/800x600?text=Image+Not+Found';
+                };
+                track.appendChild(img);
+            });
+
+            updateNewsDisplay(false); // Update tampilan awal tanpa animasi
+            startAutoNews();
+        }
+
+        // 3. Fungsi Update Tampilan (Teks & Posisi Gambar)
+        function updateNewsDisplay(useAnimation = true) {
+            const titleEl = document.getElementById('newsTitle');
+            const dateEl = document.getElementById('newsDate');
+            const descEl = document.getElementById('newsDesc');
+            const counterEl = document.getElementById('newsCounter');
+            const progressEl = document.getElementById('newsProgress');
+            const track = document.getElementById('newsTrack');
+            const container = document.querySelector('.news-image-col');
+
+            if (!track || !container || newsData.length === 0) return;
+
+            // Hitung lebar container saat ini
+            const containerWidth = container.clientWidth;
+            
+            // Geser Track
+            track.style.transition = useAnimation ? 'transform 0.6s cubic-bezier(0.25, 1, 0.5, 1)' : 'none';
+            track.style.transform = `translateX(-${currentNewsIndex * containerWidth}px)`;
+
+            // Efek Fade Text
+            titleEl.classList.add('text-fade-out');
+            titleEl.classList.remove('text-fade-in');
+            descEl.classList.add('text-fade-out');
+            descEl.classList.remove('text-fade-in');
+
+            setTimeout(() => {
+                const item = newsData[currentNewsIndex];
+                if(item) {
+                    titleEl.textContent = item.title;
+                    dateEl.textContent = item.date;
+                    descEl.textContent = item.desc;
+                    
+                    const idx = currentNewsIndex + 1;
+                    const total = newsData.length;
+                    counterEl.textContent = `${idx < 10 ? '0'+idx : idx} / ${total < 10 ? '0'+total : total}`;
+                }
+                
+                titleEl.classList.remove('text-fade-out');
+                titleEl.classList.add('text-fade-in');
+                descEl.classList.remove('text-fade-out');
+                descEl.classList.add('text-fade-in');
+            }, 300);
+
+            // Reset Progress Bar
+            progressEl.classList.remove('active');
+            void progressEl.offsetWidth; // Trigger reflow
+            progressEl.classList.add('active');
+        }
+
+        // 4. Fungsi Navigasi (Next / Prev)
+        function nextNews() {
+            if (newsData.length <= 1) return;
+            currentNewsIndex++;
+            if (currentNewsIndex >= newsData.length) {
+                currentNewsIndex = 0; // Loop balik ke awal
+            }
+            updateNewsDisplay(true);
+            startAutoNews(); // Reset timer
+        }
+
+        function prevNews() {
+            if (newsData.length <= 1) return;
+            currentNewsIndex--;
+            if (currentNewsIndex < 0) {
+                currentNewsIndex = newsData.length - 1; // Loop ke akhir
+            }
+            updateNewsDisplay(true);
+            startAutoNews(); // Reset timer
+        }
+
+        function startAutoNews() {
+            clearInterval(newsInterval);
+            if (newsData.length > 1) {
+                newsInterval = setInterval(() => {
+                    nextNews();
+                }, 5000);
+            }
+        }
+
+        // 5. Event Listener Resize (Agar responsif)
+        window.addEventListener('resize', () => {
+            if (newsData.length > 0) updateNewsDisplay(false);
+        });
+
+        // --- PENTING: EKSPOS FUNGSI KE GLOBAL AGAR BISA DIKLIK HTML ---
+        window.nextNews = nextNews;
+        window.prevNews = prevNews;
+        window.initNewsCarousel = initNewsCarousel; // Backup
+
+
+        // ============================================================
+        // BAGIAN C: FETCH DATA DARI FIREBASE
+        // ============================================================
+        console.log("Firebase: Menghubungkan...");
         const galleryRef = ref(db, 'galeri'); 
 
-        // 2. AMBIL DATA & MASUKKAN KE LOGIKA CAROUSEL
         onValue(galleryRef, (snapshot) => {
+            console.log("Firebase: Data diterima.");
             const data = snapshot.val();
             
             if (data) {
-                // Konversi Object ke Array
-                let allItems = Object.keys(data).map(key => ({
-                    id: key,
-                    ...data[key]
-                }));
+                let allItems = Object.keys(data).map(key => ({ id: key, ...data[key] }));
 
-                // --- FILTER: HANYA AMBIL YANG KATEGORINYA 'NEWS' ---
+                // Filter & Sort (LOGIKA FILTER LEBIH KUAT/TIDAK SENSITIF CASE)
                 const newsItems = allItems.filter(item => {
-                    const cat = (item.category || item.kategori || '').toLowerCase();
+                    // Ambil kategori, ubah ke string, trim spasi, jadikan huruf kecil
+                    const cat = String(item.category || item.kategori || '').trim().toLowerCase();
                     return cat === 'news' || cat === 'berita';
                 });
 
-                // Urutkan dari yang terbaru
+                console.log(`Firebase: Ditemukan ${newsItems.length} item berita.`);
+
                 newsItems.sort((a, b) => {
                     const dateA = new Date(a.date || a.tanggal || 0);
                     const dateB = new Date(b.date || b.tanggal || 0);
                     return dateB - dateA;
                 });
 
-                // --- PENTING: MAPPING DATA KE FORMAT YANG DIPAKAI SCRIPT CAROUSEL ---
-                // Kita mengubah data dari Firebase agar sesuai dengan variabel 'newsData' yang diharapkan script
+                // Mapping ke variabel lokal newsData
                 newsData = newsItems.map(item => {
                     const rawDate = item.date || item.tanggal || new Date();
                     const dateStr = new Date(rawDate).toLocaleDateString('id-ID', {
@@ -1878,88 +2106,24 @@
                     };
                 });
                 
-                // JIKA DATA ADA, INISIALISASI CAROUSEL ULANG
+                // Jalankan Init setelah data siap
                 if (newsData.length > 0) {
                     initNewsCarousel();
                 } else {
-                    document.getElementById('newsTitle').textContent = "Belum Ada Berita";
-                    document.getElementById('newsDesc').textContent = "Saat ini belum ada data berita kategori News.";
+                    document.getElementById('newsTitle').textContent = "Data Kosong";
+                    document.getElementById('newsDesc').textContent = "Data ditemukan di database, tapi tidak ada yang berkategori 'News'.";
                 }
 
             } else {
-                console.log("Data Galeri Kosong.");
+                console.log("Firebase: Data Galeri Kosong/Null.");
+                document.getElementById('newsTitle').textContent = "Database Kosong";
             }
         }, (err) => {
             console.error("Firebase Error:", err);
-            document.getElementById('newsTitle').textContent = "Gagal Memuat Berita";
+            document.getElementById('newsTitle').textContent = "Gagal Koneksi";
+            document.getElementById('newsDesc').textContent = "Cek koneksi internet atau izin database. " + err.message;
         });
+
     </script>
-
-    <div id="searchOverlay" class="search-overlay">
-        <div class="search-content">
-            <button class="close-search" onclick="closeSearch()">&times;</button>
-            <h2 style="color:var(--primary-color); margin-bottom:20px; ">Pencarian</h2>
-            <input type="text" id="searchInput" placeholder="Ketik kata kunci (misal: Izin, Maritim)..." onkeyup="performSearch()">
-            <div id="searchResults" class="search-results"></div>
-        </div>
-    </div>
-    <script type="module">
-    import { initializeApp, getApp, getApps } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getDatabase, ref, runTransaction } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
-
-    const firebaseConfig2 = {
-        apiKey: "AIzaSyBUJhTYOZS3GFfmD_eVj2lxHWEz4KNWKE4",
-
-  authDomain: "admin-pelayanan-balmon.firebaseapp.com",
-
-  databaseURL: "https://admin-pelayanan-balmon-default-rtdb.firebaseio.com",
-
-  projectId: "admin-pelayanan-balmon",
-
-  storageBucket: "admin-pelayanan-balmon.firebasestorage.app",
-
-  messagingSenderId: "1071557110255",
-
-  appId: "1:1071557110255:web:43b7380192a9cc2bb7ee1a",
-
-  measurementId: "G-QQCZY44EDW"
-
-    };
-
-    // SOLUSI: Cek jika sudah ada app, jika tidak buat instance baru dengan nama 'tracker'
-    let appTracker;
-    if (getApps().length === 0) {
-        appTracker = initializeApp(firebaseConfig2);
-    } else {
-        // Berikan nama unik 'tracker' agar tidak bentrok dengan config di atas
-        try {
-            appTracker = initializeApp(firebaseConfig2, "tracker");
-        } catch (e) {
-            appTracker = getApp("tracker");
-        }
-    }
-
-    const dbTracker = getDatabase(appTracker);
-
-    function runVisitorTracker() {
-        // Menggunakan 'visited_v2' sebagai key baru untuk pengetesan ulang
-        if (!sessionStorage.getItem('visited_v2')) {
-            const visitRef = ref(dbTracker, 'statistik_web/total_kunjungan');
-            
-            runTransaction(visitRef, (currentCount) => {
-                return (currentCount || 0) + 1;
-            }).then(() => {
-                console.log("✅ Tracker: Berhasil update Firebase.");
-                sessionStorage.setItem('visited_v2', 'true');
-            }).catch((err) => {
-                console.error("❌ Tracker Error:", err.message);
-            });
-        } else {
-            console.log("ℹ️ Tracker: Sesi aktif ditemukan.");
-        }
-    }
-
-    runVisitorTracker();
-</script>
 </body>
 </html>
