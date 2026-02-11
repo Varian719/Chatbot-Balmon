@@ -95,7 +95,50 @@
               </div>
             </div>
           </div>
-
+          <div class="row mt-4">
+    <div class="col-12">
+        <div class="card card-outline card-warning shadow-sm">
+            <div class="card-header border-0">
+                <h3 class="card-title fw-bold text-warning">
+                    <i class="bi bi-person-lines-fill me-2"></i>
+                    Permintaan Pendaftaran Baru
+                </h3>
+                <div class="card-tools">
+                    <span class="badge bg-warning text-dark" id="pendingCount">0 Pending</span>
+                    <button type="button" class="btn btn-tool" data-lte-toggle="card-collapse">
+                        <i class="bi bi-dash-lg"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="card-body p-0 table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead class="table-light">
+                        <tr>
+                            <th style="width: 5%">No</th>
+                            <th>Email Pengguna</th>
+                            <th>Role</th>
+                            <th>Tanggal Daftar</th>
+                            <th>Status</th>
+                            <th class="text-center" style="width: 20%">Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody id="approvalTableBody">
+                        <tr>
+                            <td colspan="6" class="text-center py-5 text-muted">
+                                <div class="spinner-border text-primary spinner-border-sm mb-2" role="status"></div>
+                                <br>Sedang memuat data...
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="card-footer bg-light border-0 small text-muted">
+                * Klik "Terima" untuk mengaktifkan akun, atau "Tolak" untuk menghapus permintaan.
+            </div>
+        </div>
+    </div>
+</div>
           <div class="row">
             <div class="col-12">
               <div class="card mb-4 shadow-sm border-0">
@@ -149,104 +192,96 @@
   <script src="https://cdn.jsdelivr.net/npm/admin-lte@4.0.0-beta2/dist/js/adminlte.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <script src="https://cdn.jsdelivr.net/npm/apexcharts@3.45.1/dist/apexcharts.min.js"></script>
+<script type="module">
+    // --- 1. IMPORT SEMUA LIBRARY FIREBASE YG DIBUTUHKAN ---
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+    
+    // PENTING: Import KEDUA database (Realtime & Firestore)
+    import { getDatabase, ref as refDb, onValue } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+    import { getFirestore, collection, query, where, onSnapshot, doc, updateDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-  <script type="module">
-    // Import yang dibutuhkan
-    import { initAdminPage } from "./security.js";
-    import { getAuth, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-    import { ref, onValue } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
-
-    // --- FITUR LOGOUT (DIPISAH DARI DASHBOARD AGAR SELALU JALAN) ---
-    // Kode ini akan jalan duluan sebelum menunggu database, jadi tombol pasti bisa diklik.
-    const setupLogout = () => {
-        const btnLogout = document.getElementById('btnSystemLogout');
-        if (!btnLogout) return;
-
-        btnLogout.addEventListener('click', async (e) => {
-            e.preventDefault();
-            
-            // Konfirmasi (Tanpa Cancel)
-            const result = await Swal.fire({
-                title: 'Keluar?', 
-                text: "Sesi akan diakhiri.", 
-                icon: 'warning',
-                showCancelButton: false, 
-                confirmButtonColor: '#d33',   
-                confirmButtonText: 'Ya, Keluar'
-            });
-
-            if (result.isConfirmed) {
-                Swal.fire({ 
-                    title: 'Keluar...', 
-                    timer: 3000,
-                    didOpen: () => Swal.showLoading() 
-                });
-
-                try {
-                    // Coba logout bersih via Firebase
-                    const auth = getAuth(); 
-                    await signOut(auth);
-                    window.location.replace("index.html");
-                } catch (error) {
-                    console.error("Force Logout:", error);
-                    // Jika Firebase error, TETAP PAKSA keluar
-                    window.location.replace("index.html");
-                }
-            }
-        });
+    // --- 2. KONFIGURASI FIREBASE ---
+    const firebaseConfig = {
+        apiKey: "AIzaSyDUeIg9Zn_xndPXtChO8KufXFp6EMtqBJ0",
+        authDomain: "admin-pelayanan-balmon.firebaseapp.com",
+        projectId: "admin-pelayanan-balmon",
+        storageBucket: "admin-pelayanan-balmon.firebasestorage.app",
+        messagingSenderId: "1071557110255",
+        appId: "1:1071557110255:web:bff7087da1feacccb7ee1a"
     };
-    // Jalankan setup logout segera
-    setupLogout();
 
+    // Inisialisasi App
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    
+    // INISIALISASI KEDUA DATABASE (BEDA VARIABEL AGAR TIDAK BENTROK)
+    const dbRealtime = getDatabase(app);  // <-- Khusus untuk CHART
+    const dbFirestore = getFirestore(app); // <-- Khusus untuk APPROVAL USER
 
-    // --- FUNGSI HELPER (Agar tidak error jika elemen hilang) ---
+    // --- 3. HELPER UI ---
     const safeSetText = (id, value) => {
         const el = document.getElementById(id);
         if (el) el.innerText = value;
     };
-
-    // Tanggal Hari Ini
     const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
     safeSetText('date-display', new Date().toLocaleDateString('id-ID', options));
 
-    // --- SETUP CHART KOSONG ---
+    // --- 4. LOGIKA UTAMA (SAAT ADMIN LOGIN) ---
+    onAuthStateChanged(auth, (user) => {
+        if (!user) {
+            window.location.href = "index.html"; 
+        } else {
+            console.log("Admin Aktif:", user.email);
+            safeSetText('user-display', user.email);
+            
+            // JALANKAN SEMUA FUNGSI SECARA BERSAMAAN
+            initCharts();            // 1. Siapkan Canvas Chart
+            loadRealtimeStats();     // 2. Isi Data Chart (Realtime DB)
+            listenForPendingUsers(); // 3. Isi Tabel Approval (Firestore)
+        }
+    });
+
+    // ==========================================================
+    // BAGIAN A: CHART & STATISTIK (DARI REALTIME DATABASE)
+    // ==========================================================
     let demoChart, monthlyChart;
-    
-    // Chart Demografi
-    const demoOptions = {
-        series: [{ name: 'Responden', data: [0,0,0,0,0] }],
-        chart: { type: 'bar', height: 350, toolbar: { show: false } },
-        colors: ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6'],
-        plotOptions: { bar: { borderRadius: 4, distributed: true } },
-        dataLabels: { enabled: false },
-        xaxis: { categories: ['Remaja', 'Dewasa Muda', 'Dewasa', 'Paruh Baya', 'Lansia'] }
+
+    const initCharts = () => {
+        // Chart 1: Demografi
+        const elDemo = document.querySelector("#demography-chart");
+        if(elDemo) { 
+            demoChart = new ApexCharts(elDemo, {
+                series: [{ name: 'Responden', data: [0,0,0,0,0] }],
+                chart: { type: 'bar', height: 350, toolbar: { show: false } },
+                colors: ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6'],
+                plotOptions: { bar: { borderRadius: 4, distributed: true } },
+                dataLabels: { enabled: false },
+                xaxis: { categories: ['Remaja', 'Dewasa Muda', 'Dewasa', 'Paruh Baya', 'Lansia'] }
+            }); 
+            demoChart.render(); 
+        }
+
+        // Chart 2: Bulanan
+        const elMonthly = document.querySelector("#monthly-visitor-chart");
+        if(elMonthly) { 
+            monthlyChart = new ApexCharts(elMonthly, {
+                series: [{ name: "Kunjungan", data: [] }],
+                chart: { type: 'area', height: 350, zoom: { enabled: false } },
+                xaxis: { categories: [] },
+                colors: ['#0d6efd']
+            }); 
+            monthlyChart.render(); 
+        }
     };
-    const elDemo = document.querySelector("#demography-chart");
-    if(elDemo) { demoChart = new ApexCharts(elDemo, demoOptions); demoChart.render(); }
 
-    // Chart Bulanan
-    const monthlyOptions = {
-        series: [{ name: "Kunjungan", data: [] }],
-        chart: { type: 'area', height: 350, zoom: { enabled: false } },
-        xaxis: { categories: [] },
-        colors: ['#0d6efd']
-    };
-    const elMonthly = document.querySelector("#monthly-visitor-chart");
-    if(elMonthly) { monthlyChart = new ApexCharts(elMonthly, monthlyOptions); monthlyChart.render(); }
-
-
-    // --- LOGIKA DASHBOARD ---
-    // Menggunakan initAdminPage untuk cek login dan ambil data
-    initAdminPage((user, db) => {
-        console.log("User valid:", user.email);
-        safeSetText('user-display', user.email);
-
-        // 1. Data Demografi
-        onValue(ref(db, 'statistik_web/demografi_umur'), (snapshot) => {
+    function loadRealtimeStats() {
+        // Load Demografi
+        onValue(refDb(dbRealtime, 'statistik_web/demografi_umur'), (snapshot) => {
             let counts = { 'Remaja': 0, 'Dewasa Muda': 0, 'Dewasa': 0, 'Paruh Baya': 0, 'Lansia': 0 };
             let totalResponden = 0;
             let tableRows = []; 
-
+            
             if (snapshot.exists()) {
                 const data = snapshot.val();
                 totalResponden = Object.keys(data).length;
@@ -262,18 +297,21 @@
             }
             safeSetText('visitor-count', totalResponden);
             if (demoChart) demoChart.updateSeries([{ data: Object.values(counts) }]);
-            renderTable(tableRows);
+            renderRespondenTable(tableRows);
         });
 
-        // 2. Data Kunjungan Bulanan
-        onValue(ref(db, 'statistik_web/kunjungan_bulanan'), (snapshot) => {
+        // Load Kunjungan Bulanan (Agar Chart Area Muncul)
+        onValue(refDb(dbRealtime, 'statistik_web/kunjungan_bulanan'), (snapshot) => {
             let categories = [];
             let seriesData = [];
             if(snapshot.exists()) {
                 const data = snapshot.val();
+                // Sort key bulan (format YYYY-MM)
                 Object.keys(data).sort().forEach(key => {
+                    // Konversi key "2024-02" jadi Label "Feb 2024"
                     const dateObj = new Date(key + "-01");
-                    categories.push(dateObj.toLocaleDateString('id-ID', { month: 'short', year: 'numeric' }));
+                    const label = dateObj.toLocaleDateString('id-ID', { month: 'short', year: 'numeric' });
+                    categories.push(label);
                     seriesData.push(data[key]);
                 });
             }
@@ -283,29 +321,119 @@
             }
         });
 
-        // 3. Statistik Lain
-        onValue(ref(db, 'statistik_web/total_kunjungan'), (snap) => 
-            safeSetText('stat-traffic-count', (snap.val() || 0).toLocaleString('id-ID'))
-        );
-        onValue(ref(db, 'arsip_drive'), (s) => 
-            safeSetText('stat-dokumen-count', s.exists() ? Object.keys(s.val()).length : 0)
-        );
-    });
+        // Statistik Angka Kecil
+        onValue(refDb(dbRealtime, 'statistik_web/total_kunjungan'), (snap) => safeSetText('stat-traffic-count', (snap.val() || 0).toLocaleString('id-ID')));
+        onValue(refDb(dbRealtime, 'arsip_drive'), (s) => safeSetText('stat-dokumen-count', s.exists() ? Object.keys(s.val()).length : 0));
+    }
 
-    // Render Tabel Helper
-    function renderTable(dataList) {
+    function renderRespondenTable(dataList) {
         const tbody = document.getElementById('table-demografi-body');
         if(!tbody) return;
         if(dataList.length === 0) { tbody.innerHTML = `<tr><td colspan="5" class="text-center py-4 text-muted">Belum ada data.</td></tr>`; return; }
         
         dataList.sort((a, b) => b.waktu - a.waktu);
         let html = '';
-        dataList.forEach((d, index) => {
+        dataList.slice(0, 10).forEach((d, index) => { 
             let dateStr = d.waktu ? new Date(d.waktu).toLocaleString('id-ID', { day: 'numeric', month: 'short', hour: '2-digit', minute:'2-digit' }) : '-';
             html += `<tr><td class="ps-4">${index + 1}</td><td>${d.umur} Thn</td><td>${d.kategori}</td><td class="small">${d.device || '-'}</td><td class="small">${dateStr}</td></tr>`;
         });
         tbody.innerHTML = html;
     }
-  </script>
+
+    // ==========================================================
+    // BAGIAN B: APPROVAL USER (DARI FIRESTORE)
+    // ==========================================================
+    function listenForPendingUsers() {
+        const q = query(collection(dbFirestore, "users"), where("status", "==", "pending"));
+
+        onSnapshot(q, (snapshot) => {
+            const tbody = document.getElementById("approvalTableBody");
+            const countBadge = document.getElementById("pendingCount");
+            
+            if(tbody) tbody.innerHTML = "";
+            if(countBadge) countBadge.innerText = snapshot.size + " Pending";
+
+            if (snapshot.empty) {
+                if(tbody) tbody.innerHTML = `
+                    <tr><td colspan="6" class="text-center py-4 text-muted fst-italic">
+                        Tidak ada permintaan pendaftaran baru.
+                    </td></tr>`;
+                return;
+            }
+
+            let no = 1;
+            snapshot.forEach((docSnap) => {
+                const data = docSnap.data();
+                const uid = docSnap.id;
+                
+                let dateStr = "-";
+                if(data.createdAt) {
+                    dateStr = new Date(data.createdAt).toLocaleString('id-ID', {
+                        day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute:'2-digit'
+                    });
+                }
+
+                const row = `
+                    <tr>
+                        <td>${no++}</td>
+                        <td class="fw-bold text-primary">${data.email}</td>
+                        <td><span class="badge bg-secondary">${data.role || 'staff'}</span></td>
+                        <td>${dateStr}</td>
+                        <td><span class="badge bg-warning text-dark">Menunggu</span></td>
+                        <td class="text-center">
+                            <button onclick="window.processUser('${uid}', 'approve')" class="btn btn-success btn-sm me-1 shadow-sm" title="Terima"><i class="bi bi-check-lg"></i></button>
+                            <button onclick="window.processUser('${uid}', 'reject')" class="btn btn-danger btn-sm shadow-sm" title="Tolak"><i class="bi bi-x-lg"></i></button>
+                        </td>
+                    </tr>`;
+                if(tbody) tbody.innerHTML += row;
+            });
+        });
+    }
+
+    // FUNGSI GLOBAL TOMBOL
+    window.processUser = async (uid, action) => {
+        const userRef = doc(dbFirestore, "users", uid);
+        
+        let title, text, btnColor, btnText, newStatus;
+        if(action === 'approve') {
+            title = 'Aktifkan User?'; text = 'User akan bisa login.'; btnColor = '#198754'; btnText = 'Ya, Aktifkan';
+        } else {
+            title = 'Tolak User?'; text = 'Data akan dihapus.'; btnColor = '#d33'; btnText = 'Ya, Hapus';
+        }
+
+        const result = await Swal.fire({
+            title: title, text: text, icon: action === 'approve' ? 'question' : 'warning',
+            showCancelButton: true, confirmButtonColor: btnColor, confirmButtonText: btnText
+        });
+
+        if(result.isConfirmed) {
+            try {
+                if(action === 'approve') {
+                    await updateDoc(userRef, { status: 'active' });
+                    Swal.fire('Sukses', 'User berhasil diaktifkan.', 'success');
+                } else {
+                    await deleteDoc(userRef);
+                    Swal.fire('Sukses', 'Permintaan ditolak.', 'success');
+                }
+            } catch(e) { Swal.fire('Error', e.message, 'error'); }
+        }
+    };
+
+    // --- LOGOUT ---
+    const btnLogout = document.getElementById('btnSystemLogout');
+    if (btnLogout) {
+        btnLogout.addEventListener('click', async (e) => {
+            const result = await Swal.fire({
+                title: 'Keluar?', text: "Sesi akan diakhiri.", icon: 'warning', 
+                showCancelButton: true, confirmButtonColor: '#d33', confirmButtonText: 'Ya, Keluar'
+            });
+            if (result.isConfirmed) {
+                await signOut(auth);
+                window.location.replace("index.html");
+            }
+        });
+    }
+</script>
+
 </body>
 </html>
