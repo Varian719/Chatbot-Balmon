@@ -1,5 +1,18 @@
 {
   "projects": {
     "default": "admin-pelayanan-balmon"
-  }
+  },
+  "targets": {
+    "admin-pelayanan-balmon": {
+      "hosting": {
+        "web_utama": [
+          "pelayananbalmonsamarindatest"
+        ],
+        "web_admin": [
+          "admin-pelayanan-balmon"
+        ]
+      }
+    }
+  },
+  "etags": {}
 }
