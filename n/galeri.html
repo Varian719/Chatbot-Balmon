@@ -877,7 +877,8 @@
              
                 container.insertAdjacentHTML('beforeend', html);
             });
-
+            
+    
             const activeBtn = document.querySelector('.cat-card.active');
             if(activeBtn) {
                 const clickAttr = activeBtn.getAttribute('onclick');
@@ -886,7 +887,39 @@
                     window.filterGallery(catMatch[1], activeBtn);
                 }
             }
+            
         });
+        
+        const activateAutoFilter = () => {
+            const params = new URLSearchParams(window.location.search);
+            const target = params.get('filter');
+
+            if (target) {
+                // Cari elemen kartu berdasarkan fungsi onclick-nya
+                const targetBtn = document.querySelector(`.cat-card[onclick*="'${target}'"]`);
+                
+                if (targetBtn) {
+                    // Gunakan setTimeout kecil untuk memastikan DOM sudah stabil
+                    setTimeout(() => {
+                        targetBtn.click();
+                        // Scroll otomatis ke area galeri agar user tahu filter bekerja
+                        targetBtn.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    }, 100);
+                }
+            }
+        };
+
+        // Gunakan MutationObserver untuk mendeteksi kapan konten Firebase selesai dirender
+        const galleryGrid = document.getElementById('galleryContainer');
+        const observer = new MutationObserver((mutations, obs) => {
+            // Jika grid sudah berisi item galeri (bukan teks 'Memuat...')
+            if (galleryGrid.querySelector('.gallery-item')) {
+                activateAutoFilter();
+                obs.disconnect(); // Berhenti mengawasi setelah filter berhasil dijalankan
+            }
+        });
+
+        observer.observe(galleryGrid, { childList: true, subtree: true });
     </script>
 </body>
 </html>
