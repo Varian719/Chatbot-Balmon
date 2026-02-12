@@ -418,14 +418,13 @@
         .fc-link-list a:hover { background: var(--fc-accent-yellow); color: var(--fc-dark-blue); transform: translateX(3px); border-color: var(--fc-accent-yellow); }
 
         /* ====================================================== */
-        /* --- NEWS SECTION MODERN --- */
+        /* --- NEWS SECTION MODERN (FIXED POSITION & HEIGHT) --- */
         /* ====================================================== */
         .news-section {
             padding: 90px 0;
             background-color: var(--bg-white);
             position: relative;
         }
-        /* Background pattern/decoration untuk section agar tidak sepi */
         .news-section::before {
             content: '';
             position: absolute; left: 0; top: 0; width: 100%; height: 50%;
@@ -438,20 +437,20 @@
             align-items: stretch;
             gap: 0; 
             background: #fff;
-            border-radius: 24px; /* Lebih rounded */
+            border-radius: 24px;
             overflow: hidden;
             border: 1px solid rgba(0, 111, 176, 0.1);
-            box-shadow: 0 20px 50px rgba(0, 50, 90, 0.08); /* Shadow lebih premium */
-            height: 500px; /* Sedikit lebih tinggi */
+            box-shadow: 0 20px 50px rgba(0, 50, 90, 0.08);
+            /* FIXED HEIGHT AGAR TIDAK NAIK TURUN */
+            height: 500px;
             width: 100%;
             position: relative;
             z-index: 1;
         }
 
-        /* KOLOM KIRI: TEXT */
         .news-text-col {
             flex: 1; 
-            padding: 50px; /* Padding lebih besar */
+            padding: 50px;
             display: flex;
             flex-direction: column;
             justify-content: center; 
@@ -459,10 +458,9 @@
             min-width: 0; 
             position: relative;
             background: #ffffff;
-            overflow: hidden;
+            overflow: hidden; /* Mencegah overflow */
         }
 
-        /* Elemen dekoratif samar di belakang teks */
         .news-text-col::before {
             content: '';
             position: absolute;
@@ -474,467 +472,199 @@
             pointer-events: none;
         }
 
-        /* Baris Header (Badge & Counter) */
         .news-header-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 25px;
-            position: relative; z-index: 1;
+            display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; position: relative; z-index: 1;
         }
 
         .news-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            background: var(--primary-color); 
-            color: #ffffff;
-            padding: 6px 14px;
-            border-radius: 50px;
-            font-family: 'Albert Sans', sans-serif;
-            font-size: 12px;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
+            display: inline-flex; align-items: center; gap: 6px;
+            background: var(--primary-color); color: #ffffff;
+            padding: 6px 14px; border-radius: 50px;
+            font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;
         }
-        .news-badge::before {
-            content: ''; width: 6px; height: 6px; background: var(--accent-yellow); border-radius: 50%;
-        }
+        .news-badge::before { content: ''; width: 6px; height: 6px; background: var(--accent-yellow); border-radius: 50%; }
 
-        .news-counter {
-            font-family: 'Albert Sans', sans-serif;
-            font-size: 14px;
-            font-weight: 600;
-            color: var(--text-gray);
-            letter-spacing: 1px;
-        }
+        .news-counter { font-size: 14px; font-weight: 600; color: var(--text-gray); letter-spacing: 1px; }
 
-        /* Judul Berita */
+        /* Judul Berita (FIXED LINES) */
         .news-title-anim {
-            font-family: 'Albert Sans', sans-serif;
-            font-size: 32px;
-            font-weight: 800; /* Lebih tebal */
-            color: var(--text-dark);
-            margin-bottom: 12px;
-            line-height: 1.25;
-            transition: opacity 0.4s ease, transform 0.4s ease;
+            font-size: 32px; font-weight: 800; color: var(--text-dark);
+            margin-bottom: 12px; line-height: 1.25;
             position: relative; z-index: 1;
+            /* Batasi 2 baris */
+            display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+            height: auto;
         }
         
-        /* Tanggal */
         .news-meta {
-            font-family: 'Albert Sans', sans-serif;
-            font-size: 14px;
-            color: var(--text-gray);
-            font-weight: 500;
-            margin-bottom: 20px;
-            display: flex; align-items: center; gap: 8px;
-            position: relative; z-index: 1;
+            font-size: 14px; color: var(--text-gray); font-weight: 500;
+            margin-bottom: 20px; display: flex; align-items: center; gap: 8px; position: relative; z-index: 1;
         }
         .news-meta i { color: var(--secondary-color); }
 
-        /* Deskripsi */
+        /* Deskripsi (FIXED LINES) */
         .news-desc-anim {
-            font-family: 'Albert Sans', sans-serif;
-            font-size: 16px;
-            color: #555;
-            line-height: 1.7;
-            margin-bottom: 35px;
-            font-weight: 400;
-            opacity: 0.9;
-            transition: opacity 0.4s ease, transform 0.4s ease;
-            display: -webkit-box;
-            -webkit-line-clamp: 3;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
+            font-size: 16px; color: #555; line-height: 1.7;
+            margin-bottom: 35px; font-weight: 400; opacity: 0.9;
+            /* Batasi 3 baris */
+            display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;
             position: relative; z-index: 1;
         }
 
-        /* Controls Footer */
         .news-footer-row {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-top: auto;
-            position: relative; z-index: 1;
-            border-top: 1px solid #f0f0f0;
-            padding-top: 25px;
+            display: flex; align-items: center; justify-content: space-between;
+            margin-top: auto; position: relative; z-index: 1; border-top: 1px solid #f0f0f0; padding-top: 25px;
         }
 
-        .news-nav-group {
-            display: flex;
-            gap: 10px;
-        }
-
+        .news-nav-group { display: flex; gap: 10px; }
         .news-btn-nav {
-            width: 42px; height: 42px;
-            border: 1px solid #e2e8f0;
-            border-radius: 50%;
-            background: white;
-            color: var(--text-dark);
-            cursor: pointer;
-            display: flex; align-items: center; justify-content: center;
-            transition: all 0.2s ease;
+            width: 42px; height: 42px; border: 1px solid #e2e8f0; border-radius: 50%;
+            background: white; color: var(--text-dark); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s ease;
         }
         .news-btn-nav:hover {
-            border-color: var(--primary-color);
-            background: var(--primary-color);
-            color: white;
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0, 111, 176, 0.15);
+            border-color: var(--primary-color); background: var(--primary-color); color: white; transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0, 111, 176, 0.15);
         }
 
         .news-btn-readmore {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            padding: 10px 24px;
-            background: var(--bg-light-blue);
-            color: var(--primary-color);
-            border-radius: 50px;
-            font-family: 'Albert Sans', sans-serif;
-            font-weight: 700;
-            font-size: 14px;
-            transition: all 0.3s ease;
+            display: inline-flex; align-items: center; gap: 8px; padding: 10px 24px;
+            background: var(--bg-light-blue); color: var(--primary-color); border-radius: 50px;
+            font-weight: 700; font-size: 14px; transition: all 0.3s ease;
         }
         .news-btn-readmore:hover {
-            background: var(--primary-color);
-            color: white;
-            box-shadow: 0 8px 20px rgba(0, 111, 176, 0.25);
-            transform: translateY(-2px);
+            background: var(--primary-color); color: white; box-shadow: 0 8px 20px rgba(0, 111, 176, 0.25); transform: translateY(-2px);
         }
 
-        /* KOLOM KANAN: GAMBAR FIXED WIDTH */
+        /* KOLOM KANAN: GAMBAR FIXED */
         .news-image-col {
-            flex: 0 0 500px; 
-            width: 500px;
-            position: relative;
-            overflow: hidden;
-            height: 100%; 
-            background: #eee;
+            flex: 0 0 500px; width: 500px; position: relative; overflow: hidden; height: 100%; background: #eee;
         }
-
-        /* Overlay Gradien pada gambar agar menyatu dengan border radius container */
         .news-image-col::after {
-            content: '';
-            position: absolute; inset: 0;
-            box-shadow: inset 10px 0 20px -10px rgba(0,0,0,0.1);
-            pointer-events: none;
-            z-index: 2;
+            content: ''; position: absolute; inset: 0; box-shadow: inset 10px 0 20px -10px rgba(0,0,0,0.1); pointer-events: none; z-index: 2;
         }
-
         .news-slider-track-manual {
-            display: flex;
-            height: 100%;
-            width: 100%;
-            transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+            display: flex; height: 100%; width: 100%; transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1);
         }
-
         .news-slide-img {
-            min-width: 100%; 
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            flex-shrink: 0;
-            display: block;
-            transition: transform 5s ease; /* Efek zoom halus saat diam */
+            min-width: 100%; width: 100%; height: 100%; object-fit: cover; flex-shrink: 0; display: block; transition: transform 5s ease;
         }
-        /* Efek Zoom halus pada gambar aktif */
-        .news-image-col:hover .news-slide-img {
-            transform: scale(1.05);
-        }
+        .news-image-col:hover .news-slide-img { transform: scale(1.05); }
         
         /* Animasi Text */
-        .text-fade-out { opacity: 0; transform: translateY(10px); }
-        .text-fade-in { opacity: 1; transform: translateY(0); }
+        .text-fade-out { opacity: 0; transform: translateY(10px); transition: 0.3s; }
+        .text-fade-in { opacity: 1; transform: translateY(0); transition: 0.3s; }
 
-        /* Progress Bar */
         .news-progress {
-            position: absolute; bottom: 0; left: 0; height: 5px;
-            background: var(--accent-yellow); width: 0%; z-index: 10;
+            position: absolute; bottom: 0; left: 0; height: 5px; background: var(--accent-yellow); width: 0%; z-index: 10;
         }
         .news-progress.active { transition: width 5s linear; width: 100%; }
         .news-progress.reset { transition: none; width: 0%; }
-        /* RESPONSIVE NEWS (Mobile) - FIXED HEIGHT & WIDE BUTTONS */
-/* ========================================= */
-        /* RESPONSIVE VIDEO CAROUSEL (SWIPE MANUAL) */
-        /* ========================================= */
-/* ========================================= */
-        /* FIX: RESPONSIVE VIDEO CAROUSEL (SWIPE)   */
-        /* ========================================= */
-        @media (max-width: 900px) {
-            /* 1. Layout Stack (Atas-Bawah) */
-            .video-flex-container { 
-                display: flex;
-                flex-direction: column; 
-                align-items: flex-start; 
-                gap: 30px; 
-            }
-            .video-info-col { 
-                width: 100%; 
-                text-align: left; 
-                padding: 0 20px; 
-            }
-            .video-carousel-col { 
-                width: 100%; 
-                overflow: visible; /* Penting: Biarkan keluar dari container induk */
-            }
-
-            /* 2. Sembunyikan Tombol Panah Desktop */
-            .vc-nav-btn-absolute { 
-                display: none !important; 
-            }
-            
-            /* 3. Area Scroll Utama (Window) */
-            .vc-window {
-                display: flex;
-                width: 100%;
-                /* KUNCI UTAMA AGAR BISA SCROLL: */
-                overflow-x: auto !important; 
-                overflow-y: hidden;
-                
-                /* Supaya smooth di iPhone/Android */
-                -webkit-overflow-scrolling: touch; 
-                
-                /* Padding kiri agar kartu pertama tidak nempel pinggir layar */
-                padding: 10px 20px 40px 20px !important; 
-                
-                /* Matikan scrollbar default */
-                scrollbar-width: none; 
-                -ms-overflow-style: none; 
-            }
-            
-            /* Sembunyikan scrollbar di Chrome/Safari */
-            .vc-window::-webkit-scrollbar {
-                display: none;
-            }
-
-            /* 4. Track (Wadah Kartu) */
-            .vc-track {
-                display: flex;
-                gap: 15px; /* Jarak antar kartu */
-                
-                /* Matikan Transform JS Desktop */
-                transform: none !important; 
-                width: auto !important; /* Lebar mengikuti jumlah konten */
-                margin: 0 !important;
-            }
-
-            /* 5. Kartu Video (Item) */
-            .video-card {
-                /* Paksa lebar tetap agar memicu scroll */
-                flex: 0 0 280px !important; 
-                width: 280px !important;
-                max-width: 280px !important;
-                
-                /* Hiasan */
-                margin-right: 0;
-                scroll-snap-align: center; /* Opsional: Magnet effect */
-            }
-        }
 
         /* ====================================================== */
-        /* --- NEW: VIDEO SLIDER SECTION (PARALLAX DARK SPLIT) --- */
+        /* --- VIDEO SLIDER SECTION (FIXED HEIGHT) --- */
         /* ====================================================== */
         .video-slider-section {
             padding: 80px 0;
-            background-color: #0f172a; /* Fallback Color */
-            /* Parallax Background Image */
+            background-color: #0f172a; 
             background-image: url('https://images.unsplash.com/photo-1550751827-4bd374c3f58b?q=80&w=2070&auto=format&fit=crop'); 
-            background-attachment: fixed;
-            background-position: center;
-            background-size: cover;
-            position: relative;
-            overflow: hidden;
+            background-attachment: fixed; background-position: center; background-size: cover;
+            position: relative; overflow: hidden;
         }
-        
-        /* Dark Gradient Overlay for Readability */
         .video-slider-section::before {
-            content: '';
-            position: absolute; left: 0; top: 0; width: 100%; height: 100%;
-            background: linear-gradient(135deg, rgba(11, 22, 42, 0.95) 0%, rgba(20, 35, 60, 0.9) 100%);
-            z-index: 1;
+            content: ''; position: absolute; left: 0; top: 0; width: 100%; height: 100%;
+            background: linear-gradient(135deg, rgba(11, 22, 42, 0.95) 0%, rgba(20, 35, 60, 0.9) 100%); z-index: 1;
         }
 
-        /* Layout Container Split */
         .video-flex-container {
-            position: relative; 
-            z-index: 2; /* Di atas overlay */
-            display: flex;
-            align-items: center;
-            gap: 40px;
-            flex-wrap: wrap; /* Stack di mobile */
+            position: relative; z-index: 2; display: flex; align-items: center; gap: 40px; flex-wrap: wrap;
         }
 
-        /* --- KOLOM KIRI (TEXT) --- */
-        .video-info-col {
-            flex: 1; 
-            min-width: 300px;
-            color: #ffffff;
-        }
+        .video-info-col { flex: 1; min-width: 300px; color: #ffffff; }
+        .video-info-col h2 { font-size: 48px; font-weight: 800; margin: 0 0 15px 0; letter-spacing: -1px; }
+        .video-info-col p { font-size: 16px; color: rgba(255, 255, 255, 0.8); margin-bottom: 30px; line-height: 1.6; }
 
-        .video-info-col h2 {
-            font-size: 48px;
-            font-weight: 800;
-            margin: 0 0 15px 0;
-            letter-spacing: -1px;
-        }
+        .video-carousel-col { flex: 2; min-width: 0; width: 100%; }
+        .video-slider-wrapper { position: relative; width: 100%; padding: 0 40px; }
 
-        .video-info-col p {
-            font-size: 16px;
-            color: rgba(255, 255, 255, 0.8);
-            margin-bottom: 30px;
-            line-height: 1.6;
-        }
+        .vc-window { width: 100%; overflow: hidden; padding: 20px 5px; position: relative; }
+        .vc-track { display: flex; gap: 20px; width: max-content; transition: transform 0.5s cubic-bezier(0.25, 1, 0.5, 1); }
 
-        .yt-btn {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            width: 50px; height: 50px;
-            background-color: white;
-            color: #ff0000;
-            border-radius: 12px;
-            font-size: 24px;
-            transition: all 0.3s ease;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-        }
-        .yt-btn:hover {
-            transform: scale(1.1);
-            box-shadow: 0 8px 25px rgba(255, 0, 0, 0.3);
-        }
-
-        /* --- KOLOM KANAN (CAROUSEL) --- */
-        .video-carousel-col {
-            flex: 2; /* Lebih lebar dari teks */
-            min-width: 0; /* Penting agar flex item tidak overflow */
-            width: 100%; /* Fallback */
-        }
-
-        /* Container Pembungkus Relatif untuk tombol Absolute */
-        .video-slider-wrapper {
-            position: relative;
-            width: 100%;
-            padding: 0 40px; /* Memberi ruang agar tombol tidak menutupi konten di mobile */
-        }
-
-        /* Container untuk track carousel */
-        .vc-window {
-            width: 100%;
-            overflow: hidden; 
-            padding: 20px 5px;
-            position: relative;
-        }
-
-        /* Track flex untuk menampung kartu */
-        .vc-track {
-            display: flex;
-            gap: 20px; /* Jarak antar kartu */
-            width: max-content;
-            transition: transform 0.5s cubic-bezier(0.25, 1, 0.5, 1); /* Animasi geser halus */
-        }
-
-        /* Kartu Video - UKURAN LEBIH KECIL */
+        /* KARTU VIDEO - FIXED HEIGHT & WIDTH */
         .video-card {
-            flex: 0 0 280px; /* Lebar tetap 280px (Compact) */
-            width: 280px;
-            background: #fff;
-            border-radius: 16px;
-            overflow: hidden;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
-            border: none;
-            transition: all 0.3s ease;
+            flex: 0 0 280px; width: 280px; 
+            /* KUNCI TINGGI */
+            height: 350px; 
+            background: #fff; border-radius: 16px; overflow: hidden;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2); border: none; transition: all 0.3s ease;
+            display: flex; flex-direction: column;
         }
-        .video-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
-        }
+        .video-card:hover { transform: translateY(-5px); box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3); }
 
-        /* Wrapper untuk iframe agar responsif 16:9 */
         .video-card-media {
-            position: relative;
-            width: 100%;
-            padding-bottom: 56.25%; /* Aspek rasio 16:9 */
-            height: 0;
-            background: #000;
+            position: relative; width: 100%; padding-bottom: 56.25%; height: 0; background: #000; flex-shrink: 0;
         }
-        .video-card-media iframe {
-            position: absolute;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            border: 0;
-        }
+        .video-card-media iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0; }
 
-        /* Konten Teks di bawah video */
-        .video-card-content {
-            padding: 20px;
-        }
-
+        .video-card-content { padding: 20px; flex-grow: 1; display: flex; flex-direction: column; }
         .video-card-content h3 {
-            font-size: 16px;
-            font-weight: 700;
-            color: var(--text-dark);
-            margin: 0 0 10px 0;
-            line-height: 1.3;
-            /* Batasi 2 baris untuk judul */
+            font-size: 16px; font-weight: 700; color: var(--text-dark); margin: 0 0 10px 0; line-height: 1.3;
             display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
         }
-
         .video-card-content p {
-            font-size: 13px;
-            color: var(--text-gray);
-            margin: 0;
-            line-height: 1.6;
-            /* Batasi 3 baris untuk deskripsi */
+            font-size: 13px; color: var(--text-gray); margin: 0; line-height: 1.6;
             display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;
         }
         
-        /* --- TOMBOL NAVIGASI DI ATAS BACKGROUND GELAP --- */
+        /* Navigasi Video Desktop */
         .vc-nav-btn-absolute {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 45px; height: 45px;
-            border: none;
-            border-radius: 50%;
-            /* Glassmorphism Effect */
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(5px);
-            border: 1px solid rgba(255,255,255,0.2);
-            color: #fff;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-            cursor: pointer;
-            z-index: 10;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 18px;
-            transition: all 0.2s ease;
+            position: absolute; top: 50%; transform: translateY(-50%); width: 45px; height: 45px;
+            border: none; border-radius: 50%; background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(5px);
+            border: 1px solid rgba(255,255,255,0.2); color: #fff; box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            cursor: pointer; z-index: 10; display: flex; align-items: center; justify-content: center; font-size: 18px; transition: all 0.2s ease;
         }
-        
-        .vc-nav-btn-absolute:hover {
-            background: #fff;
-            color: var(--primary-color);
-            transform: translateY(-50%) scale(1.1);
-            box-shadow: 0 0 20px rgba(255, 255, 255, 0.4);
-        }
-
+        .vc-nav-btn-absolute:hover { background: #fff; color: var(--primary-color); transform: translateY(-50%) scale(1.1); }
         .vc-nav-btn-absolute.prev { left: -10px; }
         .vc-nav-btn-absolute.next { right: -10px; }
         
+        /* RESPONSIVE VIDEO (SWIPE MOBILE) */
         @media (max-width: 900px) {
             .video-flex-container { flex-direction: column; align-items: flex-start; gap: 30px; }
-            .video-info-col { width: 100%; text-align: left; }
-            .video-carousel-col { width: 100%; }
-            .vc-nav-btn-absolute.prev { left: 0px; }
-            .vc-nav-btn-absolute.next { right: 0px; }
+            .video-info-col { width: 100%; text-align: left; padding: 0 20px; }
+            .video-carousel-col { width: 100%; overflow: visible; }
+            .video-slider-wrapper { padding: 0; }
+
+            /* Sembunyikan Tombol Desktop */
+            .vc-nav-btn-absolute { display: none !important; }
+
+            /* Enable Scroll Swipe */
+            .vc-window {
+                display: flex; width: 100%; overflow-x: auto !important; overflow-y: hidden;
+                -webkit-overflow-scrolling: touch; padding: 10px 20px 40px 20px !important;
+                scrollbar-width: none; -ms-overflow-style: none;
+            }
+            .vc-window::-webkit-scrollbar { display: none; }
+
+            .vc-track {
+                transform: none !important; width: auto !important; margin: 0 !important; gap: 15px;
+            }
+            .video-card {
+                flex: 0 0 280px !important; width: 280px !important; margin-right: 0; scroll-snap-align: center;
+            }
         }
 
-        @media (max-width: 768px) {
-            .video-slider-wrapper { padding: 0; }
-            .vc-nav-btn-absolute {
-                background: rgba(255,255,255,0.9);
-                color: #333;
-                width: 35px; height: 35px; font-size: 16px;
+        /* RESPONSIVE NEWS (MOBILE STACK) */
+        @media (max-width: 900px) {
+            .news-container {
+                flex-direction: column-reverse; /* Gambar atas, Teks bawah */
+                height: auto; /* Auto height di HP */
+                min-height: 500px;
             }
+            .news-image-col {
+                width: 100%; height: 250px; flex: none; border-radius: 16px 16px 0 0;
+            }
+            .news-text-col {
+                width: 100%; flex: none; padding: 25px;
+            }
+            .news-title-anim { font-size: 24px; }
         }
 
         /* ARCHIVE */
@@ -966,18 +696,11 @@
 
         /* --- CHAT WIDGET TERBARU --- */
         .chat-toggle-btn { 
-            position: fixed; 
-            bottom: 30px; 
-            right: 30px; 
-            width: 65px; height: 65px; 
-            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark)); 
-            color: #ffffff; 
-            border: none; border-radius: 50%; 
-            box-shadow: 0 8px 25px rgba(0, 111, 176, 0.4); 
-            cursor: pointer; z-index: 10000; /* Z-Index Tinggi */
-            display: flex; align-items: center; justify-content: center; 
-            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.3s, background 0.3s; 
-            overflow: hidden; will-change: transform;
+            position: fixed; bottom: 30px; right: 30px; width: 65px; height: 65px; 
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark)); color: #ffffff; 
+            border: none; border-radius: 50%; box-shadow: 0 8px 25px rgba(0, 111, 176, 0.4); 
+            cursor: pointer; z-index: 10000; display: flex; align-items: center; justify-content: center; 
+            transition: transform 0.3s, box-shadow 0.3s, background 0.3s; overflow: hidden; will-change: transform;
         }
         .chat-toggle-btn:hover { transform: scale(1.1); box-shadow: 0 12px 30px rgba(0, 111, 176, 0.5); }
         .chat-toggle-btn.on-footer { background: var(--accent-yellow); color: var(--text-dark); }
@@ -988,97 +711,35 @@
         .chat-toggle-btn.active .icon-close { opacity: 1; transform: scale(1) rotate(0deg); }
 
         .chat-box-container { 
-            position: fixed; 
-            bottom: 110px; /* Jarak aman di atas tombol (30px bottom + 65px btn + 15px gap) */
-            right: 30px; 
-            width: 350px; 
-            height: 500px; 
-            max-height: 70vh;
-            background-color: #fff; 
-            border-radius: 16px; 
-            box-shadow: 0 20px 50px -10px rgba(0, 60, 100, 0.25);
-            border: 1px solid rgba(0, 111, 176, 0.1); 
-            z-index: 9999; 
-            opacity: 0; visibility: hidden; 
-            transform: translateY(20px) scale(0.95); 
-            transition: all 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
+            position: fixed; bottom: 110px; right: 30px; width: 350px; height: 500px; max-height: 70vh;
+            background-color: #fff; border-radius: 16px; box-shadow: 0 20px 50px -10px rgba(0, 60, 100, 0.25);
+            border: 1px solid rgba(0, 111, 176, 0.1); z-index: 9999; 
+            opacity: 0; visibility: hidden; transform: translateY(20px) scale(0.95); transition: all 0.3s;
             overflow: hidden; display: flex; flex-direction: column;
         }
         .chat-box-container.active { opacity: 1; visibility: visible; transform: translateY(0) scale(1); }
         
-        /* CHAT HEADER */
         .chat-header {
             background: linear-gradient(135deg, var(--primary-color) 0%, #00406b 100%);
-            padding: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            border-bottom: 3px solid var(--accent-yellow);
-            color: #fff;
-            flex-shrink: 0;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-            position: relative;
-            overflow: hidden;
+            padding: 20px; display: flex; align-items: center; justify-content: space-between;
+            border-bottom: 3px solid var(--accent-yellow); color: #fff; flex-shrink: 0;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1); position: relative; overflow: hidden;
         }
-        
-        /* Efek Shine Halus */
         .chat-header::after {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 60%);
-            pointer-events: none;
+            content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 60%); pointer-events: none;
         }
 
-        .chat-header-content {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            z-index: 2; /* Di atas efek shine */
-            width: 100%;
-        }
-
+        .chat-header-content { display: flex; align-items: center; gap: 15px; z-index: 2; width: 100%; }
         .chat-logo-bg { 
-            width: 48px; height: 48px; 
-            background: rgba(255, 255, 255, 0.15); 
-            backdrop-filter: blur(5px); 
-            border: 1px solid rgba(255, 255, 255, 0.3); 
-            border-radius: 50%; 
-            display: flex; align-items: center; justify-content: center; color: #fff;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-            flex-shrink: 0;
+            width: 48px; height: 48px; background: rgba(255, 255, 255, 0.15); backdrop-filter: blur(5px); 
+            border: 1px solid rgba(255, 255, 255, 0.3); border-radius: 50%; 
+            display: flex; align-items: center; justify-content: center; color: #fff; box-shadow: 0 4px 10px rgba(0,0,0,0.1); flex-shrink: 0;
         }
-        
-        .chat-info {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-        }
-        
-        .chat-info h4 { 
-            margin: 0; 
-            font-size: 16px; 
-            font-weight: 700; 
-            letter-spacing: 0.5px; 
-            text-shadow: 0 2px 4px rgba(0,0,0,0.15);
-            line-height: 1.2;
-        }
-        
-        .chat-status { 
-            display: flex; align-items: center; gap: 6px; 
-            font-size: 12px; font-weight: 500; 
-            color: rgba(255,255,255,0.9); 
-            margin-top: 3px; 
-        }
-        
-        .status-dot {
-            width: 8px; height: 8px; background-color: #00ff9d; 
-            border-radius: 50%; box-shadow: 0 0 8px rgba(0, 255, 157, 0.6); 
-            animation: pulseDot 2s infinite;
-        }
+        .chat-info { display: flex; flex-direction: column; justify-content: center; }
+        .chat-info h4 { margin: 0; font-size: 16px; font-weight: 700; letter-spacing: 0.5px; text-shadow: 0 2px 4px rgba(0,0,0,0.15); line-height: 1.2; }
+        .chat-status { display: flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 500; color: rgba(255,255,255,0.9); margin-top: 3px; }
+        .status-dot { width: 8px; height: 8px; background-color: #00ff9d; border-radius: 50%; box-shadow: 0 0 8px rgba(0, 255, 157, 0.6); animation: pulseDot 2s infinite; }
         @keyframes pulseDot { 0% { transform: scale(0.95); opacity: 0.7; } 50% { transform: scale(1.2); opacity: 1; } 100% { transform: scale(0.95); opacity: 0.7; } }
 
         /* Responsive */
@@ -1087,9 +748,6 @@
             .hero-bg-image { background-position: center; }
             .fc-nav-btn { display: none; } 
             .fc-window { overflow-x: auto; scroll-behavior: smooth; } 
-            
-            /* Penyesuaian untuk video carousel di mobile */
-            .video-card { flex: 0 0 280px; /* Sedikit lebih kecil di mobile */ }
         }
         @media (max-width: 600px) {
             .brand-text { font-size: 14px; }
@@ -1105,160 +763,201 @@
             .nav-menu { display: flex; }
             header.header-minimal { background-color: #fff; }
             
-            /* FIX CHAT DI MOBILE AGAR TIDAK MENUTUPI TOMBOL */
-            .chat-toggle-btn {
-                bottom: 20px;
-                right: 20px;
-            }
+            .chat-toggle-btn { bottom: 20px; right: 20px; }
             .chat-box-container {
-                width: calc(100% - 40px) !important; /* Full width minus margin */
-                height: 65vh !important; /* Jangan full screen */
-                max-height: 600px !important;
-                right: 20px !important;
-                left: 20px !important;
-                bottom: 100px !important; /* PASTIKAN DI ATAS TOMBOL */
-                top: auto !important;
-                border-radius: 16px !important;
+                width: calc(100% - 40px) !important; height: 65vh !important; max-height: 600px !important;
+                right: 20px !important; left: 20px !important; bottom: 100px !important; top: auto !important; border-radius: 16px !important;
             }
         }
 
-        /* --- NEWS SECTION DESKTOP (FIXED) --- */
-        @media (min-width: 901px) {
-            .news-container {
-                /* Container utama yang memotong gambar berlebih */
-                overflow: hidden; 
-                background-color: #ffffff;
-                padding: 0; /* Pastikan tidak ada padding/jarak di dalam container */
-                border-radius: 24px; /* Lengkungan ujung luar container */
-            }
-
-            .news-image-col {
-                /* Flex grow agar mengisi sisa ruang kosong sampai mentok kanan */
-                flex: 1; 
-                height: 100%;
-                
-                /* --- LOGIKA BORDER RADIUS AGAR FULL KANAN --- */
-                /* Kiri-Atas: 40px (Melengkung estetik) */
-                /* Kanan-Atas: 0px (Lurus, nempel ke ujung kanan) */
-                /* Kanan-Bawah: 0px (Lurus, nempel ke ujung kanan) */
-                /* Kiri-Bawah: 40px (Melengkung estetik) */
-                border-radius: 24px 0 0 24px; 
-
-                overflow: hidden;
-                position: relative;
-                z-index: 2;
-                
-                /* Bayangan halus di sisi kiri lengkungan */
-                box-shadow: -10px 0 30px rgba(0, 0, 0, 0.05);
-            }
-
-            .news-slide-img {
-                width: 100%;
-                height: 100%;
-                object-fit: cover;
-            }
-        }
         /* FIX UNTUK MENGHILANGKAN KOTAK LOGO DI HP */
         @media (max-width: 768px) {
             .brand-area {
-                background: transparent !important;
-                backdrop-filter: none !important;
-                -webkit-backdrop-filter: none !important;
-                border: none !important;
-                box-shadow: none !important;
-                padding-left: 0 !important;
+                background: transparent !important; backdrop-filter: none !important; -webkit-backdrop-filter: none !important;
+                border: none !important; box-shadow: none !important; padding-left: 0 !important;
             }
         }
 
-        /* CSS UNTUK SOSIAL MEDIA HEADER */
+        /* HEADER SOCIALS */
         .header-socials {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            margin-left: auto;
-            margin-right: 30px;
-            padding-right: 30px;
-            border-right: 1px solid rgba(255, 255, 255, 0.3);
-            padding-left: 0;
-            border-left: none;
-            height: 40px;
+            display: flex; align-items: center; gap: 15px; margin-left: auto; margin-right: 30px; padding-right: 30px;
+            border-right: 1px solid rgba(255, 255, 255, 0.3); padding-left: 0; height: 40px;
         }
-
-        .social-icon {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: transform 0.3s ease;
-        }
-
-        .social-icon svg {
-            width: 20px;
-            height: 20px;
-            fill: #ffffff;
-            transition: all 0.3s ease;
-            opacity: 0.9;
-        }
-
+        .social-icon { display: flex; align-items: center; justify-content: center; transition: transform 0.3s ease; }
+        .social-icon svg { width: 20px; height: 20px; fill: #ffffff; transition: all 0.3s ease; opacity: 0.9; }
         .social-icon:hover { transform: translateY(-2px); }
         .social-icon:hover svg { opacity: 1; fill: var(--accent-yellow); }
 
-        header.header-minimal .header-socials {
-            border-right-color: #e2e8f0;
-            border-left: none; 
-        }
-        header.header-minimal .social-icon svg {
-            fill: var(--text-gray);
-        }
-        header.header-minimal .social-icon:hover svg {
-            fill: var(--primary-color);
-        }
-        header.header-minimal .social-icon.wa-icon:hover svg {
-            fill: #25D366; 
-        }
+        header.header-minimal .header-socials { border-right-color: #e2e8f0; }
+        header.header-minimal .social-icon svg { fill: var(--text-gray); }
+        header.header-minimal .social-icon:hover svg { fill: var(--primary-color); }
+        header.header-minimal .social-icon.wa-icon:hover svg { fill: #25D366; }
 
-        @media (max-width: 992px) {
-            .header-socials { display: none; }
-        }
+        @media (max-width: 992px) { .header-socials { display: none; } }
         
-        /* SEARCH OVERLAY STYLE */
+        /* SEARCH OVERLAY */
         .search-overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
-            z-index: 99999;
-            display: flex; justify-content: center; align-items: flex-start;
-            padding-top: 100px;
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); z-index: 99999;
+            display: flex; justify-content: center; align-items: flex-start; padding-top: 100px;
             opacity: 0; visibility: hidden; transition: all 0.3s ease;
         }
-
         .search-overlay.active { opacity: 1; visibility: visible; }
-
-        .search-content {
-            width: 100%; max-width: 600px; position: relative; padding: 0 20px;
-            transform: translateY(-20px); transition: 0.4s ease;
-        }
+        .search-content { width: 100%; max-width: 600px; position: relative; padding: 0 20px; transform: translateY(-20px); transition: 0.4s ease; }
         .search-overlay.active .search-content { transform: translateY(0); }
-
-        .close-search {
-            position: absolute; top: -50px; right: 0; font-size: 40px; border: none; background: none; cursor: pointer; color: var(--text-dark); transition: 0.3s;
-        }
+        .close-search { position: absolute; top: -50px; right: 0; font-size: 40px; border: none; background: none; cursor: pointer; color: var(--text-dark); transition: 0.3s; }
         .close-search:hover { color: var(--accent-red); transform: rotate(90deg); }
-
         #searchInput {
-            width: 100%; padding: 20px; font-size: 18px; border: 2px solid #eee; border-radius: 12px; outline: none; transition: 0.3s; font-family: 'Albert Sans', sans-serif;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+            width: 100%; padding: 20px; font-size: 18px; border: 2px solid #eee; border-radius: 12px; outline: none; transition: 0.3s; font-family: 'Albert Sans', sans-serif; box-shadow: 0 5px 20px rgba(0,0,0,0.05);
         }
         #searchInput:focus { border-color: var(--primary-color); box-shadow: 0 5px 20px rgba(0, 111, 176, 0.2); }
-
         .search-results { margin-top: 20px; max-height: 60vh; overflow-y: auto; }
-
         .search-item {
-            background: #fff; padding: 15px; border-radius: 8px; margin-bottom: 10px;
-            border: 1px solid #eee; transition: 0.2s; cursor: pointer; display: block; text-decoration: none; color: var(--text-dark);
+            background: #fff; padding: 15px; border-radius: 8px; margin-bottom: 10px; border: 1px solid #eee; transition: 0.2s; cursor: pointer; display: block; text-decoration: none; color: var(--text-dark);
         }
         .search-item:hover { background: var(--bg-light-blue); border-color: var(--primary-color); transform: translateX(5px); }
         .search-item h4 { margin: 0 0 5px 0; color: var(--primary-color); font-size: 16px; }
         .search-item p { margin: 0; font-size: 13px; color: var(--text-gray); }
+
+        /* --- ABOUT SECTION (TENTANG BALMON) --- */
+        /* =========================================== */
+        .about-section {
+            padding: 60px 0;
+            background-color: #ffffff;
+            position: relative;
+        }
+
+        .about-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 40px;
+            position: relative;
+        }
+
+        /* KOLOM GAMBAR (KIRI) */
+        .about-img-col {
+            flex: 1;
+            position: relative;
+        }
+
+        .about-main-img {
+            width: 100%;
+            border-radius: 16px;
+            position: relative;
+            transition: transform 0.3s ease;
+        }
+
+        .about-img-col:hover .about-main-img {
+            transform: translateY(-3px);
+        }
+
+        /* KOLOM TEKS (KANAN) */
+        .about-text-col {
+            flex: 1;
+        }
+
+        .about-tag {
+            display: inline-block;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--secondary-color);
+            background: rgba(0, 172, 224, 0.1);
+            padding: 4px 12px;
+            border-radius: 20px;
+            margin-bottom: 16px;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        .about-title {
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin: 0 0 16px 0;
+            line-height: 1.3;
+        }
+
+        .about-title span {
+            color: var(--primary-color);
+        }
+
+        .about-desc {
+            font-size: 16px;
+            color: var(--text-gray);
+            line-height: 1.6;
+            margin-bottom: 24px;
+            text-align: justify;
+        }
+
+        /* Poin-poin Checklist */
+        .about-points {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 28px;
+        }
+
+        .point-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 500;
+            color: var(--primary-dark);
+            font-size: 14px;
+        }
+
+        .point-item i {
+            color: var(--accent-yellow);
+            font-size: 16px;
+            background: var(--primary-color);
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            flex-shrink: 0;
+        }
+
+        .btn-about {
+            /* Ubah display dari inline-block ke block atau flex */
+            display: table; /* atau fit-content */
+            
+            /* Trik margin auto untuk menengahkan elemen block */
+            margin: 0 auto; 
+            
+            /* Style lama Anda tetap di bawah ini */
+            align-items: center;
+            gap: 8px;
+            background-color: var(--primary-color);
+            color: #ffffff;
+            padding: 12px 24px;
+            border-radius: 24px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .btn-about:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 900px) {
+            .about-wrapper {
+                flex-direction: column;
+                gap: 30px;
+            }
+            .about-img-col {
+                width: 100%;
+                padding: 0 20px;
+            }
+            .about-text-col {
+                width: 100%;
+                text-align: left;
+            }
+        }
     </style>
 </head>
 <body>
@@ -1355,40 +1054,69 @@
         </div>
     </div>
 
-    <div class="news-section fade-in-section">
-        <div class="container news-container">
-            <div class="news-text-col">
-                <div class="news-header-row">
-                    <span class="news-badge">Berita Balmon</span>
-                    <span class="news-counter" id="newsCounter">00 / 00</span>
-                </div>
+    <div class="about-section fade-in-section">
+        <div class="container">
+            <div class="about-wrapper">
                 
-                <h2 class="news-title-anim" id="newsTitle">Memuat Berita...</h2>
-                <div class="news-meta">
-                    <i class="bi bi-calendar-event"></i> <span id="newsDate">...</span>
+                <div class="about-img-col">
+                    <img src="https://images.unsplash.com/photo-1497215728101-856f4ea42174?q=80&w=2070&auto=format&fit=crop" alt="Kantor Balmon Samarinda" class="about-main-img">
                 </div>
-                <p class="news-desc-anim" id="newsDesc">Menghubungkan ke database Firebase...</p>
-                
-                <div class="news-footer-row">
-                    <a href="galeri.html" class="news-btn-readmore">
-                        Baca Selengkapnya <i class="bi bi-arrow-right"></i>
-                    </a>
-                    
-                    <div class="news-nav-group">
-                        <button class="news-btn-nav" onclick="prevNews()">
-                            <i class="bi bi-chevron-left"></i>
-                        </button>
-                        <button class="news-btn-nav" onclick="nextNews()">
-                            <i class="bi bi-chevron-right"></i>
-                        </button>
+
+                <div class="about-text-col">
+                    <span class="about-tag">Tentang</span>
+                    <h2 class="about-title">Balai Monitor Spektrum <br> Frekuensi Radio Kelas I Samarinda</h2>
+                    <p class="about-desc">
+                        Adalah Unit Pelaksana Teknis (UPT) di lingkungan Direktorat Jenderal Sumber Daya dan Perangkat Pos dan Informatika (Ditjen SDPPI), Kementerian Komunikasi dan Digital.
+                        <br><br>
+                        Kami bertugas melaksanakan pengawasan, pengendalian, dan penertiban penggunaan spektrum frekuensi radio agar tercipta komunikasi yang lancar tanpa interferensi di wilayah Kalimantan Timur.
+                    </p>
+
+                    <div style="text-align: center; width: 100%;">
+                        <a href="#layanan-publik" class="btn-about">
+                            Selengkapnya Tentang Kami <i class="bi bi-arrow-right"></i>
+                        </a>
                     </div>
                 </div>
             </div>
+        </div>
+    </div>
 
-            <div class="news-image-col">
-                <div class="news-slider-track-manual" id="newsTrack">
+    <div class="news-section fade-in-section">
+        <div class="container">
+            <div class="news-container">
+                <div class="news-text-col">
+                    <div class="news-header-row">
+                        <span class="news-badge">Balmon News</span>
+                        <span class="news-counter" id="newsCounter">00 / 00</span>
                     </div>
-                <div class="news-progress" id="newsProgress"></div>
+                    
+                    <h2 class="news-title-anim" id="newsTitle">Memuat Berita...</h2>
+                    <div class="news-meta">
+                        <i class="bi bi-calendar-event"></i> <span id="newsDate">...</span>
+                    </div>
+                    <p class="news-desc-anim" id="newsDesc">Menghubungkan ke database Firebase...</p>
+                    
+                    <div class="news-footer-row">
+                        <a href="galeri.html" class="news-btn-readmore">
+                            Baca Selengkapnya <i class="bi bi-arrow-right"></i>
+                        </a>
+                        
+                        <div class="news-nav-group">
+                            <button class="news-btn-nav" onclick="prevNews()">
+                                <i class="bi bi-chevron-left"></i>
+                            </button>
+                            <button class="news-btn-nav" onclick="nextNews()">
+                                <i class="bi bi-chevron-right"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="news-image-col">
+                    <div class="news-slider-track-manual" id="newsTrack">
+                        </div>
+                    <div class="news-progress" id="newsProgress"></div>
+                </div>
             </div>
         </div>
     </div>
@@ -1581,6 +1309,15 @@
         <svg class="icon-message" viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 9h12v2H6V9zm8 5H6v-2h8v2zm4-6H6V6h12v2z"/></svg>
         <svg class="icon-close" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
     </button>
+
+    <div class="search-overlay" id="searchOverlay">
+        <div class="search-content">
+            <button class="close-search" onclick="closeSearch()">&times;</button>
+            <h2 style="color:var(--primary-color);">Pencarian</h2>
+            <input type="text" id="searchInput" onkeyup="performSearch()" placeholder="Ketik kata kunci...">
+            <div class="search-results" id="searchResults"></div>
+        </div>
+    </div>
 
     <script>
         // ===========================================
@@ -2125,53 +1862,5 @@
         });
 
     </script>
-    <script type="module">
-    import { initializeApp, getApp, getApps } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getDatabase, ref, runTransaction } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
-
-    const firebaseConfig2 = {
-        apiKey: "AIzaSyDUeIg9Zn_xndPXtChO8KufXFp6EMtqBJ0",
-        authDomain: "admin-pelayanan-balmon.firebaseapp.com",
-        projectId: "admin-pelayanan-balmon",
-        storageBucket: "admin-pelayanan-balmon.firebasestorage.app",
-        messagingSenderId: "1071557110255",
-        appId: "1:1071557110255:web:bff7087da1feacccb7ee1a"
-    };
-
-    // SOLUSI: Cek jika sudah ada app, jika tidak buat instance baru dengan nama 'tracker'
-    let appTracker;
-    if (getApps().length === 0) {
-        appTracker = initializeApp(firebaseConfig2);
-    } else {
-        // Berikan nama unik 'tracker' agar tidak bentrok dengan config di atas
-        try {
-            appTracker = initializeApp(firebaseConfig2, "tracker");
-        } catch (e) {
-            appTracker = getApp("tracker");
-        }
-    }
-
-    const dbTracker = getDatabase(appTracker);
-
-    function runVisitorTracker() {
-        // Menggunakan 'visited_v2' sebagai key baru untuk pengetesan ulang
-        if (!sessionStorage.getItem('visited_v2')) {
-            const visitRef = ref(dbTracker, 'statistik_web/total_kunjungan');
-            
-            runTransaction(visitRef, (currentCount) => {
-                return (currentCount || 0) + 1;
-            }).then(() => {
-                console.log("✅ Tracker: Berhasil update Firebase.");
-                sessionStorage.setItem('visited_v2', 'true');
-            }).catch((err) => {
-                console.error("❌ Tracker Error:", err.message);
-            });
-        } else {
-            console.log("ℹ️ Tracker: Sesi aktif ditemukan.");
-        }
-    }
-
-    runVisitorTracker();
-</script>
 </body>
 </html>

@@ -130,92 +130,115 @@
         </div>
     </footer>
 <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
-        // 1. Konfigurasi Firebase (HARUS SAMA PERSIS dengan galeri.html)
-        const firebaseConfig = {
-            apiKey: "AIzaSyDUeIg9Zn_xndPXtChO8KufXFp6EMtqBJ0", // Pastikan API Key ini benar
-            authDomain: "admin-pelayanan-balmon.firebaseapp.com",
-            projectId: "admin-pelayanan-balmon",
-            storageBucket: "admin-pelayanan-balmon.firebasestorage.app",
-            messagingSenderId: "1071557110255",
-            appId: "1:1071557110255:web:bff7087da1feacccb7ee1a"
-        };
+    // 1. Konfigurasi Firebase
+    const firebaseConfig = {
+        apiKey: "AIzaSyDUeIg9Zn_xndPXtChO8KufXFp6EMtqBJ0",
+        authDomain: "admin-pelayanan-balmon.firebaseapp.com",
+        projectId: "admin-pelayanan-balmon",
+        storageBucket: "admin-pelayanan-balmon.firebasestorage.app",
+        messagingSenderId: "1071557110255",
+        appId: "1:1071557110255:web:bff7087da1feacccb7ee1a"
+    };
 
-        const app = initializeApp(firebaseConfig);
-        const db = getDatabase(app);
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
 
-        // 2. Fungsi untuk mengambil Parameter ID dari URL
-        function getQueryParam(param) {
-            const urlParams = new URLSearchParams(window.location.search);
-            return urlParams.get(param);
+    function getQueryParam(param) {
+        const urlParams = new URLSearchParams(window.location.search);
+        return urlParams.get(param);
+    }
+
+    async function loadNewsDetail() {
+        const newsId = getQueryParam('id'); 
+        const errorArea = document.getElementById('error-area');
+        const mainContent = document.getElementById('main-content');
+
+        if (!newsId) {
+            mainContent.classList.add('d-none');
+            errorArea.classList.remove('d-none');
+            return;
         }
 
-        // 3. Logika Utama
-        async function loadNewsDetail() {
-            // Ambil ID dari URL (?id=-Okkl...)
-            const newsId = getQueryParam('id');
+        // Jalur database: Pastikan menggunakan 'galeri/'
+        const newsRef = ref(db, `galeri/${newsId}`); 
 
-            // Cek jika ID tidak ada
-            if (!newsId) {
-                document.body.innerHTML = '<h2 style="text-align:center; margin-top:50px;">Error: ID Berita tidak ditemukan di URL.</h2>';
-                return;
-            }
+        try {
+            const snapshot = await get(newsRef);
 
-            console.log("Mencari berita dengan ID:", newsId); // Cek di Console
+            if (snapshot.exists()) {
+                const data = snapshot.val();
+                
+                // --- UPDATE HTML (Menyesuaikan dengan ID di HTML Anda) ---
+                
+                // 1. Update Judul & Breadcrumb
+                document.getElementById('article-title').innerText = data.title || "Tanpa Judul";
+                document.getElementById('breadcrumb-title').innerText = data.title || "Berita";
+                document.title = `${data.title} | Balmon Samarinda`;
 
-            // Ambil referensi ke DATABASE ROOT + ID
-            // KUNCI PERBAIKAN: Langsung tembak ke ref(db, newsId) karena data Anda ada di root
-            const newsRef = ref(db, newsId); 
+                // 2. Update Tanggal & Kategori
+                document.getElementById('article-date').innerText = data.date || "-";
+                document.getElementById('article-category').innerText = data.category || "News";
 
-            try {
-                const snapshot = await get(newsRef);
-
-                if (snapshot.exists()) {
-                    const data = snapshot.val();
-                    console.log("Data ditemukan:", data);
-
-                    // --- TAMPILKAN DATA KE HTML ---
-                    // Pastikan elemen HTML Anda memiliki ID yang sesuai (contoh: id="news-title")
-                    
-                    // 1. Judul
-                    const titleEl = document.getElementById('news-title');
-                    if(titleEl) titleEl.innerText = data.title || "Tanpa Judul";
-
-                    // 2. Tanggal
-                    const dateEl = document.getElementById('news-date');
-                    if(dateEl) dateEl.innerText = data.date || "-";
-
-                    // 3. Gambar
-                    const imgEl = document.getElementById('news-image');
-                    if(imgEl) {
-                        imgEl.src = data.imageUrl || 'https://via.placeholder.com/800x400';
-                        imgEl.style.display = 'block'; // Pastikan muncul
-                    }
-
-                    // 4. Deskripsi / Konten
-                    const contentEl = document.getElementById('news-content');
-                    if(contentEl) {
-                        // Ubah enter (\n) menjadi paragraf HTML (<br>)
-                        const formattedContent = (data.description || "").replace(/\n/g, '<br>');
-                        contentEl.innerHTML = formattedContent;
-                    }
-
-                } else {
-                    console.log("Data tidak ditemukan di Firebase");
-                    document.body.innerHTML = '<h2 style="text-align:center; margin-top:50px;">Maaf, berita tidak ditemukan (Data Valid tapi Kosong).</h2>';
+                // 3. Update Gambar Utama
+                const imgContainer = document.getElementById('img-container');
+                if (data.imageUrl) {
+                    imgContainer.innerHTML = `<img src="${data.imageUrl}" class="article-featured-img" alt="${data.title}">`;
                 }
-            } catch (error) {
-                console.error("Gagal mengambil data:", error);
-                document.body.innerHTML = '<h2 style="text-align:center; margin-top:50px;">Terjadi kesalahan koneksi.</h2>';
+
+                // 4. Update Isi Konten
+                const bodyEl = document.getElementById('article-body');
+                if (bodyEl) {
+                    // Karena css Anda punya white-space: pre-wrap, \n otomatis jadi baris baru
+                    bodyEl.innerText = data.description || "Tidak ada isi berita.";
+                }
+
+                // 5. Muat Sidebar (Publikasi Terbaru)
+                loadRecentPosts();
+
+            } else {
+                mainContent.classList.add('d-none');
+                errorArea.classList.remove('d-none');
+                document.getElementById('debug-id-display').innerText = newsId;
             }
+        } catch (error) {
+            console.error("Gagal mengambil data:", error);
+            alert("Terjadi kesalahan koneksi ke database.");
         }
+    }
 
-        // Jalankan fungsi saat halaman dimuat
-        loadNewsDetail();
-    </script>
+    // Fungsi tambahan untuk mengisi sidebar agar tidak kosong
+    async function loadRecentPosts() {
+        const recentRef = ref(db, 'galeri');
+        try {
+            const snapshot = await get(recentRef);
+            if (snapshot.exists()) {
+                const data = snapshot.val();
+                let items = Object.entries(data)
+                    .map(([key, val]) => ({ key, ...val }))
+                    .filter(item => item.category === 'news') // Hanya ambil kategori news
+                    .slice(0, 5); // Ambil 5 terbaru
 
+                const container = document.getElementById('recent-posts-container');
+                container.innerHTML = items.map(item => `
+                    <div class="recent-post-item">
+                        <img src="${item.imageUrl}" class="recent-post-img">
+                        <div>
+                            <div class="recent-post-title">
+                                <a href="news_detail.html?id=${item.key}">${item.title}</a>
+                            </div>
+                            <small class="text-muted">${item.date || ''}</small>
+                        </div>
+                    </div>
+                `).join('');
+            }
+        } catch (e) { console.error(e); }
+    }
+
+    loadNewsDetail();
+</script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
