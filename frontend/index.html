@@ -125,7 +125,7 @@
             transition: all 0.4s ease; 
             cursor: pointer;
             background-color: rgba(255, 255, 255, 0.1); 
-            backdrop-filter: blur(8px);                    
+            backdrop-filter: blur(8px);                   
             -webkit-backdrop-filter: blur(8px);            
             padding: 8px 20px;                              
             border-radius: 50px;                              
@@ -352,7 +352,7 @@
             background-position: center; 
             background-size: cover; 
             background-repeat: no-repeat;
-            min-height: 350px; 
+            min-height: 150px; 
             position: relative; 
             display: flex; 
             align-items: center; 
@@ -367,10 +367,17 @@
         .parallax-content h2 { font-size: 36px; font-weight: 800; margin-bottom: 10px; letter-spacing: 1px; text-transform: uppercase; }
         .tagline-berakhlak { font-size: 18px; color: var(--accent-yellow); font-weight: 500; display: block; margin-top: 15px; border-top: 1px solid rgba(255,255,255,0.2); padding-top: 15px; }
 
-        /* FEATURE CAROUSEL (UNTUK LAYANAN) */
         .feature-carousel-section {
             --fc-primary-blue: #0056b3; --fc-dark-blue: #003d80; --fc-accent-yellow: #ffc107; --fc-bg-light-blue: #f0f8ff; --fc-white: #ffffff; --fc-text-gray: #666666;
-            padding: 80px 0; width: 100%; background-color: var(--fc-white); position: relative; overflow: hidden;
+            padding: 60px 0; 
+            width: 100%; 
+            background-color: var(--fc-white); 
+            position: relative; 
+            overflow: hidden;
+
+            /* --- TAMBAHAN FIX SHADOW/GAP --- */
+            margin-top: -2px;  /* Menarik section ke atas untuk menutup celah */
+            z-index: 5;        /* Memastikan section ini menumpuk di atas celah */
         }
         .feature-bg-decor {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-color: white; z-index: 0; pointer-events: none;
@@ -420,16 +427,25 @@
         /* ====================================================== */
         /* --- NEWS SECTION MODERN (FIXED POSITION & HEIGHT) --- */
         /* ====================================================== */
+        /* Cari bagian ini di CSS kamu */
         .news-section {
-            padding: 90px 0;
+            padding: 60px 0 90px 0;
             background-color: var(--bg-white);
             position: relative;
+            
+            /* --- TAMBAHKAN KODE DI BAWAH INI --- */
+            margin-top: -2px;  /* Menarik section ke atas untuk menutup celah */
+            z-index: 5;        /* Memastikan section ini menumpuk di atas celah tsb */
         }
         .news-section::before {
             content: '';
-            position: absolute; left: 0; top: 0; width: 100%; height: 50%;
-            background: linear-gradient(180deg, #f8fbfe 0%, #ffffff 100%);
-            z-index: 0;
+            position: absolute; left: 0; 
+            
+            /* UBAH top: 0 MENJADI top: -1px */
+            top: -1px; 
+            
+            width: 100%; height: 50%;
+            background: var(--bg-white);
         }
 
         .news-container {
@@ -461,15 +477,9 @@
             overflow: hidden; /* Mencegah overflow */
         }
 
+        /* REVISI: MENGHILANGKAN DEKORASI SAMAR AGAR PUTIH BERSIH */
         .news-text-col::before {
-            content: '';
-            position: absolute;
-            top: -50px; right: -50px;
-            width: 300px; height: 300px;
-            background: radial-gradient(circle, rgba(0, 111, 176, 0.05) 0%, transparent 70%);
-            border-radius: 50%;
-            z-index: 0;
-            pointer-events: none;
+            display: none; /* Menghilangkan radial-gradient blob */
         }
 
         .news-header-row {
@@ -669,7 +679,12 @@
 
         /* ARCHIVE */
         .archive-section { font-family: 'Albert Sans', sans-serif; background-color: #ffffff; padding: 120px 0; text-align: center; position: relative; overflow: hidden; }
-        .archive-bg-decor { position: absolute; width: 500px; height: 500px; border-radius: 50%; background: radial-gradient(circle, rgba(0, 86, 179, 0.06) 0%, transparent 70%); top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 0; pointer-events: none; }
+        
+        /* REVISI: MENGHILANGKAN DEKORASI SAMAR AGAR PUTIH BERSIH */
+        .archive-bg-decor { 
+            display: none; /* Menghilangkan radial-gradient */
+        }
+        
         .archive-content { position: relative; z-index: 1; max-width: 900px; margin: 0 auto; padding: 0 20px; }
         .archive-icon { 
             display: flex; align-items: center; justify-content: center; width: 100px; height: 100px; background-color: #f0f8ff; color: #0056b3; 
@@ -825,6 +840,7 @@
             padding: 60px 0;
             background-color: #ffffff;
             position: relative;
+            z-index: 1; /* Pastikan ini lebih rendah dari feature carousel */
         }
 
         .about-wrapper {
@@ -858,10 +874,11 @@
 
         .about-tag {
             display: inline-block;
+            background: rgba(0, 172, 224, 0.1);
+            font-style: bold;
             font-size: 14px;
             font-weight: 600;
             color: var(--secondary-color);
-            background: rgba(0, 172, 224, 0.1);
             padding: 4px 12px;
             border-radius: 20px;
             margin-bottom: 16px;
@@ -956,6 +973,49 @@
             .about-text-col {
                 width: 100%;
                 text-align: left;
+            }
+        }
+
+        /* ABOUT SECTION - MOBILE RESPONSIVE & TEXT CENTER */
+        @media (max-width: 768px) {
+            .about-wrapper {
+                flex-direction: column;
+                gap: 30px;
+            }
+            
+            .about-img-col {
+                width: 100%;
+                order: 1;
+            }
+            
+            .about-text-col {
+                width: 100%;
+                order: 2;
+                text-align: center;
+            }
+            
+            .about-tag {
+                display: inline-block;
+                margin-bottom: 16px;
+            }
+            
+            .about-title {
+                font-size: 24px;
+            }
+            
+            .about-desc {
+                text-align: center;
+                font-size: 15px;
+            }
+            
+            .about-points {
+                grid-template-columns: 1fr;
+                justify-items: center;
+                margin-bottom: 28px;
+            }
+            
+            .point-item {
+                justify-content: center;
             }
         }
     </style>
@@ -1070,63 +1130,8 @@
                         <br><br>
                         Kami bertugas melaksanakan pengawasan, pengendalian, dan penertiban penggunaan spektrum frekuensi radio agar tercipta komunikasi yang lancar tanpa interferensi di wilayah Kalimantan Timur.
                     </p>
-
-                    <div style="text-align: center; width: 100%;">
-                        <a href="#layanan-publik" class="btn-about">
-                            Selengkapnya Tentang Kami <i class="bi bi-arrow-right"></i>
-                        </a>
-                    </div>
                 </div>
             </div>
-        </div>
-    </div>
-
-    <div class="news-section fade-in-section">
-        <div class="container">
-            <div class="news-container">
-                <div class="news-text-col">
-                    <div class="news-header-row">
-                        <span class="news-badge">Balmon News</span>
-                        <span class="news-counter" id="newsCounter">00 / 00</span>
-                    </div>
-                    
-                    <h2 class="news-title-anim" id="newsTitle">Memuat Berita...</h2>
-                    <div class="news-meta">
-                        <i class="bi bi-calendar-event"></i> <span id="newsDate">...</span>
-                    </div>
-                    <p class="news-desc-anim" id="newsDesc">Menghubungkan ke database Firebase...</p>
-                    
-                    <div class="news-footer-row">
-                        <a href="galeri.html" class="news-btn-readmore">
-                            Baca Selengkapnya <i class="bi bi-arrow-right"></i>
-                        </a>
-                        
-                        <div class="news-nav-group">
-                            <button class="news-btn-nav" onclick="prevNews()">
-                                <i class="bi bi-chevron-left"></i>
-                            </button>
-                            <button class="news-btn-nav" onclick="nextNews()">
-                                <i class="bi bi-chevron-right"></i>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="news-image-col">
-                    <div class="news-slider-track-manual" id="newsTrack">
-                        </div>
-                    <div class="news-progress" id="newsProgress"></div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="parallax-banner">
-        <div class="parallax-overlay"></div>
-        <div class="parallax-content fade-in-section">
-            <h2>ASN BerAKHLAK</h2>
-            <p style="font-size: 16px; opacity: 0.9;">Bangga Melayani Bangsa</p>
-            <span class="tagline-berakhlak">Berorientasi Pelayanan • Akuntabel • Kompeten • Harmonis • Loyal • Adaptif • Kolaboratif</span>
         </div>
     </div>
 
@@ -1208,6 +1213,46 @@
         </div>
     </div>
 
+    <div class="news-section fade-in-section">
+        <div class="container">
+            <div class="news-container">
+                <div class="news-text-col">
+                    <div class="news-header-row">
+                        <span class="news-badge">Berita & Pengumuman</span>
+                        <span class="news-counter" id="newsCounter" style="margin: 0 0 0 auto;">00 / 00</span>
+                    </div>
+                    
+                    <h2 class="news-title-anim" id="newsTitle" style="font-size: 24px;">Memuat Berita...</h2>
+                    <div class="news-meta">
+                        <i class="bi bi-calendar-event"></i> <span id="newsDate">...</span>
+                    </div>
+                    <p class="news-desc-anim" id="newsDesc">Menghubungkan ke database Firebase...</p>
+                    
+                    <div class="news-footer-row">
+                        <a href="galeri.html?filter=news" class="news-btn-readmore">
+                            Baca Selengkapnya <i class="bi bi-arrow-right"></i>
+                        </a>
+                        
+                        <div class="news-nav-group">
+                            <button class="news-btn-nav" onclick="prevNews()">
+                                <i class="bi bi-chevron-left"></i>
+                            </button>
+                            <button class="news-btn-nav" onclick="nextNews()">
+                                <i class="bi bi-chevron-right"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="news-image-col">
+                    <div class="news-slider-track-manual" id="newsTrack">
+                        </div>
+                    <div class="news-progress" id="newsProgress"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="video-slider-section fade-in-section">
         <div class="container video-flex-container">
             
@@ -1263,6 +1308,15 @@
             Unduh Dokumen & Regulasi
         </a>
     </div>
+    </div>
+
+    <div class="parallax-banner">
+        <div class="parallax-overlay"></div>
+        <div class="parallax-content fade-in-section">
+            <h2>ASN BerAKHLAK</h2>
+            <p style="font-size: 16px; opacity: 0.9;">Bangga Melayani Bangsa</p>
+            <span class="tagline-berakhlak">Berorientasi Pelayanan • Akuntabel • Kompeten • Harmonis • Loyal • Adaptif • Kolaboratif</span>
+        </div>
     </div>
 
     <footer id="mainFooter" class="fade-in-section">
@@ -1479,8 +1533,8 @@
         });
 
         /* =========================================
-           LOGIKA VIDEO SLIDER (BUTTON CONTROLLED)
-           ========================================= */
+            LOGIKA VIDEO SLIDER (BUTTON CONTROLLED)
+            ========================================= */
         
         // Data Video
         const videoData = [
@@ -1861,75 +1915,6 @@
             document.getElementById('newsDesc').textContent = "Cek koneksi internet atau izin database. " + err.message;
         });
 
-<<<<<<< Updated upstream
-    <div id="searchOverlay" class="search-overlay">
-        <div class="search-content">
-            <button class="close-search" onclick="closeSearch()">&times;</button>
-            <h2 style="color:var(--primary-color); margin-bottom:20px; ">Pencarian</h2>
-            <input type="text" id="searchInput" placeholder="Ketik kata kunci (misal: Izin, Maritim)..." onkeyup="performSearch()">
-            <div id="searchResults" class="search-results"></div>
-        </div>
-    </div>
-    <script type="module">
-    import { initializeApp, getApp, getApps } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getDatabase, ref, runTransaction } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
-
-    const firebaseConfig2 = {
-        apiKey: "AIzaSyBUJhTYOZS3GFfmD_eVj2lxHWEz4KNWKE4",
-
-  authDomain: "admin-pelayanan-balmon.firebaseapp.com",
-
-  databaseURL: "https://admin-pelayanan-balmon-default-rtdb.firebaseio.com",
-
-  projectId: "admin-pelayanan-balmon",
-
-  storageBucket: "admin-pelayanan-balmon.firebasestorage.app",
-
-  messagingSenderId: "1071557110255",
-
-  appId: "1:1071557110255:web:43b7380192a9cc2bb7ee1a",
-
-  measurementId: "G-QQCZY44EDW"
-
-    };
-
-    // SOLUSI: Cek jika sudah ada app, jika tidak buat instance baru dengan nama 'tracker'
-    let appTracker;
-    if (getApps().length === 0) {
-        appTracker = initializeApp(firebaseConfig2);
-    } else {
-        // Berikan nama unik 'tracker' agar tidak bentrok dengan config di atas
-        try {
-            appTracker = initializeApp(firebaseConfig2, "tracker");
-        } catch (e) {
-            appTracker = getApp("tracker");
-        }
-    }
-
-    const dbTracker = getDatabase(appTracker);
-
-    function runVisitorTracker() {
-        // Menggunakan 'visited_v2' sebagai key baru untuk pengetesan ulang
-        if (!sessionStorage.getItem('visited_v2')) {
-            const visitRef = ref(dbTracker, 'statistik_web/total_kunjungan');
-            
-            runTransaction(visitRef, (currentCount) => {
-                return (currentCount || 0) + 1;
-            }).then(() => {
-                console.log("✅ Tracker: Berhasil update Firebase.");
-                sessionStorage.setItem('visited_v2', 'true');
-            }).catch((err) => {
-                console.error("❌ Tracker Error:", err.message);
-            });
-        } else {
-            console.log("ℹ️ Tracker: Sesi aktif ditemukan.");
-        }
-    }
-
-    runVisitorTracker();
-</script>
-=======
     </script>
->>>>>>> Stashed changes
 </body>
 </html>
