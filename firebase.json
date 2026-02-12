@@ -7,7 +7,8 @@
         "firebase.json",
         "**/.*",
         "**/node_modules/**"
-      ]
+      ],
+      "cleanUrls": true
     },
     {
       "target": "web_admin",
@@ -16,7 +17,8 @@
         "firebase.json",
         "**/.*",
         "**/node_modules/**"
-      ]
+      ],
+      "cleanUrls": true
     }
   ]
 }

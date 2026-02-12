@@ -799,19 +799,58 @@
 
             container.innerHTML = ""; 
             const data = snapshot.val();
-            let items = Object.values(data).sort((a, b) => b.timestamp - a.timestamp);
-
+            
+            // --- GANTI JADI INI ---
+            // Menggunakan Object.entries agar ID (key) masuk ke dalam data item
+            let items = Object.entries(data)
+                .map(([key, val]) => ({ key, ...val })) 
+                .sort((a, b) => b.timestamp - a.timestamp);
+            // ----------------------
             items.forEach(item => {
+                // A. Tentukan Warna Badge & Icon
+                
+                let badgeColor = 'bg-primary';
+                let iconClass = 'bi-newspaper'; // Default icon berita
+                let cat = (item.category || 'berita').toLowerCase();
+                
+                // Variabel untuk Lightbox (Popup)
+                let typeParam = "'image'"; 
+                
+                if(cat === 'video') {
+                    badgeColor = 'bg-danger';
+                    iconClass = 'bi-play-circle';
+                    typeParam = "'video'";
+                }
+                if(cat === 'infografis') {
+                    badgeColor = 'bg-warning text-dark';
+                    iconClass = 'bi-image';
+                }
+
+                // B. Potong Deskripsi
+                let desc = item.description || '';
+                if(desc.length > 100) desc = desc.substring(0, 100) + '...';
+
+                // C. LOGIKA TOMBOL BACA SELENGKAPNYA (Ini yang penting)
+                let tombolBaca = ''; // Default kosong
+
+                // Hanya isi variabel tombol jika kategorinya news/berita
+                const id = item.key
                 const dateObj = new Date(item.date);
                 const dateStr = dateObj.toLocaleDateString('id-ID', {day:'numeric', month:'short', year:'numeric'});
                 const isVideo = item.category === 'video';
-                const typeParam = isVideo ? "'video'" : "'image'";
+                const typeParam2 = isVideo ? "'video'" : "'image'";
                 
-                let iconClass = isVideo ? 'bi-play-circle-fill' : 'bi-arrows-angle-expand';
-                if(item.category === 'news') iconClass = 'bi-file-text';
+                let iconClass2 = isVideo ? 'bi-play-circle-fill' : 'bi-arrows-angle-expand';
+                if(item.category === 'news') iconClass2 = 'bi-file-text';
                 
                 const descText = item.description || ""; 
-
+                   if (item.category === 'news') {
+                    tombolBaca = `
+                        <a href="news_detail.html?id=${item.key}" class="btn btn-sm btn-outline-primary mt-3 align-self-start">
+                            Baca Selengkapnya <i class="bi bi-arrow-right"></i>
+                        </a>
+                    `;
+                }
                 const html = `
                     <div class="gallery-item" data-category="${item.category}" data-video-src="${item.videoUrl}">
                         <div class="media-wrapper" onclick="openLightbox(this, ${typeParam})">
@@ -829,9 +868,11 @@
                             <div class="item-date"><i class="bi bi-calendar-event"></i> ${dateStr}</div>
                             <h3 class="item-title">${item.title}</h3>
                             <p class="item-desc">${descText}</p>
+                            ${tombolBaca}
                         </div>
                     </div>
                 `;
+             
                 container.insertAdjacentHTML('beforeend', html);
             });
 

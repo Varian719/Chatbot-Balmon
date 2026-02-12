@@ -2125,5 +2125,53 @@
         });
 
     </script>
+    <script type="module">
+    import { initializeApp, getApp, getApps } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { getDatabase, ref, runTransaction } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+
+    const firebaseConfig2 = {
+        apiKey: "AIzaSyDUeIg9Zn_xndPXtChO8KufXFp6EMtqBJ0",
+        authDomain: "admin-pelayanan-balmon.firebaseapp.com",
+        projectId: "admin-pelayanan-balmon",
+        storageBucket: "admin-pelayanan-balmon.firebasestorage.app",
+        messagingSenderId: "1071557110255",
+        appId: "1:1071557110255:web:bff7087da1feacccb7ee1a"
+    };
+
+    // SOLUSI: Cek jika sudah ada app, jika tidak buat instance baru dengan nama 'tracker'
+    let appTracker;
+    if (getApps().length === 0) {
+        appTracker = initializeApp(firebaseConfig2);
+    } else {
+        // Berikan nama unik 'tracker' agar tidak bentrok dengan config di atas
+        try {
+            appTracker = initializeApp(firebaseConfig2, "tracker");
+        } catch (e) {
+            appTracker = getApp("tracker");
+        }
+    }
+
+    const dbTracker = getDatabase(appTracker);
+
+    function runVisitorTracker() {
+        // Menggunakan 'visited_v2' sebagai key baru untuk pengetesan ulang
+        if (!sessionStorage.getItem('visited_v2')) {
+            const visitRef = ref(dbTracker, 'statistik_web/total_kunjungan');
+            
+            runTransaction(visitRef, (currentCount) => {
+                return (currentCount || 0) + 1;
+            }).then(() => {
+                console.log("✅ Tracker: Berhasil update Firebase.");
+                sessionStorage.setItem('visited_v2', 'true');
+            }).catch((err) => {
+                console.error("❌ Tracker Error:", err.message);
+            });
+        } else {
+            console.log("ℹ️ Tracker: Sesi aktif ditemukan.");
+        }
+    }
+
+    runVisitorTracker();
+</script>
 </body>
 </html>
