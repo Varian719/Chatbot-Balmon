@@ -125,7 +125,7 @@
             transition: all 0.4s ease; 
             cursor: pointer;
             background-color: rgba(255, 255, 255, 0.1); 
-            backdrop-filter: blur(8px);                   
+            backdrop-filter: blur(8px);                    
             -webkit-backdrop-filter: blur(8px);            
             padding: 8px 20px;                              
             border-radius: 50px;                              
@@ -135,7 +135,7 @@
 
         .brand-area:hover {
             background-color: rgba(255, 255, 255, 0.2); 
-            transform: translateY(-2px);                    
+            transform: translateY(-2px);                     
             box-shadow: 0 8px 20px rgba(0, 111, 176, 0.3); 
         }
         .brand-logo-img { 
@@ -369,7 +369,7 @@
 
         .feature-carousel-section {
             --fc-primary-blue: #0056b3; --fc-dark-blue: #003d80; --fc-accent-yellow: #ffc107; --fc-bg-light-blue: #f0f8ff; --fc-white: #ffffff; --fc-text-gray: #666666;
-            padding: 60px 0; 
+            padding: 30px 0; 
             width: 100%; 
             background-color: var(--fc-white); 
             position: relative; 
@@ -429,7 +429,7 @@
         /* ====================================================== */
         /* Cari bagian ini di CSS kamu */
         .news-section {
-            padding: 60px 0 90px 0;
+            padding: 30px 0;
             background-color: var(--bg-white);
             position: relative;
             
@@ -573,7 +573,7 @@
         /* --- VIDEO SLIDER SECTION (FIXED HEIGHT) --- */
         /* ====================================================== */
         .video-slider-section {
-            padding: 80px 0;
+            padding: 20px 0 20px 0;
             background-color: #0f172a; 
             background-image: url('https://images.unsplash.com/photo-1550751827-4bd374c3f58b?q=80&w=2070&auto=format&fit=crop'); 
             background-attachment: fixed; background-position: center; background-size: cover;
@@ -602,7 +602,7 @@
         .video-card {
             flex: 0 0 280px; width: 280px; 
             /* KUNCI TINGGI */
-            height: 350px; 
+            height: 300px; 
             background: #fff; border-radius: 16px; overflow: hidden;
             box-shadow: 0 10px 25px rgba(0,0,0,0.2); border: none; transition: all 0.3s ease;
             display: flex; flex-direction: column;
@@ -875,9 +875,9 @@
         .about-tag {
             display: inline-block;
             background: rgba(0, 172, 224, 0.1);
-            font-style: bold;
+            /* FIX TYPO: font-style: bold; menjadi font-weight: bold; */
+            font-weight: 700;
             font-size: 14px;
-            font-weight: 600;
             color: var(--secondary-color);
             padding: 4px 12px;
             border-radius: 20px;
@@ -1204,8 +1204,7 @@
                             <div class="fc-card-header-text"><h3>Hubungi Kami</h3></div>
                             <p class="fc-card-desc">Masyarakat dapat melaporkan gangguan frekuensi radio melalui kanal pengaduan resmi kami.</p>
                             <div class="fc-dropdown-area">
-                                <ul class="fc-link-list"><li><a href="kontak.html">Kontak</a></li>
-                            </div>
+                                <ul class="fc-link-list"><li><a href="kontak.html">Kontak</a></li></ul> </div>
                         </div>
                     </div>
                 </div>
@@ -1252,9 +1251,6 @@
             </div>
         </div>
     </div>
-<section class="video-section" style="position: relative; padding: 40px 0;">
-        
-        
 
     <div class="video-slider-section fade-in-section">
         <div class="container video-flex-container">
@@ -1283,23 +1279,6 @@
 
         </div>
     </div>
-
-            <button class="nav-btn next" onclick="slideVideo('next')" aria-label="Video Selanjutnya" style="
-                background: var(--primary-color); 
-                color: white; 
-                border: none; 
-                width: 40px; 
-                height: 40px; 
-                border-radius: 50%; 
-                cursor: pointer; 
-                z-index: 10;
-                margin-left: 10px;">
-                <i class="bi bi-chevron-right"></i>
-            </button>
-
-        </div>
-    </div>
-</section>
 
 
     <div class="archive-section fade-in-section">
@@ -1436,7 +1415,8 @@
             }, 100);
             
             // INIT VIDEO SLIDER
-            initVideoSlider();
+            // Note: initVideoSlider dipanggil di script bawah jika Firebase aktif
+            if(typeof initVideoSlider === 'function') initVideoSlider();
         });
         
         window.addEventListener('pageshow', (event) => {
@@ -1551,10 +1531,67 @@
             const nav = document.getElementById('mobileNavDropdown');
             if (!header.contains(event.target) && nav.classList.contains('active')) closeMobileMenu();
         });
+
         /* =========================================
-           LOGIKA VIDEO SLIDER (DINAMIS FIREBASE)
-           ========================================= */
-     
+            LOGIKA VIDEO SLIDER (STATIC FALLBACK)
+            ========================================= */
+        
+        // Menggunakan "var" agar bisa diakses global jika Firebase gagal
+        var globalVideoData = [
+            { id: "MhM-jKwb92g", title: "Mengenal Spektrum Frekuensi Radio", desc: "Video edukasi singkat." },
+            { id: "ScMzIvxBSi4", title: "Prosedur Perizinan ISR Online", desc: "Panduan lengkap Izin Stasiun Radio." }
+        ];
+        
+        let videoScrollPosition = 0;
+        let videoCardWidth = 300; 
+
+        // Fungsi ini akan ditimpa oleh Firebase Script jika berhasil load
+        function initVideoSlider() {
+            const track = document.getElementById('videoTrack');
+            if(!track) return;
+            track.innerHTML = '';
+
+            globalVideoData.forEach(video => {
+                const card = document.createElement('div');
+                card.className = 'video-card';
+                card.innerHTML = `
+                    <div class="video-card-media">
+                         <iframe src="https://www.youtube.com/embed/${video.id}" loading="lazy" allowfullscreen title="${video.title}"></iframe>
+                    </div>
+                    <div class="video-card-content">
+                        <h3>${video.title}</h3>
+                        <p>${video.desc}</p>
+                    </div>
+                `;
+                track.appendChild(card);
+            });
+        }
+
+        // Fungsi Slide Video Global
+        function slideVideo(direction) {
+            const track = document.getElementById('videoTrack');
+            const firstCard = track.querySelector('.video-card');
+            if(firstCard) {
+                videoCardWidth = firstCard.offsetWidth + 20; 
+            }
+
+            // Gunakan globalVideoData jika belum ditimpa Firebase
+            const currentDataLength = (window.firebaseVideoData && window.firebaseVideoData.length > 0) ? window.firebaseVideoData.length : globalVideoData.length;
+            const maxScroll = (currentDataLength * videoCardWidth) - track.parentElement.offsetWidth;
+            
+            if (direction === 'next') {
+                videoScrollPosition += videoCardWidth;
+                if (videoScrollPosition > maxScroll) videoScrollPosition = maxScroll; 
+                if (maxScroll < 0) videoScrollPosition = 0;
+            } else {
+                videoScrollPosition -= videoCardWidth;
+                if (videoScrollPosition < 0) videoScrollPosition = 0;
+            }
+
+            track.style.transform = `translateX(-${videoScrollPosition}px)`;
+        }
+
+
         /* SEARCH FUNCTIONALITY */
         const pages = [
             { title: "Beranda", url: "index.html", desc: "Halaman utama Balmon Samarinda" },
@@ -1608,50 +1645,14 @@
         document.addEventListener('keydown', function(event) {
             if (event.key === "Escape") closeSearch();
         });
-        onValue(galeriRef, (snapshot) => {
-        if (snapshot.exists()) {
-            const data = snapshot.val();
-            // Ubah object ke array + simpan KEY
-            const allItems = Object.entries(data).map(([key, val]) => ({ key, ...val }));
-
-            // ----------------------------------------------------
-            // 1. LOGIKA VIDEO (Menggunakan kode baru di atas)
-            // ----------------------------------------------------
-            const videoItems = allItems
-                .filter(item => {
-                    const cat = (item.category || item.kategori || '').toLowerCase();
-                    return cat === 'video';
-                })
-                .sort((a, b) => {
-                    // Sortir timestamp (terbaru diatas)
-                    const timeA = a.timestamp || new Date(a.date || 0).getTime();
-                    const timeB = b.timestamp || new Date(b.date || 0).getTime();
-                    return timeB - timeA;
-                });
-
-            // PANGGIL FUNGSI INIT SLIDER
-            initVideoSlider(videoItems);
-
-            // ----------------------------------------------------
-            // 2. LOGIKA BERITA (Tetap seperti sebelumnya)
-            // ----------------------------------------------------
-            const newsItems = allItems.filter(item => {
-                 const cat = (item.category || item.kategori || '').toLowerCase();
-                 return cat === 'news' || cat === 'berita';
-            });
-            
-            // ... (Kode mapping newsData Anda yang lama) ...
-            if (newsItems.length > 0) initNewsCarousel();
-        }
-    });
     </script>
-    <script src="TTS_Adaptif.js"></script>
-
+    
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getDatabase, ref, runTransaction, onValue } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
         // --- 1. KONFIGURASI FIREBASE ---
+        // CATATAN PENTING: Jika error CORS, buka file ini via Live Server (http://127.0.0.1:5500), jangan double click file html.
         const firebaseConfig = {
             apiKey: "AIzaSyDUeIg9Zn_xndPXtChO8KufXFp6EMtqBJ0",
             authDomain: "admin-pelayanan-balmon.firebaseapp.com",
@@ -1668,30 +1669,33 @@
         // ============================================================
         // BAGIAN A: VISITOR TRACKER
         // ============================================================
-        function runVisitorTracker() {
-            if (!sessionStorage.getItem('visited_v2')) {
-                const visitRef = ref(db, 'statistik_web/total_kunjungan');
-                runTransaction(visitRef, (currentCount) => {
-                    return (currentCount || 0) + 1;
-                }).then(() => {
-                    console.log("✅ Tracker: Data kunjungan diperbarui.");
-                    sessionStorage.setItem('visited_v2', 'true');
-                }).catch((err) => console.error("❌ Tracker Error:", err));
+        try {
+            function runVisitorTracker() {
+                if (!sessionStorage.getItem('visited_v2')) {
+                    const visitRef = ref(db, 'statistik_web/total_kunjungan');
+                    runTransaction(visitRef, (currentCount) => {
+                        return (currentCount || 0) + 1;
+                    }).then(() => {
+                        console.log("✅ Tracker: Data kunjungan diperbarui.");
+                        sessionStorage.setItem('visited_v2', 'true');
+                    }).catch((err) => console.error("❌ Tracker Error:", err));
+                }
             }
+            runVisitorTracker();
+        } catch (e) {
+            console.log("Visitor tracker skipped (local context)");
         }
-        runVisitorTracker();
 
         // ============================================================
-        // BAGIAN B: LOGIKA NEWS CAROUSEL (Full Logic Disini)
+        // BAGIAN B: LOGIKA NEWS CAROUSEL
         // ============================================================
         
-        // 1. Variabel Global untuk Module ini
+        // 1. Variabel Global News
         let newsData = []; 
         let currentNewsIndex = 0;
         let newsInterval;
-        let isTransitioning = false;
 
-        // 2. Fungsi Init Carousel
+        // 2. Fungsi Init Carousel News
         function initNewsCarousel() {
             const track = document.getElementById('newsTrack');
             if (!track) return;
@@ -1702,32 +1706,30 @@
                 const titleEl = document.getElementById('newsTitle');
                 const descEl = document.getElementById('newsDesc');
                 if(titleEl) titleEl.textContent = "Data Kosong";
-                if(descEl) descEl.textContent = "Tidak ada berita ditemukan dengan kategori 'News' atau 'Berita'.";
+                if(descEl) descEl.textContent = "Tidak ada berita ditemukan.";
                 return;
             }
 
-            // Masukkan gambar asli
+            // Masukkan gambar
             newsData.forEach(news => {
                 const img = document.createElement('img');
                 img.src = news.img;
                 img.className = 'news-slide-img';
                 img.alt = news.title;
-                // Force Style agar layout tidak berantakan
                 img.style.minWidth = "100%";
                 img.style.width = "100%";
                 img.style.objectFit = "cover";
-                // Fallback jika gambar error
                 img.onerror = function() {
                     this.src = 'https://via.placeholder.com/800x600?text=Image+Not+Found';
                 };
                 track.appendChild(img);
             });
 
-            updateNewsDisplay(false); // Update tampilan awal tanpa animasi
+            updateNewsDisplay(false); 
             startAutoNews();
         }
 
-        // 3. Fungsi Update Tampilan (Teks & Posisi Gambar)
+        // 3. Fungsi Update Tampilan News
         function updateNewsDisplay(useAnimation = true) {
             const titleEl = document.getElementById('newsTitle');
             const dateEl = document.getElementById('newsDate');
@@ -1739,14 +1741,11 @@
 
             if (!track || !container || newsData.length === 0) return;
 
-            // Hitung lebar container saat ini
             const containerWidth = container.clientWidth;
             
-            // Geser Track
             track.style.transition = useAnimation ? 'transform 0.6s cubic-bezier(0.25, 1, 0.5, 1)' : 'none';
             track.style.transform = `translateX(-${currentNewsIndex * containerWidth}px)`;
 
-            // Efek Fade Text
             titleEl.classList.add('text-fade-out');
             titleEl.classList.remove('text-fade-in');
             descEl.classList.add('text-fade-out');
@@ -1770,55 +1769,98 @@
                 descEl.classList.add('text-fade-in');
             }, 300);
 
-            // Reset Progress Bar
             progressEl.classList.remove('active');
-            void progressEl.offsetWidth; // Trigger reflow
+            void progressEl.offsetWidth; 
             progressEl.classList.add('active');
         }
 
-        // 4. Fungsi Navigasi (Next / Prev)
+        // 4. Navigasi News
         function nextNews() {
             if (newsData.length <= 1) return;
             currentNewsIndex++;
-            if (currentNewsIndex >= newsData.length) {
-                currentNewsIndex = 0; // Loop balik ke awal
-            }
+            if (currentNewsIndex >= newsData.length) currentNewsIndex = 0;
             updateNewsDisplay(true);
-            startAutoNews(); // Reset timer
+            startAutoNews();
         }
 
         function prevNews() {
             if (newsData.length <= 1) return;
             currentNewsIndex--;
-            if (currentNewsIndex < 0) {
-                currentNewsIndex = newsData.length - 1; // Loop ke akhir
-            }
+            if (currentNewsIndex < 0) currentNewsIndex = newsData.length - 1;
             updateNewsDisplay(true);
-            startAutoNews(); // Reset timer
+            startAutoNews();
         }
 
         function startAutoNews() {
             clearInterval(newsInterval);
             if (newsData.length > 1) {
-                newsInterval = setInterval(() => {
-                    nextNews();
-                }, 5000);
+                newsInterval = setInterval(() => { nextNews(); }, 5000);
             }
         }
 
-        // 5. Event Listener Resize (Agar responsif)
         window.addEventListener('resize', () => {
             if (newsData.length > 0) updateNewsDisplay(false);
         });
 
-        // --- PENTING: EKSPOS FUNGSI KE GLOBAL AGAR BISA DIKLIK HTML ---
+        // Expose News Functions
         window.nextNews = nextNews;
         window.prevNews = prevNews;
-        window.initNewsCarousel = initNewsCarousel; // Backup
 
 
         // ============================================================
-        // BAGIAN C: FETCH DATA DARI FIREBASE
+        // BAGIAN C: LOGIKA VIDEO SLIDER (FIREBASE INTEGRATED)
+        // ============================================================
+        
+        let dbVideoData = []; 
+        
+        // Helper: Ekstrak YouTube ID dari URL (Link panjang/pendek)
+        function getYoutubeId(url) {
+            if (!url) return null;
+            const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
+            const match = url.match(regExp);
+            return (match && match[2].length === 11) ? match[2] : null;
+        }
+
+        // 2. Fungsi Init Video Slider (Render Kartu dari DB)
+        function initDbVideoSlider() {
+            const track = document.getElementById('videoTrack');
+            if(!track) return;
+            
+            track.innerHTML = ''; 
+
+            if (dbVideoData.length === 0) {
+                track.innerHTML = '<div style="color:white; padding:20px;">Belum ada video tersedia.</div>';
+                return;
+            }
+
+            dbVideoData.forEach(video => {
+                const card = document.createElement('div');
+                card.className = 'video-card';
+                const embedUrl = video.id ? `https://www.youtube.com/embed/${video.id}` : '';
+                
+                card.innerHTML = `
+                    <div class="video-card-media">
+                         <iframe src="${embedUrl}" loading="lazy" allowfullscreen title="${video.title}"></iframe>
+                    </div>
+                    <div class="video-card-content">
+                        <h3>${video.title}</h3>
+                        <p>${video.desc}</p>
+                    </div>
+                `;
+                track.appendChild(card);
+            });
+            
+            // Simpan ke window agar fungsi global slideVideo bisa akses
+            window.firebaseVideoData = dbVideoData;
+            
+            // Reset posisi scroll
+            const trackEl = document.getElementById('videoTrack');
+            if(trackEl) trackEl.style.transform = `translateX(0px)`;
+        }
+
+
+        // ============================================================
+        // BAGIAN D: FETCH DATA DARI FIREBASE (GABUNGAN NEWS & VIDEO)
         // ============================================================
         console.log("Firebase: Menghubungkan...");
         const galleryRef = ref(db, 'galeri'); 
@@ -1830,14 +1872,11 @@
             if (data) {
                 let allItems = Object.keys(data).map(key => ({ id: key, ...data[key] }));
 
-                // Filter & Sort (LOGIKA FILTER LEBIH KUAT/TIDAK SENSITIF CASE)
+                // 1. PROSES DATA BERITA (NEWS)
                 const newsItems = allItems.filter(item => {
-                    // Ambil kategori, ubah ke string, trim spasi, jadikan huruf kecil
                     const cat = String(item.category || item.kategori || '').trim().toLowerCase();
                     return cat === 'news' || cat === 'berita';
                 });
-
-                console.log(`Firebase: Ditemukan ${newsItems.length} item berita.`);
 
                 newsItems.sort((a, b) => {
                     const dateA = new Date(a.date || a.tanggal || 0);
@@ -1845,7 +1884,6 @@
                     return dateB - dateA;
                 });
 
-                // Mapping ke variabel lokal newsData
                 newsData = newsItems.map(item => {
                     const rawDate = item.date || item.tanggal || new Date();
                     const dateStr = new Date(rawDate).toLocaleDateString('id-ID', {
@@ -1860,147 +1898,43 @@
                     };
                 });
                 
-                // Jalankan Init setelah data siap
-                if (newsData.length > 0) {
-                    initNewsCarousel();
-                } else {
+                if (newsData.length > 0) initNewsCarousel();
+                else {
                     document.getElementById('newsTitle').textContent = "Data Kosong";
-                    document.getElementById('newsDesc').textContent = "Data ditemukan di database, tapi tidak ada yang berkategori 'News'.";
+                    document.getElementById('newsDesc').textContent = "Tidak ada berita ditemukan.";
+                }
+
+                // 2. PROSES DATA VIDEO
+                const videoItems = allItems.filter(item => {
+                    const cat = String(item.category || item.kategori || '').trim().toLowerCase();
+                    return cat === 'video';
+                });
+                
+                dbVideoData = videoItems.map(item => {
+                    const rawLink = item.url || item.videoUrl || item.link || '';
+                    return {
+                        id: getYoutubeId(rawLink), 
+                        title: item.title || item.judul || 'Video Balmon',
+                        desc: item.description || item.desc || item.deskripsi || 'Video dokumentasi dan edukasi.'
+                    };
+                });
+
+                console.log(`Firebase: Ditemukan ${dbVideoData.length} video.`);
+                
+                if(dbVideoData.length > 0) {
+                    initDbVideoSlider();
                 }
 
             } else {
-                console.log("Firebase: Data Galeri Kosong/Null.");
+                console.log("Firebase: Data Galeri Kosong.");
                 document.getElementById('newsTitle').textContent = "Database Kosong";
             }
         }, (err) => {
             console.error("Firebase Error:", err);
             document.getElementById('newsTitle').textContent = "Gagal Koneksi";
-            document.getElementById('newsDesc').textContent = "Cek koneksi internet atau izin database. " + err.message;
+            document.getElementById('newsDesc').textContent = "Pastikan Anda membuka file ini menggunakan Server (bukan file://) atau periksa koneksi internet.";
         });
-        
 
     </script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
-
-<script>
-    // =======================================================
-    // 2. KONFIGURASI FIREBASE (COPY DARI GALERI.HTML ANDA)
-    // =======================================================
-    // GANTI BAGIAN INI DENGAN CONFIG ASLI DARI FIREBASE ANDA
-    const firebaseConfig2 = {
-        apiKey: "AIzaSyDUeIg9Zn_xndPXtChO8KufXFp6EMtqBJ0",
-            authDomain: "admin-pelayanan-balmon.firebaseapp.com",
-            databaseURL: "https://admin-pelayanan-balmon-default-rtdb.firebaseio.com",
-            projectId: "admin-pelayanan-balmon",
-            appId: "1:1071557110255:web:bff7087da1feacccb7ee1a"
-    };
-
-    // Mencegah error jika firebase sudah di-init sebelumnya
-    if (!firebase.apps.length) {
-        firebase.initializeApp(firebaseConfig2);
-    }
-
-    // =======================================================
-    // 3. LOGIKA VIDEO SLIDER
-    // =======================================================
-    const videoTrack = document.getElementById('videoTrack');
-
-    // Debugging: Cek apakah elemen ditemukan
-    if (!videoTrack) {
-        console.error("❌ Elemen #videoTrack tidak ditemukan di HTML!");
-    } else {
-        console.log("✅ Memulai koneksi ke Firebase...");
-        
-        // Referensi ke Database 'galeri'
-        const dbRef = firebase.database().ref('galeri');
-
-        dbRef.on('value', (snapshot) => {
-            console.log("✅ Data diterima dari Firebase"); // Cek Console F12 jika ini tidak muncul
-            
-            const data = snapshot.val();
-            videoTrack.innerHTML = ''; // Hapus loading spinner
-
-            if (data) {
-                const allItems = Object.values(data).reverse(); // Urutkan terbaru
-                
-                // Filter hanya kategori 'Video' (Case insensitive)
-                const videoItems = allItems.filter(item => {
-                    const k = item.category || item.category || '';
-                    return k.toLowerCase() === 'video';
-                });
-
-                if (videoItems.length === 0) {
-                    videoTrack.innerHTML = '<div style="padding:20px; width:100%; text-align:center;">Tidak ada video ditemukan.</div>';
-                    return;
-                }
-
-                // Render Kartu Video
-                videoItems.forEach(item => {
-                    let videoId = '';
-                    if (item.videoUrl && item.videoUrl.includes('v=')) {
-                        videoId = item.videoUrl.split('v=')[1].split('&')[0];
-                    } else if (item.videoUrl && item.videoUrl.includes('youtu.be/')) {
-                        videoId = item.videoUrl.split('youtu.be/')[1].split('?')[0];
-                    }
-
-                    if (!videoId) return;
-
-                    const cardHTML = `
-                        <div class="video-card vc-card">
-                            <div class="video-card-media">
-                                <iframe 
-                                    src="https://www.youtube.com/embed/${videoId}?enablejsapi=1" 
-                                    title="${item.judul || 'Video'}" 
-                                    frameborder="0" 
-                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-                                    allowfullscreen 
-                                    loading="lazy">
-                                </iframe>
-                            </div>
-                            <div class="video-card-content">
-                                <h3>${item.title || 'Tanpa Judul'}</h3>
-                                <p>${item.description ? item.description.substring(0, 80) + '...' : ''}</p>
-                            </div>
-                        </div>
-                    `;
-                    videoTrack.innerHTML += cardHTML;
-                });
-            } else {
-                videoTrack.innerHTML = '<div style="padding:20px; width:100%; text-align:center;">Database Galeri Kosong.</div>';
-            }
-        }, (error) => {
-            console.error("❌ Firebase Error:", error);
-            videoTrack.innerHTML = `<div style="color:red; padding:20px;">Gagal memuat: ${error.message}</div>`;
-        });
-    }
-
-    // =======================================================
-    // 4. FUNGSI NAVIGASI TOMBOL
-    // =======================================================
-    let scrollAmount = 0;
-    window.slideVideo = function(direction) {
-        const track = document.getElementById('videoTrack');
-        const cards = track.querySelectorAll('.vc-card');
-        if (cards.length === 0) return;
-
-        const cardWidth = cards[0].offsetWidth + 20; // + gap
-        const containerWidth = track.parentElement.offsetWidth;
-        // Hitung batas scroll maksimal
-        const maxScroll = (cards.length * cardWidth) - containerWidth; 
-
-        if (direction === 'next') {
-            scrollAmount += cardWidth;
-            // Cegah scroll bablas
-            if (scrollAmount > maxScroll) scrollAmount = Math.max(0, maxScroll);
-        } else {
-            scrollAmount -= cardWidth;
-            if (scrollAmount < 0) scrollAmount = 0;
-        }
-
-        track.style.transform = `translateX(-${scrollAmount}px)`;
-    };
-</script>
-    
 </body>
 </html>
