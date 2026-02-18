@@ -391,29 +391,25 @@
                     </svg>
                 </a>
             </div>
-
-            <nav class="nav-menu">
+<nav class="nav-menu">
                 <ul class="menu-list">
                     <li class="menu-item" onclick="window.location.href='index.html'">Beranda</li>
+                    <li class="menu-item" onclick="window.location.href='profil.html'" style="color:var(--primary-color);">Profil</li>
                     <li class="menu-item">Layanan
                         <ul class="dropdown-content">
                             <li><a href="konsesi.html">Izin Konsesi</a></li>
                             <li><a href="maritim.html">Izin Maritim</a></li>
                             <li><a href="fm.html">Izin Penyiaran FM</a></li>
+                            <li><a href="arsip.html">Download</a></li>
                         </ul>
                     </li>
                     <li class="menu-item" onclick="window.location.href='galeri.html'">Publikasi</li>
-                    <li class="menu-item" onclick="window.location.href='arsip.html'">Download</li>
                     <li class="menu-item" onclick="window.location.href='kontak.html'">Kontak</li>
                 </ul>
-                <button class="nav-search-btn" onclick="openSearch()" style="margin-left:10px; border:none; background:transparent; color:white; cursor:pointer;">
-                    <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <circle cx="11" cy="11" r="8"></circle>
-                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-                    </svg>
+                <button onclick="openSearch()" style="margin-left:10px; border:none; background:transparent; color:var(--text-dark); cursor:pointer;">
+                    <i class="bi bi-search" style="font-size:18px;"></i>
                 </button>
             </nav>
-            
             <button class="hamburger-btn" id="hamburgerBtn" onclick="toggleMobileMenu()">
                 <span></span>
                 <span></span>
