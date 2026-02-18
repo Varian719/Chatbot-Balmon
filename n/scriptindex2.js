@@ -10,25 +10,23 @@ function initScrollAnimations() {
             }
         });
     }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
-    fadeSections.forEach(section => { observer.observe(section); });
+    fadeSections.forEach(section => observer.observe(section));
 }
+document.addEventListener('DOMContentLoaded', initScrollAnimations);
 
-document.addEventListener('DOMContentLoaded', () => { initScrollAnimations(); });
-
-// PAGE LOADER LOGIC OPTIMIZED
+// PAGE LOADER
 window.addEventListener('load', () => {
     const loader = document.getElementById('pageLoader');
-    if(loader) loader.classList.add('hidden');
+    if (loader) loader.classList.add('hidden');
     setTimeout(() => {
-        const visibleSections = document.querySelectorAll('.fade-in-section');
-        visibleSections.forEach(section => {
+        document.querySelectorAll('.fade-in-section').forEach(section => {
             const rect = section.getBoundingClientRect();
             if (rect.top < window.innerHeight && rect.bottom > 0) {
                 section.classList.add('is-visible');
             }
         });
     }, 100);
-    if(typeof initVideoSlider === 'function') initVideoSlider();
+    if (typeof initVideoSlider === 'function') initVideoSlider();
 });
 
 window.addEventListener('pageshow', (event) => {
@@ -36,6 +34,7 @@ window.addEventListener('pageshow', (event) => {
     if (event.persisted && loader) loader.classList.add('hidden');
 });
 
+// Link transition
 document.querySelectorAll('a').forEach(link => {
     link.addEventListener('click', function(e) {
         const href = this.getAttribute('href');
@@ -50,14 +49,14 @@ document.querySelectorAll('a').forEach(link => {
 });
 
 // FEATURE CAROUSEL
-function toggleDropdown(clickedCard) { 
-    clickedCard.classList.toggle('active'); 
+window.toggleDropdown = function(clickedCard) {
+    clickedCard.classList.toggle('active');
     const isExpanded = clickedCard.classList.contains('active');
     clickedCard.setAttribute('aria-expanded', isExpanded);
-}
+};
 
 // CHAT ANIMATION & LAZY LOAD
-function animateChatToggle() {
+window.animateChatToggle = function() {
     const btn = document.getElementById("toggleBtn");
     const box = document.getElementById("chatBox");
     const iframe = document.getElementById("chatFrame");
@@ -67,23 +66,23 @@ function animateChatToggle() {
     }
 
     if (btn.classList.contains("active")) {
-        btn.classList.remove("active"); 
+        btn.classList.remove("active");
         btn.setAttribute('aria-expanded', 'false');
-        box.classList.remove("active"); 
+        box.classList.remove("active");
         box.setAttribute('aria-hidden', 'true');
         return;
     }
     if (btn.classList.contains("loading")) return;
-    
+
     btn.classList.add("loading");
     setTimeout(() => {
-        btn.classList.remove("loading"); 
-        btn.classList.add("active"); 
+        btn.classList.remove("loading");
+        btn.classList.add("active");
         btn.setAttribute('aria-expanded', 'true');
         box.classList.add("active");
         box.setAttribute('aria-hidden', 'false');
-    }, 400); 
-}
+    }, 400);
+};
 
 // SCROLL EVENTS
 let lastScrollY = window.scrollY;
@@ -93,7 +92,7 @@ function updateScroll() {
     const chatBtn = document.getElementById('toggleBtn');
     const footer = document.getElementById('mainFooter');
     const header = document.getElementById('mainHeader');
-    
+
     if (scrollY > 50) header.classList.add('header-minimal');
     else header.classList.remove('header-minimal');
 
@@ -108,7 +107,6 @@ function updateScroll() {
     }
     ticking = false;
 }
-
 window.addEventListener('scroll', function() {
     lastScrollY = window.scrollY;
     if (!ticking) {
@@ -117,68 +115,46 @@ window.addEventListener('scroll', function() {
     }
 }, { passive: true });
 
-function scrollToTop() { window.scrollTo({ top: 0, behavior: 'smooth' }); }
+window.scrollToTop = function() { window.scrollTo({ top: 0, behavior: 'smooth' }); };
 
 // MOBILE MENU
-function toggleMobileMenu() {
-    const btn = document.getElementById('hamburgerBtn');
-    const menu = document.getElementById('mobileNavDropdown');
-    const isExpanded = btn.getAttribute('aria-expanded') === 'true';
-    
-    btn.classList.toggle('active');
-    btn.setAttribute('aria-expanded', !isExpanded);
-    menu.classList.toggle('active');
-}
-
-function closeMobileMenu() {
-    const btn = document.getElementById('hamburgerBtn');
-    const menu = document.getElementById('mobileNavDropdown');
-    
-    btn.classList.remove('active');
-    btn.setAttribute('aria-expanded', 'false');
-    menu.classList.remove('active');
+window.toggleMobileMenu = function() {
+    document.getElementById('hamburgerBtn').classList.toggle('active');
+    document.getElementById('mobileNavDropdown').classList.toggle('active');
+};
+window.closeMobileMenu = function() {
+    document.getElementById('hamburgerBtn').classList.remove('active');
+    document.getElementById('mobileNavDropdown').classList.remove('active');
     document.querySelectorAll('.mobile-submenu').forEach(s => s.classList.remove('active'));
     document.querySelectorAll('.mobile-menu-item.has-submenu').forEach(i => i.classList.remove('active'));
-}
-
-function toggleMobileSubmenu(element) {
+};
+window.toggleMobileSubmenu = function(element) {
     const submenu = element.nextElementSibling;
     element.classList.toggle('active');
-    const isExpanded = element.getAttribute('aria-expanded') === 'true';
-    element.setAttribute('aria-expanded', !isExpanded);
-    
-    if (submenu && submenu.classList.contains('mobile-submenu')) {
-        submenu.classList.toggle('active');
-    }
-}
-
-function handleMobileMenuItem(element, action) {
+    if (submenu && submenu.classList.contains('mobile-submenu')) submenu.classList.toggle('active');
+};
+window.handleMobileMenuItem = function(element, action) {
     if (action === 'beranda') window.location.href = 'index.html';
     else if (action === 'kontak') window.location.href = 'kontak.html';
     else if (action === 'publikasi') window.location.href = 'galeri.html';
     else if (action === 'download') window.location.href = 'arsip.html';
-    else if (action === 'profil') window.location.href = 'profil.html';
-    closeMobileMenu();
-}
-
+    window.closeMobileMenu();
+};
 document.addEventListener('click', function(event) {
     const header = document.getElementById('mainHeader');
     const nav = document.getElementById('mobileNavDropdown');
-    if (!header.contains(event.target) && nav.classList.contains('active')) closeMobileMenu();
+    if (!header.contains(event.target) && nav.classList.contains('active')) window.closeMobileMenu();
 });
 
 /* =========================================
-    LOGIKA VIDEO SLIDER (LAZY LOAD)
+   VIDEO SLIDER LAZY LOAD (FALLBACK)
    ========================================= */
-
-// Fungsi untuk memutar video saat thumbnail diklik
 window.playVideoFromSlider = function(wrapper, event) {
-    if (event) event.stopPropagation(); // Mencegah event bubble ke parent (slider)
+    if (event) event.stopPropagation();
     const card = wrapper.closest('.video-card');
+    if (!card) return;
     const videoId = card.dataset.videoId;
     if (!videoId) return;
-
-    // Jika sudah ada iframe, jangan buat lagi
     if (wrapper.querySelector('iframe')) return;
 
     const iframe = document.createElement('iframe');
@@ -194,11 +170,10 @@ window.playVideoFromSlider = function(wrapper, event) {
 
     wrapper.innerHTML = '';
     wrapper.style.position = 'relative';
-    wrapper.style.paddingBottom = '56.25%'; // 16:9 aspect ratio
+    wrapper.style.paddingBottom = '56.25%';
     wrapper.appendChild(iframe);
 };
 
-// Menggunakan "var" agar bisa diakses global jika Firebase gagal
 var globalVideoData = [
     { id: "MhM-jKwb92g", title: "Mengenal Spektrum Frekuensi Radio", desc: "Video edukasi singkat." },
     { id: "ScMzIvxBSi4", title: "Prosedur Perizinan ISR Online", desc: "Panduan lengkap Izin Stasiun Radio." }
@@ -207,7 +182,6 @@ var globalVideoData = [
 let videoScrollPosition = 0;
 let videoCardWidth = 300;
 
-// Fungsi initVideoSlider untuk fallback (jika Firebase gagal)
 function initVideoSlider() {
     const track = document.getElementById('videoTrack');
     if (!track) return;
@@ -239,8 +213,7 @@ function initVideoSlider() {
     });
 }
 
-// Fungsi Slide Video Global
-function slideVideo(direction) {
+window.slideVideo = function(direction) {
     const track = document.getElementById('videoTrack');
     const firstCard = track.querySelector('.video-card');
     if (firstCard) {
@@ -249,7 +222,7 @@ function slideVideo(direction) {
 
     const currentDataLength = (window.firebaseVideoData && window.firebaseVideoData.length > 0) ? window.firebaseVideoData.length : globalVideoData.length;
     const maxScroll = (currentDataLength * videoCardWidth) - track.parentElement.offsetWidth;
-    
+
     if (direction === 'next') {
         videoScrollPosition += videoCardWidth;
         if (videoScrollPosition > maxScroll) videoScrollPosition = maxScroll;
@@ -260,9 +233,9 @@ function slideVideo(direction) {
     }
 
     track.style.transform = `translateX(-${videoScrollPosition}px)`;
-}
+};
 
-/* SEARCH FUNCTIONALITY */
+/* SEARCH */
 const pages = [
     { title: "Beranda", url: "index.html", desc: "Halaman utama Balmon Samarinda" },
     { title: "Izin Konsesi", url: "konsesi.html", desc: "Layanan perizinan frekuensi untuk perusahaan/konsesi." },
@@ -273,31 +246,23 @@ const pages = [
     { title: "Kontak Kami", url: "kontak.html", desc: "Alamat kantor, email, dan nomor pengaduan." }
 ];
 
-function openSearch() {
-    const overlay = document.getElementById('searchOverlay');
-    overlay.classList.add('active');
-    overlay.setAttribute('aria-hidden', 'false');
+window.openSearch = function() {
+    document.getElementById('searchOverlay').classList.add('active');
     setTimeout(() => document.getElementById('searchInput').focus(), 300);
-}
-
-function closeSearch() {
-    const overlay = document.getElementById('searchOverlay');
-    overlay.classList.remove('active');
-    overlay.setAttribute('aria-hidden', 'true');
+};
+window.closeSearch = function() {
+    document.getElementById('searchOverlay').classList.remove('active');
     document.getElementById('searchInput').value = '';
     document.getElementById('searchResults').innerHTML = '';
-}
-
-function performSearch() {
+};
+window.performSearch = function() {
     const input = document.getElementById('searchInput').value.toLowerCase();
     const resultContainer = document.getElementById('searchResults');
     resultContainer.innerHTML = '';
-
     if (input.length < 2) return;
 
-    const results = pages.filter(page => 
-        page.title.toLowerCase().includes(input) || 
-        page.desc.toLowerCase().includes(input)
+    const results = pages.filter(page =>
+        page.title.toLowerCase().includes(input) || page.desc.toLowerCase().includes(input)
     );
 
     if (results.length > 0) {
@@ -311,8 +276,5 @@ function performSearch() {
     } else {
         resultContainer.innerHTML = '<div style="text-align:center; color:#888;">Tidak ditemukan hasil yang cocok.</div>';
     }
-}
-
-document.addEventListener('keydown', function(event) {
-    if (event.key === "Escape") closeSearch();
-});
+};
+document.addEventListener('keydown', e => { if (e.key === "Escape") window.closeSearch(); });
