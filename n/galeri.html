@@ -4,16 +4,22 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Galeri Kegiatan dan Publikasi Balmon Samarinda - Foto, Video, dan Infografis">
-    
     <title>Galeri Publikasi - Balmon Samarinda</title>
-    
     <link rel="icon" type="image/png" href="logo-ikon.png" sizes="32x32">
-    
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Albert+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-
+    <!-- Bootstrap CSS untuk dropdown -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Meta tags SEO -->
+    <meta name="keywords" content="galeri balmon, foto kegiatan, video edukasi, infografis frekuensi">
+    <link rel="canonical" href="https://balmonsamarinda.go.id/galeri.html">
+    <meta property="og:title" content="Galeri Publikasi - Balmon Samarinda">
+    <meta property="og:description" content="Kumpulan foto, video, dan infografis kegiatan Balai Monitor Spektrum Frekuensi Radio Samarinda.">
+    <meta property="og:url" content="https://balmonsamarinda.go.id/galeri.html">
+    <meta property="og:image" content="https://balmonsamarinda.go.id/images/galeri-og.jpg">
+    <meta name="twitter:card" content="summary_large_image">
     <style>
         /* ========================================= */
         /* --- 1. SETUP WARNA & GLOBAL (STANDAR) --- */
@@ -187,6 +193,38 @@
         .cat-title { font-size: 14px; font-weight: 600; color: var(--text-gray); }
         .cat-card.active .cat-title { color: var(--primary-color); font-weight: 700; }
 
+        /* Gaya dropdown untuk tombol Foto */
+        .dropdown {
+            display: contents;
+        }
+        .dropdown .cat-card {
+            width: 100%; height: 100%; margin: 0;
+        }
+        .dropdown-menu {
+            background: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            border: 1px solid rgba(0,0,0,0.05);
+            padding: 8px 0;
+            margin-top: 5px;
+        }
+        .dropdown-item {
+            font-family: 'Albert Sans', sans-serif;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-dark);
+            padding: 10px 20px;
+            transition: 0.2s;
+        }
+        .dropdown-item:hover {
+            background-color: var(--bg-light-blue);
+            color: var(--primary-color);
+        }
+        .dropdown-item:active {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
         .gallery-section { max-width: 1200px; margin: 0 auto; padding: 0 20px 100px; }
         .gallery-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 30px; }
         
@@ -351,9 +389,7 @@
         .search-item:hover { background: var(--bg-light-blue); border-color: var(--primary-color); transform: translateX(5px); }
         .search-item h4 { margin: 0 0 5px 0; color: var(--primary-color); font-size: 16px; }
         .search-item p { margin: 0; font-size: 13px; color: var(--text-gray); }
-        
-   
-   </style>
+    </style>
 </head>
 <body>
 
@@ -391,10 +427,10 @@
                     </svg>
                 </a>
             </div>
-<nav class="nav-menu">
+            <nav class="nav-menu">
                 <ul class="menu-list">
                     <li class="menu-item" onclick="window.location.href='index.html'">Beranda</li>
-                    <li class="menu-item" onclick="window.location.href='profil.html'" style="color:var(--primary-color);">Profil</li>
+                    <li class="menu-item" onclick="window.location.href='profil.html'">Profil</li>
                     <li class="menu-item">Layanan
                         <ul class="dropdown-content">
                             <li><a href="konsesi.html">Izin Konsesi</a></li>
@@ -406,8 +442,11 @@
                     <li class="menu-item" onclick="window.location.href='galeri.html'">Publikasi</li>
                     <li class="menu-item" onclick="window.location.href='kontak.html'">Kontak</li>
                 </ul>
-                <button onclick="openSearch()" style="margin-left:10px; border:none; background:transparent; color:var(--text-dark); cursor:pointer;">
-                    <i class="bi bi-search" style="font-size:18px;"></i>
+                <button onclick="openSearch()" style="margin-left:10px; border:none; background:transparent; color:white; cursor:pointer;">
+                    <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                    </svg>
                 </button>
             </nav>
             <button class="hamburger-btn" id="hamburgerBtn" onclick="toggleMobileMenu()">
@@ -440,6 +479,7 @@
     </div>
 
     <div class="category-wrapper fade-in-section">
+        <!-- Semua -->
         <div class="cat-card active" onclick="filterGallery('all', this)">
             <svg class="cat-icon-svg" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
                 <rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect>
@@ -447,13 +487,25 @@
             </svg>
             <span class="cat-title">Semua</span>
         </div>
-        <div class="cat-card" onclick="filterGallery('foto', this)">
-            <svg class="cat-icon-svg" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
-                <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
-                <circle cx="12" cy="13" r="4"></circle>
-            </svg>
-            <span class="cat-title">Foto</span>
+
+        <!-- Foto dengan dropdown -->
+        <div class="dropdown">
+            <div class="cat-card dropdown-toggle" id="fotoDropdown" data-bs-toggle="dropdown" aria-expanded="false" style="cursor: pointer;">
+                <svg class="cat-icon-svg" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                    <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
+                    <circle cx="12" cy="13" r="4"></circle>
+                </svg>
+                <span class="cat-title">Foto</span>
+            </div>
+            <ul class="dropdown-menu" aria-labelledby="fotoDropdown">
+                <li><a class="dropdown-item" href="#" onclick="filterGalleryBySubcategory('SRC')">SRC dan LRC</a></li>
+                <li><a class="dropdown-item" href="#" onclick="filterGalleryBySubcategory('sosialisasi')">Sosialisasi Denda Izin Stasiun Radio</a></li>
+                <li><a class="dropdown-item" href="#" onclick="filterGalleryBySubcategory('pegawai')">Pegawai Balmon Samarinda</a></li>
+                <li><a class="dropdown-item" href="#" onclick="filterGalleryBySubcategory('capacity')">Capacity Building</a></li>
+            </ul>
         </div>
+
+        <!-- Video -->
         <div class="cat-card" onclick="filterGallery('video', this)">
             <svg class="cat-icon-svg" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
                 <rect x="2" y="2" width="20" height="20" rx="2.18" ry="2.18"></rect>
@@ -461,6 +513,8 @@
             </svg>
             <span class="cat-title">Video</span>
         </div>
+
+        <!-- Infografis -->
         <div class="cat-card" onclick="filterGallery('infografis', this)">
             <svg class="cat-icon-svg" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
                 <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
@@ -468,6 +522,8 @@
             </svg>
             <span class="cat-title">Infografis</span>
         </div>
+
+        <!-- News -->
         <div class="cat-card" onclick="filterGallery('news', this)">
             <svg class="cat-icon-svg" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
                 <path d="M19 20H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h10l4 4v10a2 2 0 0 1-2 2z"></path>
@@ -551,12 +607,13 @@
         </div>
     </div>
 
-    <script src="dist_js/galeri.min.js">
-    </script>
-
+    <!-- Bootstrap JS untuk dropdown -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- File JS umum (berisi fungsi UI seperti toggleMobileMenu, openLightbox, dll.) -->
+    <script src="dist_js/galeri.min.js"></script>
+    <!-- File module untuk Firebase dan filter subkategori -->
+    <script type="module" src="dist_js/galerimodul.min.js"></script>
+    <!-- File TTS jika diperlukan -->
     <script src="dist_js/TTS_Adaptif.min.js"></script>
-
-    <script src="dist_js/galerimodul.min.js" type="module">
-    </script>
 </body>
 </html>

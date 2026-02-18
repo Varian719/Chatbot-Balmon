@@ -104,19 +104,20 @@
                                 <option value="foto">Foto Kegiatan</option>
                                 <option value="video">Video</option>
                                 <option value="infografis">Infografis</option>
-                                <option value="news">News</option> </select>
+                                <option value="news">News</option>
+                            </select>
                         </div>
 
                         <div class="mb-3">
                             <label class="form-label small fw-bold">Link Gambar (URL)</label>
                             <input type="url" id="inpImage" class="form-control" required placeholder="https://...">
-                            <div class="form-text">Paste link gambar dari Imgur/Drive/Hosting.</div>
+                            <div class="form-text">Paste link gambar dari Imgur/Drive/Hosting. <strong>Untuk video, akan terisi otomatis dari link YouTube.</strong></div>
                         </div>
 
                         <div class="mb-3" id="videoField" style="display:none;">
                             <label class="form-label small fw-bold text-danger">Link Video (Embed URL)</label>
                             <input type="url" id="inpVideo" class="form-control" placeholder="https://www.youtube.com/embed/ID_VIDEO">
-                            <div class="form-text">Gunakan link embed YouTube.</div>
+                            <div class="form-text">Gunakan link embed YouTube. Thumbnail akan otomatis terisi.</div>
                         </div>
 
                         <div class="d-grid gap-2">
@@ -178,6 +179,15 @@
     import { ref, push, onValue, remove, update } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
     import { signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
+    // ==================== FUNGSI PEMBANTU ====================
+    // Fungsi untuk mengekstrak ID YouTube dari berbagai format URL
+    function extractYoutubeId(url) {
+        if (!url) return null;
+        const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
+        const match = url.match(regExp);
+        return (match && match[2].length === 11) ? match[2] : null;
+    }
+
     // Set Tanggal Header
     const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
     document.getElementById('date-display').innerText = new Date().toLocaleDateString('id-ID', options);
@@ -185,17 +195,30 @@
     // Toggle Input Video
     const catSelect = document.getElementById('inpCategory');
     const videoField = document.getElementById('videoField');
+    const inpVideo = document.getElementById('inpVideo');
+    const inpImage = document.getElementById('inpImage');
     
     function checkCategory() {
         if(catSelect.value === 'video') {
             videoField.style.display = 'block';
-            document.getElementById('inpVideo').setAttribute('required', 'true');
+            inpVideo.setAttribute('required', 'true');
         } else {
             videoField.style.display = 'none';
-            document.getElementById('inpVideo').removeAttribute('required');
+            inpVideo.removeAttribute('required');
         }
     }
     catSelect.addEventListener('change', checkCategory);
+
+    // ==================== AUTO-FILL THUMBNAIL UNTUK VIDEO ====================
+    inpVideo.addEventListener('input', function() {
+        if (catSelect.value === 'video') {
+            const videoUrl = this.value;
+            const videoId = extractYoutubeId(videoUrl);
+            if (videoId) {
+                inpImage.value = `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`;
+            }
+        }
+    });
 
     // Variabel global untuk menyimpan data sementara agar mudah diedit
     let galleryData = [];
@@ -266,18 +289,18 @@
             items.forEach((item, index) => {
                 const dateStr = new Date(item.date).toLocaleDateString('id-ID');
                 
-                // Badge Kategori (UPDATE LOGIKA WARNA NEWS)
+                // Badge Kategori
                 let badgeClass = 'bg-secondary';
                 if(item.category === 'foto') badgeClass = 'bg-primary';
                 if(item.category === 'video') badgeClass = 'bg-danger';
                 if(item.category === 'infografis') badgeClass = 'bg-success';
-                if(item.category === 'news') badgeClass = 'bg-info text-dark'; // Biru muda untuk News
+                if(item.category === 'news') badgeClass = 'bg-info text-dark';
 
                 tbody.innerHTML += `
                     <tr>
                         <td class="ps-4 fw-bold text-secondary">${index + 1}</td>
                         <td>
-                            <img src="${item.imageUrl}" class="img-thumbnail-admin shadow-sm" alt="thumb">
+                            <img src="${item.imageUrl}" class="img-thumbnail-admin shadow-sm" alt="thumb" onerror="this.onerror=null; this.src='https://via.placeholder.com/60x60?text=Error';">
                         </td>
                         <td>
                             <div class="fw-bold text-dark">${item.title}</div>
@@ -355,48 +378,41 @@
             });
         }
 
-    // --- FITUR LOGOUT (DIPISAH DARI DASHBOARD AGAR SELALU JALAN) ---
-    // Kode ini akan jalan duluan sebelum menunggu database, jadi tombol pasti bisa diklik.
-    const setupLogout = () => {
-        const btnLogout = document.getElementById('btnSystemLogout');
-        if (!btnLogout) return;
+        // --- FITUR LOGOUT (DIPISAH DARI DASHBOARD AGAR SELALU JALAN) ---
+        const setupLogout = () => {
+            const btnLogout = document.getElementById('btnSystemLogout');
+            if (!btnLogout) return;
 
-        btnLogout.addEventListener('click', async (e) => {
-            e.preventDefault();
-            
-            // Konfirmasi (Tanpa Cancel)
-            const result = await Swal.fire({
-                title: 'Keluar?', 
-                text: "Sesi akan diakhiri.", 
-                icon: 'warning',
-                showCancelButton: false, 
-                confirmButtonColor: '#d33',   
-                confirmButtonText: 'Ya, Keluar'
-            });
-
-            if (result.isConfirmed) {
-                Swal.fire({ 
-                    title: 'Keluar...', 
-                    timer: 3000,
-                    didOpen: () => Swal.showLoading() 
+            btnLogout.addEventListener('click', async (e) => {
+                e.preventDefault();
+                
+                const result = await Swal.fire({
+                    title: 'Keluar?', 
+                    text: "Sesi akan diakhiri.", 
+                    icon: 'warning',
+                    showCancelButton: false, 
+                    confirmButtonColor: '#d33',   
+                    confirmButtonText: 'Ya, Keluar'
                 });
 
-                try {
-                    // Coba logout bersih via Firebase
-                    const auth = getAuth(); 
-                    await signOut(auth);
-                    window.location.replace("index.html");
-                } catch (error) {
-                    console.error("Force Logout:", error);
-                    // Jika Firebase error, TETAP PAKSA keluar
-                    window.location.replace("index.html");
-                }
-            }
-        });
-    };
-    // Jalankan setup logout segera
-    setupLogout();
+                if (result.isConfirmed) {
+                    Swal.fire({ 
+                        title: 'Keluar...', 
+                        timer: 3000,
+                        didOpen: () => Swal.showLoading() 
+                    });
 
+                    try {
+                        await signOut(auth);
+                        window.location.replace("index.html");
+                    } catch (error) {
+                        console.error("Force Logout:", error);
+                        window.location.replace("index.html");
+                    }
+                }
+            });
+        };
+        setupLogout();
     });
   </script>
 </body>
