@@ -1270,6 +1270,38 @@
                 content: " (" attr(href) ")";
             }
         }
+        .video-thumbnail-wrapper {
+    position: relative;
+    width: 100%;
+    height: 0;
+    padding-bottom: 56.25%; /* 16:9 aspect ratio */
+    background-color: #000;
+    cursor: pointer;
+    overflow: hidden;
+}
+.video-thumbnail-wrapper img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+.play-button-overlay {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 2;
+    transition: transform 0.3s;
+}
+.video-thumbnail-wrapper:hover .play-button-overlay {
+    transform: translate(-50%, -50%) scale(1.1);
+}
+/* Pastikan video-card memiliki tinggi yang sesuai */
+.video-card {
+    height: auto; /* atau 300px jika ingin tinggi tetap */
+}
     </style>
 </head>
 <body>
