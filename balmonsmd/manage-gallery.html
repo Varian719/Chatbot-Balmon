@@ -108,17 +108,19 @@
                             </select>
                         </div>
 
-                        <!-- Subkategori untuk Foto (muncul hanya jika kategori foto) -->
+                        <!-- Field Subkategori (hanya untuk foto) -->
                         <div class="mb-3" id="subcategoryField" style="display:none;">
                             <label class="form-label small fw-bold">Subkategori Foto</label>
                             <select id="inpSubcategory" class="form-control">
-                                <option value="">Pilih Subkategori</option>
+                                <option value="">Pilih subkategori</option>
                                 <option value="SRC">SRC dan LRC</option>
                                 <option value="sosialisasi">Sosialisasi Denda Izin Stasiun Radio</option>
                                 <option value="pegawai">Pegawai Balmon Samarinda</option>
                                 <option value="capacity">Capacity Building</option>
+                                <option value="UNAR">UNAR</option>
+                                <option value="monitoring">Monitoring Spektrum Frekuensi Radio</option>
+                                <option value="lainnya">Lainnya</option>
                             </select>
-                            <div class="form-text">Pilih subkategori untuk foto.</div>
                         </div>
 
                         <div class="mb-3">
@@ -204,35 +206,34 @@
     const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
     document.getElementById('date-display').innerText = new Date().toLocaleDateString('id-ID', options);
 
-    // Toggle Input Video dan Subkategori
+    // Elemen yang diperlukan
     const catSelect = document.getElementById('inpCategory');
     const videoField = document.getElementById('videoField');
-    const subcategoryField = document.getElementById('subcategoryField');
     const inpVideo = document.getElementById('inpVideo');
     const inpImage = document.getElementById('inpImage');
+    const subcategoryField = document.getElementById('subcategoryField');
+    const inpSubcategory = document.getElementById('inpSubcategory');
     
     function checkCategory() {
-        const cat = catSelect.value;
-        // Video field
-        if(cat === 'video') {
+        // Tampilkan/sembunyikan field video
+        if(catSelect.value === 'video') {
             videoField.style.display = 'block';
             inpVideo.setAttribute('required', 'true');
         } else {
             videoField.style.display = 'none';
             inpVideo.removeAttribute('required');
         }
-        // Subcategory field (hanya untuk foto)
-        if(cat === 'foto') {
+        // Tampilkan/sembunyikan field subkategori (hanya untuk foto)
+        if(catSelect.value === 'foto') {
             subcategoryField.style.display = 'block';
         } else {
             subcategoryField.style.display = 'none';
-            // Kosongkan nilai subkategori jika bukan foto
-            document.getElementById('inpSubcategory').value = '';
+            inpSubcategory.value = ''; // reset jika perlu
         }
     }
     catSelect.addEventListener('change', checkCategory);
 
-    // Auto-fill thumbnail untuk video
+    // Auto-fill thumbnail YouTube
     inpVideo.addEventListener('input', function() {
         if (catSelect.value === 'video') {
             const videoUrl = this.value;
@@ -243,7 +244,7 @@
         }
     });
 
-    // Variabel global
+    // Variabel global data
     let galleryData = [];
 
     // --- LOGIKA UTAMA ---
@@ -251,7 +252,7 @@
         console.log("Gallery Admin Ready");
         document.getElementById('user-display').innerText = user.email;
 
-        // 1. TAMBAH / UPDATE DATA
+        // 1. SUBMIT FORM (CREATE / UPDATE)
         document.getElementById('galleryForm').addEventListener('submit', (e) => {
             e.preventDefault();
             
@@ -260,16 +261,13 @@
                 title: document.getElementById('inpTitle').value,
                 description: document.getElementById('inpDesc').value || "",
                 date: document.getElementById('inpDate').value,
-                category: document.getElementById('inpCategory').value,
+                category: catSelect.value,
+                // Subkategori hanya disimpan jika kategori foto, selain itu kosong
+                subcategory: (catSelect.value === 'foto') ? inpSubcategory.value : "",
                 imageUrl: document.getElementById('inpImage').value,
-                videoUrl: document.getElementById('inpVideo').value || "",
+                videoUrl: inpVideo.value || "",
                 timestamp: Date.now() 
             };
-            
-            // Tambahkan subcategory jika kategori foto
-            if (newData.category === 'foto') {
-                newData.subcategory = document.getElementById('inpSubcategory').value;
-            }
 
             if (editId) {
                 // UPDATE
@@ -294,7 +292,7 @@
             }
         });
 
-        // 2. TAMPILKAN DATA
+        // 2. READ DATA
         onValue(ref(db, 'galeri'), (snapshot) => {
             const tbody = document.getElementById('gallery-table-body');
             const totalBadge = document.getElementById('total-gallery');
@@ -347,7 +345,7 @@
             });
         });
 
-        // 3. FUNGSI EDIT
+        // 3. EDIT
         window.editItem = (id) => {
             const item = galleryData.find(i => i.id === id);
             if (!item) return;
@@ -359,15 +357,9 @@
             document.getElementById('inpCategory').value = item.category;
             document.getElementById('inpImage').value = item.imageUrl;
             document.getElementById('inpVideo').value = item.videoUrl || "";
-            
-            // Set subkategori jika ada
-            if (item.category === 'foto' && item.subcategory) {
-                document.getElementById('inpSubcategory').value = item.subcategory;
-            } else {
-                document.getElementById('inpSubcategory').value = '';
-            }
+            document.getElementById('inpSubcategory').value = item.subcategory || "";
 
-            checkCategory(); // untuk menampilkan field yang sesuai
+            checkCategory(); // memastikan field yang sesuai tampil
 
             document.getElementById('form-title').innerHTML = `<i class="bi bi-pencil-square me-2"></i> Edit Galeri`;
             const btnSubmit = document.getElementById('btnSubmit');
@@ -379,7 +371,7 @@
             window.scrollTo({ top: 0, behavior: 'smooth' });
         };
 
-        // 4. FUNGSI BATAL EDIT
+        // 4. BATAL EDIT
         window.batalEdit = () => {
             document.getElementById('galleryForm').reset();
             document.getElementById('inpId').value = ""; 
@@ -394,7 +386,7 @@
             document.getElementById('btnCancel').style.display = 'none';
         };
 
-        // 5. FUNGSI HAPUS
+        // 5. HAPUS
         window.hapusItem = (key) => {
             Swal.fire({
                 title: 'Hapus Konten?',
