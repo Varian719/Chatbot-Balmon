@@ -23,17 +23,14 @@ onValue(galeriRef, (snapshot) => {
     container.innerHTML = ""; 
     const data = snapshot.val();
     
-    // Menggunakan Object.entries agar ID (key) masuk ke dalam data item
     let items = Object.entries(data)
         .map(([key, val]) => ({ key, ...val })) 
         .sort((a, b) => b.timestamp - a.timestamp);
     
     items.forEach(item => {
-        // Tentukan ikon dan warna badge
         let iconClass = 'bi-newspaper';
         let cat = (item.category || 'berita').toLowerCase();
         
-        // Variabel untuk Lightbox (Popup)
         let typeParam = "'image'"; 
         
         if(cat === 'video') {
@@ -44,13 +41,11 @@ onValue(galeriRef, (snapshot) => {
             iconClass = 'bi-image';
         }
 
-        // Format tanggal
         const dateObj = new Date(item.date);
         const dateStr = dateObj.toLocaleDateString('id-ID', {day:'numeric', month:'short', year:'numeric'});
         
         const descText = item.description || ""; 
         
-        // Tombol baca untuk news
         let tombolBaca = '';
         if (cat === 'news') {
             tombolBaca = `
@@ -60,7 +55,6 @@ onValue(galeriRef, (snapshot) => {
             `;
         }
         
-        // Tambahkan atribut data-subcategory jika kategori foto
         const subcategoryAttr = cat === 'foto' ? ` data-subcategory="${item.subcategory || ''}"` : '';
         
         const html = `
@@ -88,7 +82,6 @@ onValue(galeriRef, (snapshot) => {
         container.insertAdjacentHTML('beforeend', html);
     });
     
-    // Terapkan filter aktif (jika ada)
     const activeBtn = document.querySelector('.cat-card.active');
     if(activeBtn && activeBtn.getAttribute('onclick')) {
         const clickAttr = activeBtn.getAttribute('onclick');
@@ -99,7 +92,6 @@ onValue(galeriRef, (snapshot) => {
     }
 });
 
-// Auto filter dari URL (misal ?filter=news)
 const activateAutoFilter = () => {
     const params = new URLSearchParams(window.location.search);
     const target = params.get('filter');
