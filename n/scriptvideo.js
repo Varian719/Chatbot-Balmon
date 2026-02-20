@@ -1,5 +1,5 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-import { getDatabase, ref, runTransaction, onValue, set } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+import { getDatabase, ref, runTransaction, onValue } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
 const firebaseConfig = {
     apiKey: "AIzaSyDUeIg9Zn_xndPXtChO8KufXFp6EMtqBJ0",
@@ -12,40 +12,15 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
-// ================== VISITOR TRACKER BULANAN (STABIL) ==================
+// ================== VISITOR TRACKER ==================
 try {
     if (!sessionStorage.getItem('visited_v2')) {
-        const now = new Date();
-        const yearMonth = now.getFullYear() + '-' + String(now.getMonth() + 1).padStart(2, '0');
-        const monthlyRef = ref(db, `statistik_web/kunjungan_bulanan/${yearMonth}`);
-        
-        // Coba dengan transaksi dulu
-        runTransaction(monthlyRef, (currentCount) => (currentCount || 0) + 1)
-            .then(() => {
-                sessionStorage.setItem('visited_v2', 'true');
-                console.log("✅ Tracker: Kunjungan bulan " + yearMonth + " diperbarui.");
-            })
-            .catch((err) => {
-                console.warn("⚠️ Transaksi gagal, mencoba fallback...", err);
-                // Fallback: baca nilai saat ini lalu tambah
-                onValue(monthlyRef, (snap) => {
-                    const current = snap.val() || 0;
-                    set(monthlyRef, current + 1)
-                        .then(() => {
-                            sessionStorage.setItem('visited_v2', 'true');
-                            console.log("✅ Tracker (fallback): Kunjungan bulan " + yearMonth + " diperbarui.");
-                        })
-                        .catch(setErr => {
-                            console.error("❌ Tracker fallback error:", setErr);
-                        });
-                }, { onlyOnce: true });
-            });
-    } else {
-        console.log("⏩ Tracker: Sesi sudah dihitung sebelumnya.");
+        const visitRef = ref(db, 'statistik_web/total_kunjungan');
+        runTransaction(visitRef, (currentCount) => (currentCount || 0) + 1)
+            .then(() => sessionStorage.setItem('visited_v2', 'true'))
+            .catch(err => console.error("Tracker Error:", err));
     }
-} catch (e) {
-    console.log("Visitor tracker exception:", e);
-}
+} catch (e) { console.log("Visitor tracker skipped"); }
 
 // ================== NEWS CAROUSEL ==================
 let newsData = [];
@@ -63,6 +38,7 @@ function updateNewsDisplay(useAnimation = true) {
 
     if (!track || !container || newsData.length === 0) return;
 
+    // Fallback jika lebar container 0 (misal di mobile)
     let containerWidth = container.clientWidth;
     if (containerWidth === 0) {
         containerWidth = container.offsetWidth || window.innerWidth * 0.9;
