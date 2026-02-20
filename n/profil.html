@@ -155,81 +155,71 @@
         .mobile-submenu a:hover { background-color: #ffffff; color: var(--primary-color); padding-left: 48px; }
 
         /* ========================================= */
-        /* --- 3. HERO FULL SCREEN (SPLIT) --- */
+        /* --- 3. HERO FULL SCREEN CAROUSEL --- */
         /* ========================================= */
         .hero-full-screen {
-            display: grid;
-            grid-template-columns: 1fr 1fr; /* 2 Kolom (Kiri Kanan) */
-            height: 100vh; /* Full ukuran layar */
+            position: relative;
+            height: 100vh;
             width: 100vw;
-            overflow: hidden;
-            position: relative;
-        }
-
-        /* Sisi Kiri (Teks & Warna Utama Instansi) */
-        .hero-left-content {
-            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-color) 100%);
-            color: #ffffff;
             display: flex;
-            flex-direction: column;
-            justify-content: center;
-            padding: 80px 10% 40px 10%; /* Padding untuk header dan batas tepi */
-            position: relative;
-            z-index: 2;
-        }
-
-        .hero-left-content::after {
-            /* Elemen dekoratif arsiran */
-            content: ''; position: absolute; top: 0; right: 0; width: 100%; height: 100%;
-            background-image: radial-gradient(rgba(255,255,255,0.1) 1px, transparent 1px);
-            background-size: 20px 20px; opacity: 0.5; pointer-events: none;
-        }
-
-        .hero-left-content .breadcrumb {
-            font-size: 14px; opacity: 0.9; margin-bottom: 25px; font-weight: 500; color: powderblue;
-            position: relative; z-index: 3;
-        }
-        .hero-left-content .breadcrumb a {
-            color: white; text-decoration: none; border-bottom: 1px solid rgba(255,255,255,0.4); transition: 0.3s;
-        }
-        .hero-left-content .breadcrumb a:hover { border-bottom-color: #fff; text-decoration: none; }
-
-        .hero-left-content .hero-title { 
-            font-size: 3.2rem; font-weight: 800; margin: 0 0 20px 0; 
-            letter-spacing: -1px; line-height: 1.1; text-shadow: 0 4px 10px rgba(0,0,0,0.2); 
-            color: #ffffff; position: relative; z-index: 3;
-        }
-        .hero-left-content .hero-subtitle {
-            font-size: 1.2rem; font-weight: 400; color: var(--accent-yellow);
-            line-height: 1.6; position: relative; z-index: 3; max-width: 90%;
-        }
-
-        /* Sisi Kanan (Carousel) */
-        .hero-right-carousel {
-            position: relative;
-            height: 100%;
-            width: 100%;
+            align-items: center; /* Teks di tengah secara vertikal */
             overflow: hidden;
+        }
+
+        /* Carousel Background */
+        .hero-carousel-background {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: 1;
             background-color: #000;
         }
 
-        /* Gradien hitam transparan di atas gambar agar menu header tetap terlihat sedikit */
-        .hero-right-carousel::before {
-            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 120px;
-            background: linear-gradient(to bottom, rgba(0,0,0,0.6) 0%, transparent 100%);
-            z-index: 5; pointer-events: none;
-        }
-
-        .carousel-container { position: relative; width: 100%; height: 100%; }
-        
         .carousel-slide {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             background-size: cover; background-position: center;
             opacity: 0; transition: opacity 1.5s ease-in-out, transform 5s ease-out;
-            transform: scale(1.05); /* Sedikit zoom saat aktif */
+            transform: scale(1.05);
         }
         .carousel-slide.active { opacity: 1; transform: scale(1); z-index: 2; }
 
+        /* Gradasi agar teks di kiri bisa dibaca jelas dengan background foto apapun */
+        .hero-overlay {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(90deg, rgba(0, 80, 130, 0.95) 0%, rgba(0, 80, 130, 0.6) 45%, rgba(0, 80, 130, 0.1) 100%);
+            z-index: 3; pointer-events: none;
+        }
+
+        /* Konten Teks melayang di atas */
+        .hero-content {
+            position: relative;
+            z-index: 4;
+            width: 100%;
+        }
+
+        .hero-text-wrapper {
+            max-width: 700px; /* Batasan lebar teks di sebelah kiri */
+            color: #ffffff;
+            padding-top: 60px; /* Offset dari header */
+        }
+
+        .hero-text-wrapper .breadcrumb {
+            font-size: 14px; opacity: 0.9; margin-bottom: 25px; font-weight: 500; color: powderblue;
+        }
+        .hero-text-wrapper .breadcrumb a {
+            color: white; text-decoration: none; border-bottom: 1px solid rgba(255,255,255,0.4); transition: 0.3s;
+        }
+        .hero-text-wrapper .breadcrumb a:hover { border-bottom-color: #fff; text-decoration: none; }
+
+        .hero-text-wrapper .hero-title { 
+            font-size: 3.5rem; font-weight: 800; margin: 0 0 20px 0; 
+            letter-spacing: -1px; line-height: 1.1; text-shadow: 0 4px 10px rgba(0,0,0,0.3); 
+        }
+        .hero-text-wrapper .hero-subtitle {
+            font-size: 1.25rem; font-weight: 400; color: var(--accent-yellow);
+            line-height: 1.6; text-shadow: 0 2px 5px rgba(0,0,0,0.5);
+        }
+
+        /* Indikator Carousel */
         .carousel-indicators {
             position: absolute; bottom: 40px; left: 50%; transform: translateX(-50%);
             display: flex; gap: 10px; z-index: 10;
@@ -354,15 +344,17 @@
 
         /* RESPONSIVE MEDIA QUERIES */
         @media (max-width: 992px) {
-            .hero-left-content .hero-title { font-size: 2.5rem; }
+            .hero-text-wrapper .hero-title { font-size: 2.5rem; }
             .intro-grid { grid-template-columns: 1fr; }
             .tf-grid { grid-template-columns: 1fr; }
         }
         @media (max-width: 768px) {
-            /* Ubah grid Hero jadi tumpuk pada mobile */
-            .hero-full-screen { grid-template-columns: 1fr; grid-template-rows: auto 50vh; height: auto; min-height: 100vh;}
-            .hero-left-content { padding-top: 120px; padding-bottom: 60px; }
-            .hero-left-content .hero-title { font-size: 2rem; }
+            /* Tampilan layar kecil (HP) */
+            .hero-full-screen { height: auto; min-height: 100vh; display: flex; align-items: center; text-align: center; }
+            /* Mengubah gradasi dari ke kanan menjadi ke bawah pada layar kecil */
+            .hero-overlay { background: linear-gradient(180deg, rgba(0, 80, 130, 0.95) 0%, rgba(0, 80, 130, 0.7) 100%); }
+            .hero-text-wrapper { margin: 0 auto; padding-top: 100px; padding-bottom: 80px; }
+            .hero-text-wrapper .hero-title { font-size: 2rem; }
             
             .hamburger-btn { display: flex; }
             .menu-list { display: none; }
@@ -516,27 +508,33 @@
     </header>
 
     <section class="hero-full-screen">
-        <div class="hero-left-content">
-            <div class="breadcrumb">
-                <a href="index.html">Beranda</a> / <span style="color: var(--accent-yellow);">Profil Organisasi</span>
+        
+        <div class="hero-carousel-background">
+            <div class="carousel-slide active" style="background-image: url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=1600&q=80');"></div>
+            <div class="carousel-slide" style="background-image: url('https://images.unsplash.com/photo-1516321497487-e288fb19713f?auto=format&fit=crop&w=1600&q=80');"></div>
+            <div class="carousel-slide" style="background-image: url('https://images.unsplash.com/photo-1563986768609-322da13575f3?auto=format&fit=crop&w=1600&q=80');"></div>
+            
+            <div class="hero-overlay"></div>
+            
+            <div class="carousel-indicators">
+                <span class="dot active" onclick="currentSlide(0)"></span>
+                <span class="dot" onclick="currentSlide(1)"></span>
+                <span class="dot" onclick="currentSlide(2)"></span>
             </div>
-            <h1 class="hero-title">Profil Balai Monitor Spektrum Frekuensi Radio Kelas I Samarinda</h1>
-            <div class="hero-subtitle">Mewujudkan Ekosistem Telekomunikasi yang Sehat, Aman, dan Berkelanjutan di Kalimantan Timur.</div>
         </div>
         
-        <div class="hero-right-carousel">
-            <div class="carousel-container">
-                <div class="carousel-slide active" style="background-image: url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=1000&q=80');"></div>
-                <div class="carousel-slide" style="background-image: url('https://images.unsplash.com/photo-1516321497487-e288fb19713f?auto=format&fit=crop&w=1000&q=80');"></div>
-                <div class="carousel-slide" style="background-image: url('https://images.unsplash.com/photo-1563986768609-322da13575f3?auto=format&fit=crop&w=1000&q=80');"></div>
-                
-                <div class="carousel-indicators">
-                    <span class="dot active" onclick="currentSlide(0)"></span>
-                    <span class="dot" onclick="currentSlide(1)"></span>
-                    <span class="dot" onclick="currentSlide(2)"></span>
+        <div class="hero-content">
+            <div class="container">
+                <div class="hero-text-wrapper">
+                    <div class="breadcrumb">
+                        <a href="index.html">Beranda</a> / <span style="color: var(--accent-yellow);">Profil Organisasi</span>
+                    </div>
+                    <h1 class="hero-title">Profil Balai Monitor Spektrum Frekuensi Radio Kelas I Samarinda</h1>
+                    <div class="hero-subtitle">Mewujudkan Ekosistem Telekomunikasi yang Sehat, Aman, dan Berkelanjutan di Kalimantan Timur.</div>
                 </div>
             </div>
         </div>
+
     </section>
 
     <section class="bg-white">
