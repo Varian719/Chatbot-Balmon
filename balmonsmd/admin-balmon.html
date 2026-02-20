@@ -14,7 +14,7 @@
   <style>
       .small-box { transition: transform 0.3s; }
       .small-box:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.15) !important; }
-      #demography-chart, #monthly-visitor-chart { min-height: 350px !important; width: 100%; }
+      #monthly-visitor-chart, #device-chart { min-height: 350px !important; width: 100%; }
       .table-responsive { max-height: 400px; overflow-y: auto; }
       
       /* Style khusus Papan Pengumuman */
@@ -22,6 +22,16 @@
       .announcement-warning { border-color: #ffc107; }
       .announcement-info { border-color: #0dcaf0; }
       .announcement-danger { border-color: #dc3545; }
+      
+      /* Style untuk badge perangkat */
+      .badge-device {
+          font-size: 0.8rem;
+          padding: 0.3rem 0.6rem;
+          border-radius: 50px;
+      }
+      .badge-mobile { background-color: #e3f2fd; color: #0d6efd; }
+      .badge-tablet { background-color: #e8f5e9; color: #28a745; }
+      .badge-desktop { background-color: #fff3e0; color: #fd7e14; }
   </style>
 </head>
 
@@ -81,6 +91,7 @@
       <div class="app-content">
         <div class="container-fluid">
           
+          <!-- Statistik Card -->
           <div class="row">
             <div class="col-lg-3 col-6">
               <div class="small-box text-bg-success shadow-sm">
@@ -92,16 +103,14 @@
               <div class="small-box text-bg-danger shadow-sm">
                 <div class="inner">
                   <h3 id="stat-traffic-count">0</h3> 
-                  <p>Total Kunjungan</p>
-                  <div style="border-top: 1px solid rgba(255,255,255,0.4); margin-top: 5px; padding-top: 5px; font-size: 0.9rem;">
-                    <i class="bi bi-ui-checks"></i> <span id="visitor-count" class="fw-bold">0</span> Responden
-                  </div>
+                  <p>Total Kunjungan (Semua Waktu)</p>
                 </div>
                 <div class="icon"> <i class="bi bi-eye"></i> </div>
               </div>
             </div>
           </div>
 
+          <!-- Papan Pengumuman -->
           <div class="row mt-4">
             <div class="col-12">
                 <div class="card card-outline card-warning shadow-sm">
@@ -142,6 +151,8 @@
                 </div>
             </div>
           </div>
+
+          <!-- Grafik Bulanan -->
           <div class="row mt-4">
             <div class="col-12">
               <div class="card mb-4 shadow-sm border-0">
@@ -153,35 +164,71 @@
             </div>
           </div>
 
+          <!-- Statistik Perangkat (menggantikan demografi & tabel responden) -->
           <div class="row">
             <div class="col-lg-6">
               <div class="card mb-4 shadow-sm border-0 h-100">
                 <div class="card-header bg-white">
-                    <h5 class="card-title fw-bold text-dark"><i class="bi bi-pie-chart-fill text-primary me-2"></i> Demografi Umur</h5>
+                    <h5 class="card-title fw-bold text-dark"><i class="bi bi-pie-chart-fill text-primary me-2"></i> Statistik Perangkat</h5>
                 </div>
-                <div class="card-body"><div id="demography-chart"></div></div>
+                <div class="card-body"><div id="device-chart"></div></div>
               </div>
             </div>
             <div class="col-lg-6">
-                <div class="card shadow-sm border-0 h-100">
+                <div class="card mb-4 shadow-sm border-0 h-100">
                     <div class="card-header bg-white">
-                        <h5 class="card-title fw-bold"><i class="bi bi-table me-2"></i> Data Responden Terbaru</h5>
+                        <h5 class="card-title fw-bold text-dark"><i class="bi bi-info-circle me-2"></i> Ringkasan Perangkat</h5>
                     </div>
-                    <div class="card-body p-0">
-                        <div class="table-responsive">
-                            <table class="table table-striped table-hover align-middle mb-0">
-                                <thead class="table-light">
-                                    <tr><th class="ps-4">No</th><th>Umur</th><th>Kategori</th><th>Perangkat</th><th>Waktu</th></tr>
-                                </thead>
-                                <tbody id="table-demografi-body">
-                                    <tr><td colspan="5" class="text-center py-4 text-muted">Memuat data...</td></tr>
-                                </tbody>
-                            </table>
+                    <div class="card-body d-flex align-items-center justify-content-center h-100">
+                        <div class="row w-100 text-center">
+                            <div class="col-4">
+                                <h3 id="device-mobile-count">0</h3>
+                                <p class="text-muted">Mobile</p>
+                            </div>
+                            <div class="col-4">
+                                <h3 id="device-tablet-count">0</h3>
+                                <p class="text-muted">Tablet</p>
+                            </div>
+                            <div class="col-4">
+                                <h3 id="device-desktop-count">0</h3>
+                                <p class="text-muted">Desktop</p>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
           </div>
+
+          <!-- Tabel Sesi Pengunjung -->
+          <div class="row mt-4">
+            <div class="col-12">
+              <div class="card shadow-sm border-0">
+                <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                  <h5 class="card-title fw-bold"><i class="bi bi-clock-history me-2 text-primary"></i> Sesi Pengunjung Terkini</h5>
+                  <span class="badge bg-secondary" id="total-sessions">0 Sesi</span>
+                </div>
+                <div class="card-body p-0">
+                  <div class="table-responsive">
+                    <table class="table table-striped table-hover align-middle mb-0">
+                      <thead class="table-light">
+                        <tr>
+                          <th class="ps-4">No</th>
+                          <th>User ID</th>
+                          <th>Perangkat</th>
+                          <th>Halaman</th>
+                          <th>Waktu Kunjungan</th>
+                        </tr>
+                      </thead>
+                      <tbody id="table-sessions-body">
+                        <tr><td colspan="5" class="text-center py-4 text-muted">Memuat data sesi...</td></tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
         </div>
       </div>
     </main>
@@ -235,28 +282,17 @@
             initCharts();            
             loadRealtimeStats();     
             loadDynamicAnnouncements(); // Load pengumuman jika ada di database
+            loadRecentSessions();       // Load sesi pengunjung
         }
     });
 
     // ==========================================================
-    // BAGIAN A: CHART & STATISTIK (SAMA SEPERTI SEBELUMNYA)
+    // BAGIAN A: CHART & STATISTIK
     // ==========================================================
-    let demoChart, monthlyChart;
+    let monthlyChart, deviceChart;
 
     const initCharts = () => {
-        const elDemo = document.querySelector("#demography-chart");
-        if(elDemo) { 
-            demoChart = new ApexCharts(elDemo, {
-                series: [{ name: 'Responden', data: [0,0,0,0,0] }],
-                chart: { type: 'bar', height: 350, toolbar: { show: false } },
-                colors: ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6'],
-                plotOptions: { bar: { borderRadius: 4, distributed: true } },
-                dataLabels: { enabled: false },
-                xaxis: { categories: ['Remaja', 'Dewasa Muda', 'Dewasa', 'Paruh Baya', 'Lansia'] }
-            }); 
-            demoChart.render(); 
-        }
-
+        // Chart kunjungan bulanan
         const elMonthly = document.querySelector("#monthly-visitor-chart");
         if(elMonthly) { 
             monthlyChart = new ApexCharts(elMonthly, {
@@ -267,35 +303,31 @@
             }); 
             monthlyChart.render(); 
         }
+
+        // Chart perangkat (pie)
+        const elDevice = document.querySelector("#device-chart");
+        if (elDevice) {
+            deviceChart = new ApexCharts(elDevice, {
+                series: [0, 0, 0],
+                chart: { type: 'pie', height: 350 },
+                labels: ['Mobile', 'Tablet', 'Desktop'],
+                colors: ['#0d6efd', '#20c997', '#fd7e14'],
+                legend: { position: 'bottom' }
+            });
+            deviceChart.render();
+        }
     };
 
     function loadRealtimeStats() {
-        onValue(ref(db, 'statistik_web/demografi_umur'), (snapshot) => {
-            let counts = { 'Remaja': 0, 'Dewasa Muda': 0, 'Dewasa': 0, 'Paruh Baya': 0, 'Lansia': 0 };
-            let totalResponden = 0;
-            let tableRows = []; 
-            
-            if (snapshot.exists()) {
-                const data = snapshot.val();
-                totalResponden = Object.keys(data).length;
-                Object.values(data).forEach(item => {
-                    const k = item.kategori || "";
-                    if (k.includes("Remaja")) counts['Remaja']++;
-                    else if (k.includes("Dewasa Muda")) counts['Dewasa Muda']++;
-                    else if (k.includes("Dewasa")) counts['Dewasa']++;
-                    else if (k.includes("Paruh Baya")) counts['Paruh Baya']++;
-                    else if (k.includes("Lansia")) counts['Lansia']++;
-                    tableRows.push(item);
-                });
-            }
-            safeSetText('visitor-count', totalResponden);
-            if (demoChart) demoChart.updateSeries([{ data: Object.values(counts) }]);
-            renderRespondenTable(tableRows);
-        });
+        // Dokumen (arsip_drive)
+        onValue(ref(db, 'arsip_drive'), (s) => safeSetText('stat-dokumen-count', s.exists() ? Object.keys(s.val()).length : 0));
 
+        // Kunjungan bulanan + total kunjungan (akumulasi)
         onValue(ref(db, 'statistik_web/kunjungan_bulanan'), (snapshot) => {
             let categories = [];
             let seriesData = [];
+            let totalVisits = 0;
+            
             if(snapshot.exists()) {
                 const data = snapshot.val();
                 Object.keys(data).sort().forEach(key => {
@@ -303,37 +335,62 @@
                     const label = dateObj.toLocaleDateString('id-ID', { month: 'short', year: 'numeric' });
                     categories.push(label);
                     seriesData.push(data[key]);
+                    totalVisits += data[key];
                 });
             }
+            safeSetText('stat-traffic-count', totalVisits.toLocaleString('id-ID'));
+            
             if(monthlyChart) {
                 monthlyChart.updateOptions({ xaxis: { categories: categories } });
                 monthlyChart.updateSeries([{ data: seriesData }]);
             }
         });
 
-        onValue(ref(db, 'statistik_web/total_kunjungan'), (snap) => safeSetText('stat-traffic-count', (snap.val() || 0).toLocaleString('id-ID')));
-        onValue(ref(db, 'arsip_drive'), (s) => safeSetText('stat-dokumen-count', s.exists() ? Object.keys(s.val()).length : 0));
+        // Statistik perangkat
+        loadDeviceStats();
     }
 
-    function renderRespondenTable(dataList) {
-        const tbody = document.getElementById('table-demografi-body');
-        if(!tbody) return;
-        if(dataList.length === 0) { tbody.innerHTML = `<tr><td colspan="5" class="text-center py-4 text-muted">Belum ada data.</td></tr>`; return; }
-        
-        dataList.sort((a, b) => b.waktu - a.waktu);
-        let html = '';
-        dataList.slice(0, 10).forEach((d, index) => { 
-            let dateStr = d.waktu ? new Date(d.waktu).toLocaleString('id-ID', { day: 'numeric', month: 'short', hour: '2-digit', minute:'2-digit' }) : '-';
-            html += `<tr><td class="ps-4">${index + 1}</td><td>${d.umur} Thn</td><td>${d.kategori}</td><td class="small">${d.device || '-'}</td><td class="small">${dateStr}</td></tr>`;
+    function loadDeviceStats() {
+        // Coba ambil dari node perangkat (counter)
+        const deviceCounterRef = ref(db, 'statistik_web/perangkat');
+        onValue(deviceCounterRef, (snapshot) => {
+            let mobile = 0, tablet = 0, desktop = 0;
+            if (snapshot.exists()) {
+                const data = snapshot.val();
+                mobile = data.mobile || 0;
+                tablet = data.tablet || 0;
+                desktop = data.desktop || 0;
+            } else {
+                // Fallback: hitung dari sessions
+                onValue(ref(db, 'statistik_web/sessions'), (sessSnap) => {
+                    if (sessSnap.exists()) {
+                        const sessions = Object.values(sessSnap.val());
+                        mobile = sessions.filter(s => s.deviceType === 'mobile').length;
+                        tablet = sessions.filter(s => s.deviceType === 'tablet').length;
+                        desktop = sessions.filter(s => s.deviceType === 'desktop' || !s.deviceType).length;
+                    }
+                    updateDeviceUI(mobile, tablet, desktop);
+                }, { onlyOnce: true });
+                return;
+            }
+            updateDeviceUI(mobile, tablet, desktop);
         });
-        tbody.innerHTML = html;
+    }
+
+    function updateDeviceUI(mobile, tablet, desktop) {
+        // Update chart
+        if (deviceChart) {
+            deviceChart.updateSeries([mobile, tablet, desktop]);
+        }
+        // Update angka di ringkasan
+        safeSetText('device-mobile-count', mobile);
+        safeSetText('device-tablet-count', tablet);
+        safeSetText('device-desktop-count', desktop);
     }
 
     // ==========================================================
     // BAGIAN B: PAPAN PENGUMUMAN (DINAMIS DARI DB)
     // ==========================================================
-    // Fitur Tambahan: Jika Anda menambahkan data di 'announcements' pada Firebase,
-    // kode ini akan menimpa pengumuman default dengan pengumuman real dari DB.
     function loadDynamicAnnouncements() {
         const annRef = ref(db, 'announcements');
         onValue(annRef, (snapshot) => {
@@ -342,7 +399,6 @@
                 let html = '';
                 snapshot.forEach((child) => {
                     const data = child.val();
-                    // Tentukan Warna
                     let borderClass = 'border-info';
                     let textClass = 'text-info';
                     let icon = 'bi-info-circle-fill';
@@ -366,6 +422,65 @@
                 });
                 container.innerHTML = html;
             }
+        });
+    }
+
+    // ==========================================================
+    // BAGIAN C: SESI PENGUNJUNG
+    // ==========================================================
+    function loadRecentSessions() {
+        const sessionsRef = ref(db, 'statistik_web/sessions');
+        onValue(sessionsRef, (snapshot) => {
+            const tbody = document.getElementById('table-sessions-body');
+            const totalSpan = document.getElementById('total-sessions');
+            
+            if (!tbody || !totalSpan) return;
+            
+            if (!snapshot.exists()) {
+                tbody.innerHTML = `<tr><td colspan="5" class="text-center py-4 text-muted">Belum ada data sesi.</td></tr>`;
+                totalSpan.innerText = '0 Sesi';
+                return;
+            }
+
+            const data = snapshot.val();
+            const sessions = Object.keys(data).map(key => ({ id: key, ...data[key] }));
+            
+            // Urutkan dari terbaru
+            sessions.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
+            
+            totalSpan.innerText = sessions.length + ' Sesi';
+            
+            let html = '';
+            sessions.slice(0, 15).forEach((s, index) => {
+                // Format tanggal
+                let dateStr = s.timestamp ? new Date(s.timestamp).toLocaleString('id-ID', { 
+                    day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' 
+                }) : '-';
+                
+                // Badge perangkat
+                let deviceBadge = '<span class="badge badge-device badge-desktop"><i class="bi bi-pc-display me-1"></i>Desktop</span>';
+                if (s.deviceType === 'mobile') {
+                    deviceBadge = '<span class="badge badge-device badge-mobile"><i class="bi bi-phone me-1"></i>Mobile</span>';
+                } else if (s.deviceType === 'tablet') {
+                    deviceBadge = '<span class="badge badge-device badge-tablet"><i class="bi bi-tablet me-1"></i>Tablet</span>';
+                }
+                
+                // Halaman
+                let page = s.url ? s.url.split('/').pop() || '/' : '/';
+                if (page.length > 30) page = page.substring(0, 30) + '…';
+                
+                html += `
+                    <tr>
+                        <td class="ps-4">${index + 1}</td>
+                        <td><code>${s.userId?.substring(0, 12) || '-'}…</code></td>
+                        <td>${deviceBadge}</td>
+                        <td><small title="${s.url || ''}">${page}</small></td>
+                        <td><small>${dateStr}</small></td>
+                    </tr>
+                `;
+            });
+            
+            tbody.innerHTML = html;
         });
     }
 
