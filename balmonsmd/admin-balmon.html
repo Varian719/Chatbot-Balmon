@@ -164,45 +164,44 @@
             </div>
           </div>
 
-          <!-- Statistik Perangkat (menggantikan demografi & tabel responden) -->
+          <!-- Statistik Perangkat + Sesi Pengunjung (sebaris) -->
           <div class="row">
+            <!-- Kolom Kiri: Statistik Perangkat (chart + ringkasan) -->
             <div class="col-lg-6">
-              <div class="card mb-4 shadow-sm border-0 h-100">
+              <div class="card mb-3 shadow-sm border-0">
                 <div class="card-header bg-white">
                     <h5 class="card-title fw-bold text-dark"><i class="bi bi-pie-chart-fill text-primary me-2"></i> Statistik Perangkat</h5>
                 </div>
-                <div class="card-body"><div id="device-chart"></div></div>
+                <div class="card-body">
+                  <div id="device-chart"></div>
+                </div>
+              </div>
+              <div class="card shadow-sm border-0">
+                  <div class="card-header bg-white">
+                      <h5 class="card-title fw-bold text-dark"><i class="bi bi-info-circle me-2"></i> Ringkasan Perangkat</h5>
+                  </div>
+                  <div class="card-body d-flex align-items-center justify-content-center">
+                      <div class="row w-100 text-center">
+                          <div class="col-4">
+                              <h3 id="device-mobile-count">0</h3>
+                              <p class="text-muted">Mobile</p>
+                          </div>
+                          <div class="col-4">
+                              <h3 id="device-tablet-count">0</h3>
+                              <p class="text-muted">Tablet</p>
+                          </div>
+                          <div class="col-4">
+                              <h3 id="device-desktop-count">0</h3>
+                              <p class="text-muted">Desktop</p>
+                          </div>
+                      </div>
+                  </div>
               </div>
             </div>
-            <div class="col-lg-6">
-                <div class="card mb-4 shadow-sm border-0 h-100">
-                    <div class="card-header bg-white">
-                        <h5 class="card-title fw-bold text-dark"><i class="bi bi-info-circle me-2"></i> Ringkasan Perangkat</h5>
-                    </div>
-                    <div class="card-body d-flex align-items-center justify-content-center h-100">
-                        <div class="row w-100 text-center">
-                            <div class="col-4">
-                                <h3 id="device-mobile-count">0</h3>
-                                <p class="text-muted">Mobile</p>
-                            </div>
-                            <div class="col-4">
-                                <h3 id="device-tablet-count">0</h3>
-                                <p class="text-muted">Tablet</p>
-                            </div>
-                            <div class="col-4">
-                                <h3 id="device-desktop-count">0</h3>
-                                <p class="text-muted">Desktop</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-          </div>
 
-          <!-- Tabel Sesi Pengunjung -->
-          <div class="row mt-4">
-            <div class="col-12">
-              <div class="card shadow-sm border-0">
+            <!-- Kolom Kanan: Tabel Sesi Pengunjung dengan Lokasi -->
+            <div class="col-lg-6">
+              <div class="card shadow-sm border-0 h-100">
                 <div class="card-header bg-white d-flex justify-content-between align-items-center">
                   <h5 class="card-title fw-bold"><i class="bi bi-clock-history me-2 text-primary"></i> Sesi Pengunjung Terkini</h5>
                   <span class="badge bg-secondary" id="total-sessions">0 Sesi</span>
@@ -215,12 +214,13 @@
                           <th class="ps-4">No</th>
                           <th>User ID</th>
                           <th>Perangkat</th>
+                          <th>Lokasi</th> <!-- Kolom Lokasi ditambahkan -->
                           <th>Halaman</th>
                           <th>Waktu Kunjungan</th>
                         </tr>
                       </thead>
                       <tbody id="table-sessions-body">
-                        <tr><td colspan="5" class="text-center py-4 text-muted">Memuat data sesi...</td></tr>
+                        <tr><td colspan="6" class="text-center py-4 text-muted">Memuat data sesi...</td></tr>
                       </tbody>
                     </table>
                   </div>
@@ -426,7 +426,7 @@
     }
 
     // ==========================================================
-    // BAGIAN C: SESI PENGUNJUNG
+    // BAGIAN C: SESI PENGUNJUNG (DENGAN LOKASI)
     // ==========================================================
     function loadRecentSessions() {
         const sessionsRef = ref(db, 'statistik_web/sessions');
@@ -437,7 +437,7 @@
             if (!tbody || !totalSpan) return;
             
             if (!snapshot.exists()) {
-                tbody.innerHTML = `<tr><td colspan="5" class="text-center py-4 text-muted">Belum ada data sesi.</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="6" class="text-center py-4 text-muted">Belum ada data sesi.</td></tr>`;
                 totalSpan.innerText = '0 Sesi';
                 return;
             }
@@ -468,12 +468,19 @@
                 // Halaman
                 let page = s.url ? s.url.split('/').pop() || '/' : '/';
                 if (page.length > 30) page = page.substring(0, 30) + '…';
+
+                // Lokasi
+                let locationText = '-';
+                if (s.city && s.country) locationText = `${s.city}, ${s.country}`;
+                else if (s.city) locationText = s.city;
+                else if (s.country) locationText = s.country;
                 
                 html += `
                     <tr>
                         <td class="ps-4">${index + 1}</td>
                         <td><code>${s.userId?.substring(0, 12) || '-'}…</code></td>
                         <td>${deviceBadge}</td>
+                        <td><small>${locationText}</small></td>
                         <td><small title="${s.url || ''}">${page}</small></td>
                         <td><small>${dateStr}</small></td>
                     </tr>

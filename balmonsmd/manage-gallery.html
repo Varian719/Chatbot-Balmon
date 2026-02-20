@@ -126,7 +126,11 @@
                         <div class="mb-3">
                             <label class="form-label small fw-bold">Link Gambar (URL)</label>
                             <input type="url" id="inpImage" class="form-control" required placeholder="https://...">
-                            <div class="form-text">Paste link gambar dari Imgur/Drive/Hosting. <strong>Untuk video, akan terisi otomatis dari link YouTube.</strong></div>
+                            <div class="form-text">
+                                Paste link gambar dari Imgur/Drive/Hosting. 
+                                <strong>Untuk Google Drive, akan otomatis dikonversi ke direct link.</strong>
+                                Untuk video, akan terisi otomatis dari link YouTube.
+                            </div>
                         </div>
 
                         <div class="mb-3" id="videoField" style="display:none;">
@@ -195,11 +199,30 @@
     import { signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
     // ==================== FUNGSI PEMBANTU ====================
+    
+    // Fungsi untuk mengekstrak ID YouTube
     function extractYoutubeId(url) {
         if (!url) return null;
         const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
         const match = url.match(regExp);
         return (match && match[2].length === 11) ? match[2] : null;
+    }
+
+    // Fungsi untuk mengekstrak ID file Google Drive
+    function extractGoogleDriveId(url) {
+        if (!url) return null;
+        // Format: https://drive.google.com/file/d/FILE_ID/view
+        const match = url.match(/\/d\/([a-zA-Z0-9_-]+)/);
+        return match ? match[1] : null;
+    }
+
+    // Fungsi untuk mengkonversi link Google Drive ke direct image link
+    function convertGoogleDriveToDirect(url) {
+        const fileId = extractGoogleDriveId(url);
+        if (fileId) {
+            return `https://lh3.googleusercontent.com/d/${fileId}`;
+        }
+        return url; // jika bukan link Drive, kembalikan aslinya
     }
 
     // Set Tanggal Header
@@ -233,7 +256,7 @@
     }
     catSelect.addEventListener('change', checkCategory);
 
-    // Auto-fill thumbnail YouTube
+    // Auto-fill thumbnail YouTube (untuk video)
     inpVideo.addEventListener('input', function() {
         if (catSelect.value === 'video') {
             const videoUrl = this.value;
@@ -241,6 +264,29 @@
             if (videoId) {
                 inpImage.value = `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`;
             }
+        }
+    });
+
+    // ==================== KONVERSI GOOGLE DRIVE KE DIRECT LINK ====================
+    // Event listener untuk kolom Link Gambar (kecuali kategori video)
+    inpImage.addEventListener('input', function() {
+        // Jangan konversi jika kategori video (karena bisa diisi otomatis oleh YouTube)
+        if (catSelect.value === 'video') return;
+        
+        const originalUrl = this.value.trim();
+        const directUrl = convertGoogleDriveToDirect(originalUrl);
+        if (directUrl !== originalUrl) {
+            // Tampilkan pesan notifikasi kecil (opsional)
+            // Bisa juga langsung set value
+            this.value = directUrl;
+            // Tampilkan notifikasi dengan SweetAlert2 (opsional, bisa dikomentari)
+            // Swal.fire({
+            //     icon: 'info',
+            //     title: 'Link Dikonversi',
+            //     text: 'Link Google Drive telah diubah menjadi direct link.',
+            //     timer: 1500,
+            //     showConfirmButton: false
+            // });
         }
     });
 

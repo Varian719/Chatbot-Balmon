@@ -63,6 +63,54 @@ function getUserId() {
     return getCookie('user_id') || 'unknown';
 }
 
+// ==================== TAMBAHAN: FUNGSI IP GEOLOCATION ====================
+async function getIpLocation() {
+    // Coba ipapi.co (HTTPS, gratis 1000/hari, tanpa token)
+    try {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 5000);
+        const response = await fetch('https://ipapi.co/json/', {
+            signal: controller.signal
+        });
+        clearTimeout(timeoutId);
+        
+        if (!response.ok) throw new Error(`HTTP error ${response.status}`);
+        const data = await response.json();
+        return {
+            ip: data.ip,
+            country: data.country_name,
+            region: data.region,
+            city: data.city
+        };
+    } catch (error) {
+        console.warn('⚠️ ipapi.co gagal, fallback ke ip-api.com:', error.message);
+        
+        // Fallback ke ip-api.com (HTTP, gratis 45/menit)
+        try {
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 5000);
+            const response = await fetch('http://ip-api.com/json/?fields=status,country,regionName,city,query', {
+                signal: controller.signal
+            });
+            clearTimeout(timeoutId);
+            
+            if (!response.ok) throw new Error(`HTTP error ${response.status}`);
+            const data = await response.json();
+            if (data.status !== 'success') throw new Error('API returned non-success');
+            return {
+                ip: data.query,
+                country: data.country,
+                region: data.regionName,
+                city: data.city
+            };
+        } catch (fallbackError) {
+            console.error('❌ Semua API geolokasi gagal:', fallbackError.message);
+            return null;
+        }
+    }
+}
+// ==================== AKHIR TAMBAHAN ====================
+
 // Kirim data ke statistik_web
 async function sendAnalytics() {
     // Cegah pengiriman ganda dalam satu sesi
@@ -72,6 +120,10 @@ async function sendAnalytics() {
     const device = getDeviceInfo();
     const timestamp = Date.now();
     const date = new Date().toISOString();
+
+    // === TAMBAHAN: Ambil data lokasi ===
+    const location = await getIpLocation();
+    // ====================================
 
     const sessionData = {
         userId: userId,
@@ -84,7 +136,13 @@ async function sendAnalytics() {
         language: navigator.language,
         screen: `${screen.width}x${screen.height}`,
         referrer: document.referrer || 'direct',
-        url: window.location.href
+        url: window.location.href,
+        // === TAMBAHAN: Field lokasi ===
+        ip: location?.ip || null,
+        country: location?.country || null,
+        region: location?.region || null,
+        city: location?.city || null
+        // ==============================
     };
 
     try {
@@ -99,7 +157,7 @@ async function sendAnalytics() {
 
         // Tandai sudah terkirim
         sessionStorage.setItem('analytics_sent', 'true');
-        console.log('✅ Data session tersimpan di statistik_web');
+        console.log('✅ Data session tersimpan di statistik_web (termasuk lokasi)');
     } catch (error) {
         console.error('❌ Gagal menyimpan data:', error);
     }
