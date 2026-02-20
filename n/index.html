@@ -127,8 +127,8 @@
             background-color: rgba(255, 255, 255, 0.1); 
             backdrop-filter: blur(8px);                    
             -webkit-backdrop-filter: blur(8px);            
-            padding: 8px 20px;                               
-            border-radius: 50px;                               
+            padding: 8px 20px;                              
+            border-radius: 50px;                              
             border: 1px solid rgba(255, 255, 255, 0.2); 
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);  
         }
@@ -223,24 +223,105 @@
         
         .hamburger-btn.active span { background-color: var(--primary-color) !important; }
 
-        .mobile-nav-dropdown {
-            display: none; position: fixed; top: 80px; left: 0; width: 100%; max-height: calc(100vh - 80px); background-color: #ffffff;
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1); flex-direction: column; overflow-y: auto; z-index: 999; animation: slideDownMobile 0.3s ease;
+        /* ===== MOBILE SIDEBAR (OFF-CANVAS) ===== */
+        /* Overlay */
+        .mobile-nav-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(3px);
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
         }
-        .mobile-nav-dropdown.active { display: flex; }
-        @keyframes slideDownMobile { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
 
-        .mobile-menu-item {
-            font-family: 'Albert Sans', sans-serif;
-            padding: 16px 20px; border-bottom: 1px solid #eee; color: var(--text-dark); font-weight: 600; font-size: 15px; cursor: pointer; transition: all 0.3s ease; display: flex; justify-content: space-between; align-items: center;
+        /* Sidebar */
+        .mobile-nav-dropdown {
+            position: fixed;
+            top: 0;
+            left: -280px; /* tersembunyi di kiri */
+            width: 280px;
+            height: 100vh;
+            background-color: #ffffff;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+            z-index: 1001;
+            overflow-y: auto;
+            transition: left 0.3s ease;
+            display: block; /* ubah dari none ke block */
+            padding-top: 20px;
         }
-        .mobile-menu-item:hover { background-color: var(--bg-light-blue); color: var(--primary-color); }
-        .mobile-menu-item.has-submenu::after { content: '▼'; font-size: 12px; transition: transform 0.3s ease; }
-        .mobile-menu-item.has-submenu.active::after { transform: rotate(-180deg); }
-        .mobile-submenu { max-height: 0; overflow: hidden; background-color: #f8f9fa; transition: max-height 0.3s ease; }
-        .mobile-submenu.active { max-height: 500px; }
-        .mobile-submenu a { display: block; padding: 12px 40px; color: var(--text-gray); font-size: 14px; font-weight: 500; border-bottom: 1px solid #eee; transition: all 0.2s ease; }
-        .mobile-submenu a:hover { background-color: #ffffff; color: var(--primary-color); padding-left: 48px; }
+
+        .mobile-nav-dropdown.active {
+            left: 0;
+        }
+
+        .mobile-nav-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* Styling menu item dalam sidebar */
+        .mobile-menu-item {
+            padding: 15px 25px;
+            border-bottom: 1px solid #f0f0f0;
+            font-weight: 600;
+            color: var(--text-dark);
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .mobile-menu-item:hover {
+            background-color: var(--bg-light-blue);
+            color: var(--primary-color);
+        }
+
+        .mobile-menu-item.has-submenu {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .mobile-menu-item.has-submenu::after {
+            content: '▼';
+            font-size: 12px;
+            transition: transform 0.3s;
+        }
+
+        .mobile-menu-item.has-submenu.active::after {
+            transform: rotate(-180deg);
+        }
+
+        .mobile-submenu {
+            max-height: 0;
+            overflow: hidden;
+            background-color: #f8f9fa;
+            transition: max-height 0.3s ease;
+        }
+
+        .mobile-submenu.active {
+            max-height: 500px;
+        }
+
+        .mobile-submenu a {
+            display: block;
+            padding: 12px 40px;
+            color: var(--text-gray);
+            font-size: 14px;
+            border-bottom: 1px solid #eee;
+            transition: all 0.2s;
+        }
+
+        .mobile-submenu a:hover {
+            background-color: #ffffff;
+            color: var(--primary-color);
+            padding-left: 48px;
+        }
+
+        /* Hapus gaya lama untuk mobile-nav-dropdown yang tidak digunakan lagi */
 
         /* HERO SECTION */
         .hero-section {
@@ -451,7 +532,6 @@
             overflow: hidden;
             border: 1px solid rgba(0, 111, 176, 0.1);
             box-shadow: 0 20px 50px rgba(0, 50, 90, 0.08);
-            /* FIXED HEIGHT AGAR TIDAK NAIK TURUN */
             height: 500px;
             width: 100%;
             position: relative;
@@ -468,12 +548,10 @@
             min-width: 0; 
             position: relative;
             background: #ffffff;
-            overflow: hidden; /* Mencegah overflow */
+            overflow: hidden;
         }
 
-        .news-text-col::before {
-            display: none; /* Menghilangkan radial-gradient blob */
-        }
+        .news-text-col::before { display: none; }
 
         .news-header-row {
             display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; position: relative; z-index: 1;
@@ -489,12 +567,10 @@
 
         .news-counter { font-size: 14px; font-weight: 600; color: var(--text-gray); letter-spacing: 1px; }
 
-        /* Judul Berita (FIXED LINES) */
         .news-title-anim {
             font-size: 32px; font-weight: 800; color: var(--text-dark);
             margin-bottom: 12px; line-height: 1.25;
             position: relative; z-index: 1;
-            /* Batasi 2 baris */
             display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
             height: auto;
         }
@@ -505,11 +581,9 @@
         }
         .news-meta i { color: var(--secondary-color); }
 
-        /* Deskripsi (FIXED LINES) */
         .news-desc-anim {
             font-size: 16px; color: #555; line-height: 1.7;
             margin-bottom: 35px; font-weight: 400; opacity: 0.9;
-            /* Batasi 3 baris */
             display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;
             position: relative; z-index: 1;
         }
@@ -552,7 +626,6 @@
         }
         .news-image-col:hover .news-slide-img { transform: scale(1.05); }
         
-        /* Animasi Text */
         .text-fade-out { opacity: 0; transform: translateY(10px); transition: 0.3s; }
         .text-fade-in { opacity: 1; transform: translateY(0); transition: 0.3s; }
 
@@ -604,7 +677,7 @@
             padding: 12px 24px;
             background-color: rgba(255, 255, 255, 0.05);
             border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 8px; /* Sudut sedikit membulat */
+            border-radius: 8px;
             color: #ffffff;
             text-decoration: none;
             font-weight: 600;
@@ -613,13 +686,13 @@
         }
 
         .yt-link-btn svg {
-            color: #ff0000; /* Warna merah khas YouTube */
+            color: #ff0000;
             transition: transform 0.3s ease;
         }
 
         .yt-link-btn:hover {
             background-color: #ffffff;
-            color: #0f172a; /* Warna teks gelap saat dihover */
+            color: #0f172a;
             transform: translateY(-3px);
             box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
         }
@@ -641,7 +714,7 @@
             height: 45px;
             background: rgba(255, 255, 255, 0.05);
             border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 8px; /* BENTUK KOTAK dengan sudut sedikit membulat */
+            border-radius: 8px;
             color: #ffffff;
             font-size: 18px;
             display: flex;
@@ -654,7 +727,7 @@
 
         .vc-arrow-btn:hover {
             background: #ffffff;
-            color: var(--text-dark); /* Mengubah ikon jadi gelap saat di-hover */
+            color: var(--text-dark);
             transform: translateY(-3px);
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
         }
@@ -664,15 +737,13 @@
 
         .vc-window { width: 100%; overflow: hidden; padding: 20px 5px; position: relative; }
 
-        /* KARTU VIDEO - FIXED HEIGHT & WIDTH */
         .video-card {
             flex: 0 0 280px; width: 280px; 
-            /* KUNCI TINGGI */
             height: 300px; 
             background: transparent; border-radius: 16px; overflow: hidden;
             box-shadow: 0 10px 25px rgba(0,0,0,0.2); border: none; transition: all 0.3s ease;
             display: flex; flex-direction: column;
-            scroll-snap-align: start; /* Kartu akan selalu rata kiri saat digeser */
+            scroll-snap-align: start;
         }
         .video-card:hover { transform: translateY(-5px); box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3); }
 
@@ -706,16 +777,16 @@
             overflow: hidden;
         }
         
-        /* --- PENGATURAN SCROLL PRESISI (MENGATASI GESER NANGGUNG) --- */
+        /* --- PENGATURAN SCROLL PRESISI --- */
         .vc-window { 
             width: 100%; 
-            overflow-x: auto; /* Aktifkan native scroll */
+            overflow-x: auto;
             padding: 20px 5px; 
             position: relative;
-            scroll-behavior: smooth; /* Geseran mulus */
+            scroll-behavior: smooth;
             scrollbar-width: none; 
             -ms-overflow-style: none;
-            scroll-snap-type: x mandatory; /* Memaksa scroll berhenti pas di kartu */
+            scroll-snap-type: x mandatory;
         }
         .vc-window::-webkit-scrollbar { display: none; }
         
@@ -727,7 +798,7 @@
 
         /* RESPONSIVE VIDEO (SWIPE MOBILE) */
         @media (max-width: 900px) {
-            .vc-nav-arrows { display: none !important; } /* Sembunyikan arrow di HP */
+            .vc-nav-arrows { display: none !important; }
             .video-flex-container { flex-direction: column; align-items: flex-start; gap: 30px; }
             .video-info-col { width: 100%; text-align: left; padding: 0 20px; }
             .video-carousel-col { width: 100%; overflow: visible; }
@@ -737,8 +808,8 @@
         /* RESPONSIVE NEWS (MOBILE STACK) */
         @media (max-width: 900px) {
             .news-container {
-                flex-direction: column-reverse; /* Gambar atas, Teks bawah */
-                height: auto; /* Auto height di HP */
+                flex-direction: column-reverse;
+                height: auto;
                 min-height: 500px;
             }
             .news-image-col {
@@ -1142,30 +1213,28 @@
             </a>
         </div>
         
-            <nav class="nav-menu">
-                <ul class="menu-list">
-                    <li class="menu-item" onclick="window.location.href='index.html'">Beranda</li>
-                     <li class="menu-item" onclick="window.location.href='profil.html'">Profil</li>
-                    <li class="menu-item">Layanan
-                        <ul class="dropdown-content">
-                            <li><a href="konsesi.html">Izin Konsesi</a></li>
-                            <li><a href="maritim.html">Izin Maritim</a></li>
-                            <li><a href="fm.html">Izin Penyiaran FM</a></li>
-                            <li><a href="arsip.html">Download</a></li>
-                        </ul>
-                    </li>
-                    <li class="menu-item" onclick="window.location.href='galeri.html'">Publikasi</li>
-                   
-                    <li class="menu-item" onclick="window.location.href='kontak.html'">Kontak</li>
-                </ul>
-                <button class="nav-search-btn" onclick="openSearch()" style="margin-left:10px; border:none; background:transparent; color:white; cursor:pointer;">
-                    <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <circle cx="11" cy="11" r="8"></circle>
-                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-                    </svg>
-                </button>
-            </nav>
-            
+        <nav class="nav-menu">
+            <ul class="menu-list">
+                <li class="menu-item" onclick="window.location.href='index.html'">Beranda</li>
+                <li class="menu-item" onclick="window.location.href='profil.html'">Profil</li>
+                <li class="menu-item">Layanan
+                    <ul class="dropdown-content">
+                        <li><a href="konsesi.html">Izin Konsesi</a></li>
+                        <li><a href="maritim.html">Izin Maritim</a></li>
+                        <li><a href="fm.html">Izin Penyiaran FM</a></li>
+                        <li><a href="arsip.html">Download</a></li>
+                    </ul>
+                </li>
+                <li class="menu-item" onclick="window.location.href='galeri.html'">Publikasi</li>
+                <li class="menu-item" onclick="window.location.href='kontak.html'">Kontak</li>
+            </ul>
+            <button class="nav-search-btn" onclick="openSearch()" style="margin-left:10px; border:none; background:transparent; color:white; cursor:pointer;">
+                <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                </svg>
+            </button>
+        </nav>
         
         <button class="hamburger-btn" id="hamburgerBtn" onclick="toggleMobileMenu()">
             <span></span>
@@ -1174,9 +1243,12 @@
         </button>
     </div>
 
+    <!-- Overlay untuk menutup sidebar saat diklik -->
+    <div id="mobileNavOverlay" class="mobile-nav-overlay"></div>
+
     <div class="mobile-nav-dropdown" id="mobileNavDropdown">
         <div class="mobile-menu-item" onclick="handleMobileMenuItem(this, 'beranda')">Beranda</div>
-         <div class="mobile-menu-item" onclick="handleMobileMenuItem(this, 'profil')">Profil</div>
+        <div class="mobile-menu-item" onclick="handleMobileMenuItem(this, 'profil')">Profil</div>
         <div class="mobile-menu-item has-submenu" onclick="toggleMobileSubmenu(this)">Layanan</div>
         <div class="mobile-submenu" id="submenu-layanan">
             <a href="konsesi.html" onclick="closeMobileMenu()">Izin Konsesi</a>
@@ -1185,7 +1257,6 @@
             <a href="arsip.html" onclick="closeMobileMenu()">Download</a>
         </div>
         <div class="mobile-menu-item" onclick="handleMobileMenuItem(this, 'publikasi')">Publikasi</div>
-       
         <div class="mobile-menu-item" onclick="handleMobileMenuItem(this, 'kontak')">Kontak</div>
     </div>
 </header>
@@ -1465,6 +1536,68 @@
     </div>
 
     <script src="dist_js/scriptindex2.min.js"></script>
+    <script>
+        // MOBILE MENU FUNCTIONS (SIDEBAR)
+        window.toggleMobileMenu = function() {
+            const btn = document.getElementById('hamburgerBtn');
+            const menu = document.getElementById('mobileNavDropdown');
+            const overlay = document.getElementById('mobileNavOverlay');
+            
+            btn.classList.toggle('active');
+            menu.classList.toggle('active');
+            overlay.classList.toggle('active');
+            
+            // Mencegah scroll body saat sidebar terbuka
+            if (menu.classList.contains('active')) {
+                document.body.style.overflow = 'hidden';
+            } else {
+                document.body.style.overflow = '';
+            }
+        };
+
+        window.closeMobileMenu = function() {
+            const btn = document.getElementById('hamburgerBtn');
+            const menu = document.getElementById('mobileNavDropdown');
+            const overlay = document.getElementById('mobileNavOverlay');
+            
+            btn.classList.remove('active');
+            menu.classList.remove('active');
+            overlay.classList.remove('active');
+            document.body.style.overflow = '';
+            
+            // Tutup juga submenu yang mungkin terbuka
+            document.querySelectorAll('.mobile-submenu').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.mobile-menu-item.has-submenu').forEach(i => i.classList.remove('active'));
+        };
+
+        // Tutup menu saat overlay diklik
+        document.addEventListener('click', function(event) {
+            const overlay = document.getElementById('mobileNavOverlay');
+            const menu = document.getElementById('mobileNavDropdown');
+            if (overlay && overlay.classList.contains('active') && event.target === overlay) {
+                window.closeMobileMenu();
+            }
+        });
+
+        // Fungsi toggle submenu
+        window.toggleMobileSubmenu = function(element) {
+            const submenu = element.nextElementSibling;
+            element.classList.toggle('active');
+            if (submenu && submenu.classList.contains('mobile-submenu')) {
+                submenu.classList.toggle('active');
+            }
+        };
+
+        // Fungsi handle menu item
+        window.handleMobileMenuItem = function(element, action) {
+            if (action === 'beranda') window.location.href = 'index.html';
+            else if (action === 'kontak') window.location.href = 'kontak.html';
+            else if (action === 'publikasi') window.location.href = 'galeri.html';
+            else if (action === 'download') window.location.href = 'arsip.html';
+            else if (action === 'profil') window.location.href = 'profil.html';
+            window.closeMobileMenu();
+        };
+    </script>
     <script>
     document.addEventListener('DOMContentLoaded', () => {
         const prevBtn = document.getElementById('videoPrevBtn');

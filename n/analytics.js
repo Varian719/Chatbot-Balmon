@@ -1,10 +1,8 @@
-// analytics.js
-// Mengirim data pengunjung ke Firebase di dalam node statistik_web
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
 import { getDatabase, ref, push, set, runTransaction } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
-// Konfigurasi Firebase
+// Konfigurasi Firebase realtime database
 const firebaseConfig = {
     apiKey: "AIzaSyDUeIg9Zn_xndPXtChO8KufXFp6EMtqBJ0",
     authDomain: "admin-pelayanan-balmon.firebaseapp.com",
@@ -16,7 +14,7 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
-// Fungsi untuk membaca cookie
+// Fungsi membaca cookie
 function getCookie(name) {
     const nameEQ = name + "=";
     const ca = document.cookie.split(';');
