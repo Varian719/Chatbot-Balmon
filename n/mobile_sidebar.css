@@ -1,0 +1,103 @@
+/* ===== MOBILE SIDEBAR (OFF-CANVAS) ===== */
+.mobile-nav-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(3px);
+    z-index: 1000;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.mobile-nav-dropdown {
+    position: fixed;
+    top: 0;
+    left: -280px;
+    width: 280px;
+    height: 100vh;
+    background-color: #ffffff;
+    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+    z-index: 1001;
+    overflow-y: auto;
+    transition: left 0.3s ease;
+    display: block;
+    padding-top: 20px;
+}
+
+.mobile-nav-dropdown.active {
+    left: 0;
+}
+
+.mobile-nav-overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.mobile-menu-item {
+    padding: 15px 25px;
+    border-bottom: 1px solid #f0f0f0;
+    font-weight: 600;
+    color: var(--text-dark);
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.mobile-menu-item:hover {
+    background-color: var(--bg-light-blue);
+    color: var(--primary-color);
+}
+
+.mobile-menu-item.has-submenu {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.mobile-menu-item.has-submenu::after {
+    content: '▼';
+    font-size: 12px;
+    transition: transform 0.3s;
+}
+
+.mobile-menu-item.has-submenu.active::after {
+    transform: rotate(-180deg);
+}
+
+.mobile-submenu {
+    max-height: 0;
+    overflow: hidden;
+    background-color: #f8f9fa;
+    transition: max-height 0.3s ease;
+}
+
+.mobile-submenu.active {
+    max-height: 500px;
+}
+
+.mobile-submenu a {
+    display: block;
+    padding: 12px 40px;
+    color: var(--text-gray);
+    font-size: 14px;
+    border-bottom: 1px solid #eee;
+    transition: all 0.2s;
+}
+
+.mobile-submenu a:hover {
+    background-color: #ffffff;
+    color: var(--primary-color);
+    padding-left: 48px;
+}
+
+/* Responsif: hanya tampil di mobile */
+@media (min-width: 769px) {
+    .mobile-nav-overlay,
+    .mobile-nav-dropdown,
+    .hamburger-btn {
+        display: none !important;
+    }
+}
