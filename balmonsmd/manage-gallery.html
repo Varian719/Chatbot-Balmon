@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
   <meta charset="utf-8" />
-  <title>Admin Balmon | Manajemen Galeri</title>
+  <title>Admin Balmon | Manajemen Galeri & Komentar</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/source-sans-3@5.0.12/index.css" />
@@ -14,6 +14,7 @@
       .table-responsive { max-height: 500px; overflow-y: auto; }
       thead th { position: sticky; top: 0; background: #fff; z-index: 1; border-top: none; }
       .img-thumbnail-admin { width: 60px; height: 60px; object-fit: cover; border-radius: 8px; }
+      .comment-message { max-width: 300px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   </style>
 </head>
 
@@ -25,7 +26,7 @@
       <div class="container-fluid">
         <ul class="navbar-nav">
           <li class="nav-item"><a class="nav-link" data-lte-toggle="sidebar" href="#"><i class="bi bi-list"></i></a></li>
-          <li class="nav-item"><span class="nav-link fw-bold text-primary">MANAJEMEN GALERI</span></li>
+          <li class="nav-item"><span class="nav-link fw-bold text-primary">MANAJEMEN GALERI & KOMENTAR</span></li>
         </ul>
         <ul class="navbar-nav ms-auto">
             <li class="nav-item d-none d-md-block me-3">
@@ -73,6 +74,7 @@
       <div class="app-content">
         <div class="container-fluid">
           
+          <!-- ROW 1: Galeri (Form + Tabel) -->
           <div class="row">
             <div class="col-lg-4 mb-4">
               <div class="card shadow-sm border-0 h-100">
@@ -104,39 +106,20 @@
                                 <option value="foto">Foto Kegiatan</option>
                                 <option value="video">Video</option>
                                 <option value="infografis">Infografis</option>
-                                <option value="news">News</option>
-                            </select>
-                        </div>
-
-                        <!-- Field Subkategori (hanya untuk foto) -->
-                        <div class="mb-3" id="subcategoryField" style="display:none;">
-                            <label class="form-label small fw-bold">Subkategori Foto</label>
-                            <select id="inpSubcategory" class="form-control">
-                                <option value="">Pilih subkategori</option>
-                                <option value="SRC">SRC dan LRC</option>
-                                <option value="sosialisasi">Sosialisasi Denda Izin Stasiun Radio</option>
-                                <option value="pegawai">Pegawai Balmon Samarinda</option>
-                                <option value="capacity">Capacity Building</option>
-                                <option value="UNAR">UNAR</option>
-                                <option value="monitoring">Monitoring Spektrum Frekuensi Radio</option>
-                                <option value="lainnya">Lainnya</option>
+                                <option value="news">News</option> 
                             </select>
                         </div>
 
                         <div class="mb-3">
                             <label class="form-label small fw-bold">Link Gambar (URL)</label>
                             <input type="url" id="inpImage" class="form-control" required placeholder="https://...">
-                            <div class="form-text">
-                                Paste link gambar dari Imgur/Drive/Hosting. 
-                                <strong>Untuk Google Drive, akan otomatis dikonversi ke direct link.</strong>
-                                Untuk video, akan terisi otomatis dari link YouTube.
-                            </div>
+                            <div class="form-text">Paste link gambar dari Imgur/Drive/Hosting.</div>
                         </div>
 
                         <div class="mb-3" id="videoField" style="display:none;">
                             <label class="form-label small fw-bold text-danger">Link Video (Embed URL)</label>
                             <input type="url" id="inpVideo" class="form-control" placeholder="https://www.youtube.com/embed/ID_VIDEO">
-                            <div class="form-text">Gunakan link embed YouTube. Thumbnail akan otomatis terisi.</div>
+                            <div class="form-text">Gunakan link embed YouTube.</div>
                         </div>
 
                         <div class="d-grid gap-2">
@@ -180,6 +163,37 @@
             </div>
           </div>
 
+          <!-- ROW 2: Komentar -->
+          <div class="row mt-4">
+            <div class="col-12">
+                <div class="card shadow-sm border-0">
+                    <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                        <h5 class="card-title fw-bold text-dark"><i class="bi bi-chat-dots me-2"></i> Daftar Komentar Pengunjung</h5>
+                        <span class="badge bg-secondary" id="total-comments">0 Komentar</span>
+                    </div>
+                    <div class="card-body p-0">
+                        <div class="table-responsive">
+                            <table class="table table-striped table-hover align-middle mb-0">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th class="ps-4">No</th>
+                                        <th>Nama</th>
+                                        <th>Email</th>
+                                        <th>Komentar</th>
+                                        <th>Tanggal</th>
+                                        <th class="text-center">Aksi</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="comments-table-body">
+                                    <tr><td colspan="6" class="text-center py-4 text-muted">Memuat data...</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+          </div>
+
         </div>
       </div>
     </main>
@@ -196,101 +210,40 @@
   <script type="module">
     import { initAdminPage } from "./security.js";
     import { ref, push, onValue, remove, update } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
-    import { signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-
-    // ==================== FUNGSI PEMBANTU ====================
-    
-    // Fungsi untuk mengekstrak ID YouTube
-    function extractYoutubeId(url) {
-        if (!url) return null;
-        const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
-        const match = url.match(regExp);
-        return (match && match[2].length === 11) ? match[2] : null;
-    }
-
-    // Fungsi untuk mengekstrak ID file Google Drive
-    function extractGoogleDriveId(url) {
-        if (!url) return null;
-        // Format: https://drive.google.com/file/d/FILE_ID/view
-        const match = url.match(/\/d\/([a-zA-Z0-9_-]+)/);
-        return match ? match[1] : null;
-    }
-
-    // Fungsi untuk mengkonversi link Google Drive ke direct image link
-    function convertGoogleDriveToDirect(url) {
-        const fileId = extractGoogleDriveId(url);
-        if (fileId) {
-            return `https://lh3.googleusercontent.com/d/${fileId}`;
-        }
-        return url; // jika bukan link Drive, kembalikan aslinya
-    }
+    import { getAuth, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
     // Set Tanggal Header
     const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
     document.getElementById('date-display').innerText = new Date().toLocaleDateString('id-ID', options);
 
-    // Elemen yang diperlukan
+    // --- Fungsi Escape HTML untuk keamanan ---
+    function escapeHTML(str) {
+        if (!str) return '';
+        return str.replace(/[&<>"]/g, function(match) {
+            if (match === '&') return '&amp;';
+            if (match === '<') return '&lt;';
+            if (match === '>') return '&gt;';
+            if (match === '"') return '&quot;';
+            return match;
+        });
+    }
+
+    // Toggle Input Video
     const catSelect = document.getElementById('inpCategory');
     const videoField = document.getElementById('videoField');
-    const inpVideo = document.getElementById('inpVideo');
-    const inpImage = document.getElementById('inpImage');
-    const subcategoryField = document.getElementById('subcategoryField');
-    const inpSubcategory = document.getElementById('inpSubcategory');
     
     function checkCategory() {
-        // Tampilkan/sembunyikan field video
         if(catSelect.value === 'video') {
             videoField.style.display = 'block';
-            inpVideo.setAttribute('required', 'true');
+            document.getElementById('inpVideo').setAttribute('required', 'true');
         } else {
             videoField.style.display = 'none';
-            inpVideo.removeAttribute('required');
-        }
-        // Tampilkan/sembunyikan field subkategori (hanya untuk foto)
-        if(catSelect.value === 'foto') {
-            subcategoryField.style.display = 'block';
-        } else {
-            subcategoryField.style.display = 'none';
-            inpSubcategory.value = ''; // reset jika perlu
+            document.getElementById('inpVideo').removeAttribute('required');
         }
     }
     catSelect.addEventListener('change', checkCategory);
 
-    // Auto-fill thumbnail YouTube (untuk video)
-    inpVideo.addEventListener('input', function() {
-        if (catSelect.value === 'video') {
-            const videoUrl = this.value;
-            const videoId = extractYoutubeId(videoUrl);
-            if (videoId) {
-                inpImage.value = `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`;
-            }
-        }
-    });
-
-    // ==================== KONVERSI GOOGLE DRIVE KE DIRECT LINK ====================
-    // Event listener untuk kolom Link Gambar (kecuali kategori video)
-    inpImage.addEventListener('input', function() {
-        // Jangan konversi jika kategori video (karena bisa diisi otomatis oleh YouTube)
-        if (catSelect.value === 'video') return;
-        
-        const originalUrl = this.value.trim();
-        const directUrl = convertGoogleDriveToDirect(originalUrl);
-        if (directUrl !== originalUrl) {
-            // Tampilkan pesan notifikasi kecil (opsional)
-            // Bisa juga langsung set value
-            this.value = directUrl;
-            // Tampilkan notifikasi dengan SweetAlert2 (opsional, bisa dikomentari)
-            // Swal.fire({
-            //     icon: 'info',
-            //     title: 'Link Dikonversi',
-            //     text: 'Link Google Drive telah diubah menjadi direct link.',
-            //     timer: 1500,
-            //     showConfirmButton: false
-            // });
-        }
-    });
-
-    // Variabel global data
+    // Variabel global untuk menyimpan data sementara agar mudah diedit
     let galleryData = [];
 
     // --- LOGIKA UTAMA ---
@@ -298,7 +251,7 @@
         console.log("Gallery Admin Ready");
         document.getElementById('user-display').innerText = user.email;
 
-        // 1. SUBMIT FORM (CREATE / UPDATE)
+        // 1. GALERI: TAMBAH / UPDATE DATA (CREATE / UPDATE)
         document.getElementById('galleryForm').addEventListener('submit', (e) => {
             e.preventDefault();
             
@@ -307,43 +260,40 @@
                 title: document.getElementById('inpTitle').value,
                 description: document.getElementById('inpDesc').value || "",
                 date: document.getElementById('inpDate').value,
-                category: catSelect.value,
-                // Subkategori hanya disimpan jika kategori foto, selain itu kosong
-                subcategory: (catSelect.value === 'foto') ? inpSubcategory.value : "",
+                category: document.getElementById('inpCategory').value,
                 imageUrl: document.getElementById('inpImage').value,
-                videoUrl: inpVideo.value || "",
+                videoUrl: document.getElementById('inpVideo').value || "",
                 timestamp: Date.now() 
             };
 
             if (editId) {
-                // UPDATE
+                // --- MODE UPDATE ---
                 delete newData.timestamp; 
                 
                 update(ref(db, `galeri/${editId}`), newData)
                     .then(() => {
                         Swal.fire({icon: 'success', title: 'Terupdate!', text: 'Data berhasil diperbarui.', timer: 1500, showConfirmButton: false});
-                        window.batalEdit();
+                        window.batalEdit(); // Reset form
                     })
                     .catch(err => Swal.fire('Error', err.message, 'error'));
             } else {
-                // CREATE
+                // --- MODE CREATE (BARU) ---
                 push(ref(db, 'galeri'), newData)
                     .then(() => {
                         Swal.fire({icon: 'success', title: 'Berhasil!', text: 'Konten baru ditambahkan.', timer: 1500, showConfirmButton: false});
                         document.getElementById('galleryForm').reset();
                         videoField.style.display = 'none';
-                        subcategoryField.style.display = 'none';
                     })
                     .catch(err => Swal.fire('Error', err.message, 'error'));
             }
         });
 
-        // 2. READ DATA
+        // 2. GALERI: TAMPILKAN DATA (READ)
         onValue(ref(db, 'galeri'), (snapshot) => {
             const tbody = document.getElementById('gallery-table-body');
             const totalBadge = document.getElementById('total-gallery');
             tbody.innerHTML = "";
-            galleryData = [];
+            galleryData = []; // Reset data lokal
             
             if (!snapshot.exists()) {
                 tbody.innerHTML = `<tr><td colspan="5" class="text-center py-4 text-muted">Belum ada konten galeri.</td></tr>`;
@@ -355,26 +305,33 @@
             const items = Object.keys(data).map(k => ({id: k, ...data[k]}));
             galleryData = items; 
             
+            // Sort: Terbaru di atas
             items.sort((a,b) => b.timestamp - a.timestamp);
             totalBadge.innerText = `${items.length} Item`;
 
             items.forEach((item, index) => {
                 const dateStr = new Date(item.date).toLocaleDateString('id-ID');
                 
+                // Badge Kategori
                 let badgeClass = 'bg-secondary';
                 if(item.category === 'foto') badgeClass = 'bg-primary';
                 if(item.category === 'video') badgeClass = 'bg-danger';
                 if(item.category === 'infografis') badgeClass = 'bg-success';
                 if(item.category === 'news') badgeClass = 'bg-info text-dark';
 
+                // Escape HTML untuk keamanan
+                const safeTitle = escapeHTML(item.title);
+                const safeDesc = escapeHTML(item.description || '');
+                const safeImageUrl = escapeHTML(item.imageUrl); // untuk atribut src sebenarnya tidak perlu escape, tapi amankan saja
+
                 tbody.innerHTML += `
                     <tr>
                         <td class="ps-4 fw-bold text-secondary">${index + 1}</td>
                         <td>
-                            <img src="${item.imageUrl}" class="img-thumbnail-admin shadow-sm" alt="thumb" onerror="this.onerror=null; this.src='https://via.placeholder.com/60x60?text=Error';">
+                            <img src="${safeImageUrl}" class="img-thumbnail-admin shadow-sm" alt="thumb" onerror="this.src='https://via.placeholder.com/60?text=No+Img'">
                         </td>
                         <td>
-                            <div class="fw-bold text-dark">${item.title}</div>
+                            <div class="fw-bold text-dark">${safeTitle}</div>
                             <small class="text-muted"><i class="bi bi-calendar-event me-1"></i> ${dateStr}</small>
                         </td>
                         <td><span class="badge ${badgeClass}">${item.category.toUpperCase()}</span></td>
@@ -391,7 +348,7 @@
             });
         });
 
-        // 3. EDIT
+        // 3. GALERI: FUNGSI EDIT (LOAD DATA KE FORM)
         window.editItem = (id) => {
             const item = galleryData.find(i => i.id === id);
             if (!item) return;
@@ -403,9 +360,8 @@
             document.getElementById('inpCategory').value = item.category;
             document.getElementById('inpImage').value = item.imageUrl;
             document.getElementById('inpVideo').value = item.videoUrl || "";
-            document.getElementById('inpSubcategory').value = item.subcategory || "";
 
-            checkCategory(); // memastikan field yang sesuai tampil
+            checkCategory();
 
             document.getElementById('form-title').innerHTML = `<i class="bi bi-pencil-square me-2"></i> Edit Galeri`;
             const btnSubmit = document.getElementById('btnSubmit');
@@ -417,7 +373,7 @@
             window.scrollTo({ top: 0, behavior: 'smooth' });
         };
 
-        // 4. BATAL EDIT
+        // 4. GALERI: FUNGSI BATAL EDIT
         window.batalEdit = () => {
             document.getElementById('galleryForm').reset();
             document.getElementById('inpId').value = ""; 
@@ -432,7 +388,7 @@
             document.getElementById('btnCancel').style.display = 'none';
         };
 
-        // 5. HAPUS
+        // 5. GALERI: FUNGSI HAPUS (DELETE)
         window.hapusItem = (key) => {
             Swal.fire({
                 title: 'Hapus Konten?',
@@ -443,49 +399,146 @@
                 confirmButtonText: 'Ya, Hapus'
             }).then((result) => {
                 if (result.isConfirmed) {
-                    remove(ref(db, `galeri/${key}`));
-                    Swal.fire('Terhapus!', 'Konten berhasil dihapus.', 'success');
-                    if(document.getElementById('inpId').value === key) window.batalEdit();
-                }
-            });
-        }
-
-        // --- LOGOUT ---
-        const setupLogout = () => {
-            const btnLogout = document.getElementById('btnSystemLogout');
-            if (!btnLogout) return;
-
-            btnLogout.addEventListener('click', async (e) => {
-                e.preventDefault();
-                
-                const result = await Swal.fire({
-                    title: 'Keluar?', 
-                    text: "Sesi akan diakhiri.", 
-                    icon: 'warning',
-                    showCancelButton: false, 
-                    confirmButtonColor: '#d33',   
-                    confirmButtonText: 'Ya, Keluar'
-                });
-
-                if (result.isConfirmed) {
-                    Swal.fire({ 
-                        title: 'Keluar...', 
-                        timer: 3000,
-                        didOpen: () => Swal.showLoading() 
-                    });
-
-                    try {
-                        await signOut(auth);
-                        window.location.replace("index.html");
-                    } catch (error) {
-                        console.error("Force Logout:", error);
-                        window.location.replace("index.html");
-                    }
+                    remove(ref(db, `galeri/${key}`))
+                        .then(() => {
+                            Swal.fire('Terhapus!', 'Konten berhasil dihapus.', 'success');
+                            if(document.getElementById('inpId').value === key) window.batalEdit();
+                        })
+                        .catch(err => Swal.fire('Error', err.message, 'error'));
                 }
             });
         };
-        setupLogout();
+
+        // ========== KOMENTAR ==========
+        const commentsRef = ref(db, 'statistik_web/komentar');
+        const commentsTbody = document.getElementById('comments-table-body');
+        const totalCommentsBadge = document.getElementById('total-comments');
+
+        // 6. KOMENTAR: TAMPILKAN DATA (READ)
+        onValue(commentsRef, (snapshot) => {
+            commentsTbody.innerHTML = "";
+            
+            if (!snapshot.exists()) {
+                commentsTbody.innerHTML = `<tr><td colspan="6" class="text-center py-4 text-muted">Belum ada komentar.</td></tr>`;
+                totalCommentsBadge.innerText = "0 Komentar";
+                return;
+            }
+
+            const data = snapshot.val();
+            if (typeof data === 'string' && data === '') {
+                commentsTbody.innerHTML = `<tr><td colspan="6" class="text-center py-4 text-muted">Belum ada komentar.</td></tr>`;
+                totalCommentsBadge.innerText = "0 Komentar";
+                return;
+            }
+
+            const items = Object.keys(data).map(k => ({id: k, ...data[k]}));
+            
+            // Sort: terbaru di atas
+            items.sort((a,b) => (b.timestamp || 0) - (a.timestamp || 0));
+            totalCommentsBadge.innerText = `${items.length} Komentar`;
+
+            items.forEach((item, index) => {
+                let dateStr = '-';
+                if (item.timestamp) {
+                    const date = new Date(item.timestamp);
+                    dateStr = date.toLocaleDateString('id-ID', { 
+                        day: 'numeric', 
+                        month: 'short', 
+                        year: 'numeric',
+                        hour: '2-digit',
+                        minute: '2-digit'
+                    });
+                }
+
+                // Escape semua field teks
+                const safeName = escapeHTML(item.name || '');
+                const safeEmail = escapeHTML(item.email || '');
+                const safeMessage = escapeHTML(item.message || '');
+
+                commentsTbody.innerHTML += `
+                    <tr>
+                        <td class="ps-4 fw-bold text-secondary">${index + 1}</td>
+                        <td>${safeName}</td>
+                        <td>${safeEmail}</td>
+                        <td><div class="comment-message" title="${safeMessage}">${safeMessage}</div></td>
+                        <td>${dateStr}</td>
+                        <td class="text-center">
+                            <button class="btn btn-sm btn-outline-danger" onclick="hapusKomentar('${item.id}')" title="Hapus">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            });
+        }, (error) => {
+            console.error('Error loading comments:', error);
+            commentsTbody.innerHTML = `<tr><td colspan="6" class="text-center py-4 text-danger">Gagal memuat komentar.</td></tr>`;
+        });
+
+        // 7. KOMENTAR: FUNGSI HAPUS
+        window.hapusKomentar = (key) => {
+            Swal.fire({
+                title: 'Hapus Komentar?',
+                text: "Komentar ini akan dihapus permanen.",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                confirmButtonText: 'Ya, Hapus',
+                cancelButtonText: 'Batal'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    remove(ref(db, `statistik_web/komentar/${key}`))
+                        .then(() => {
+                            Swal.fire('Terhapus!', 'Komentar berhasil dihapus.', 'success');
+                        })
+                        .catch((err) => {
+                            Swal.fire('Error', err.message, 'error');
+                        });
+                }
+            });
+        };
+
     });
+
+    // --- FITUR LOGOUT (berdiri sendiri) ---
+    const setupLogout = () => {
+        const btnLogout = document.getElementById('btnSystemLogout');
+        if (!btnLogout) return;
+
+        btnLogout.addEventListener('click', async (e) => {
+            e.preventDefault();
+            
+            const result = await Swal.fire({
+                title: 'Keluar?', 
+                text: "Sesi akan diakhiri.", 
+                icon: 'warning',
+                showCancelButton: false, 
+                confirmButtonColor: '#d33',   
+                confirmButtonText: 'Ya, Keluar'
+            });
+
+            if (result.isConfirmed) {
+                Swal.fire({ 
+                    title: 'Keluar...', 
+                    timer: 3000,
+                    didOpen: () => Swal.showLoading() 
+                });
+
+                try {
+                    const auth = getAuth(); 
+                    await signOut(auth);
+                    window.location.replace("index.html");
+                } catch (error) {
+                    console.error("Force Logout:", error);
+                    window.location.replace("index.html");
+                }
+            }
+        });
+    };
+    setupLogout();
+
+    // Pastikan checkCategory dijalankan saat halaman dimuat (jika ada nilai default)
+    checkCategory();
   </script>
 </body>
 </html>
