@@ -1,0 +1,358 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <title>Admin Balmon | Manajemen Arsip</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/source-sans-3@5.0.12/index.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.min.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/admin-lte@4.0.0-beta2/dist/css/adminlte.min.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+
+  <style>
+    .card-doc { transition: transform 0.2s, box-shadow 0.2s; cursor: default; }
+    .card-doc:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.1) !important; }
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: #f1f1f1; }
+    ::-webkit-scrollbar-thumb { background: #ccc; border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: #aaa; }
+  </style>
+</head>
+
+<body class="layout-fixed sidebar-expand-lg bg-body-tertiary">
+
+  <div class="app-wrapper">
+
+    <nav class="app-header navbar navbar-expand bg-body shadow-sm">
+      <div class="container-fluid">
+        <ul class="navbar-nav">
+          <li class="nav-item"><a class="nav-link" data-lte-toggle="sidebar" href="#"><i class="bi bi-list"></i></a></li>
+          <li class="nav-item"><span class="nav-link fw-bold text-primary">Panel Admin Arsip</span></li>
+        </ul>
+        <ul class="navbar-nav ms-auto">
+            <li class="nav-item d-none d-md-block me-3">
+                <span class="nav-link text-muted" id="user-display">Checking...</span>
+            </li>
+            <li class="nav-item">
+                <button id="btnSystemLogout" class="btn btn-danger btn-sm shadow-sm">
+                    <i class="bi bi-power"></i> Keluar
+                </button>
+            </li>
+        </ul>
+      </div>
+    </nav>
+
+    <aside class="app-sidebar bg-body-secondary shadow" data-bs-theme="dark">
+      <div class="sidebar-brand">
+        <a href="#" class="brand-link text-center">
+          <span class="brand-text fw-bold">BALMON SAMARINDA</span>
+        </a>
+      </div>
+      <div class="sidebar-wrapper">
+        <nav class="mt-2">
+          <ul class="nav sidebar-menu flex-column">
+            <li class="nav-item"><a href="admin-balmon.html" class="nav-link"><i class="nav-icon bi bi-speedometer"></i><p>Dashboard</p></a></li>
+            <li class="nav-item"><a href="dokumen.html" class="nav-link active"><i class="nav-icon bi bi-folder-fill"></i><p>Arsip Digital</p></a></li>
+            <li class="nav-item"><a href="datachat.html" class="nav-link"><i class="nav-icon bi bi-chat-fill"></i><p>History Chatbot</p></a></li>
+            <li class="nav-item"><a href="gform_management.html" class="nav-link"><i class="nav-icon bi bi-ui-checks"></i><p>Manajemen GForm</p></a></li>
+            <li class="nav-item"><a href="manage-gallery.html" class="nav-link"><i class="nav-icon bi bi-image-fill"></i><p>Manajemen Publikasi</p></a></li>
+            <li class="nav-item"><a href="../../../frontend/index.html" target="_blank" class="nav-link"><i class="nav-icon bi bi-globe"></i><p>Lihat Website</p></a></li>
+          </ul>
+        </nav>
+      </div>
+    </aside>
+
+    <main class="app-main">
+      <div class="app-content-header">
+        <div class="container-fluid">
+          
+          <div class="card shadow-sm border-0 mb-4">
+            <div class="card-header bg-gradient-primary text-white" style="background: linear-gradient(45deg, #006fb0, #00ace0);">
+              <h5 class="card-title mb-0"><i class="bi bi-cloud-arrow-up-fill"></i> Upload Dokumen Baru</h5>
+            </div>
+            <div class="card-body">
+              
+              <div class="row g-3 align-items-end">
+                <div class="col-md-5">
+                  <label class="form-label fw-bold">Judul Dokumen</label>
+                  <input type="text" id="docJudul" class="form-control" placeholder="Contoh: Surat Edaran No. 5">
+                </div>
+                
+                <div class="col-md-5">
+                  <label class="form-label fw-bold">Pilih File (PDF/Word/Excel)</label>
+                  <input type="file" id="docFile" class="form-control" accept=".pdf,.doc,.docx,.xls,.xlsx">
+                </div>
+
+                <div class="col-md-2">
+                  <button onclick="handleUpload()" id="btnUpload" class="btn btn-primary w-100 fw-bold">
+                    <i class="bi bi-cloud-upload"></i> UPLOAD
+                  </button>
+                </div>
+              </div>
+              <small class="text-muted mt-2 d-block">*File akan otomatis diupload ke Google Drive Publik & tercatat di sistem.</small>
+            </div>
+          </div>
+
+          <div class="d-flex justify-content-between align-items-center mb-3 pb-2 border-bottom">
+            <h5 class="text-secondary m-0"><i class="bi bi-database-check"></i> Arsip Tersimpan</h5>
+            <div class="input-group" style="width: 300px;">
+                <span class="input-group-text bg-white border-end-0"><i class="bi bi-search"></i></span>
+                <input type="text" id="searchBox" class="form-control border-start-0" placeholder="Cari judul dokumen...">
+            </div>
+          </div>
+
+          <div class="row" id="gridDokumen">
+             <div class="col-12 text-center py-5">
+                 <div class="spinner-border text-primary" role="status"></div>
+                 <p class="mt-2 text-muted">Mengambil data...</p>
+             </div>
+          </div>
+
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/admin-lte@4.0.0-beta2/dist/js/adminlte.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  
+  <script async defer src="https://apis.google.com/js/api.js" onload="gapiLoaded()"></script>
+  <script async defer src="https://accounts.google.com/gsi/client" onload="gisLoaded()"></script>
+
+  <script type="module">
+    import { initAdminPage } from "./security.js";
+    import { ref, push, onValue, remove, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+    import { getAuth, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+
+    // --- KONFIGURASI GOOGLE DRIVE ---
+    // (Menggunakan data dari file sebelumnya)
+    const CLIENT_ID = '1053263347737-g32v5386cnfl8dbe49i0t9i9pv9fg44t.apps.googleusercontent.com'; 
+    const API_KEY = 'AIzaSyAcIVdG6dQxewbNNlvRCWb0yGjCWoeqdE4'; 
+    const DISCOVERY_DOC = 'https://www.googleapis.com/discovery/v1/apis/drive/v3/rest';
+    const SCOPES = 'https://www.googleapis.com/auth/drive.file';
+    const TARGET_FOLDER_ID = '1EUgbh4L8nh9J8X2EDc1s0KhnrqQGQmzL'; 
+
+    let tokenClient;
+    let gapiInited = false;
+    let gisInited = false;
+    let dbInstance;
+    let allDocs = [];
+
+    // --- SETUP GOOGLE API (DI BELAKANG LAYAR) ---
+    window.gapiLoaded = function() {
+        gapi.load('client', async () => {
+            await gapi.client.init({ apiKey: API_KEY, discoveryDocs: [DISCOVERY_DOC] });
+            gapiInited = true;
+        });
+    }
+
+    window.gisLoaded = function() {
+        tokenClient = google.accounts.oauth2.initTokenClient({
+            client_id: CLIENT_ID,
+            scope: SCOPES,
+            callback: '', // Akan didefinisikan saat butuh token
+        });
+        gisInited = true;
+    }
+
+    // --- INIT HALAMAN ---
+    initAdminPage((user, db) => {
+        console.log("Ready. User: " + user.email);
+        const userDisplay = document.getElementById('user-display');
+        if(userDisplay) userDisplay.innerText = user.email;
+        dbInstance = db; 
+
+        // Load Data Firebase
+        onValue(ref(db, 'arsip_drive'), (snapshot) => {
+            const grid = document.getElementById('gridDokumen');
+            if(!snapshot.exists()) {
+                allDocs = [];
+                renderGrid(allDocs);
+                return;
+            }
+            allDocs = [];
+            snapshot.forEach(child => { 
+                allDocs.push({ key: child.key, ...child.val() }); 
+            });
+            allDocs.sort((a, b) => b.timestamp - a.timestamp);
+            renderGrid(allDocs);
+        });
+    });
+
+    // --- LOGIKA UPLOAD (OTOMATIS LOGIN JIKA BELUM) ---
+    window.handleUpload = async function() {
+        const fileInput = document.getElementById('docFile');
+        const judul = document.getElementById('docJudul').value;
+        const file = fileInput.files[0];
+
+        if (!file || !judul) {
+            return Swal.fire({ title: 'Data Kurang', text: 'Mohon isi judul dan pilih file.', icon: 'warning' });
+        }
+
+        // Cek apakah API siap
+        if (!gapiInited || !gisInited) {
+            return Swal.fire('Tunggu Sebentar', 'Koneksi Google Drive sedang disiapkan...', 'info');
+        }
+
+        // Cek Token / Minta Izin
+        tokenClient.callback = async (resp) => {
+            if (resp.error) throw (resp);
+            // Jika token didapat, Lanjutkan Upload
+            await executeUpload(file, judul);
+        };
+
+        // Jika belum ada akses token yang valid, ini akan memunculkan popup login
+        // Jika sudah ada (di cache browser), biasanya langsung lanjut atau popup sebentar
+        const token = gapi.client.getToken();
+        if (token === null) {
+            // Minta login
+            tokenClient.requestAccessToken({prompt: ''});
+        } else {
+            // Sudah login, langsung gas
+            await executeUpload(file, judul);
+        }
+    }
+
+    // --- PROSES UPLOAD SEBENARNYA ---
+    async function executeUpload(file, judul) {
+        Swal.fire({
+            title: 'Mengupload ke Drive...',
+            html: 'Mohon tunggu, jangan tutup halaman ini.',
+            allowOutsideClick: false,
+            didOpen: () => Swal.showLoading()
+        });
+
+        try {
+            const accessToken = gapi.client.getToken().access_token;
+            
+            const metadata = { 
+                'name': file.name, 
+                'parents': [TARGET_FOLDER_ID]
+            };
+
+            const form = new FormData();
+            form.append('metadata', new Blob([JSON.stringify(metadata)], { type: 'application/json' }));
+            form.append('file', file);
+
+            // Upload ke Google Drive
+            const response = await fetch('https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&fields=id', {
+                method: 'POST',
+                headers: new Headers({ 'Authorization': 'Bearer ' + accessToken }),
+                body: form
+            });
+            
+            const driveData = await response.json();
+            if(driveData.error) throw new Error(driveData.error.message);
+
+            // Simpan Metadata ke Firebase
+            if(!dbInstance) throw new Error("Database belum siap.");
+
+            await push(ref(dbInstance, 'arsip_drive'), {
+                judul: judul,
+                drive_id: driveData.id,
+                tipe: file.type,
+                timestamp: serverTimestamp()
+            });
+
+            Swal.fire('Sukses!', 'File berhasil diupload & disimpan.', 'success');
+            document.getElementById('docJudul').value = '';
+            document.getElementById('docFile').value = '';
+
+        } catch (err) {
+            console.error(err);
+            Swal.fire('Gagal Upload', 'Error: ' + err.message, 'error');
+        }
+    }
+
+    // --- RENDER GRID ---
+    function renderGrid(dataList) {
+        const grid = document.getElementById('gridDokumen');
+        if(dataList.length === 0) {
+            grid.innerHTML = `<div class="col-12 text-center text-muted py-5"><i class="bi bi-folder-x display-1 opacity-25"></i><p class="mt-3">Tidak ada dokumen ditemukan.</p></div>`;
+            return;
+        }
+
+        let html = '';
+        dataList.forEach(d => {
+            let isPdf = d.tipe && d.tipe.toLowerCase().includes('pdf');
+            let iconClass = isPdf ? 'bi-file-earmark-pdf-fill text-danger' : 'bi-file-earmark-word-fill text-primary';
+            let dateStr = new Date(d.timestamp || Date.now()).toLocaleDateString('id-ID', {day: 'numeric', month: 'short', year: 'numeric'});
+
+            html += `
+                <div class="col-md-4 col-lg-3 mb-4">
+                    <div class="card h-100 border-0 shadow-sm card-doc">
+                        <div class="card-body text-center d-flex flex-column">
+                            <div class="mb-3"><i class="bi ${iconClass}" style="font-size: 3rem;"></i></div>
+                            <h6 class="fw-bold text-dark text-truncate px-2" title="${d.judul}">${d.judul}</h6>
+                            <small class="text-muted mb-3"><i class="bi bi-calendar3"></i> ${dateStr}</small>
+                            <div class="mt-auto d-flex gap-2 justify-content-center">
+                                <a href="https://drive.google.com/uc?export=view&id=${d.drive_id}" target="_blank" class="btn btn-sm btn-light border" title="Lihat">
+                                    <i class="bi bi-eye"></i>
+                                </a>
+                                <button onclick="hapusData('${d.key}')" class="btn btn-sm btn-outline-danger" title="Hapus">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>`;
+        });
+        grid.innerHTML = html;
+    }
+
+    document.getElementById('searchBox').addEventListener('keyup', (e) => {
+        const keyword = e.target.value.toLowerCase();
+        const filtered = allDocs.filter(doc => doc.judul.toLowerCase().includes(keyword));
+        renderGrid(filtered);
+    });
+
+    // --- HAPUS DATA ---
+    window.hapusData = function(key) {
+        Swal.fire({
+            title: 'Hapus Arsip?',
+            text: "Data akan dihapus dari daftar.",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonText: 'Batal',
+            confirmButtonText: 'Ya, Hapus!'
+        }).then((result) => {
+            if (result.isConfirmed && dbInstance) {
+                remove(ref(dbInstance, `arsip_drive/${key}`))
+                .then(() => {
+                    const Toast = Swal.mixin({ toast: true, position: 'top-end', showConfirmButton: false, timer: 3000 });
+                    Toast.fire({ icon: 'success', title: 'Data berhasil dihapus' });
+                });
+            }
+        });
+    }
+
+    // --- LOGOUT SYSTEM (YANG SUDAH DIPERBAIKI) ---
+    const setupLogout = () => {
+        const btnLogout = document.getElementById('btnSystemLogout');
+        if (!btnLogout) return;
+        btnLogout.addEventListener('click', async (e) => {
+            e.preventDefault();
+            const result = await Swal.fire({
+                title: 'Keluar?', text: "Sesi akan diakhiri.", icon: 'warning',
+                showCancelButton: false, confirmButtonColor: '#d33', confirmButtonText: 'Ya, Keluar'
+            });
+            if (result.isConfirmed) {
+                Swal.fire({ title: 'Keluar...', timer: 3000, didOpen: () => Swal.showLoading() });
+                try {
+                    const auth = getAuth(); 
+                    await signOut(auth);
+                    window.location.replace("login_balmon.html");
+                } catch (error) {
+                    window.location.replace("login_balmon.html");
+                }
+            }
+        });
+    };
+    setupLogout();
+
+  </script>
+</body>
+</html>
