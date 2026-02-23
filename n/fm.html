@@ -14,33 +14,34 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Albert+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <meta name="keywords" content="izin penyiaran FM, LPS, LPK, LPPL, prosedur fm, syarat izin radio">
-<link rel="canonical" href="https://balmonsamarinda.go.id/fm.html">
-<meta property="og:title" content="Izin Penyiaran FM - Balmon Samarinda">
-<meta property="og:description" content="Prosedur dan persyaratan perizinan stasiun radio FM (LPS, LPK, LPPL) di wilayah Kalimantan Timur.">
-<meta property="og:url" content="https://balmonsamarinda.go.id/fm.html">
-<meta property="og:image" content="https://balmonsamarinda.go.id/images/fm-og.jpg">
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Izin Penyiaran FM - Balmon Samarinda">
-<meta name="twitter:description" content="Prosedur dan persyaratan perizinan stasiun radio FM (LPS, LPK, LPPL) di wilayah Kalimantan Timur.">
-<meta name="twitter:image" content="https://balmonsamarinda.go.id/images/fm-og.jpg">
+    <link rel="canonical" href="https://balmonsamarinda.go.id/fm.html">
+    <meta property="og:title" content="Izin Penyiaran FM - Balmon Samarinda">
+    <meta property="og:description" content="Prosedur dan persyaratan perizinan stasiun radio FM (LPS, LPK, LPPL) di wilayah Kalimantan Timur.">
+    <meta property="og:url" content="https://balmonsamarinda.go.id/fm.html">
+    <!-- Perbaikan: gunakan path relatif untuk gambar -->
+    <meta property="og:image" content="images/fm-og.jpg">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Izin Penyiaran FM - Balmon Samarinda">
+    <meta name="twitter:description" content="Prosedur dan persyaratan perizinan stasiun radio FM (LPS, LPK, LPPL) di wilayah Kalimantan Timur.">
+    <meta name="twitter:image" content="images/fm-og.jpg">
 
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "Service",
-  "name": "Izin Penyiaran FM",
-  "description": "Layanan perizinan stasiun radio FM untuk lembaga penyiaran swasta, komunitas, dan publik lokal.",
-  "provider": {
-    "@type": "GovernmentOrganization",
-    "name": "Balai Monitor Spektrum Frekuensi Radio Kelas I Samarinda",
-    "url": "https://balmonsamarinda.go.id"
-  },
-  "areaServed": {
-    "@type": "State",
-    "name": "Kalimantan Timur"
-  }
-}
-</script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Service",
+      "name": "Izin Penyiaran FM",
+      "description": "Layanan perizinan stasiun radio FM untuk lembaga penyiaran swasta, komunitas, dan publik lokal.",
+      "provider": {
+        "@type": "GovernmentOrganization",
+        "name": "Balai Monitor Spektrum Frekuensi Radio Kelas I Samarinda",
+        "url": "https://balmonsamarinda.go.id"
+      },
+      "areaServed": {
+        "@type": "State",
+        "name": "Kalimantan Timur"
+      }
+    }
+    </script>
     <style>
         /* ========================================= */
         /* --- 1. SETUP WARNA & GLOBAL (STANDAR) --- */
@@ -159,27 +160,114 @@
         .dropdown-content li a:hover { background-color: var(--bg-light-blue); color: var(--primary-color); padding-left: 25px; }
         @keyframes slideDown { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* Mobile Menu */
-        .hamburger-btn { display: none; flex-direction: column; gap: 6px; background: none; border: none; cursor: pointer; padding: 8px; z-index: 1001; }
-        .hamburger-btn span { width: 24px; height: 2.5px; background-color: white; border-radius: 2px; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); transform-origin: center; }
+        /* HAMBURGER */
+        .hamburger-btn {
+            display: none; flex-direction: column; gap: 6px; background: none; border: none; cursor: pointer; padding: 8px; z-index: 1001;
+        }
+        .hamburger-btn span {
+            width: 24px; height: 2.5px; 
+            background-color: white;
+            border-radius: 2px; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); transform-origin: center;
+        }
         .hamburger-btn.active span:nth-child(1) { transform: translateY(8.5px) rotate(45deg); }
         .hamburger-btn.active span:nth-child(2) { opacity: 0; transform: translateX(10px); }
         .hamburger-btn.active span:nth-child(3) { transform: translateY(-8.5px) rotate(-45deg); }
         .hamburger-btn.active span { background-color: #ffffff !important; }
 
-        .mobile-nav-dropdown { display: none; position: fixed; top: 80px; left: 0; width: 100%; max-height: calc(100vh - 80px); background-color: #ffffff; box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1); flex-direction: column; overflow-y: auto; z-index: 999; animation: slideDownMobile 0.3s ease; }
-        .mobile-nav-dropdown.active { display: flex; }
-        @keyframes slideDownMobile { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
-        
-        .mobile-menu-item { font-family: 'Albert Sans', sans-serif; padding: 16px 20px; border-bottom: 1px solid #eee; color: var(--text-dark); font-weight: 600; font-size: 15px; cursor: pointer; transition: all 0.3s ease; display: flex; justify-content: space-between; align-items: center; }
-        .mobile-menu-item:hover { background-color: var(--bg-light-blue); color: var(--primary-color); }
-        .mobile-menu-item.has-submenu::after { content: '▼'; font-size: 12px; transition: transform 0.3s ease; }
-        .mobile-menu-item.has-submenu.active::after { transform: rotate(-180deg); }
-        
-        .mobile-submenu { max-height: 0; overflow: hidden; background-color: #f8f9fa; transition: max-height 0.3s ease; }
-        .mobile-submenu.active { max-height: 500px; }
-        .mobile-submenu a { display: block; padding: 12px 40px; color: var(--text-gray); font-size: 14px; font-weight: 500; border-bottom: 1px solid #eee; transition: all 0.2s ease; }
-        .mobile-submenu a:hover { background-color: #ffffff; color: var(--primary-color); padding-left: 48px; }
+        /* ===== MOBILE SIDEBAR (OFF-CANVAS) ===== */
+        .mobile-nav-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(3px);
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+
+        .mobile-nav-dropdown {
+            position: fixed;
+            top: 0;
+            left: -280px;
+            width: 280px;
+            height: 100vh;
+            background-color: #ffffff;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+            z-index: 1001;
+            overflow-y: auto;
+            transition: left 0.3s ease;
+            display: block; /* Ubah dari none ke block */
+            padding-top: 20px;
+        }
+
+        .mobile-nav-dropdown.active {
+            left: 0;
+        }
+
+        .mobile-nav-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .mobile-menu-item {
+            padding: 15px 25px;
+            border-bottom: 1px solid #f0f0f0;
+            font-weight: 600;
+            color: var(--text-dark);
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .mobile-menu-item:hover {
+            background-color: var(--bg-light-blue);
+            color: var(--primary-color);
+        }
+
+        .mobile-menu-item.has-submenu {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .mobile-menu-item.has-submenu::after {
+            content: '▼';
+            font-size: 12px;
+            transition: transform 0.3s;
+        }
+
+        .mobile-menu-item.has-submenu.active::after {
+            transform: rotate(-180deg);
+        }
+
+        .mobile-submenu {
+            max-height: 0;
+            overflow: hidden;
+            background-color: #f8f9fa;
+            transition: max-height 0.3s ease;
+        }
+
+        .mobile-submenu.active {
+            max-height: 500px;
+        }
+
+        .mobile-submenu a {
+            display: block;
+            padding: 12px 40px;
+            color: var(--text-gray);
+            font-size: 14px;
+            border-bottom: 1px solid #eee;
+            transition: all 0.2s;
+        }
+
+        .mobile-submenu a:hover {
+            background-color: #ffffff;
+            color: var(--primary-color);
+            padding-left: 48px;
+        }
 
         /* ========================================= */
         /* --- 3. PAGE CONTENT (KHUSUS FM) --- */
@@ -197,7 +285,7 @@
         }
 
         .page-title { font-size: 48px; font-weight: 800; margin: 0; letter-spacing: -1px; text-shadow: 0 4px 10px rgba(0,0,0,0.1); }
-        .breadcrumb { font-size: 14px; opacity: 0.9; margin-bottom: 15px; font-weight: 500; }
+        .breadcrumb { font-size: 14px; opacity: 0.9; margin-bottom: 15px; font-weight: 500; color: rgba(255,255,255,0.9); } /* Perbaikan warna */
         .breadcrumb a { color: #fff; text-decoration: none; border-bottom: 1px solid rgba(255,255,255,0.4); transition: 0.3s; }
         .breadcrumb a:hover { border-bottom-color: #fff; }
 
@@ -360,23 +448,6 @@
         .search-item:hover { background: var(--bg-light-blue); border-color: var(--primary-color); transform: translateX(5px); }
         .search-item h4 { margin: 0 0 5px 0; color: var(--primary-color); font-size: 16px; }
         .search-item p { margin: 0; font-size: 13px; color: var(--text-gray); }
-
-        .breadcrumb {
-        color: powderblue; /* Ganti dengan kode warna yang kamu mau (misal: hitam pudar) */
-        font-size: 15px; /* Opsional: Jika ingin mengatur ukuran font */
-        }
-
-        /* Mengubah warna link (Beranda) */
-        .breadcrumb a {
-            color: white; /* Ganti dengan warna link yang kamu mau (misal: biru) */
-            text-decoration: none; /* Opsional: Menghilangkan garis bawah pada link */
-        }
-
-        /* Opsional: Warna saat link disorot mouse */
-        .breadcrumb a:hover {
-            color: white; 
-            text-decoration: x-underline;
-        }
     </style>
 </head>
 <body>
@@ -388,7 +459,7 @@
 
     <header id="mainHeader">
         <div class="container header-content">
-            <div class="brand-area" onclick="window.location.href='index.html'">
+            <div class="brand-area" onclick="window.location.href='index.html'" role="button" tabindex="0" aria-label="Kembali ke Beranda">
                 <img src="balmonsmd1.png" alt="Logo Balmon" class="brand-logo-img">
                 <div class="brand-text">
                     BALMON SAMARINDA
@@ -397,19 +468,19 @@
             </div>
 
             <div class="header-socials">
-                <a href="https://wa.me/6285648283012" target="_blank" class="social-icon wa-icon" aria-label="WhatsApp">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg>
+                <a href="https://wa.me/6285648283012" target="_blank" rel="noopener noreferrer" class="social-icon wa-icon" aria-label="WhatsApp">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.347-.297.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg>
                 </a>
-                <a href="https://www.instagram.com/balmonsamarinda/" target="_blank" class="social-icon" aria-label="Instagram">
+                <a href="https://www.instagram.com/balmonsamarinda/" target="_blank" rel="noopener noreferrer" class="social-icon" aria-label="Instagram">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.163 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
                 </a>
-                <a href="https://www.facebook.com/profile.php?id=100068963927418" target="_blank" class="social-icon" aria-label="Facebook">
+                <a href="https://www.facebook.com/profile.php?id=100068963927418" target="_blank" rel="noopener noreferrer" class="social-icon" aria-label="Facebook">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9 8h-3v4h3v12h5v-12h3.642l.358-4h-4v-1.667c0-.955.192-1.333 1.115-1.333h2.885v-5h-3.808c-3.596 0-5.192 1.583-5.192 4.615v3.385z"/></svg>
                 </a>
-                <a href="https://youtube.com/@balmonsamarindaa?si=EZUAjSarJaMD-7R9" target="_blank" class="social-icon" aria-label="YouTube">
+                <a href="https://youtube.com/@balmonsamarindaa?si=EZUAjSarJaMD-7R9" target="_blank" rel="noopener noreferrer" class="social-icon" aria-label="YouTube">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z"/></svg>
                 </a>
-                <a href="https://www.tiktok.com/@balmon.samarinda?lang=en" target="_blank" class="social-icon" aria-label="TikTok">
+                <a href="https://www.tiktok.com/@balmon.samarinda?lang=en" target="_blank" rel="noopener noreferrer" class="social-icon" aria-label="TikTok">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" stroke="none">
                         <path d="M12.53.02C13.84 0 15.14.01 16.44 0c.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.65-1.58-1.09-.1-.09-.19-.2-.29-.3v6.52c.02 4.07-3.23 7.49-7.29 7.49-3.93.04-7.3-3.13-7.48-7.05-.07-1.84.58-3.66 1.83-5.01 1.25-1.35 3.03-2.14 4.86-2.16v4.03c-1.11-.02-2.19.46-2.95 1.29a4.106 4.106 0 0 0-1.1 2.89c.04 2.22 1.84 4.02 4.06 4.02 2.22 0 4.02-1.8 4.02-4.02V.02h.22z"/>
                     </svg>
@@ -425,7 +496,7 @@
                         <li role="none"><a href="konsesi.html" role="menuitem">Izin Konsesi</a></li>
                         <li role="none"><a href="maritim.html" role="menuitem">Izin Maritim</a></li>
                         <li role="none"><a href="fm.html" role="menuitem">Izin Penyiaran FM</a></li>
-                        <li role="none"><a href="arsip.html" role="menuitem">Download</a>
+                        <li role="none"><a href="arsip.html" role="menuitem">Download</a></li> <!-- Perbaikan: tutup li -->
                     </ul>
                 </li>
                 <li class="menu-item" onclick="window.location.href='galeri.html'" role="button" tabindex="0">Publikasi</li>
@@ -439,7 +510,7 @@
             </button>
         </nav>
             
-            <button class="hamburger-btn" id="hamburgerBtn" onclick="toggleMobileMenu()">
+            <button class="hamburger-btn" id="hamburgerBtn" onclick="toggleMobileMenu()" aria-label="Buka menu navigasi">
                 <span></span>
                 <span></span>
                 <span></span>
@@ -447,17 +518,20 @@
         </div>
 
         <div class="mobile-nav-dropdown" id="mobileNavDropdown">
-            <div class="mobile-menu-item" onclick="handleMobileMenuItem(this, 'beranda')">Beranda</div>
-            <div class="mobile-menu-item has-submenu" onclick="toggleMobileSubmenu(this)">Layanan</div>
+            <div class="mobile-menu-item" onclick="handleMobileMenuItem(this, 'beranda')" role="button" tabindex="0">Beranda</div>
+            <div class="mobile-menu-item" onclick="handleMobileMenuItem(this, 'profil')" role="button" tabindex="0">Profil</div> <!-- Perbaikan: 'profil' lowercase -->
+            <div class="mobile-menu-item has-submenu" onclick="toggleMobileSubmenu(this)" role="button" tabindex="0">Layanan</div>
             <div class="mobile-submenu">
                 <a href="konsesi.html" onclick="closeMobileMenu()">Izin Konsesi</a>
                 <a href="maritim.html" onclick="closeMobileMenu()">Izin Maritim</a>
                 <a href="fm.html" onclick="closeMobileMenu()">Izin Penyiaran FM</a>
             </div>
-            <div class="mobile-menu-item" onclick="handleMobileMenuItem(this, 'publikasi')">Publikasi</div>
-            <div class="mobile-menu-item" onclick="handleMobileMenuItem(this, 'download')">Download</div>
-            <div class="mobile-menu-item" onclick="handleMobileMenuItem(this, 'kontak')">Kontak</div>
+            <div class="mobile-menu-item" onclick="handleMobileMenuItem(this, 'publikasi')" role="button" tabindex="0">Publikasi</div>
+            <div class="mobile-menu-item" onclick="handleMobileMenuItem(this, 'download')" role="button" tabindex="0">Download</div>
+            <div class="mobile-menu-item" onclick="handleMobileMenuItem(this, 'kontak')" role="button" tabindex="0">Kontak</div>
         </div>
+        <!-- Overlay untuk menutup sidebar saat diklik -->
+        <div id="mobileNavOverlay" class="mobile-nav-overlay"></div>
     </header>
 
     <div class="page-header">
@@ -483,7 +557,7 @@
                 <hr style="border: 0; border-top: 1px solid #eee; margin: 30px 0;">
 
                 <h2 class="section-title">Persyaratan Pembuatan Akun</h2>
-                <p>Sebelum mengajukan izin, pemohon wajib memiliki akun di <a href="https://oss.go.id" target="_blank" style="color:var(--primary-color); font-weight:600;">oss.go.id</a> dan menambahkan PBUMKU <strong>"Izin Stasiun Radio"</strong>. Selanjutnya, lakukan registrasi di <a href="https://e-penyiaran.kominfo.go.id" target="_blank" style="color:var(--primary-color); font-weight:600;">e-penyiaran.kominfo.go.id</a>.</p>
+                <p>Sebelum mengajukan izin, pemohon wajib memiliki akun di <a href="https://oss.go.id" target="_blank" rel="noopener noreferrer" style="color:var(--primary-color); font-weight:600;">oss.go.id</a> dan menambahkan PBUMKU <strong>"Izin Stasiun Radio"</strong>. Selanjutnya, lakukan registrasi di <a href="https://e-penyiaran.kominfo.go.id" target="_blank" rel="noopener noreferrer" style="color:var(--primary-color); font-weight:600;">e-penyiaran.kominfo.go.id</a>.</p>
 
                 <div class="subsection-title">A. Untuk LPS (Lembaga Penyiaran Swasta)</div>
                 <ul class="check-list">
@@ -563,11 +637,11 @@
                 <h3 style="margin-top:0; color:var(--text-dark);">Aksi Cepat</h3>
                 <p style="font-size:13px; color:var(--text-gray);">Tautan penting untuk memulai proses perizinan.</p>
                 <div style="margin-top: 25px;">
-                    <a href="https://oss.go.id" target="_blank" class="btn-download">
+                    <a href="https://oss.go.id" target="_blank" rel="noopener noreferrer" class="btn-download">
                         <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="9" y1="9" x2="15" y2="15"></line><line x1="15" y1="9" x2="9" y2="15"></line></svg>
                         Portal OSS RBA
                     </a>
-                    <a href="https://e-penyiaran.kominfo.go.id" target="_blank" class="btn-download btn-primary">
+                    <a href="https://e-penyiaran.kominfo.go.id" target="_blank" rel="noopener noreferrer" class="btn-download btn-primary">
                         <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
                         Akses e-Penyiaran
                     </a>
@@ -623,17 +697,18 @@
                 </div>
             </div>
         </div>
-        <iframe id="chatFrame" data-src="https://MagangBalmon2619-Chat-Balmon.hf.space" style="width: 100%; height: 100%; border: none; background: #fff;" allow="clipboard-write; microphone" loading="lazy"></iframe>
+        <!-- Perbaikan: tambahkan loading="lazy" dan dimensi eksplisit -->
+        <iframe id="chatFrame" data-src="https://MagangBalmon2619-Chat-Balmon.hf.space" style="width: 100%; height: 100%; border: none; background: #fff;" allow="clipboard-write; microphone" loading="lazy" width="350" height="500"></iframe>
     </div>
 
-    <button class="chat-toggle-btn" id="toggleBtn" onclick="animateChatToggle()">
+    <button class="chat-toggle-btn" id="toggleBtn" onclick="animateChatToggle()" aria-label="Buka chat">
         <svg class="icon-message" viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 9h12v2H6V9zm8 5H6v-2h8v2zm4-6H6V6h12v2z"/></svg>
         <svg class="icon-close" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
     </button>
 
     <div id="searchOverlay" class="search-overlay">
         <div class="search-content">
-            <button class="close-search" onclick="closeSearch()">&times;</button>
+            <button class="close-search" onclick="closeSearch()" aria-label="Tutup pencarian">&times;</button>
             <h2 style="color:var(--primary-color); margin-bottom:20px;">Pencarian</h2>
             <input type="text" id="searchInput" placeholder="Ketik kata kunci (misal: Izin, Maritim)..." onkeyup="performSearch()">
             <div id="searchResults" class="search-results"></div>
@@ -694,33 +769,63 @@
             }
         }, { passive: true });
 
-        // MOBILE MENU
+        // MOBILE MENU (SIDEBAR)
         function toggleMobileMenu() {
-            document.getElementById('hamburgerBtn').classList.toggle('active');
-            document.getElementById('mobileNavDropdown').classList.toggle('active');
+            const btn = document.getElementById('hamburgerBtn');
+            const menu = document.getElementById('mobileNavDropdown');
+            const overlay = document.getElementById('mobileNavOverlay');
+            
+            btn.classList.toggle('active');
+            menu.classList.toggle('active');
+            overlay.classList.toggle('active');
+            
+            // Mencegah scroll body saat sidebar terbuka
+            if (menu.classList.contains('active')) {
+                document.body.style.overflow = 'hidden';
+            } else {
+                document.body.style.overflow = '';
+            }
         }
+
         function closeMobileMenu() {
-            document.getElementById('hamburgerBtn').classList.remove('active');
-            document.getElementById('mobileNavDropdown').classList.remove('active');
+            const btn = document.getElementById('hamburgerBtn');
+            const menu = document.getElementById('mobileNavDropdown');
+            const overlay = document.getElementById('mobileNavOverlay');
+            
+            btn.classList.remove('active');
+            menu.classList.remove('active');
+            overlay.classList.remove('active');
+            document.body.style.overflow = '';
+            
+            // Tutup juga submenu yang mungkin terbuka
             document.querySelectorAll('.mobile-submenu').forEach(s => s.classList.remove('active'));
             document.querySelectorAll('.mobile-menu-item.has-submenu').forEach(i => i.classList.remove('active'));
         }
+
         function toggleMobileSubmenu(element) {
             const submenu = element.nextElementSibling;
             element.classList.toggle('active');
-            if (submenu && submenu.classList.contains('mobile-submenu')) submenu.classList.toggle('active');
+            if (submenu && submenu.classList.contains('mobile-submenu')) {
+                submenu.classList.toggle('active');
+            }
         }
+
         function handleMobileMenuItem(element, action) {
             if (action === 'beranda') window.location.href = 'index.html';
             else if (action === 'kontak') window.location.href = 'kontak.html';
             else if (action === 'publikasi') window.location.href = 'galeri.html';
             else if (action === 'download') window.location.href = 'arsip.html';
+            else if (action === 'profil') window.location.href = 'profil.html';
             closeMobileMenu();
         }
+
+        // Tutup menu saat overlay diklik
         document.addEventListener('click', function(event) {
-            const header = document.getElementById('mainHeader');
-            const nav = document.getElementById('mobileNavDropdown');
-            if (!header.contains(event.target) && nav.classList.contains('active')) closeMobileMenu();
+            const overlay = document.getElementById('mobileNavOverlay');
+            const menu = document.getElementById('mobileNavDropdown');
+            if (overlay && overlay.classList.contains('active') && event.target === overlay) {
+                closeMobileMenu();
+            }
         });
 
         // CHAT TOGGLE (LAZY LOAD LOGIC)
@@ -745,6 +850,7 @@
         // --- 3. SEARCH LOGIC ---
         const pages = [
             { title: "Beranda", url: "index.html", desc: "Halaman utama Balmon Samarinda" },
+            { title: "Profil", url: "profil.html", desc: "Informasi tentang Balmon Samarinda." },
             { title: "Izin Konsesi", url: "konsesi.html", desc: "Layanan perizinan frekuensi untuk perusahaan/konsesi." },
             { title: "Izin Maritim (Kapal)", url: "maritim.html", desc: "Pengurusan izin stasiun radio kapal dan laut." },
             { title: "Izin Penyiaran FM", url: "fm.html", desc: "Prosedur perizinan untuk stasiun radio FM/Penyiaran." },
