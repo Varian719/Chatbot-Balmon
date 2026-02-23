@@ -189,7 +189,7 @@
             z-index: 1001;
             overflow-y: auto;
             transition: left 0.3s ease;
-            display: block;
+            display: block; /* ubah dari none ke block */
             padding-top: 20px;
         }
 
@@ -770,7 +770,7 @@
             <input type="text" id="commentName" placeholder="Nama Anda" required>
             <input type="email" id="commentEmail" placeholder="Email (opsional)">
             <textarea id="commentMessage" placeholder="Tulis komentar..." required></textarea>
-            <button id="submitCommentBtn">Kirim Komentar</button>
+          <button id="submitCommentBtn" onclick="submitComment()">Kirim Komentar</button>
         </div>
         <div class="comments-list" id="commentsList">
             <!-- Komentar akan dimuat di sini oleh JavaScript -->
@@ -901,12 +901,18 @@
                 closeMobileMenu();
             }
         });
+
+        // ==================== FUNGSI LAINNYA (GALLERY, LIGHTBOX, SEARCH, dll) ====================
+        // (Kode asli untuk filterGallery, openLightbox, closeLightbox, openSearch, performSearch, dll.)
+        // Catatan: Semua fungsi tersebut sudah ada di file galeri.min.js dan galerimodul.min.js,
+        // jadi tidak perlu ditulis ulang di sini. Kode di atas hanya untuk memastikan sidebar berfungsi.
     </script>
 
-    <!-- File JS utama: fungsi gallery, lightbox, search -->
+    <!-- File JS utama -->
     <script src="dist_js/galeri.min.js"></script>
     <script src="dist_js/TTS_Adaptif.min.js"></script>
-    <!-- File module Firebase: gabungan galeri dan komentar -->
+    <!-- File module Firebase -->
     <script type="module" src="dist_js/galerimodul.min.js"></script>
+  
 </body>
 </html>
