@@ -3,99 +3,294 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Galeri Kegiatan dan Publikasi Balmon Samarinda - Foto, Video, dan Infografis">
+    <meta name="keywords" content="galeri balmon, foto kegiatan, video edukasi, infografis frekuensi">
+    <link rel="canonical" href="https://balmonsamarinda.go.id/galeri.html">
+    <meta property="og:title" content="Galeri Publikasi - Balmon Samarinda">
+    <meta property="og:description" content="Kumpulan foto, video, dan infografis kegiatan Balai Monitor Spektrum Frekuensi Radio Samarinda.">
+    <meta property="og:url" content="https://balmonsamarinda.go.id/galeri.html">
+    <meta property="og:image" content="https://balmonsamarinda.go.id/images/galeri-og.jpg">
+    <meta name="twitter:card" content="summary_large_image">
+    
     <title>Galeri Publikasi - Balmon Samarinda</title>
     
     <link rel="icon" type="image/png" href="logo-ikon.png" sizes="32x32">
-    <link rel="icon" type="image/svg+xml" href="balmonsmd1.png">
     
+    <!-- Bootstrap CSS untuk dropdown -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Albert+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.min.css" />
-
+    
     <style>
-        /* ================= GLOBAL STYLE ================= */
+        /* ========================================= */
+        /* --- 1. SETUP WARNA & GLOBAL (STANDAR) --- */
+        /* ========================================= */
         :root {
             --primary-color: #006fb0;
             --primary-dark: #005082;
             --secondary-color: #00ace0;
             --accent-yellow: #ecbb1d;
+            --accent-red: #de262a;
+            --bg-light-blue: #f4f9fc;
+            --bg-white: #ffffff;
             --text-dark: #1e293b;
             --text-gray: #64748b;
-            --bg-light-blue: #f4f9fc;
+            --shadow-soft: 0 10px 30px -5px rgba(0, 0, 0, 0.05);
+            --radius-md: 12px;
+            --wa-green: #25D366;
         }
 
         body { 
             margin: 0; padding: 0; 
             font-family: 'Albert Sans', sans-serif; 
-            background-color: var(--bg-light-blue); 
+            background-color: var(--bg-light-blue);
             color: var(--text-dark); 
+            line-height: 1.6; 
             overflow-x: hidden; 
+            -webkit-font-smoothing: antialiased;
         }
         
-        a { text-decoration: none; color: inherit; transition: 0.3s; }
+        a { text-decoration: none; color: inherit; transition: color 0.3s ease, transform 0.3s ease; }
         ul { list-style: none; padding: 0; margin: 0; }
         * { box-sizing: border-box; }
 
-        /* ================= HEADER & NAVBAR (VERSI DRAF/SIMPLE) ================= */
-        header { position: fixed; top: 0; width: 100%; height: 80px; z-index: 1000; transition: 0.4s; }
-        header.header-minimal { background: rgba(255,255,255,0.95); backdrop-filter: blur(10px); box-shadow: 0 5px 20px rgba(0,0,0,0.05); height: 70px; }
-        
-        .header-content { display: flex; align-items: center; justify-content: space-between; height: 100%; max-width: 1200px; margin: 0 auto; padding: 0 20px; }
-        
-        .brand-area { display: flex; align-items: center; gap: 12px; padding: 8px 15px; border-radius: 50px; background: rgba(255,255,255,0.1); backdrop-filter: blur(5px); border: 1px solid rgba(255,255,255,0.2); cursor: pointer; }
-        .brand-logo-img { height: 45px; }
-        .brand-text { color: #fff; font-weight: 800; font-size: 18px; line-height: 1.2; }
-        .brand-text span { display: block; font-size: 10px; font-weight: 500; opacity: 0.9; }
-        
-        header.header-minimal .brand-text { color: var(--primary-color); }
-        header.header-minimal .brand-text span { color: var(--text-gray); }
-        header.header-minimal .brand-area { background: transparent; border: none; backdrop-filter: none; padding: 0; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; width: 100%; }
 
-        /* MENU NAVIGASI SIMPLE */
-        .nav-menu { display: flex; align-items: center; height: 100%; }
-        .menu-list { display: flex; gap: 5px; height: 100%; }
-        .menu-item { color: #fff; font-weight: 600; font-size: 14px; padding: 0 15px; display: flex; align-items: center; height: 100%; position: relative; }
-        .menu-item:hover { color: var(--accent-yellow); }
-        header.header-minimal .menu-item { color: var(--text-dark); }
+        /* --- ANIMASI FADE-IN --- */
+        .fade-in-section {
+            opacity: 0; transform: translateY(30px);
+            transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1), transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .fade-in-section.is-visible { opacity: 1; transform: translateY(0); }
+
+        /* --- LOADER --- */
+        .page-loader {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-color: #ffffff; z-index: 99999;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            transition: opacity 0.5s ease, visibility 0.5s ease; opacity: 1; visibility: visible;
+        }
+        .page-loader.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
+        .loader-spinner {
+            width: 50px; height: 50px; border: 4px solid rgba(0, 111, 176, 0.1);
+            border-left-color: var(--primary-color); border-radius: 50%;
+            animation: spin 1s linear infinite; margin-bottom: 15px;
+        }
+        .loader-text {
+            color: var(--primary-color); font-weight: 600; font-size: 14px; letter-spacing: 1px;
+            animation: pulseText 1.5s infinite ease-in-out;
+        }
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+        @keyframes pulseText { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+
+        /* ========================================= */
+        /* --- 2. HEADER STYLE (STANDAR) --- */
+        /* ========================================= */
+        header {
+            background-color: transparent;
+            backdrop-filter: none; -webkit-backdrop-filter: none;
+            box-shadow: none;
+            height: 80px; position: fixed; top: 0; left: 0; width: 100%; z-index: 1000;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .header-content { display: flex; align-items: center; justify-content: space-between; height: 100%; }
+        
+        .brand-area { 
+            display: flex; align-items: center; gap: 12px; transition: all 0.4s ease; cursor: pointer;
+            background-color: rgba(255, 255, 255, 0.1); backdrop-filter: blur(8px); padding: 8px 20px; border-radius: 50px; border: 1px solid rgba(255, 255, 255, 0.2); box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+        .brand-area:hover { background-color: rgba(255, 255, 255, 0.2); transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0, 111, 176, 0.3); }
+        .brand-logo-img { height: 50px; width: auto; filter: drop-shadow(0 2px 5px rgba(0, 0, 0, 0.5)); transition: all 0.3s; }
+        .brand-text { font-size: 18px; font-weight: 800; color: #ffffff; line-height: 1.2; display: flex; flex-direction: column; text-shadow: 0 2px 10px rgba(0, 0, 0, 0.6); transition: color 0.3s; }
+        .brand-text span { font-size: 11px; font-weight: 500; color: rgba(255,255,255,0.9); letter-spacing: 0.5px; transition: color 0.3s; text-shadow: 0 1px 5px rgba(0, 0, 0, 0.6); }
+
+        /* Header Minimal */
+        header.header-minimal {
+            background-color: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px);
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.08); height: 70px;
+        }
+        header.header-minimal .brand-text { color: var(--primary-color); text-shadow: none; }
+        header.header-minimal .brand-text span { color: var(--text-gray); text-shadow: none; }
+        header.header-minimal .brand-logo-img { filter: none; }
+        header.header-minimal .menu-item { color: var(--text-dark); text-shadow: none; }
         header.header-minimal .menu-item:hover { color: var(--primary-color); }
+        header.header-minimal .brand-area { background: transparent; border: none; box-shadow: none; padding-left: 0; backdrop-filter: none; }
+        header.header-minimal .hamburger-btn span { background-color: var(--primary-color); }
+        header.header-minimal .nav-search-btn { color: var(--primary-color) !important; }
+
+        /* Social Icons */
+        .header-socials { display: flex; align-items: center; gap: 15px; margin-left: auto; margin-right: 30px; padding-right: 30px; border-right: 1px solid rgba(255, 255, 255, 0.3); height: 40px; }
+        .social-icon { display: flex; align-items: center; justify-content: center; transition: transform 0.3s ease; }
+        .social-icon svg { width: 20px; height: 20px; fill: #ffffff; transition: all 0.3s ease; opacity: 0.9; }
+        .social-icon:hover { transform: translateY(-2px); }
+        .social-icon:hover svg { opacity: 1; fill: var(--accent-yellow); }
+        
+        header.header-minimal .header-socials { border-right-color: #e2e8f0; border-left: none; }
+        header.header-minimal .social-icon svg { fill: var(--text-gray); }
+        header.header-minimal .social-icon:hover svg { fill: var(--primary-color); }
+        header.header-minimal .social-icon.wa-icon:hover svg { fill: #25D366; }
+
+        @media (max-width: 992px) { .header-socials { display: none; } }
+
+        /* Nav Menu */
+        .nav-menu { height: 100%; display: flex; align-items: center; transition: all 0.4s ease; }
+        .menu-list { display: flex; gap: 8px; height: 100%; align-items: center; }
+        .menu-item { position: relative; height: 100%; display: flex; align-items: center; padding: 0 12px; font-size: 14px; font-weight: 600; color: #ffffff; cursor: pointer; transition: color 0.3s; text-shadow: 0 1px 5px rgba(0,0,0,0.4); }
+        .menu-item:hover { color: var(--accent-yellow); opacity: 1; }
+        .menu-item::after { content: ''; position: absolute; bottom: 0; left: 0; width: 0%; height: 3px; background: var(--accent-yellow); transition: width 0.3s ease; }
+        .menu-item:hover::after { width: 100%; }
+
+        .dropdown-content { display: none; position: absolute; top: 100%; left: 0; background-color: #ffffff; min-width: 240px; box-shadow: 0 15px 30px rgba(0,0,0,0.1); border-radius: 0 0 8px 8px; z-index: 1000; padding: 10px 0; border-top: 3px solid var(--primary-color); animation: slideDown 0.3s ease; }
+        .menu-item:hover .dropdown-content { display: block; }
+        .dropdown-content li a { display: block; padding: 10px 20px; color: var(--text-dark); font-weight: 400; font-size: 14px; font-family: 'Albert Sans', sans-serif; text-shadow: none; }
+        .dropdown-content li a:hover { background-color: var(--bg-light-blue); color: var(--primary-color); padding-left: 25px; }
+        @keyframes slideDown { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
         /* HAMBURGER */
-        .hamburger-btn { display: none; background: none; border: none; cursor: pointer; padding: 10px; flex-direction: column; gap: 6px; }
-        .hamburger-btn span { display: block; width: 25px; height: 3px; background: #fff; border-radius: 2px; transition: 0.3s; }
-        header.header-minimal .hamburger-btn span { background: var(--primary-color); }
-        
-        @media (max-width: 768px) { 
-            .menu-list { display: none; } 
-            .hamburger-btn { display: flex; } 
+        .hamburger-btn {
+            display: none; flex-direction: column; gap: 6px; background: none; border: none; cursor: pointer; padding: 8px; z-index: 1001;
+        }
+        .hamburger-btn span {
+            width: 24px; height: 2.5px; 
+            background-color: white;
+            border-radius: 2px; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); transform-origin: center;
+        }
+        .hamburger-btn.active span:nth-child(1) { transform: translateY(8.5px) rotate(45deg); }
+        .hamburger-btn.active span:nth-child(2) { opacity: 0; transform: translateX(10px); }
+        .hamburger-btn.active span:nth-child(3) { transform: translateY(-8.5px) rotate(-45deg); }
+        .hamburger-btn.active span { background-color: var(--primary-color) !important; }
+
+        /* ===== MOBILE SIDEBAR (OFF-CANVAS) ===== */
+        .mobile-nav-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(3px);
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
         }
 
-        /* MOBILE MENU */
-        .mobile-nav-dropdown { 
-            display: none; position: fixed; top: 70px; left: 0; width: 100%; background: #fff; 
-            box-shadow: 0 10px 20px rgba(0,0,0,0.1); flex-direction: column; z-index: 999; 
+        .mobile-nav-dropdown {
+            position: fixed;
+            top: 0;
+            left: -280px;
+            width: 280px;
+            height: 100vh;
+            background-color: #ffffff;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+            z-index: 1001;
+            overflow-y: auto;
+            transition: left 0.3s ease;
+            display: block; /* ubah dari none ke block */
+            padding-top: 20px;
         }
-        .mobile-nav-dropdown.active { display: flex; }
-        .mobile-menu-item { padding: 15px 20px; border-bottom: 1px solid #f0f0f0; font-weight: 600; color: var(--text-dark); }
 
-        /* ================= PAGE CONTENT ================= */
+        .mobile-nav-dropdown.active {
+            left: 0;
+        }
+
+        .mobile-nav-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .mobile-menu-item {
+            padding: 15px 25px;
+            border-bottom: 1px solid #f0f0f0;
+            font-weight: 600;
+            color: var(--text-dark);
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .mobile-menu-item:hover {
+            background-color: var(--bg-light-blue);
+            color: var(--primary-color);
+        }
+
+        .mobile-menu-item.has-submenu {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .mobile-menu-item.has-submenu::after {
+            content: '▼';
+            font-size: 12px;
+            transition: transform 0.3s;
+        }
+
+        .mobile-menu-item.has-submenu.active::after {
+            transform: rotate(-180deg);
+        }
+
+        .mobile-submenu {
+            max-height: 0;
+            overflow: hidden;
+            background-color: #f8f9fa;
+            transition: max-height 0.3s ease;
+        }
+
+        .mobile-submenu.active {
+            max-height: 500px;
+        }
+
+        .mobile-submenu a {
+            display: block;
+            padding: 12px 40px;
+            color: var(--text-gray);
+            font-size: 14px;
+            border-bottom: 1px solid #eee;
+            transition: all 0.2s;
+        }
+
+        .mobile-submenu a:hover {
+            background-color: #ffffff;
+            color: var(--primary-color);
+            padding-left: 48px;
+        }
+
+        /* ========================================= */
+        /* --- 3. PAGE HEADER & GALLERY STYLES --- */
+        /* ========================================= */
         .page-header {
-            padding: 160px 20px 100px; text-align: center; color: #fff;
+            padding: 160px 20px 80px; text-align: center; color: #fff;
             background: linear-gradient(135deg, rgba(0, 111, 176, 0.9), rgba(0, 80, 130, 0.8)), url('https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=1600&q=80');
             background-size: cover; background-position: center; background-attachment: fixed;
         }
         .page-title { font-size: 42px; font-weight: 800; margin: 0; text-shadow: 0 5px 15px rgba(0,0,0,0.2); }
-        .breadcrumb { margin-bottom: 15px; opacity: 0.9; font-size: 14px; }
 
-        /* FILTER CARDS */
         .category-wrapper {
-            display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
-            gap: 20px; max-width: 1000px; margin: -50px auto 50px; padding: 0 20px; position: relative; z-index: 10;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+            gap: 15px;
+            max-width: 1000px;
+            margin: -50px auto 50px;
+            padding: 0 20px;
+            position: relative;
+            z-index: 10;
         }
         .cat-card {
-            background: #ffffff; border-radius: 16px; padding: 20px 10px; text-align: center; cursor: pointer;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.08); border: 2px solid transparent; 
-            display: flex; flex-direction: column; align-items: center; gap: 10px; transition: 0.3s;
+            background: #ffffff;
+            border-radius: 12px;
+            padding: 20px 10px;
+            text-align: center;
+            cursor: pointer;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            border: 2px solid transparent;
+            transition: 0.3s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
         }
         .cat-card:hover { transform: translateY(-5px); box-shadow: 0 15px 40px rgba(0, 111, 176, 0.15); }
         .cat-card.active { border-color: var(--primary-color); background-color: #f0f9ff; }
@@ -104,129 +299,399 @@
         .cat-title { font-size: 14px; font-weight: 600; color: var(--text-gray); }
         .cat-card.active .cat-title { color: var(--primary-color); font-weight: 700; }
 
-        /* GALLERY GRID */
+        /* Gaya dropdown untuk tombol Foto */
+        .dropdown .cat-card {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            cursor: pointer;
+        }
+        .dropdown-menu {
+            background: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            border: 1px solid rgba(0,0,0,0.05);
+            padding: 8px 0;
+            margin-top: 5px;
+        }
+        .dropdown-item {
+            font-family: 'Albert Sans', sans-serif;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-dark);
+            padding: 10px 20px;
+            transition: 0.2s;
+        }
+        .dropdown-item:hover {
+            background-color: var(--bg-light-blue);
+            color: var(--primary-color);
+        }
+        .dropdown-item:active {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        .dropdown-divider {
+            margin: 5px 0;
+            border-top: 1px solid #eee;
+        }
+
         .gallery-section { max-width: 1200px; margin: 0 auto; padding: 0 20px 100px; }
         .gallery-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 30px; }
         
         .gallery-item {
             background: #fff; border-radius: 16px; overflow: hidden; box-shadow: 0 5px 15px rgba(0,0,0,0.05);
-            display: flex; flex-direction: column; animation: fadeIn 0.6s ease; transition: 0.3s;
+            transition: 0.3s; display: flex; flex-direction: column; animation: fadeIn 0.6s ease;
         }
         .gallery-item:hover { transform: translateY(-5px); box-shadow: 0 15px 30px rgba(0,0,0,0.1); }
         .gallery-item.hidden { display: none; }
-        
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
         .media-wrapper { position: relative; aspect-ratio: 4/3; overflow: hidden; cursor: pointer; }
         .media-wrapper img { width: 100%; height: 100%; object-fit: cover; transition: 0.5s; }
         .gallery-item:hover .media-wrapper img { transform: scale(1.05); }
         
+        .overlay {
+            position: absolute; inset: 0; background: rgba(0,0,0,0.3); opacity: 0;
+            display: flex; align-items: center; justify-content: center; transition: 0.3s;
+        }
+        .gallery-item:hover .overlay { opacity: 1; }
+        .icon-box {
+            width: 50px; height: 50px; background: rgba(255,255,255,0.95); border-radius: 50%;
+            display: flex; align-items: center; justify-content: center; color: var(--primary-color); font-size: 24px;
+            transform: scale(0.8); transition: 0.3s;
+        }
+        .gallery-item:hover .icon-box { transform: scale(1); }
+
         .media-badge {
             position: absolute; top: 15px; right: 15px; padding: 5px 12px; border-radius: 20px;
-            font-size: 10px; font-weight: 800; color: #fff; text-transform: uppercase; 
-            box-shadow: 0 2px 10px rgba(0,0,0,0.2); letter-spacing: 0.5px;
-            background: rgba(0,0,0,0.6); backdrop-filter: blur(4px);
+            font-size: 11px; font-weight: 700; color: #fff; text-transform: uppercase; background: rgba(0,0,0,0.6); backdrop-filter: blur(4px);
         }
-        /* Badge Colors */
         .badge-video { background: rgba(220, 53, 69, 0.9); }
         .badge-infografis { background: rgba(25, 135, 84, 0.9); }
         .badge-foto { background: rgba(0, 111, 176, 0.9); }
-        .badge-news { background: rgba(33, 37, 41, 0.9); } /* Hitam */
-
-        .overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.3); opacity: 0; display: flex; align-items: center; justify-content: center; transition: 0.3s; }
-        .gallery-item:hover .overlay { opacity: 1; }
-        .icon-box { width: 50px; height: 50px; background: rgba(255,255,255,0.95); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--primary-color); font-size: 24px; }
+        .badge-news { background: rgba(255, 152, 0, 0.9); }
 
         .item-info { padding: 20px; flex: 1; display: flex; flex-direction: column; }
         .item-date { font-size: 12px; color: var(--text-gray); margin-bottom: 8px; display: flex; align-items: center; gap: 6px; }
         .item-title { font-size: 16px; font-weight: 700; margin: 0; line-height: 1.4; color: var(--text-dark); }
-        
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-
-        /* FOOTER SIMPLE (DARI DRAF) */
-        footer { background: var(--primary-color); color: #fff; padding: 30px 20px; text-align: center; font-size: 14px; margin-top: auto; }
+        .item-desc {
+            font-size: 13px; color: var(--text-gray); line-height: 1.5; margin-top: 8px;
+            display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;
+        }
 
         /* LIGHTBOX */
         .lightbox { position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 10000; display: flex; align-items: center; justify-content: center; opacity: 0; visibility: hidden; transition: 0.3s; }
         .lightbox.active { opacity: 1; visibility: visible; }
-        .lightbox-content { max-width: 90vw; text-align: center; position: relative; }
+        .lightbox-content { position: relative; max-width: 90vw; max-height: 80vh; text-align: center; }
         .lightbox-media { max-width: 100%; max-height: 80vh; border-radius: 8px; }
         .lightbox-iframe { width: 80vw; height: 45vw; max-width: 1000px; max-height: 560px; border: none; background: #000; }
-        .close-lightbox { position: absolute; top: -50px; right: 0; color: #fff; font-size: 30px; cursor: pointer; }
+        .close-lightbox { position: absolute; top: -50px; right: 0; color: #fff; font-size: 30px; cursor: pointer; transition: 0.3s; }
+        .close-lightbox:hover { color: var(--accent-yellow); transform: rotate(90deg); }
         #lightboxCaption { color: #fff; margin-top: 15px; font-weight: 500; font-size: 16px; }
 
-        /* ================= FLOATING BUTTONS (DARI DRAF_GALERI) ================= */
-        .floating-container {
-            position: fixed; bottom: 30px; right: 30px; z-index: 9999;
-            display: flex; flex-direction: column; gap: 15px; align-items: flex-end;
+        /* ========================================= */
+        /* --- 4. KOMENTAR SECTION --- */
+        /* ========================================= */
+        .comments-section {
+            background-color: #ffffff;
+            padding: 50px 20px;
+            margin: 0 auto 50px;
+            border-radius: 16px;
+            box-shadow: var(--shadow-soft);
+            border: 1px solid rgba(0,0,0,0.03);
         }
-        
-        /* Tombol Aksesibilitas */
-        .btn-accessibility {
-            width: 50px; height: 50px; background: var(--primary-dark); color: #fff;
-            border-radius: 50%; display: flex; align-items: center; justify-content: center;
-            font-size: 24px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); cursor: pointer; transition: 0.3s;
+        .comments-section .section-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
         }
-        .btn-accessibility:hover { transform: scale(1.1); background: var(--accent-yellow); color: var(--text-dark); }
+        .comments-section .section-title::before {
+            content: '';
+            width: 4px;
+            height: 28px;
+            background: var(--accent-yellow);
+            border-radius: 2px;
+        }
 
-        /* Tombol Chatbot */
-        .btn-chatbot {
-            width: 60px; height: 60px; background: var(--accent-yellow); color: var(--text-dark);
-            border-radius: 50%; display: flex; align-items: center; justify-content: center;
-            font-size: 28px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); cursor: pointer;
-            transition: 0.3s; animation: pulseChat 2s infinite;
+        .comment-form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-bottom: 40px;
         }
-        .btn-chatbot:hover { transform: scale(1.1); }
-        @keyframes pulseChat { 0% { box-shadow: 0 0 0 0 rgba(236, 187, 29, 0.7); } 70% { box-shadow: 0 0 0 15px rgba(236, 187, 29, 0); } 100% { box-shadow: 0 0 0 0 rgba(236, 187, 29, 0); } }
+        .comment-form input,
+        .comment-form textarea {
+            padding: 12px 16px;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            font-family: 'Albert Sans', sans-serif;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+        .comment-form input:focus,
+        .comment-form textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(0,111,176,0.1);
+        }
+        .comment-form textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+        .comment-form button {
+            align-self: flex-start;
+            padding: 12px 30px;
+            background-color: var(--primary-color);
+            color: #fff;
+            border: none;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s;
+        }
+        .comment-form button:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+
+        .comments-list {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        .comment-item {
+            background-color: var(--bg-light-blue);
+            padding: 20px;
+            border-radius: 12px;
+            border-left: 4px solid var(--primary-color);
+        }
+        .comment-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .comment-name {
+            font-weight: 700;
+            color: var(--primary-dark);
+        }
+        .comment-date {
+            font-size: 12px;
+            color: var(--text-gray);
+        }
+        .comment-message {
+            color: var(--text-dark);
+            font-size: 14px;
+            line-height: 1.6;
+            margin: 0;
+        }
+        .empty-comments {
+            text-align: center;
+            color: var(--text-gray);
+            padding: 30px;
+            font-style: italic;
+        }
+
+        /* ========================================= */
+        /* --- 5. FOOTER & WIDGETS --- */
+        /* ========================================= */
+        footer { background-color: var(--primary-color); color: white; padding-top: 70px; font-size: 14px; position: relative; }
+        .footer-grid { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 40px; padding-bottom: 50px; }
+        .footer-col { flex: 1; min-width: 250px; }
+        .footer-col h3 { color: var(--accent-yellow); margin-bottom: 25px; font-size: 18px; font-weight: 700; }
+        .footer-links a { color: rgba(255,255,255,0.8); display: block; margin-bottom: 12px; transition: 0.2s; }
+        .footer-links a:hover { color: #fff; transform: translateX(5px); }
+        .copyright { background-color: rgba(0,0,0,0.1); text-align: center; padding: 25px 0; color: rgba(255,255,255,0.6); border-top: 1px solid rgba(255,255,255,0.1); }
+
+        /* Media Queries Footer & Header */
+        @media (max-width: 900px) {
+            .page-header { padding-bottom: 40px; }
+        }
+        @media (max-width: 768px) {
+            .hamburger-btn { display: flex; }
+            .menu-list { display: none; }
+            .nav-menu { display: flex; }
+            header.header-minimal { background-color: #fff; }
+            
+            .brand-area {
+                background: transparent !important;
+                backdrop-filter: none !important;
+                -webkit-backdrop-filter: none !important;
+                border: none !important;
+                box-shadow: none !important;
+                padding-left: 0 !important;
+            }
+            .brand-logo-img { height: 35px; }
+            .brand-text { font-size: 14px; }
+            .header-socials { display: none; }
+            
+            .chat-toggle-btn { bottom: 20px; right: 20px; }
+            .chat-box-container {
+                width: calc(100% - 40px) !important; height: 65vh !important;
+                max-height: 600px !important; right: 20px !important; left: 20px !important;
+                bottom: 100px !important; border-radius: 16px !important;
+            }
+        }
+
+        /* --- CHAT WIDGET TERBARU --- */
+        .chat-toggle-btn { 
+            position: fixed; bottom: 30px; right: 30px; width: 65px; height: 65px; 
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark)); color: #ffffff; 
+            border: none; border-radius: 50%; box-shadow: 0 8px 25px rgba(0, 111, 176, 0.4); 
+            cursor: pointer; z-index: 10000; display: flex; align-items: center; justify-content: center; 
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.3s, background 0.3s; 
+            overflow: hidden; will-change: transform;
+        }
+        .chat-toggle-btn:hover { transform: scale(1.1); box-shadow: 0 12px 30px rgba(0, 111, 176, 0.5); }
+        .chat-toggle-btn.on-footer { background: var(--accent-yellow); color: var(--text-dark); }
+        .chat-toggle-btn svg { position: absolute; width: 28px; height: 28px; transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); pointer-events: none; }
+        .icon-message { opacity: 1; transform: scale(1) rotate(0deg); fill: currentColor; }
+        .icon-close { opacity: 0; transform: scale(0) rotate(-180deg); fill: none; stroke: currentColor; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+        .chat-toggle-btn.active .icon-message { opacity: 0; transform: scale(0) rotate(90deg); }
+        .chat-toggle-btn.active .icon-close { opacity: 1; transform: scale(1) rotate(0deg); }
+
+        .chat-box-container { 
+            position: fixed; bottom: 110px; right: 30px; width: 350px; height: 500px; max-height: 70vh;
+            background-color: #fff; border-radius: 16px; box-shadow: 0 20px 50px -10px rgba(0, 60, 100, 0.25);
+            border: 1px solid rgba(0, 111, 176, 0.1);
+            z-index: 9999; opacity: 0; visibility: hidden; transform: translateY(20px) scale(0.95); transition: all 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
+            overflow: hidden; display: flex; flex-direction: column;
+        }
+        .chat-box-container.active { opacity: 1; visibility: visible; transform: translateY(0) scale(1); }
+        
+        .chat-header {
+            background: linear-gradient(135deg, var(--primary-color) 0%, #00406b 100%);
+            padding: 20px; display: flex; align-items: center; justify-content: space-between;
+            border-bottom: 3px solid var(--accent-yellow); color: #fff; flex-shrink: 0;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1); position: relative; overflow: hidden;
+        }
+        .chat-header::after {
+            content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 60%); pointer-events: none;
+        }
+        .chat-header-content { display: flex; align-items: center; gap: 15px; z-index: 2; width: 100%; }
+        .chat-logo-bg { 
+            width: 48px; height: 48px; background: rgba(255, 255, 255, 0.15); backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 255, 255, 0.3); border-radius: 50%;
+            display: flex; align-items: center; justify-content: center; color: #fff;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1); flex-shrink: 0;
+        }
+        .chat-info { display: flex; flex-direction: column; justify-content: center; }
+        .chat-info h4 { margin: 0; font-size: 16px; font-weight: 700; letter-spacing: 0.5px; text-shadow: 0 2px 4px rgba(0,0,0,0.15); line-height: 1.2; }
+        .chat-status { display: flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 500; color: rgba(255,255,255,0.9); margin-top: 3px; }
+        .status-dot { width: 8px; height: 8px; background-color: #00ff9d; border-radius: 50%; box-shadow: 0 0 8px rgba(0, 255, 157, 0.6); animation: pulseDot 2s infinite; }
+        @keyframes pulseDot { 0% { transform: scale(0.95); opacity: 0.7; } 50% { transform: scale(1.2); opacity: 1; } 100% { transform: scale(0.95); opacity: 0.7; } }
+
+        /* SEARCH OVERLAY */
+        .search-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px); z-index: 99999; display: flex; justify-content: center; align-items: flex-start;
+            padding-top: 100px; opacity: 0; visibility: hidden; transition: all 0.3s ease;
+        }
+        .search-overlay.active { opacity: 1; visibility: visible; }
+        .search-content { width: 100%; max-width: 600px; position: relative; padding: 0 20px; transform: translateY(-20px); transition: 0.4s ease; }
+        .search-overlay.active .search-content { transform: translateY(0); }
+        .close-search { position: absolute; top: -50px; right: 0; font-size: 40px; border: none; background: none; cursor: pointer; color: var(--text-dark); transition: 0.3s; }
+        .close-search:hover { color: var(--accent-red); transform: rotate(90deg); }
+        #searchInput { width: 100%; padding: 20px; font-size: 18px; border: 2px solid #eee; border-radius: 12px; outline: none; box-shadow: 0 5px 20px rgba(0,0,0,0.05); font-family: 'Albert Sans', sans-serif; }
+        #searchInput:focus { border-color: var(--primary-color); box-shadow: 0 5px 20px rgba(0, 111, 176, 0.2); }
+        .search-results { margin-top: 20px; max-height: 60vh; overflow-y: auto; }
+        .search-item { background: #fff; padding: 15px; border-radius: 8px; margin-bottom: 10px; border: 1px solid #eee; display: block; text-decoration: none; color: var(--text-dark); transition: 0.2s; cursor: pointer; }
+        .search-item:hover { background: var(--bg-light-blue); border-color: var(--primary-color); transform: translateX(5px); }
+        .search-item h4 { margin: 0 0 5px 0; color: var(--primary-color); font-size: 16px; }
+        .search-item p { margin: 0; font-size: 13px; color: var(--text-gray); }
     </style>
 </head>
 <body>
 
-    <header id="mainHeader">
-        <div class="header-content">
-            <div class="brand-area" onclick="window.location.href='index.html'">
-                <img src="balmonsmd1.png" alt="Logo" class="brand-logo-img">
-                <div class="brand-text">BALMON SAMARINDA <span>Kominfo RI</span></div>
-            </div>
-            
-            <nav class="nav-menu">
-                <div class="menu-list">
-                    <a href="index.html" class="menu-item">Beranda</a>
-                    <a href="#" class="menu-item">Profil</a>
-                    <a href="#" class="menu-item">Layanan</a>
-                    <a href="galeri.html" class="menu-item" style="color:var(--accent-yellow);">Publikasi</a>
-                    <a href="#" class="menu-item">Kontak</a>
-                </div>
-                
-                <button class="hamburger-btn" onclick="toggleMobileMenu()">
-                    <span></span><span></span><span></span>
-                </button>
-            </nav>
-        </div>
-    </header>
-
-    <div id="mobileMenu" class="mobile-nav-dropdown">
-        <a href="index.html" class="mobile-menu-item">Beranda</a>
-        <a href="#" class="mobile-menu-item">Profil</a>
-        <a href="#" class="mobile-menu-item">Layanan</a>
-        <a href="galeri.html" class="mobile-menu-item">Publikasi</a>
-        <a href="#" class="mobile-menu-item">Kontak</a>
+    <div id="pageLoader" class="page-loader">
+        <div class="loader-spinner"></div>
+        <div class="loader-text">MEMUAT GALERI...</div>
     </div>
 
-    <section class="page-header">
+    <header id="mainHeader">
+        <div class="container header-content">
+            <div class="brand-area" onclick="window.location.href='index.html'">
+                <img src="balmonsmd1.png" alt="Logo Balmon" class="brand-logo-img">
+                <div class="brand-text">
+                    BALMON SAMARINDA
+                    <span>Kementerian Komunikasi & Digital</span>
+                </div>
+            </div>
+
+            <div class="header-socials">
+                <a href="https://wa.me/6285648283012" target="_blank" class="social-icon wa-icon" aria-label="WhatsApp">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg>
+                </a>
+                <a href="https://www.instagram.com/balmonsamarinda/" target="_blank" class="social-icon" aria-label="Instagram">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.163 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+                </a>
+                <a href="https://www.facebook.com/profile.php?id=100068963927418" target="_blank" class="social-icon" aria-label="Facebook">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9 8h-3v4h3v12h5v-12h3.642l.358-4h-4v-1.667c0-.955.192-1.333 1.115-1.333h2.885v-5h-3.808c-3.596 0-5.192 1.583-5.192 4.615v3.385z"/></svg>
+                </a>
+                <a href="https://youtube.com/@balmonsamarindaa?si=EZUAjSarJaMD-7R9" target="_blank" class="social-icon" aria-label="YouTube">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z"/></svg>
+                </a>
+                <a href="https://www.tiktok.com/@balmon.samarinda?lang=en" target="_blank" class="social-icon" aria-label="TikTok">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" stroke="none">
+                        <path d="M12.53.02C13.84 0 15.14.01 16.44 0c.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.65-1.58-1.09-.1-.09-.19-.2-.29-.3v6.52c.02 4.07-3.23 7.49-7.29 7.49-3.93.04-7.3-3.13-7.48-7.05-.07-1.84.58-3.66 1.83-5.01 1.25-1.35 3.03-2.14 4.86-2.16v4.03c-1.11-.02-2.19.46-2.95 1.29a4.106 4.106 0 0 0-1.1 2.89c.04 2.22 1.84 4.02 4.06 4.02 2.22 0 4.02-1.8 4.02-4.02V.02h.22z"/>
+                    </svg>
+                </a>
+            </div>
+            <nav class="nav-menu">
+                <ul class="menu-list">
+                    <li class="menu-item" onclick="window.location.href='index.html'">Beranda</li>
+                    <li class="menu-item" onclick="window.location.href='profil.html'">Profil</li>
+                    <li class="menu-item">Layanan
+                        <ul class="dropdown-content">
+                            <li><a href="konsesi.html">Izin Konsesi</a></li>
+                            <li><a href="maritim.html">Izin Maritim</a></li>
+                            <li><a href="fm.html">Izin Penyiaran FM</a></li>
+                            <li><a href="arsip.html">Download</a></li>
+                        </ul>
+                    </li>
+                    <li class="menu-item" onclick="window.location.href='galeri.html'">Publikasi</li>
+                    <li class="menu-item" onclick="window.location.href='kontak.html'">Kontak</li>
+                </ul>
+                <button onclick="openSearch()" style="margin-left:10px; border:none; background:transparent; color:var(--text-dark); cursor:pointer;">
+                    <i class="bi bi-search" style="font-size:18px;"></i>
+                </button>
+            </nav>
+            <button class="hamburger-btn" id="hamburgerBtn" onclick="toggleMobileMenu()">
+                <span></span><span></span><span></span>
+            </button>
+        </div>
+
+        <div class="mobile-nav-dropdown" id="mobileNavDropdown">
+            <div class="mobile-menu-item" onclick="handleMobileMenuItem(this, 'beranda')">Beranda</div>
+            <div class="mobile-menu-item has-submenu" onclick="toggleMobileSubmenu(this)">Layanan</div>
+            <div class="mobile-submenu">
+                <a href="konsesi.html" onclick="closeMobileMenu()">Izin Konsesi</a>
+                <a href="maritim.html" onclick="closeMobileMenu()">Izin Maritim</a>
+                <a href="fm.html" onclick="closeMobileMenu()">Izin Penyiaran FM</a>
+            </div>
+            <div class="mobile-menu-item" onclick="handleMobileMenuItem(this, 'publikasi')">Publikasi</div>
+            <div class="mobile-menu-item" onclick="handleMobileMenuItem(this, 'download')">Download</div>
+            <div class="mobile-menu-item" onclick="handleMobileMenuItem(this, 'kontak')">Kontak</div>
+        </div>
+        <div id="mobileNavOverlay" class="mobile-nav-overlay"></div>
+    </header>
+
+    <div class="page-header">
         <div class="breadcrumb">
             <a href="index.html">Beranda</a> / <span style="color:var(--accent-yellow)">Galeri</span>
         </div>
         <h1 class="page-title">Galeri Publikasi</h1>
         <p style="opacity: 0.9; margin-top: 10px;">Dokumentasi kegiatan dan informasi Balai Monitor Samarinda</p>
-    </section>
+    </div>
 
-    <div class="category-wrapper">
-        <div class="cat-card" onclick="filterGallery('news', this)">
-            <svg class="cat-icon-svg" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z" />
-            </svg>
-            <span class="cat-title">News</span>
-        </div>
-
+    <div class="category-wrapper fade-in-section">
+        <!-- Semua -->
         <div class="cat-card active" onclick="filterGallery('all', this)">
             <svg class="cat-icon-svg" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
                 <rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect>
@@ -234,13 +699,32 @@
             </svg>
             <span class="cat-title">Semua</span>
         </div>
-        <div class="cat-card" onclick="filterGallery('foto', this)">
-            <svg class="cat-icon-svg" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
-                <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
-                <circle cx="12" cy="13" r="4"></circle>
-            </svg>
-            <span class="cat-title">Foto</span>
+
+        <!-- Foto dengan dropdown -->
+        <div class="dropdown">
+            <div class="cat-card dropdown-toggle" id="fotoDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                <svg class="cat-icon-svg" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                    <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
+                    <circle cx="12" cy="13" r="4"></circle>
+                </svg>
+                <span class="cat-title">Foto</span>
+            </div>
+            <ul class="dropdown-menu" aria-labelledby="fotoDropdown">
+                <!-- Semua Foto -->
+                <li><a class="dropdown-item" href="#" onclick="filterGallery('foto', document.getElementById('fotoDropdown'))">Semua Foto</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <!-- Subkategori -->
+                <li><a class="dropdown-item" href="#" onclick="filterGalleryBySubcategory('SRC')">SRC dan LRC</a></li>
+                <li><a class="dropdown-item" href="#" onclick="filterGalleryBySubcategory('sosialisasi')">Sosialisasi Denda Izin Stasiun Radio</a></li>
+                <li><a class="dropdown-item" href="#" onclick="filterGalleryBySubcategory('pegawai')">Pegawai Balmon Samarinda</a></li>
+                <li><a class="dropdown-item" href="#" onclick="filterGalleryBySubcategory('capacity')">Capacity Building</a></li>
+                <li><a class="dropdown-item" href="#" onclick="filterGalleryBySubcategory('UNAR')">UNAR</a></li>
+                <li><a class="dropdown-item" href="#" onclick="filterGalleryBySubcategory('monitoring')">Monitoring Spektrum Frekuensi Radio</a></li>
+                <li><a class="dropdown-item" href="#" onclick="filterGalleryBySubcategory('lainnya')">Lainnya</a></li>
+            </ul>
         </div>
+
+        <!-- Video -->
         <div class="cat-card" onclick="filterGallery('video', this)">
             <svg class="cat-icon-svg" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
                 <rect x="2" y="2" width="20" height="20" rx="2.18" ry="2.18"></rect>
@@ -248,6 +732,8 @@
             </svg>
             <span class="cat-title">Video</span>
         </div>
+
+        <!-- Infografis -->
         <div class="cat-card" onclick="filterGallery('infografis', this)">
             <svg class="cat-icon-svg" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
                 <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
@@ -255,183 +741,178 @@
             </svg>
             <span class="cat-title">Infografis</span>
         </div>
+
+        <!-- News -->
+        <div class="cat-card" onclick="filterGallery('news', this)">
+            <svg class="cat-icon-svg" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                <path d="M19 20H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h10l4 4v10a2 2 0 0 1-2 2z"></path>
+                <polyline points="14 4 14 8 18 8"></polyline>
+                <line x1="7" y1="13" x2="17" y2="13"></line>
+                <line x1="7" y1="17" x2="17" y2="17"></line>
+                <line x1="7" y1="9" x2="10" y2="9"></line>
+            </svg>
+            <span class="cat-title">Berita</span>
+        </div>
     </div>
 
-    <div class="gallery-section">
+    <div class="gallery-section fade-in-section">
         <div class="gallery-grid" id="galleryContainer">
             <div style="grid-column: 1/-1; text-align: center; padding: 40px; color: #888;">
-                <div class="spinner-border text-primary" role="status"></div>
-                <p>Memuat Data...</p>
+                Sedang memuat data dari server...
             </div>
         </div>
     </div>
 
-    <div class="floating-container">
-        <div class="btn-accessibility" title="Fitur Aksesibilitas" onclick="toggleAccessibility()">
-            <i class="bi bi-universal-access"></i>
+    <!-- KOMENTAR SECTION -->
+    <section class="comments-section fade-in-section container">
+        <h2 class="section-title">Komentar Pengunjung</h2>
+        <div class="comment-form">
+            <input type="text" id="commentName" placeholder="Nama Anda" required>
+            <input type="email" id="commentEmail" placeholder="Email (opsional)">
+            <textarea id="commentMessage" placeholder="Tulis komentar..." required></textarea>
+            <button onclick="submitComment()">Kirim Komentar</button>
         </div>
-        
-        <div class="btn-chatbot" title="Chat dengan Kami" onclick="openChatbot()">
-            <i class="bi bi-chat-dots-fill"></i>
+        <div class="comments-list" id="commentsList">
+            <!-- Komentar akan dimuat di sini oleh JavaScript -->
         </div>
-    </div>
+    </section>
 
     <div id="lightbox" class="lightbox" onclick="closeLightbox(event)">
         <div class="lightbox-content">
             <span class="close-lightbox" onclick="closeLightbox(event)">&times;</span>
             <img id="lightboxImg" class="lightbox-media" src="" style="display: none;">
             <iframe id="lightboxVideo" class="lightbox-iframe" src="" allowfullscreen style="display: none;"></iframe>
-            <div id="lightboxCaption"></div>
+            <div id="lightboxCaption" class="lightbox-caption"></div>
         </div>
     </div>
 
-    <footer>
-        <strong>Copyright &copy; 2025 Balai Monitor SFR Kelas I Samarinda.</strong> All rights reserved.
+    <footer id="mainFooter" class="fade-in-section">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <h3>Balmon Samarinda</h3>
+                    <p style="color:rgba(255,255,255,0.7); line-height:1.8;">
+                        Jalan Sultan Sulaiman No. 123<br>Samarinda, Kalimantan Timur.<br><br>
+                        <strong>Telp:</strong> 0856-4828-3012<br><strong>Email:</strong> pelayananuptbalmonsamarinda@gmail.com
+                    </p>
+                </div>
+                <div class="footer-col">
+                    <h3>Tautan Cepat</h3>
+                    <div class="footer-links">
+                        <a href="#">Profil Organisasi</a><a href="#">Standar Pelayanan</a><a href="#">Pengaduan Masyarakat</a><a href="#">Peta Sebaran Menara</a>
+                    </div>
+                </div>
+                <div class="footer-col">
+                    <h3>Jam Pelayanan</h3>
+                    <p style="color:rgba(255,255,255,0.7);">Senin - Kamis: 08.00 - 16.00<br>Jumat: 08.00 - 16.30<br>Sabtu - Minggu: Libur</p>
+                </div>
+            </div>
+        </div>
+        <div class="copyright">Copyright@2024 Balai Monitor Spektrum Frekuensi Radio Kelas I Samarinda</div>
     </footer>
 
+    <div class="chat-box-container" id="chatBox">
+        <div class="chat-header">
+            <div class="chat-header-content">
+                <div class="chat-logo-bg">
+                    <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>
+                </div>
+                <div class="chat-info">
+                    <h4>Sobat Digi</h4>
+                    <div class="chat-status"><span class="status-dot"></span>Online - Siap Membantu</div>
+                </div>
+            </div>
+        </div>
+        <iframe id="chatFrame" data-src="https://MagangBalmon2619-Chat-Balmon.hf.space" style="width: 100%; height: 100%; border: none; background: #fff;" allow="clipboard-write; microphone" loading="lazy"></iframe>
+    </div>
+
+    <button class="chat-toggle-btn" id="toggleBtn" onclick="animateChatToggle()">
+        <svg class="icon-message" viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 9h12v2H6V9zm8 5H6v-2h8v2zm4-6H6V6h12v2z"/></svg>
+        <svg class="icon-close" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+    </button>
+
+    <div id="searchOverlay" class="search-overlay">
+        <div class="search-content">
+            <button class="close-search" onclick="closeSearch()">&times;</button>
+            <h2 style="color:var(--primary-color); margin-bottom:20px;">Pencarian</h2>
+            <input type="text" id="searchInput" placeholder="Ketik kata kunci (misal: Izin, Maritim)..." onkeyup="performSearch()">
+            <div id="searchResults" class="search-results"></div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS untuk dropdown -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
     <script>
-        // 1. SCROLL & NAV
-        window.addEventListener('scroll', () => {
-            const header = document.getElementById('mainHeader');
-            if (window.scrollY > 50) header.classList.add('header-minimal');
-            else header.classList.remove('header-minimal');
-        });
-
+        // ==================== MOBILE MENU (SIDEBAR) ====================
         function toggleMobileMenu() {
-            document.getElementById('mobileMenu').classList.toggle('active');
-        }
-
-        // 2. FILTER GALLERY
-        window.filterGallery = function(category, btnElement) {
-            document.querySelectorAll('.cat-card').forEach(c => c.classList.remove('active'));
-            if(btnElement) btnElement.classList.add('active');
-
-            const items = document.querySelectorAll('.gallery-item');
-            items.forEach(item => {
-                if (category === 'all' || item.dataset.category === category) {
-                    item.classList.remove('hidden');
-                    item.style.animation = 'none';
-                    item.offsetHeight; 
-                    item.style.animation = 'fadeIn 0.6s ease';
-                } else {
-                    item.classList.add('hidden');
-                }
-            });
-        };
-
-        // 3. LIGHTBOX
-        const lightbox = document.getElementById('lightbox');
-        const lbImg = document.getElementById('lightboxImg');
-        const lbVid = document.getElementById('lightboxVideo');
-        const lbCap = document.getElementById('lightboxCaption');
-
-        function getEmbedUrl(url) {
-            if (!url) return "";
-            if (url.includes("youtu.be/")) return `https://www.youtube.com/embed/${url.split("youtu.be/")[1].split("?")[0]}?autoplay=1`;
-            if (url.includes("v=")) return `https://www.youtube.com/embed/${url.split("v=")[1].split("&")[0]}?autoplay=1`;
-            return url;
-        }
-
-        window.openLightbox = function(element, type) {
-            const parentItem = element.closest('.gallery-item');
-            lbCap.innerText = parentItem.querySelector('.item-title').innerText;
-            lightbox.classList.add('active');
-
-            if (type === 'image') {
-                lbImg.src = element.querySelector('img').src;
-                lbImg.style.display = 'block';
-                lbVid.style.display = 'none';
-                lbVid.src = "";
-            } else if (type === 'video') {
-                const rawVideoUrl = parentItem.dataset.videoSrc;
-                lbVid.src = getEmbedUrl(rawVideoUrl);
-                lbVid.style.display = 'block';
-                lbImg.style.display = 'none';
-            }
-        };
-
-        window.closeLightbox = function(e) {
-            if (e.target.id === 'lightbox' || e.target.classList.contains('close-lightbox')) {
-                lightbox.classList.remove('active');
-                lbVid.src = ""; 
-            }
-        };
-
-        // 4. AKSESIBILITAS & CHATBOT PLACEHOLDER
-        window.toggleAccessibility = function() {
-            // Panggil fungsi dari TTS_Adaptif.js jika ada, atau tampilkan alert
-            if (typeof toggleAccessibilityMenu === "function") {
-                toggleAccessibilityMenu(); 
+            const btn = document.getElementById('hamburgerBtn');
+            const menu = document.getElementById('mobileNavDropdown');
+            const overlay = document.getElementById('mobileNavOverlay');
+            
+            btn.classList.toggle('active');
+            menu.classList.toggle('active');
+            overlay.classList.toggle('active');
+            
+            // Mencegah scroll body saat sidebar terbuka
+            if (menu.classList.contains('active')) {
+                document.body.style.overflow = 'hidden';
             } else {
-                alert("Menu Aksesibilitas (Sambungkan ke TTS_Adaptif.js)");
+                document.body.style.overflow = '';
             }
-        };
+        }
 
-        window.openChatbot = function() {
-            // Logika membuka Chatbot (misal redirect atau popup)
-            window.location.href = "chatbot.html"; // Contoh redirect
-        };
-    </script>
+        function closeMobileMenu() {
+            const btn = document.getElementById('hamburgerBtn');
+            const menu = document.getElementById('mobileNavDropdown');
+            const overlay = document.getElementById('mobileNavOverlay');
+            
+            btn.classList.remove('active');
+            menu.classList.remove('active');
+            overlay.classList.remove('active');
+            document.body.style.overflow = '';
+            
+            // Tutup juga submenu yang mungkin terbuka
+            document.querySelectorAll('.mobile-submenu').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.mobile-menu-item.has-submenu').forEach(i => i.classList.remove('active'));
+        }
 
-    <script src="TTS_Adaptif.js"></script>
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
-        
-        const firebaseConfig = {
-            apiKey: "AIzaSyDUeIg9Zn_xndPXtChO8KufXFp6EMtqBJ0",
-            authDomain: "admin-pelayanan-balmon.firebaseapp.com",
-            databaseURL: "https://admin-pelayanan-balmon-default-rtdb.firebaseio.com",
-            projectId: "admin-pelayanan-balmon",
-            appId: "1:1071557110255:web:bff7087da1feacccb7ee1a"
-        };
-
-        const app = initializeApp(firebaseConfig);
-        const db = getDatabase(app);
-        const container = document.getElementById('galleryContainer');
-        const galeriRef = ref(db, 'galeri');
-
-        onValue(galeriRef, (snapshot) => {
-            if (!snapshot.exists()) {
-                container.innerHTML = `<div style="text-align:center; grid-column:1/-1;">Belum ada data.</div>`;
-                return;
+        function toggleMobileSubmenu(element) {
+            const submenu = element.nextElementSibling;
+            element.classList.toggle('active');
+            if (submenu && submenu.classList.contains('mobile-submenu')) {
+                submenu.classList.toggle('active');
             }
+        }
 
-            container.innerHTML = "";
-            const data = snapshot.val();
-            let items = Object.values(data).sort((a, b) => b.timestamp - a.timestamp);
+        function handleMobileMenuItem(element, action) {
+            if (action === 'beranda') window.location.href = 'index.html';
+            else if (action === 'kontak') window.location.href = 'kontak.html';
+            else if (action === 'publikasi') window.location.href = 'galeri.html';
+            else if (action === 'download') window.location.href = 'arsip.html';
+            closeMobileMenu();
+        }
 
-            items.forEach(item => {
-                const dateObj = new Date(item.date);
-                const dateStr = dateObj.toLocaleDateString('id-ID', {day:'numeric', month:'short', year:'numeric'});
-                
-                const isVideo = item.category === 'video';
-                const typeParam = isVideo ? "'video'" : "'image'";
-                
-                let iconClass = 'bi-zoom-in';
-                if(isVideo) iconClass = 'bi-play-circle-fill';
-                if(item.category === 'news') iconClass = 'bi-file-text';
-
-                const html = `
-                    <div class="gallery-item" data-category="${item.category}" data-video-src="${item.videoUrl}">
-                        <div class="media-wrapper" onclick="openLightbox(this, ${typeParam})">
-                            <img src="${item.imageUrl}" alt="${item.title}" loading="lazy">
-                            <div class="media-badge badge-${item.category}">
-                                ${item.category.toUpperCase()}
-                            </div>
-                            <div class="overlay">
-                                <div class="icon-box"><i class="bi ${iconClass}"></i></div>
-                            </div>
-                        </div>
-                        <div class="item-info">
-                            <div class="item-date"><i class="bi bi-calendar-check"></i> ${dateStr}</div>
-                            <h3 class="item-title">${item.title}</h3>
-                        </div>
-                    </div>
-                `;
-                container.insertAdjacentHTML('beforeend', html);
-            });
+        // Tutup menu saat overlay diklik
+        document.addEventListener('click', function(event) {
+            const overlay = document.getElementById('mobileNavOverlay');
+            const menu = document.getElementById('mobileNavDropdown');
+            if (overlay && overlay.classList.contains('active') && event.target === overlay) {
+                closeMobileMenu();
+            }
         });
+
+        // ==================== FUNGSI LAINNYA (GALLERY, LIGHTBOX, SEARCH, dll) ====================
+        // (Kode asli untuk filterGallery, openLightbox, closeLightbox, openSearch, performSearch, dll.)
+        // Catatan: Semua fungsi tersebut sudah ada di file galeri.min.js dan galerimodul.min.js,
+        // jadi tidak perlu ditulis ulang di sini. Kode di atas hanya untuk memastikan sidebar berfungsi.
     </script>
+
+    <!-- File JS utama -->
+    <script src="dist_js/galeri.min.js"></script>
+    <script src="dist_js/TTS_Adaptif.min.js"></script>
+    <!-- File module Firebase -->
+    <script type="module" src="dist_js/galerimodul.min.js"></script>
+  
 </body>
 </html>
