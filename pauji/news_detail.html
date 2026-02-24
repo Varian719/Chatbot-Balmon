@@ -428,7 +428,6 @@
                         <li class="breadcrumb-item active" id="breadcrumb-title" aria-current="page" style="color: var(--accent-yellow);">Memuat...</li>
                     </ol>
                 </nav>
-                <!-- H1 TIDAK ADA DI SINI LAGI -->
             </div>
         </div>
 
@@ -436,7 +435,6 @@
             <div class="content-left">
                 <div class="content-card">
                     
-                    <!-- JUDUL BERITA DIPINDAHKAN KE SINI -->
                     <h1 class="page-title-inside" id="article-title">
                         <span class="skeleton d-inline-block" style="height: 40px; width: 80%;"></span>
                     </h1>
@@ -516,7 +514,7 @@
                 </div>
             </div>
         </section>
-        </main>
+    </main>
 
     <footer id="mainFooter">
         <div class="container-custom">
@@ -575,8 +573,148 @@
         </div>
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        // ==================== FUNGSI UMUM ====================
+        let ticking = false;
+        function updateScroll() {
+            const scrollY = window.scrollY;
+            const header = document.getElementById('mainHeader');
+            const chatBtn = document.getElementById('toggleBtn');
+            const footer = document.getElementById('mainFooter');
+
+            if (scrollY > 50) header.classList.add('header-minimal');
+            else header.classList.remove('header-minimal');
+
+            if (footer) {
+                const footerRect = footer.getBoundingClientRect();
+                if (footerRect.top < window.innerHeight) chatBtn.classList.add('on-footer');
+                else chatBtn.classList.remove('on-footer');
+            }
+            ticking = false;
+        }
+        window.addEventListener('scroll', function() {
+            if (!ticking) { window.requestAnimationFrame(updateScroll); ticking = true; }
+        }, { passive: true });
+
+        function toggleMobileMenu() {
+            const btn = document.getElementById('hamburgerBtn');
+            const menu = document.getElementById('mobileNavDropdown');
+            const overlay = document.getElementById('mobileNavOverlay');
+            
+            btn.classList.toggle('active');
+            menu.classList.toggle('active');
+            overlay.classList.toggle('active');
+            
+            if (menu.classList.contains('active')) document.body.style.overflow = 'hidden';
+            else document.body.style.overflow = '';
+        }
+
+        function closeMobileMenu() {
+            const btn = document.getElementById('hamburgerBtn');
+            const menu = document.getElementById('mobileNavDropdown');
+            const overlay = document.getElementById('mobileNavOverlay');
+            
+            btn.classList.remove('active');
+            menu.classList.remove('active');
+            overlay.classList.remove('active');
+            document.body.style.overflow = '';
+            
+            document.querySelectorAll('.mobile-submenu').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.mobile-menu-item.has-submenu').forEach(i => i.classList.remove('active'));
+        }
+
+        function toggleMobileSubmenu(element) {
+            const submenu = element.nextElementSibling;
+            element.classList.toggle('active');
+            if (submenu && submenu.classList.contains('mobile-submenu')) {
+                submenu.classList.toggle('active');
+            }
+        }
+
+        function handleMobileMenuItem(element, action) {
+            if (action === 'beranda') window.location.href = 'index.html';
+            else if (action === 'profil') window.location.href = 'profil.html';
+            else if (action === 'kontak') window.location.href = 'kontak.html';
+            else if (action === 'publikasi') window.location.href = 'galeri.html';
+            else if (action === 'download') window.location.href = 'arsip.html';
+            closeMobileMenu();
+        }
+
+        document.addEventListener('click', function(event) {
+            const overlay = document.getElementById('mobileNavOverlay');
+            if (overlay && overlay.classList.contains('active') && event.target === overlay) closeMobileMenu();
+        });
+
+        function animateChatToggle() {
+            const btn = document.getElementById("toggleBtn");
+            const box = document.getElementById("chatBox");
+            const iframe = document.getElementById("chatFrame");
+
+            if (!iframe.getAttribute('src')) {
+                iframe.setAttribute('src', iframe.getAttribute('data-src'));
+            }
+
+            if (btn.classList.contains("active")) {
+                btn.classList.remove("active"); box.classList.remove("active"); return;
+            }
+            btn.classList.add("active"); box.classList.add("active");
+        }
+
+        // Data Pencarian Statis (Sama seperti di faq.html)
+        const pages = [
+            { title: "Beranda", url: "index.html", desc: "Halaman utama Balmon Samarinda" },
+            { title: "Profil", url: "profil.html", desc: "Informasi tentang Balmon Samarinda." },
+            { title: "Izin Konsesi", url: "konsesi.html", desc: "Layanan perizinan frekuensi untuk perusahaan/konsesi." },
+            { title: "Izin Maritim (Kapal)", url: "maritim.html", desc: "Pengurusan izin stasiun radio kapal dan laut." },
+            { title: "Izin Penyiaran FM", url: "fm.html", desc: "Prosedur perizinan untuk stasiun radio FM/Penyiaran." },
+            { title: "Galeri Kegiatan", url: "galeri.html", desc: "Dokumentasi foto dan video kegiatan Balmon." },
+            { title: "Arsip & Regulasi", url: "arsip.html", desc: "Download dokumen, SOP, dan regulasi terbaru." },
+            { title: "Kontak Kami", url: "kontak.html", desc: "Alamat kantor, email, dan nomor pengaduan." },
+            { title: "FAQ Layanan", url: "faq.html", desc: "Pertanyaan umum seputar perizinan dan layanan." }
+        ];
+
+        function openSearch() {
+            document.getElementById('searchOverlay').classList.add('active');
+            setTimeout(() => document.getElementById('searchInput').focus(), 300);
+        }
+        function closeSearch() {
+            document.getElementById('searchOverlay').classList.remove('active');
+            document.getElementById('searchInput').value = '';
+            document.getElementById('searchResults').innerHTML = '';
+        }
+        function performSearch() {
+            const input = document.getElementById('searchInput').value.toLowerCase();
+            const resultContainer = document.getElementById('searchResults');
+            resultContainer.innerHTML = '';
+            if (input.length < 2) return;
+            
+            const results = pages.filter(page => page.title.toLowerCase().includes(input) || page.desc.toLowerCase().includes(input));
+            if (results.length > 0) {
+                results.forEach(page => {
+                    const item = document.createElement('a');
+                    item.href = page.url;
+                    item.className = 'search-item';
+                    item.innerHTML = `<h4>${page.title}</h4><p>${page.desc}</p>`;
+                    resultContainer.appendChild(item);
+                });
+            } else {
+                resultContainer.innerHTML = '<div style="text-align:center; color:#888;">Tidak ditemukan hasil yang cocok.</div>';
+            }
+        }
+        document.addEventListener('keydown', (e) => { if(e.key === "Escape") closeSearch(); });
+
+        window.addEventListener('load', () => {
+            const loader = document.getElementById('pageLoader');
+            if(loader) loader.classList.add('hidden');
+        });
+        window.addEventListener('pageshow', (event) => {
+            const loader = document.getElementById('pageLoader');
+            if (event.persisted && loader) loader.classList.add('hidden');
+        });
+    </script>
   
     <script src="dist_js/news_detail.min.js" type="module"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
