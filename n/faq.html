@@ -3,10 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Berita dan Publikasi Balai Monitor Spektrum Frekuensi Radio Kelas I Samarinda">
-    <title>Memuat Berita... | Balmon Samarinda</title>
+    <meta name="description" content="Pertanyaan Umum seputar Layanan Balai Monitor Spektrum Frekuensi Radio Kelas I Samarinda">
+    <title>FAQ Layanan | Balmon Samarinda</title>
     <link rel="icon" type="image/png" href="logo-ikon.png" sizes="32x32">
 
+    <!-- Bootstrap & Fonts -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -15,7 +16,7 @@
     
     <style>
         /* ========================================= */
-        /* --- 1. SETUP WARNA & GLOBAL --- */
+        /* --- 1. SETUP WARNA & GLOBAL (dari news_detail) --- */
         /* ========================================= */
         :root {
             --primary-color: #006fb0;
@@ -163,85 +164,179 @@
         }
 
         /* ========================================= */
-        /* --- 3. NEWS SPECIFIC STYLES --- */
+        /* --- 3. PAGE HEADER KHUSUS FAQ --- */
         /* ========================================= */
-        .page-header {
+        .page-header-faq {
             padding-top: 150px; padding-bottom: 80px;
             background: linear-gradient(135deg, rgba(0, 111, 176, 0.9) 0%, rgba(0, 80, 130, 0.8) 100%), url('https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=1600&q=80');
             background-size: cover; background-position: center; background-attachment: fixed;
             color: white; text-align: center;
         }
-        /* Judul di dalam header dihilangkan, jadi kita tidak pakai .page-title di sini */
-        .breadcrumb { font-size: 14px; opacity: 0.9; margin-bottom: 15px; font-weight: 500; color: rgba(255,255,255,0.9); justify-content: center; }
-        .breadcrumb a { color: #fff; text-decoration: none; border-bottom: 1px solid rgba(255,255,255,0.4); transition: 0.3s; }
+        .page-header-faq h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+        .page-header-faq p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+        .breadcrumb {
+            font-size: 14px; opacity: 0.9; margin-bottom: 15px; font-weight: 500; color: rgba(255,255,255,0.9); justify-content: center;
+        }
+        .breadcrumb a {
+            color: #fff; text-decoration: none; border-bottom: 1px solid rgba(255,255,255,0.4);
+        }
         .breadcrumb a:hover { border-bottom-color: #fff; }
-        .breadcrumb-item + .breadcrumb-item::before { color: rgba(255,255,255,0.6); }
 
-        .content-grid { display: grid; grid-template-columns: 2.5fr 1fr; gap: 40px; margin-top: -50px; margin-bottom: 60px; position: relative; z-index: 10; }
-        
-        .content-card {
-            background: #fff; border-radius: 16px; padding: 40px;
-            box-shadow: 0 5px 30px rgba(0,0,0,0.05); border: 1px solid rgba(0,0,0,0.03);
+        /* --- INFO KONTAK CARD (sama seperti di FAQ sebelumnya) --- */
+        .info-card {
+            background: white;
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+            display: flex;
+            flex-wrap: wrap;
+            gap: 40px;
+            margin: 40px auto;
+            border: 1px solid #eef2f6;
+            max-width: 1200px;
+        }
+        .info-item {
+            flex: 1 1 200px;
+            display: flex;
+            gap: 15px;
+            align-items: flex-start;
+        }
+        .info-icon {
+            background: #e6f0fa;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #006fb0;
+            font-size: 1.5rem;
+        }
+        .info-content h3 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: #005082;
+        }
+        .info-content p {
+            color: #64748b;
         }
 
-        /* Judul artikel di dalam card */
-        .page-title-inside {
-            font-size: 32px;
-            font-weight: 800;
-            color: var(--text-dark);
-            margin-top: 0;
-            margin-bottom: 20px;
-            line-height: 1.3;
+        /* --- FAQ SECTION (dari FAQ sebelumnya) --- */
+        .faq-section {
+            background: white;
+            border-radius: 16px;
+            padding: 40px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+            margin: 0 auto 60px;
+            max-width: 1000px;
         }
-        @media (max-width: 768px) {
-            .page-title-inside {
-                font-size: 24px;
-            }
+        .faq-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #006fb0;
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
-
-        .meta-data { font-size: 14px; color: var(--text-gray); display: flex; gap: 20px; border-bottom: 1px solid #eee; padding-bottom: 20px; margin-bottom: 30px; }
-        .meta-item { display: inline-flex; align-items: center; gap: 6px; font-weight: 500;}
-        .meta-item i { color: var(--primary-color); }
-
-        .article-featured-img { width: 100%; height: auto; max-height: 450px; object-fit: cover; border-radius: 12px; margin-bottom: 30px; box-shadow: 0 5px 15px rgba(0,0,0,0.08); }
-        .article-content { font-size: 16px; line-height: 1.8; color: var(--text-dark); text-align: justify; }
-        .article-content p { margin-bottom: 20px; }
-
-        .sidebar-card { background: #fff; border-radius: 16px; padding: 30px; box-shadow: 0 5px 20px rgba(0,0,0,0.05); border: 1px solid #f0f0f0; position: sticky; top: 100px; }
-        .sidebar-title { font-size: 20px; font-weight: 700; color: var(--primary-color); margin-bottom: 20px; display: flex; align-items: center; gap: 10px; }
-        .sidebar-title::before { content: ''; width: 4px; height: 24px; background: var(--accent-yellow); border-radius: 2px; }
-
-        .recent-post-item { display: flex; gap: 15px; margin-bottom: 20px; border-bottom: 1px solid #f0f0f0; padding-bottom: 15px; }
-        .recent-post-item:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
-        .recent-post-img { width: 80px; height: 80px; object-fit: cover; border-radius: 8px; flex-shrink: 0; }
-        .recent-post-title { font-size: 14px; font-weight: 600; line-height: 1.4; margin: 0 0 5px 0;}
-        .recent-post-title a { text-decoration: none; color: var(--text-dark); transition: color 0.2s; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-        .recent-post-title a:hover { color: var(--primary-color); }
-        .recent-post-date { font-size: 12px; color: var(--text-gray); }
-
-        /* Loading Skeleton */
-        .skeleton { background: #eee; border-radius: 4px; animation: pulse 1.5s infinite; }
-        @keyframes pulse { 0% { opacity: 0.6; } 50% { opacity: 1; } 100% { opacity: 0.6; } }
-
-        /* Error Area (Non-Bootstrap fallback) */
-        #error-area .alert { background: #fff3cd; border: 1px solid #ffe69c; border-radius: 12px; color: #664d03; }
-
-        @media (max-width: 900px) {
-            .content-grid { grid-template-columns: 1fr; margin-top: 0; }
-            .page-header { padding-bottom: 40px; padding-top: 120px; }
-            .content-card { padding: 25px; }
+        .faq-title::before {
+            content: '';
+            width: 4px;
+            height: 30px;
+            background: #ecbb1d;
+            border-radius: 2px;
         }
 
-        /* --- FOOTER --- */
+        .faq-item {
+            border-bottom: 1px solid #e2e8f0;
+            margin-bottom: 5px;
+        }
+        .faq-question {
+            width: 100%;
+            text-align: left;
+            padding: 20px 0;
+            background: none;
+            border: none;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #1e293b;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+        .faq-question:hover {
+            color: #006fb0;
+        }
+        .faq-question i {
+            font-size: 1.2rem;
+            transition: transform 0.3s;
+            color: #006fb0;
+        }
+        .faq-question.active i {
+            transform: rotate(180deg);
+        }
+        .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease;
+            padding-left: 10px;
+        }
+        .faq-answer.show {
+            max-height: 500px; /* cukup untuk konten */
+            padding-bottom: 20px;
+        }
+        .faq-answer p {
+            color: #475569;
+            margin-bottom: 10px;
+        }
+        .faq-answer ul, .faq-answer ol {
+            margin-left: 20px;
+            color: #475569;
+        }
+        .faq-answer li {
+            margin-bottom: 5px;
+        }
+
+        /* TOMBOL KEMBALI */
+        .back-home {
+            text-align: center;
+            margin: 40px 0;
+        }
+        .btn-primary {
+            background-color: #006fb0;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 50px;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-block;
+            transition: background-color 0.3s;
+        }
+        .btn-primary:hover {
+            background-color: #005082;
+        }
+
+        /* FOOTER (dari news_detail) */
         footer { background-color: var(--primary-color); color: white; padding-top: 70px; font-size: 14px; position: relative; margin-top: auto;}
-        .footer-grid { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 40px; padding-bottom: 50px; }
+        .footer-grid { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 40px; padding-bottom: 50px; max-width: 1200px; margin: 0 auto; padding: 0 20px 50px; }
         .footer-col { flex: 1; min-width: 250px; }
         .footer-col h3 { color: var(--accent-yellow); margin-bottom: 25px; font-size: 18px; font-weight: 700; }
         .footer-links a { color: rgba(255,255,255,0.8); display: block; margin-bottom: 12px; transition: 0.2s; text-decoration: none; }
         .footer-links a:hover { color: #fff; transform: translateX(5px); }
         .copyright { background-color: rgba(0,0,0,0.1); text-align: center; padding: 25px 0; color: rgba(255,255,255,0.6); border-top: 1px solid rgba(255,255,255,0.1); }
 
-        /* --- CHAT WIDGET & SEARCH --- */
+        /* CHAT WIDGET & SEARCH (dari news_detail) */
         .chat-toggle-btn { position: fixed; bottom: 30px; right: 30px; width: 65px; height: 65px; background: linear-gradient(135deg, var(--primary-color), var(--primary-dark)); color: #ffffff; border: none; border-radius: 50%; box-shadow: 0 8px 25px rgba(0, 111, 176, 0.4); cursor: pointer; z-index: 10000; display: flex; align-items: center; justify-content: center; transition: all 0.3s; }
         .chat-toggle-btn:hover { transform: scale(1.1); box-shadow: 0 12px 30px rgba(0, 111, 176, 0.5); }
         .chat-toggle-btn.on-footer { background: var(--accent-yellow); color: var(--text-dark); }
@@ -259,7 +354,7 @@
         .chat-info h4 { margin: 0; font-size: 16px; font-weight: 700; }
         .chat-status { display: flex; align-items: center; gap: 6px; font-size: 12px; color: rgba(255,255,255,0.9); }
         .status-dot { width: 8px; height: 8px; background-color: #00ff9d; border-radius: 50%; }
-        
+
         @media (max-width: 768px) {
             .chat-toggle-btn { bottom: 20px; right: 20px; }
             .chat-box-container { width: calc(100% - 40px) !important; height: 65vh !important; right: 20px !important; left: 20px !important; bottom: 100px !important; border-radius: 16px !important; }
@@ -278,58 +373,17 @@
         .search-item:hover { background: var(--bg-light-blue); border-color: var(--primary-color); transform: translateX(5px); }
         .search-item h4 { margin: 0 0 5px 0; color: var(--primary-color); font-size: 16px; }
         .search-item p { margin: 0; font-size: 13px; color: var(--text-gray); }
-
-        /* ===== GAYA KOMENTAR (SESUAI GALERI) ===== */
-        .comment-item {
-            border-bottom: 1px solid #eee;
-            padding: 20px 0;
-        }
-        .comment-item:last-child {
-            border-bottom: none;
-        }
-        .comment-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            margin-bottom: 8px;
-        }
-        .comment-name {
-            font-weight: 700;
-            color: var(--primary-color);
-            font-size: 1.1rem;
-        }
-        .comment-date {
-            font-size: 0.8rem;
-            color: var(--text-gray);
-        }
-        .comment-email {
-            font-size: 0.85rem;
-            color: var(--text-gray);
-            margin-top: 2px;
-        }
-        .comment-body {
-            font-size: 1rem;
-            line-height: 1.6;
-            background-color: #f8f9fc;
-            padding: 15px 20px;
-            border-radius: 16px;
-            margin-top: 10px;
-            border-left: 3px solid var(--primary-color);
-        }
-        .form-control:focus {
-            border-color: var(--primary-color);
-            box-shadow: 0 0 0 0.2rem rgba(0, 111, 176, 0.25);
-        }
     </style>
 </head>
 <body>
 
+    <!-- PAGE LOADER -->
     <div id="pageLoader" class="page-loader">
         <div class="loader-spinner"></div>
         <div class="loader-text">MEMUAT...</div>
     </div>
 
+    <!-- HEADER (sama persis dengan news_detail) -->
     <header id="mainHeader">
         <div class="container-custom header-content">
             <div class="brand-area" onclick="window.location.href='index.html'" role="button" tabindex="0">
@@ -406,142 +460,85 @@
         <div id="mobileNavOverlay" class="mobile-nav-overlay"></div>
     </header>
 
-    <div id="error-area" class="container-custom d-none" style="margin-top: 150px; margin-bottom: 50px;">
-        <div class="alert py-5 text-center shadow-sm">
-            <h2 class="fw-bold" style="color: var(--accent-red);">Berita Tidak Ditemukan</h2>
-            <p class="lead">ID tidak valid atau data telah dihapus dari database.</p>
-            <p class="small text-muted mb-4">ID: <span id="debug-id-display">-</span></p>
-            <a href="index.html" class="btn btn-primary" style="background-color: var(--primary-color); border: none; padding: 10px 25px; border-radius: 50px;">Kembali ke Beranda</a>
+    <!-- PAGE HEADER FAQ -->
+    <div class="page-header-faq">
+        <div class="container-custom">
+            <div class="breadcrumb">
+                <a href="index.html">Beranda</a> / <span style="color: #ecbb1d;">FAQ Layanan</span>
+            </div>
+            <h1>Pertanyaan Umum (FAQ)</h1>
+            <p>Informasi lengkap seputar perizinan dan layanan Balmon Samarinda</p>
         </div>
     </div>
 
-    <main id="main-content">
-        <div class="page-header">
-            <div class="container-custom">
-                <nav aria-label="breadcrumb">
-                    <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="index.html">Beranda</a></li>
-                        <li class="breadcrumb-item active" id="breadcrumb-title" aria-current="page" style="color: var(--accent-yellow);">Memuat...</li>
-                    </ol>
-                </nav>
-                <!-- H1 TIDAK ADA DI SINI LAGI -->
+    <!-- INFO KONTAK -->
+    <div class="info-card">
+        <div class="info-item">
+            <div class="info-icon"><i class="bi bi-geo-alt-fill"></i></div>
+            <div class="info-content">
+                <h3>Alamat</h3>
+                <p>Jalan Sultan Sulaiman No. 123<br>Samarinda, Kalimantan Timur 75123</p>
             </div>
         </div>
-
-        <div class="container-custom content-grid">
-            <div class="content-left">
-                <div class="content-card">
-                    
-                    <!-- JUDUL BERITA DIPINDAHKAN KE SINI -->
-                    <h1 class="page-title-inside" id="article-title">
-                        <span class="skeleton d-inline-block" style="height: 40px; width: 80%;"></span>
-                    </h1>
-
-                    <div class="meta-data">
-                        <span class="meta-item"><i class="bi bi-calendar3"></i> <span id="article-date">--/--/----</span></span>
-                        <span class="meta-item"><i class="bi bi-tag-fill"></i> <span id="article-category">News</span></span>
-                    </div>
-
-                    <div id="img-container">
-                        <div class="skeleton article-featured-img"></div>
-                    </div>
-
-                    <article class="article-content" id="article-body">
-                        <div class="skeleton w-100 mb-2" style="height: 20px;"></div>
-                        <div class="skeleton w-100 mb-2" style="height: 20px;"></div>
-                        <div class="skeleton w-75 mb-2" style="height: 20px;"></div>
-                    </article>
-
-                </div>
-            </div>
-
-            <div class="sidebar-area">
-                <div class="sidebar-card">
-                    <h5 class="sidebar-title">Publikasi Terbaru</h5>
-                    <div id="recent-posts-container">
-                        <div class="recent-post-item">
-                            <div class="skeleton recent-post-img"></div>
-                            <div style="flex-grow: 1;">
-                                <div class="skeleton" style="height:15px; width:100%; margin-bottom:5px;"></div>
-                                <div class="skeleton" style="height:15px; width:60%;"></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+        <div class="info-item">
+            <div class="info-icon"><i class="bi bi-clock-fill"></i></div>
+            <div class="info-content">
+                <h3>Jam Kerja</h3>
+                <p>Senin - Jumat : 08.00 - 16.00 WITA</p>
             </div>
         </div>
-
-        <section class="container-custom" style="margin-top: 60px; margin-bottom: 40px;">
-            <div class="content-card">
-                <h3 class="sidebar-title" style="margin-bottom: 30px;">
-                    <i class="bi bi-chat-dots me-2"></i>Komentar Pengunjung
-                </h3>
-
-                <form id="commentForm" style="margin-bottom: 40px;">
-                    <div class="row g-3">
-                        <div class="col-md-6">
-                            <label for="commentName" class="form-label fw-semibold">Nama <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control" id="commentName" required placeholder="Nama lengkap">
-                        </div>
-                        <div class="col-md-6">
-                            <label for="commentEmail" class="form-label fw-semibold">Email (opsional)</label>
-                            <input type="email" class="form-control" id="commentEmail" placeholder="email@contoh.com">
-                        </div>
-                        <div class="col-12">
-                            <label for="commentMessage" class="form-label fw-semibold">Komentar <span class="text-danger">*</span></label>
-                            <textarea class="form-control" id="commentMessage" rows="4" required placeholder="Tulis komentar Anda..."></textarea>
-                        </div>
-                        <div class="col-12 mt-4">
-                            <button type="submit" id="submitCommentBtn" class="btn text-white fw-bold px-4 py-2" style="background-color: var(--primary-color); border-radius: 50px; transition: 0.3s;">
-                                Kirim Komentar
-                            </button>
-                        </div>
-                    </div>
-                </form>
-
-                <div class="mt-5 border-top pt-4">
-                    <h5 class="fw-semibold mb-4">
-                        <i class="bi bi-chat me-2"></i>Komentar Sebelumnya
-                    </h5>
-                    <div id="commentsList">
-                        <div class="text-center text-muted py-4" id="noComments">
-                            <div class="spinner-border spinner-border-sm text-primary me-2" role="status"></div> 
-                            Memuat komentar...
-                        </div>
-                    </div>
-                </div>
+        <div class="info-item">
+            <div class="info-icon"><i class="bi bi-envelope-fill"></i></div>
+            <div class="info-content">
+                <h3>Kontak</h3>
+                <p>pelayananuptbalmonsamarinda@gmail.com<br>0856-4828-3012</p>
             </div>
-        </section>
-        </main>
+        </div>
+    </div>
 
+    <!-- FAQ SECTION -->
+    <div class="faq-section">
+        <h2 class="faq-title">Pertanyaan Umum (FAQ)</h2>
+        <div class="faq-list" id="faqList">
+            <!-- FAQ akan diisi oleh JavaScript -->
+        </div>
+        <p style="margin-top: 20px; font-size: 0.9rem; color: #64748b;">
+            * Jika pertanyaan Anda belum terjawab, silakan hubungi kami melalui telepon atau email.
+        </p>
+    </div>
+
+    <div class="back-home">
+        <a href="index.html" class="btn-primary"><i class="bi bi-arrow-left"></i> Kembali ke Beranda</a>
+    </div>
+
+    <!-- FOOTER -->
     <footer id="mainFooter">
-        <div class="container-custom">
-            <div class="footer-grid">
-                <div class="footer-col">
-                    <h3>Balmon Samarinda</h3>
-                    <p style="color:rgba(255,255,255,0.7); line-height:1.8;">
-                        Jalan Sultan Sulaiman No. 123<br>Samarinda, Kalimantan Timur.<br><br>
-                        <strong>Telp:</strong> 0856-4828-3012<br><strong>Email:</strong> pelayananuptbalmonsamarinda@gmail.com
-                    </p>
+        <div class="footer-grid">
+            <div class="footer-col">
+                <h3>Balmon Samarinda</h3>
+                <p style="color:rgba(255,255,255,0.7); line-height:1.8;">
+                    Jalan Sultan Sulaiman No. 123<br>Samarinda, Kalimantan Timur.<br><br>
+                    <strong>Telp:</strong> 0856-4828-3012<br><strong>Email:</strong> pelayananuptbalmonsamarinda@gmail.com
+                </p>
+            </div>
+            <div class="footer-col">
+                <h3>Tautan Cepat</h3>
+                <div class="footer-links">
+                    <a href="#">Profil Organisasi</a>
+                    <a href="#">Standar Pelayanan</a>
+                    <a href="#">Pengaduan Masyarakat</a>
+                    <a href="#">Peta Sebaran Menara</a>
                 </div>
-                <div class="footer-col">
-                    <h3>Tautan Cepat</h3>
-                    <div class="footer-links">
-                        <a href="#">Profil Organisasi</a>
-                        <a href="#">Standar Pelayanan</a>
-                        <a href="#">Pengaduan Masyarakat</a>
-                        <a href="#">Peta Sebaran Menara</a>
-                    </div>
-                </div>
-                <div class="footer-col">
-                    <h3>Jam Pelayanan</h3>
-                    <p style="color:rgba(255,255,255,0.7);">Senin - Kamis: 08.00 - 16.00<br>Jumat: 08.00 - 16.30<br>Sabtu - Minggu: Libur</p>
-                </div>
+            </div>
+            <div class="footer-col">
+                <h3>Jam Pelayanan</h3>
+                <p style="color:rgba(255,255,255,0.7);">Senin - Kamis: 08.00 - 16.00<br>Jumat: 08.00 - 16.30<br>Sabtu - Minggu: Libur</p>
             </div>
         </div>
         <div class="copyright">Copyright@2024 Balai Monitor Spektrum Frekuensi Radio Kelas I Samarinda</div>
     </footer>
 
+    <!-- CHAT WIDGET -->
     <div class="chat-box-container" id="chatBox">
         <div class="chat-header">
             <div class="chat-header-content">
@@ -554,7 +551,7 @@
                 </div>
             </div>
         </div>
-        <iframe id="chatFrame" data-src="https://MagangBalmon2619-Chat-Balmon.hf.space" style="width: 100%; height: 100%; border: none; background: #fff;" allow="clipboard-write; microphone" loading="lazy" width="350" height="500"></iframe>
+        <iframe id="chatFrame" data-src="https://MagangBalmon2619-Chat-Balmon.hf.space" style="width: 100%; height: 100%; border: none; background: #fff;" allow="clipboard-write; microphone" loading="lazy"></iframe>
     </div>
 
     <button class="chat-toggle-btn" id="toggleBtn" onclick="animateChatToggle()" aria-label="Buka chat">
@@ -562,6 +559,7 @@
         <svg class="icon-close" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
     </button>
 
+    <!-- SEARCH OVERLAY -->
     <div id="searchOverlay" class="search-overlay">
         <div class="search-content">
             <button class="close-search" onclick="closeSearch()" aria-label="Tutup pencarian">&times;</button>
@@ -571,8 +569,339 @@
         </div>
     </div>
 
-  
-    <script src="dist_js/news_detail.min.js" type="module"></script>
+    <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- SCRIPT FUNGSI UMUM (HEADER, MOBILE, CHAT, SEARCH) dan FAQ -->
+    <script>
+        // ==================== FUNGSI UMUM (HEADER, MOBILE, CHAT, SEARCH) ====================
+        // Fungsi-fungsi ini diambil dari news_detail.html
+
+        // HEADER SCROLL
+        let ticking = false;
+        function updateScroll() {
+            const scrollY = window.scrollY;
+            const header = document.getElementById('mainHeader');
+            const chatBtn = document.getElementById('toggleBtn');
+            const footer = document.getElementById('mainFooter');
+
+            if (scrollY > 50) header.classList.add('header-minimal');
+            else header.classList.remove('header-minimal');
+
+            if (footer) {
+                const footerRect = footer.getBoundingClientRect();
+                if (footerRect.top < window.innerHeight) chatBtn.classList.add('on-footer');
+                else chatBtn.classList.remove('on-footer');
+            }
+            ticking = false;
+        }
+        window.addEventListener('scroll', function() {
+            if (!ticking) { window.requestAnimationFrame(updateScroll); ticking = true; }
+        }, { passive: true });
+
+        // MOBILE MENU
+        function toggleMobileMenu() {
+            const btn = document.getElementById('hamburgerBtn');
+            const menu = document.getElementById('mobileNavDropdown');
+            const overlay = document.getElementById('mobileNavOverlay');
+            
+            btn.classList.toggle('active');
+            menu.classList.toggle('active');
+            overlay.classList.toggle('active');
+            
+            if (menu.classList.contains('active')) document.body.style.overflow = 'hidden';
+            else document.body.style.overflow = '';
+        }
+
+        function closeMobileMenu() {
+            const btn = document.getElementById('hamburgerBtn');
+            const menu = document.getElementById('mobileNavDropdown');
+            const overlay = document.getElementById('mobileNavOverlay');
+            
+            btn.classList.remove('active');
+            menu.classList.remove('active');
+            overlay.classList.remove('active');
+            document.body.style.overflow = '';
+            
+            document.querySelectorAll('.mobile-submenu').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.mobile-menu-item.has-submenu').forEach(i => i.classList.remove('active'));
+        }
+
+        function toggleMobileSubmenu(element) {
+            const submenu = element.nextElementSibling;
+            element.classList.toggle('active');
+            if (submenu && submenu.classList.contains('mobile-submenu')) {
+                submenu.classList.toggle('active');
+            }
+        }
+
+        function handleMobileMenuItem(element, action) {
+            if (action === 'beranda') window.location.href = 'index.html';
+            else if (action === 'profil') window.location.href = 'profil.html';
+            else if (action === 'kontak') window.location.href = 'kontak.html';
+            else if (action === 'publikasi') window.location.href = 'galeri.html';
+            else if (action === 'download') window.location.href = 'arsip.html';
+            closeMobileMenu();
+        }
+
+        document.addEventListener('click', function(event) {
+            const overlay = document.getElementById('mobileNavOverlay');
+            if (overlay && overlay.classList.contains('active') && event.target === overlay) closeMobileMenu();
+        });
+
+        // CHAT TOGGLE
+        function animateChatToggle() {
+            const btn = document.getElementById("toggleBtn");
+            const box = document.getElementById("chatBox");
+            const iframe = document.getElementById("chatFrame");
+
+            if (!iframe.getAttribute('src')) {
+                iframe.setAttribute('src', iframe.getAttribute('data-src'));
+            }
+
+            if (btn.classList.contains("active")) {
+                btn.classList.remove("active"); box.classList.remove("active"); return;
+            }
+            btn.classList.add("active"); box.classList.add("active");
+        }
+
+        // SEARCH
+        const pages = [
+            { title: "Beranda", url: "index.html", desc: "Halaman utama Balmon Samarinda" },
+            { title: "Profil", url: "profil.html", desc: "Informasi tentang Balmon Samarinda." },
+            { title: "Izin Konsesi", url: "konsesi.html", desc: "Layanan perizinan frekuensi untuk perusahaan/konsesi." },
+            { title: "Izin Maritim (Kapal)", url: "maritim.html", desc: "Pengurusan izin stasiun radio kapal dan laut." },
+            { title: "Izin Penyiaran FM", url: "fm.html", desc: "Prosedur perizinan untuk stasiun radio FM/Penyiaran." },
+            { title: "Galeri Kegiatan", url: "galeri.html", desc: "Dokumentasi foto dan video kegiatan Balmon." },
+            { title: "Arsip & Regulasi", url: "arsip.html", desc: "Download dokumen, SOP, dan regulasi terbaru." },
+            { title: "Kontak Kami", url: "kontak.html", desc: "Alamat kantor, email, dan nomor pengaduan." },
+            { title: "FAQ Layanan", url: "faq.html", desc: "Pertanyaan umum seputar perizinan dan layanan." }
+        ];
+
+        function openSearch() {
+            document.getElementById('searchOverlay').classList.add('active');
+            setTimeout(() => document.getElementById('searchInput').focus(), 300);
+        }
+        function closeSearch() {
+            document.getElementById('searchOverlay').classList.remove('active');
+            document.getElementById('searchInput').value = '';
+            document.getElementById('searchResults').innerHTML = '';
+        }
+        function performSearch() {
+            const input = document.getElementById('searchInput').value.toLowerCase();
+            const resultContainer = document.getElementById('searchResults');
+            resultContainer.innerHTML = '';
+            if (input.length < 2) return;
+            
+            const results = pages.filter(page => page.title.toLowerCase().includes(input) || page.desc.toLowerCase().includes(input));
+            if (results.length > 0) {
+                results.forEach(page => {
+                    const item = document.createElement('a');
+                    item.href = page.url;
+                    item.className = 'search-item';
+                    item.innerHTML = `<h4>${page.title}</h4><p>${page.desc}</p>`;
+                    resultContainer.appendChild(item);
+                });
+            } else {
+                resultContainer.innerHTML = '<div style="text-align:center; color:#888;">Tidak ditemukan hasil yang cocok.</div>';
+            }
+        }
+        document.addEventListener('keydown', (e) => { if(e.key === "Escape") closeSearch(); });
+
+        // LOADER
+        window.addEventListener('load', () => {
+            const loader = document.getElementById('pageLoader');
+            if(loader) loader.classList.add('hidden');
+        });
+        window.addEventListener('pageshow', (event) => {
+            const loader = document.getElementById('pageLoader');
+            if (event.persisted && loader) loader.classList.add('hidden');
+        });
+
+        // ==================== DATA FAQ (dari konten Balmon Jogja) ====================
+        const faqData = [
+            {
+                question: "Dimanakah pengajuan izin frekuensi radio dilakukan?",
+                answer: "Pengajuan izin frekuensi radio dilakukan secara online melalui website <a href='https://isr.postel.go.id' target='_blank' style='color:#006fb0;'>isr.postel.go.id</a> setelah akun terdaftar."
+            },
+            {
+                question: "Bagaimanakah persyaratan atau tata cara mengurus izin frekuensi radio?",
+                answer: `<p>Ada 2 tahap:</p>
+                <ol>
+                    <li><strong>Pembuatan Akun</strong>
+                        <ul>
+                            <li><strong>Instansi Pemerintah:</strong> Surat Keterangan Berdirinya Instansi, NPWP Instansi, Surat Kuasa (jika dikuasakan), KTP Pemberi dan Penerima Kuasa, form my spectra yang sudah ditandatangani dan distempel.</li>
+                            <li><strong>Pelaku Usaha/Badan Hukum:</strong> NIB RBA yang sudah memiliki PBUMKU ISR, NPWP Perusahaan, Akta Perusahaan, Surat Kuasa (jika dikuasakan), KTP Direktur/Penerima Kuasa, form my spectra yang ditandatangani dan distempel.</li>
+                        </ul>
+                    </li>
+                    <li><strong>Pengajuan Teknis Perizinan:</strong>
+                        <ul>
+                            <li>Surat Permohonan dan Sanggup Bayar</li>
+                            <li>Diagram Konfigurasi Jaringan (apabila menggunakan repeater dan/rig)</li>
+                            <li>IPP yang masih berlaku (untuk izin penyiaran)</li>
+                        </ul>
+                    </li>
+                </ol>
+                <p>Semua file dalam format PDF.</p>`
+            },
+            {
+                question: "Bagaimanakah cara mengetahui status pengajuan akun saya?",
+                answer: "Status pengajuan akun dapat dicek secara berkala melalui email yang didaftarkan pada sistem."
+            },
+            {
+                question: "Bagaimanakah jika pengajuan akun saya ditolak?",
+                answer: "Ajukan kembali dengan memperhatikan alasan penolakan (kelengkapan dokumen, salah pengisian data)."
+            },
+            {
+                question: "Apa langkah selanjutnya setelah pengajuan akun saya diterima?",
+                answer: "Lanjutkan dengan login pada website perizinan untuk mengajukan ISR dengan mengisi data teknis dan melengkapi dokumen pengajuan teknis perizinan."
+            },
+            {
+                question: "Apakah setelah akun disetujui saya bisa mengubah data akun?",
+                answer: "Bisa. Ajukan perubahan data akun/modifikasi data administrasi melalui website perizinan dengan login, kemudian klik profile dan klik ubah data user."
+            },
+            {
+                question: "Apakah syarat untuk merubah data administrasi?",
+                answer: "Untuk merubah data administrasi cukup dengan melampirkan dokumen seperti ketika mengajukan akun ditambah Surat Permohonan Modifikasi Akun/Pemutakhiran Data."
+            },
+            {
+                question: "Bagaimanakah cara agar NIB dapat terkoneksi dengan HUB KOMINFO?",
+                answer: `<p>Langkah agar NIB terhubung ke HUB KOMINFO:</p>
+                <ol>
+                    <li>Login ke <a href='https://oss.go.id' target='_blank'>oss.go.id</a></li>
+                    <li>Klik “PB-UMKU”</li>
+                    <li>Klik “Proses Perizinan Berusaha UMKU” pada KBLI yang sudah ada</li>
+                    <li>Klik “Ajukan Perizinan Berusahan UMKU”</li>
+                    <li>Klik “Ya” untuk Apakah Anda memerlukan Perizinan Berusaha UMKU Lainnya?</li>
+                    <li>Search “Izin Stasiun Radio”, lalu dipilih</li>
+                    <li>Klik “Proses Perizinan Berusaha UMKU”</li>
+                </ol>`
+            },
+            {
+                question: "Bagaimana jika saya lupa password?",
+                answer: "Ajukan Lupa Password melalui website perizinan. Password terbaru akan dikirimkan ke email yang didaftarkan di sistem."
+            },
+            {
+                question: "Bagaimanakah cara pengajuan ISR?",
+                answer: `<p>Cara pengajuan ISR:</p>
+                <ol>
+                    <li>Login ke website perizinan <a href='https://isr.postel.go.id' target='_blank'>isr.postel.go.id</a></li>
+                    <li>Klik menu aplikasi baru pilih layanan/service (untuk penggunaan HT pilih Seluler Darat Pribadi Standar Seluler ke Seluler, untuk penggunaan Rig/Repeater pilih Seluler Darat Pribadi Standar)</li>
+                    <li>Isikan data teknis seperti koordinat dan alamat stasiun, merk dan seri perangkat serta jumlah perangkat</li>
+                    <li>Lampirkan Surat Permohonan dan Sanggup Bayar yang ditandatangani oleh Direktur yang namanya tertera di AKTA untuk Badan Hukum, Kepala Instansi untuk Instansi Pemerintah atau yang namanya disebut di Surat Kuasa jika dikuasakan</li>
+                    <li>Lampirkan Diagram Konfigurasi Jaringan untuk pengajuan dengan Rig/Repeater</li>
+                    <li>Format surat dan lampiran dokumen dapat dilihat pada tautan <a href='https://s.komdigi.go.id/dokumenperizinanyogyakarta' target='_blank'>https://s.komdigi.go.id/dokumenperizinanyogyakarta</a> (contoh dari Balmon Jogja, untuk Samarinda dapat menyesuaikan)</li>
+                </ol>`
+            },
+            {
+                question: "Bagaimanakah cara mengisi data teknis untuk pengajuan ISR?",
+                answer: `<p>Beberapa hal yang harus diperhatikan:</p>
+                <ul>
+                    <li>Pilih kanal frekuensi VHF (136 – 174 MHz) atau UHF (350 – 380 MHz)</li>
+                    <li>Isian Radius Operasi (m) untuk stasiun Repeater (40000), Base (25000), MU (10000) & HT (5000)</li>
+                    <li>Isian ketinggian di atas tanah untuk stasiun Repeater (minimal 10), Base (minimal 10), MU & HT (2)</li>
+                    <li>Isian Feeding Loss untuk stasiun Repeater/Base adalah (1) dan MU dan HT (0)</li>
+                    <li>Isian Antenna untuk stasiun Repeater,Base,dan MU (DEFAULT VHF/UHF3 DB OMNI), untuk perangkat HT (DEFAULT VHF/UHF 0 DB OMNI)</li>
+                    <li>Isian Keluaran Daya Operasi (Power) untuk Repeater(40), Base & MU (25), HT (5)</li>
+                    <li>Isian Nama Stasiun untuk Stasiun perangkat Handy Talky MASTER yaitu HT. 01 BERGERAK SEKITAR (ALAMAT / NAMA JALAN), dan untuk perangkat Handy Talky PENGIKUT /Mobiles yaitu HT. 02 – (Jumlah stasiun yang diajukan) BERGERAK SEKITAR (ALAMAT / NAMA JALAN) (WAJIB HURUF BESAR)</li>
+                </ul>`
+            },
+            {
+                question: "Berapa lamakah pengajuan ISR itu?",
+                answer: "Pengajuan ISR disetujui melalui 2 sistem yaitu ODS (One Day Service) dan SDS (Same Day Service) untuk pengajuan sebelum jam 11.00 WITA."
+            },
+            {
+                question: "Bagaimanakah cara mengetahui status pengajuan ISR saya?",
+                answer: "Status pengajuan ISR dapat dicek secara berkala melalui website perizinan di menu Ikhtisar Perizinan (Lacak Aplikasi) dan email yang didaftarkan pada sistem."
+            },
+            {
+                question: "Apa sajakah yang membuat pengajuan ISR saya ditolak?",
+                answer: "Pengajuan ISR ditolak karena kurang lengkapnya dokumen, salah pengisian data, dan kanal frekuensi yang diajukan sudah penuh."
+            },
+            {
+                question: "Bagaimanakah jika pengajuan ISR saya ditolak?",
+                answer: "Ajukan kembali dengan memperhatikan alasan penolakan."
+            },
+            {
+                question: "Apa langkah selanjutnya setelah pengajuan ISR saya diterima?",
+                answer: "Unduh invoice BHP frekuensi radio dengan login ke <a href='https://billing-isr.kominfo.go.id' target='_blank'>billing-isr.kominfo.go.id</a> lalu lakukan pembayaran secara host to host melalui Bank Mandiri, BRI, BNI, BSI."
+            },
+            {
+                question: "Kapan ISR saya terbit?",
+                answer: "Setelah dilakukan pembayaran, download ISR melalui website perizinan atau billing ISR."
+            },
+            {
+                question: "Apakah saya bisa merubah data ISR?",
+                answer: "Bisa. Ajukan perubahan data teknis melalui website perizinan dengan login kemudian klik Aplikasi Modifikasi Lisensi serta dilengkapi dengan Surat Permohonan Modifikasi."
+            },
+            {
+                question: "Apakah jika saya mengajukan ISR sudah pasti disetujui?",
+                answer: "Tidak. Pengajuan ISR dapat ditolak karena selain kurangnya kelengkapan data teknis juga karena terbatasnya ketersediaan kanal frekuensi di wilayah yang akan diajukan."
+            },
+            {
+                question: "Bagaimanakah syarat untuk mengikuti ujian?",
+                answer: `<p>Persyaratan untuk mengikuti Ujian Negara Amatir Radio (UNAR):</p>
+                <ol>
+                    <li>Registrasi akun e-Licensing pada website <a href='https://iar-ikrap.postel.go.id' target='_blank'>iar-ikrap.postel.go.id</a></li>
+                    <li>Pas foto terbaru dengan latar belakang warna merah</li>
+                    <li>Foto atau scan KTP</li>
+                    <li>Surat rekomendasi organisasi yang ditandatangani oleh salah satu dari pengurus organisasi daerah khusus untuk peserta UNAR kenaikan tingkat</li>
+                    <li>Surat pernyataan tidak keberatan dari orang tua/wali atau keterangan kepala sekolah bagi yang belum berusia 17 Tahun</li>
+                </ol>`
+            },
+            {
+                question: "Berapakah biaya ujian?",
+                answer: "GRATIS"
+            },
+            {
+                question: "Apakah kartu ujian perlu dicetak dan bagaimana caranya?",
+                answer: "Kartu ujian dicetak oleh panitia ujian."
+            },
+            {
+                question: "Bagaimanakah kalau saya tidak lulus ujian?",
+                answer: "Dapat mengulang ujian sebanyak 3 kali."
+            },
+            {
+                question: "Setelah lulus ujian apa yang harus saya lakukan?",
+                answer: "Mendaftar ke Organisasi setempat untuk mendapatkan Kartu Tanda Anggota (KTA)."
+            }
+        ];
+
+        // Render FAQ
+        const faqList = document.getElementById('faqList');
+        faqData.forEach((item, index) => {
+            const faqItem = document.createElement('div');
+            faqItem.className = 'faq-item';
+
+            const questionBtn = document.createElement('button');
+            questionBtn.className = 'faq-question';
+            questionBtn.setAttribute('aria-expanded', 'false');
+            questionBtn.innerHTML = `${item.question} <i class="bi bi-chevron-down"></i>`;
+
+            const answerDiv = document.createElement('div');
+            answerDiv.className = 'faq-answer';
+            answerDiv.innerHTML = `<p>${item.answer}</p>`;
+
+            questionBtn.addEventListener('click', function() {
+                const isActive = this.classList.contains('active');
+                // Tutup semua jawaban lain (opsional)
+                document.querySelectorAll('.faq-question').forEach(q => {
+                    if (q !== this) {
+                        q.classList.remove('active');
+                        q.nextElementSibling.classList.remove('show');
+                        q.setAttribute('aria-expanded', 'false');
+                    }
+                });
+                this.classList.toggle('active');
+                answerDiv.classList.toggle('show');
+                this.setAttribute('aria-expanded', this.classList.contains('active'));
+            });
+
+            faqItem.appendChild(questionBtn);
+            faqItem.appendChild(answerDiv);
+            faqList.appendChild(faqItem);
+        });
+    </script>
+    <script src="dist_js/TTS_Adaptif.min.js"></script>
 </body>
 </html>
