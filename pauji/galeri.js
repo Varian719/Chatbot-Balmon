@@ -1,4 +1,3 @@
-
 // --- 1. GLOBAL UI LOGIC ---
 function initScrollAnimations() {
     const fadeSections = document.querySelectorAll('.fade-in-section');
