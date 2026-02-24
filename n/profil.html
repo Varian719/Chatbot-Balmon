@@ -320,8 +320,8 @@
             display: flex; gap: 10px; z-index: 10;
         }
         .carousel-indicators .dot {
-            width: 12px; height: 12px; background-color: rgba(255,255,255,0.4);
-            border-radius: 50%; cursor: pointer; transition: all 0.3s ease;
+            width: 12px; height: 5px; background-color: rgba(255,255,255,0.4);
+            border-radius: 0%; cursor: pointer; transition: all 0.3s ease;
             border: 2px solid transparent;
         }
         .carousel-indicators .dot.active {
@@ -350,15 +350,19 @@
             display: grid; grid-template-columns: 1fr 2fr; gap: 50px; align-items: center;
         }
         .intro-image { text-align: center; position: relative; }
+        
         .intro-image img {
             width: 100%; max-width: 350px; border-radius: 16px; 
-            box-shadow: 0 15px 35px rgba(0,0,0,0.1); border: 5px solid #fff;
+            box-shadow: none; /* Shadow dihilangkan */
+            border: none; 
             position: relative; z-index: 2;
         }
+
+        /* Bagian ini dimatikan agar box di belakang hilang */
         .intro-image::before {
-            content: ''; position: absolute; top: -15px; left: -15px; right: 15px; bottom: 15px;
-            background-color: var(--primary-color); border-radius: 16px; z-index: 1; opacity: 0.1;
+            display: none; 
         }
+
         .intro-image h3 { margin: 20px 0 5px 0; color: var(--primary-dark); font-size: 22px; }
         .intro-image p { margin: 0; color: var(--accent-red); font-weight: 600; font-size: 14px; text-transform: uppercase; }
         
@@ -565,7 +569,7 @@
             <nav class="nav-menu" role="navigation" aria-label="Menu Utama">
                 <ul class="menu-list">
                     <li class="menu-item" onclick="window.location.href='index.html'" role="button" tabindex="0">Beranda</li>
-                    <li class="menu-item" onclick="window.location.href='profil.html'" role="button" tabindex="0" style="color:var(--accent-yellow);">Profil</li>
+                    <li class="menu-item" onclick="window.location.href='profil.html'" role="button" tabindex="0">Profil</li>
                     <li class="menu-item" aria-haspopup="true" aria-expanded="false">Layanan
                         <ul class="dropdown-content" role="menu">
                             <li role="none"><a href="konsesi.html" role="menuitem">Izin Konsesi</a></li>
@@ -630,7 +634,6 @@
                         <a href="index.html">Beranda</a> / <span style="color: var(--accent-yellow);">Profil Organisasi</span>
                     </div>
                     <h1 class="hero-title">Profil Balai Monitor Spektrum Frekuensi Radio Kelas I Samarinda</h1>
-                    <div class="hero-subtitle">Mewujudkan Ekosistem Telekomunikasi yang Sehat, Aman, dan Berkelanjutan di Kalimantan Timur.</div>
                 </div>
             </div>
         </div>
@@ -641,16 +644,12 @@
         <div class="container">
             <div class="intro-grid">
                 <div class="intro-image">
-                    <img src="https://lh3.googleusercontent.com/d/1OqxS0-ODFE34vLaKwEGK-EYBjFcfssNE"  alt="Kepala Balmon Samarinda">
-                    <h3>Warko, S.Kom., M.Si</h3>
-                    <p>Kepala Balai Monitor SFR Kelas I Samarinda</p>
+                    <img src="kepala.png" alt="Kepala Balmon Samarinda">
                 </div>
                 <div class="intro-text">
-                    <h2 style="color:var(--primary-dark); font-size: 28px; margin-top:0;">Tentang Kami</h2>
-                    <p> Balai Monitor Spektrum Frekuensi Radio (Balmon) Samarinda merupakan Unit Pelaksana Teknis di bawah Direktorat Jenderal Infrastruktur Digital (DJID), Kementerian Komunikasi dan Digital Republik Indonesia.</p>
-                    <p> Balmon Samarinda memiliki peran strategis dalam melakukan pengawasan, pengendalian, serta penertiban penggunaan spektrum frekuensi radio dan perangkat telekomunikasi di wilayah kerja Kalimantan Timur dan sekitarnya.</p>
-                    <p> Spektrum frekuensi radio sebagai sumber daya alam yang terbatas harus dikelola secara tertib, efisien, dan bebas dari gangguan agar dapat dimanfaatkan secara optimal untuk mendukung komunikasi, penyiaran, keselamatan, serta pembangunan nasional.</p>
-                    <p> Dengan dukungan sumber daya manusia yang profesional serta peralatan monitoring yang modern, Balmon Samarinda berkomitmen untuk memberikan pelayanan yang transparan, akuntabel, dan berintegritas tinggi. Balmon Samarinda juga terus mendorong peningkatan literasi dan kesadaran masyarakat mengenai pentingnya penggunaan spektrum frekuensi radio yang tertib dan sesuai regulasi, guna mewujudkan ekosistem telekomunikasi yang sehat, aman, dan berkelanjutan.</p>
+                    <h2 style="color:var(--primary-dark); font-size: 24px; margin-top:0;">Sambutan Kepala Balai Monitor Spektrum Frekuensi Radio Kelas I Samarinda</h2>
+                    <p style="margin-bottom: auto;"> Balai Monitor Spektrum Frekuensi Radio (Balmon) Samarinda merupakan Unit Pelaksana Teknis di bawah Direktorat Jenderal Infrastruktur Digital (DJID), Kementerian Komunikasi dan Digital Republik Indonesia.</p>
+                    <p style="margin-top: auto;"> Balmon Samarinda memiliki peran strategis dalam melakukan pengawasan, pengendalian, serta penertiban penggunaan spektrum frekuensi radio dan perangkat telekomunikasi di wilayah kerja Kalimantan Timur dan sekitarnya. Spektrum frekuensi radio sebagai sumber daya alam yang terbatas harus dikelola secara tertib, efisien, dan bebas dari gangguan agar dapat dimanfaatkan secara optimal untuk mendukung komunikasi, penyiaran, keselamatan, serta pembangunan nasional.</p>
                 </div>
             </div>
         </div>
@@ -805,7 +804,7 @@
 
     <div id="searchOverlay" class="search-overlay">
         <div class="search-content">
-            <button class="close-search" onclick="closeSearch()">&times;</button>
+            <button class="close-search" onclick="closeSearch()">×</button>
             <h2 style="color:var(--primary-color); margin-bottom:20px;">Pencarian</h2>
             <input type="text" id="searchInput" placeholder="Ketik kata kunci (misal: Izin, Maritim)..." onkeyup="performSearch()">
             <div id="searchResults" class="search-results"></div>
