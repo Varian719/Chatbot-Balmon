@@ -3,16 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Berita dan Publikasi Balai Monitor Spektrum Frekuensi Radio Kelas I Samarinda">
-    <title>Memuat Berita... | Balmon Samarinda</title>
+    <meta name="description" content="Simulasi Estimasi Biaya Hak Penggunaan Izin Stasiun Radio (BHP ISR) - Balmon Samarinda">
+    <title>Estimasi BHP ISR - Balmon Samarinda</title>
     <link rel="icon" type="image/png" href="logo-ikon.png" sizes="32x32">
 
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Albert+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    
+
     <style>
         /* ========================================= */
         /* --- 1. SETUP WARNA & GLOBAL --- */
@@ -46,7 +45,14 @@
         ul { list-style: none; padding: 0; margin: 0; }
         * { box-sizing: border-box; }
 
-        .container-custom { max-width: 1200px; margin: 0 auto; padding: 0 20px; width: 100%; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; width: 100%; }
+
+        /* --- ANIMASI FADE-IN --- */
+        .fade-in-section {
+            opacity: 0; transform: translateY(30px);
+            transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1), transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .fade-in-section.is-visible { opacity: 1; transform: translateY(0); }
 
         /* --- LOADER --- */
         .page-loader {
@@ -72,12 +78,11 @@
         /* --- 2. HEADER STYLE --- */
         /* ========================================= */
         header {
-            background-color: transparent;
-            backdrop-filter: none; -webkit-backdrop-filter: none; box-shadow: none;
-            height: 80px; position: fixed; top: 0; left: 0; width: 100%; z-index: 1000;
+            background-color: transparent; backdrop-filter: none; -webkit-backdrop-filter: none;
+            box-shadow: none; height: 80px; position: fixed; top: 0; left: 0; width: 100%; z-index: 1000;
             transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
-        .header-content { display: flex; align-items: center; justify-content: space-between; height: 100%; max-width: 1200px; margin: 0 auto; padding: 0 20px;}
+        .header-content { display: flex; align-items: center; justify-content: space-between; height: 100%; }
         
         .brand-area { 
             display: flex; align-items: center; gap: 12px; transition: all 0.4s ease; cursor: pointer;
@@ -88,10 +93,7 @@
         .brand-text { font-size: 18px; font-weight: 800; color: #ffffff; line-height: 1.2; display: flex; flex-direction: column; text-shadow: 0 2px 10px rgba(0, 0, 0, 0.6); transition: color 0.3s; }
         .brand-text span { font-size: 11px; font-weight: 500; color: rgba(255,255,255,0.9); letter-spacing: 0.5px; transition: color 0.3s; text-shadow: 0 1px 5px rgba(0, 0, 0, 0.6); }
 
-        header.header-minimal {
-            background-color: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px);
-            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.08); height: 70px;
-        }
+        header.header-minimal { background-color: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); box-shadow: 0 2px 20px rgba(0, 0, 0, 0.08); height: 70px; }
         header.header-minimal .brand-text { color: var(--primary-color); text-shadow: none; }
         header.header-minimal .brand-text span { color: var(--text-gray); text-shadow: none; }
         header.header-minimal .brand-logo-img { filter: none; }
@@ -107,12 +109,10 @@
         .social-icon svg { width: 20px; height: 20px; fill: #ffffff; transition: all 0.3s ease; opacity: 0.9; }
         .social-icon:hover { transform: translateY(-2px); }
         .social-icon:hover svg { opacity: 1; fill: var(--accent-yellow); }
-        
         header.header-minimal .header-socials { border-right-color: #e2e8f0; border-left: none; }
         header.header-minimal .social-icon svg { fill: var(--text-gray); }
         header.header-minimal .social-icon:hover svg { fill: var(--primary-color); }
         header.header-minimal .social-icon.wa-icon:hover svg { fill: #25D366; }
-
         @media (max-width: 992px) { .header-socials { display: none; } }
 
         /* Nav Menu */
@@ -129,7 +129,7 @@
         .dropdown-content li a:hover { background-color: var(--bg-light-blue); color: var(--primary-color); padding-left: 25px; }
         @keyframes slideDown { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* HAMBURGER & MOBILE NAV */
+        /* HAMBURGER & MOBILE SIDEBAR */
         .hamburger-btn { display: none; flex-direction: column; gap: 6px; background: none; border: none; cursor: pointer; padding: 8px; z-index: 1001; }
         .hamburger-btn span { width: 24px; height: 2.5px; background-color: white; border-radius: 2px; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); transform-origin: center; }
         .hamburger-btn.active span:nth-child(1) { transform: translateY(8.5px) rotate(45deg); }
@@ -138,9 +138,9 @@
         .hamburger-btn.active span { background-color: #ffffff !important; }
 
         .mobile-nav-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5); backdrop-filter: blur(3px); z-index: 1000; opacity: 0; visibility: hidden; transition: opacity 0.3s ease, visibility 0.3s ease; }
+        .mobile-nav-overlay.active { opacity: 1; visibility: visible; }
         .mobile-nav-dropdown { position: fixed; top: 0; left: -280px; width: 280px; height: 100vh; background-color: #ffffff; box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1); z-index: 1001; overflow-y: auto; transition: left 0.3s ease; display: block; padding-top: 20px; }
         .mobile-nav-dropdown.active { left: 0; }
-        .mobile-nav-overlay.active { opacity: 1; visibility: visible; }
         .mobile-menu-item { padding: 15px 25px; border-bottom: 1px solid #f0f0f0; font-weight: 600; color: var(--text-dark); cursor: pointer; transition: background 0.2s; }
         .mobile-menu-item:hover { background-color: var(--bg-light-blue); color: var(--primary-color); }
         .mobile-menu-item.has-submenu { display: flex; justify-content: space-between; align-items: center; }
@@ -163,76 +163,58 @@
         }
 
         /* ========================================= */
-        /* --- 3. NEWS SPECIFIC STYLES --- */
+        /* --- PAGE CONTENT (Estimator) --- */
         /* ========================================= */
-        .page-header {
-            padding-top: 150px; padding-bottom: 80px;
-            background: linear-gradient(135deg, rgba(0, 111, 176, 0.9) 0%, rgba(0, 80, 130, 0.8) 100%), url('https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=1600&q=80');
-            background-size: cover; background-position: center; background-attachment: fixed;
+        .page-header-custom {
+            padding: 150px 20px 60px;
+            background: linear-gradient(135deg, rgba(0,111,176,0.9), rgba(0,80,130,0.8)), url('https://images.unsplash.com/photo-1581092335871-4c7f7d6f1b3a?auto=format&fit=crop&w=1600&q=80');
+            background-size: cover; background-position: center;
             color: white; text-align: center;
         }
-        /* Judul di dalam header dihilangkan, jadi kita tidak pakai .page-title di sini */
-        .breadcrumb { font-size: 14px; opacity: 0.9; margin-bottom: 15px; font-weight: 500; color: rgba(255,255,255,0.9); justify-content: center; }
-        .breadcrumb a { color: #fff; text-decoration: none; border-bottom: 1px solid rgba(255,255,255,0.4); transition: 0.3s; }
-        .breadcrumb a:hover { border-bottom-color: #fff; }
-        .breadcrumb-item + .breadcrumb-item::before { color: rgba(255,255,255,0.6); }
+        .page-header-custom h1 { font-size: 38px; font-weight: 800; margin: 0 0 10px; }
+        .page-header-custom p { font-size: 18px; opacity: 0.9; max-width: 700px; margin: 0 auto; }
 
-        .content-grid { display: grid; grid-template-columns: 2.5fr 1fr; gap: 40px; margin-top: -50px; margin-bottom: 60px; position: relative; z-index: 10; }
-        
-        .content-card {
-            background: #fff; border-radius: 16px; padding: 40px;
-            box-shadow: 0 5px 30px rgba(0,0,0,0.05); border: 1px solid rgba(0,0,0,0.03);
+        .estimator-card {
+            background: white; border-radius: 24px; padding: 40px;
+            margin-top: -50px; margin-bottom: 60px;
+            box-shadow: 0 20px 40px -10px rgba(0,0,0,0.1);
+            border: 1px solid rgba(0,111,176,0.1);
         }
 
-        /* Judul artikel di dalam card */
-        .page-title-inside {
-            font-size: 32px;
-            font-weight: 800;
-            color: var(--text-dark);
-            margin-top: 0;
-            margin-bottom: 20px;
-            line-height: 1.3;
+        .form-group { margin-bottom: 25px; }
+        .form-group label { display: block; font-weight: 600; margin-bottom: 8px; color: var(--text-dark); }
+        .form-group label span { color: var(--accent-red); }
+        .form-control { width: 100%; padding: 14px 18px; border: 2px solid #e2e8f0; border-radius: 12px; font-family: 'Albert Sans', sans-serif; font-size: 16px; transition: 0.2s; }
+        .form-control:focus { outline: none; border-color: var(--primary-color); box-shadow: 0 0 0 4px rgba(0,111,176,0.1); }
+        .input-group { display: flex; gap: 15px; align-items: center; }
+        .input-group .form-control { flex: 1; }
+        .input-group span { font-weight: 600; color: var(--text-gray); min-width: 50px; }
+
+        .btn-estimate {
+            background: var(--primary-color); color: white; border: none;
+            padding: 16px 40px; border-radius: 60px; font-weight: 700; font-size: 18px;
+            cursor: pointer; transition: all 0.3s; box-shadow: 0 8px 20px rgba(0,111,176,0.3);
+            width: 100%; margin-top: 20px;
         }
+        .btn-estimate:hover { background: var(--primary-dark); transform: translateY(-2px); box-shadow: 0 12px 30px rgba(0,111,176,0.4); }
+
+        .result-box {
+            background: #e8f4fe; border-radius: 20px; padding: 30px;
+            margin-top: 40px; border-left: 6px solid var(--accent-yellow);
+            display: none;
+        }
+        .result-box.show { display: block; animation: slideDown 0.4s ease; }
+        .result-box h3 { color: var(--primary-dark); margin: 0 0 15px; font-size: 24px; }
+        .result-amount { font-size: 48px; font-weight: 800; color: var(--primary-color); margin: 10px 0; line-height: 1.2; }
+        .disclaimer { font-size: 14px; color: var(--text-gray); margin-top: 20px; border-top: 1px dashed #ccc; padding-top: 20px; }
+
         @media (max-width: 768px) {
-            .page-title-inside {
-                font-size: 24px;
-            }
+            .page-header-custom h1 { font-size: 28px; }
+            .estimator-card { padding: 25px; }
+            .input-group { flex-direction: column; align-items: stretch; }
         }
 
-        .meta-data { font-size: 14px; color: var(--text-gray); display: flex; gap: 20px; border-bottom: 1px solid #eee; padding-bottom: 20px; margin-bottom: 30px; }
-        .meta-item { display: inline-flex; align-items: center; gap: 6px; font-weight: 500;}
-        .meta-item i { color: var(--primary-color); }
-
-        .article-featured-img { width: 100%; height: auto; max-height: 450px; object-fit: cover; border-radius: 12px; margin-bottom: 30px; box-shadow: 0 5px 15px rgba(0,0,0,0.08); }
-        .article-content { font-size: 16px; line-height: 1.8; color: var(--text-dark); text-align: justify; }
-        .article-content p { margin-bottom: 20px; }
-
-        .sidebar-card { background: #fff; border-radius: 16px; padding: 30px; box-shadow: 0 5px 20px rgba(0,0,0,0.05); border: 1px solid #f0f0f0; position: sticky; top: 100px; }
-        .sidebar-title { font-size: 20px; font-weight: 700; color: var(--primary-color); margin-bottom: 20px; display: flex; align-items: center; gap: 10px; }
-        .sidebar-title::before { content: ''; width: 4px; height: 24px; background: var(--accent-yellow); border-radius: 2px; }
-
-        .recent-post-item { display: flex; gap: 15px; margin-bottom: 20px; border-bottom: 1px solid #f0f0f0; padding-bottom: 15px; }
-        .recent-post-item:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
-        .recent-post-img { width: 80px; height: 80px; object-fit: cover; border-radius: 8px; flex-shrink: 0; }
-        .recent-post-title { font-size: 14px; font-weight: 600; line-height: 1.4; margin: 0 0 5px 0;}
-        .recent-post-title a { text-decoration: none; color: var(--text-dark); transition: color 0.2s; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-        .recent-post-title a:hover { color: var(--primary-color); }
-        .recent-post-date { font-size: 12px; color: var(--text-gray); }
-
-        /* Loading Skeleton */
-        .skeleton { background: #eee; border-radius: 4px; animation: pulse 1.5s infinite; }
-        @keyframes pulse { 0% { opacity: 0.6; } 50% { opacity: 1; } 100% { opacity: 0.6; } }
-
-        /* Error Area (Non-Bootstrap fallback) */
-        #error-area .alert { background: #fff3cd; border: 1px solid #ffe69c; border-radius: 12px; color: #664d03; }
-
-        @media (max-width: 900px) {
-            .content-grid { grid-template-columns: 1fr; margin-top: 0; }
-            .page-header { padding-bottom: 40px; padding-top: 120px; }
-            .content-card { padding: 25px; }
-        }
-
-        /* --- FOOTER --- */
+        /* FOOTER & CHAT */
         footer { background-color: var(--primary-color); color: white; padding-top: 70px; font-size: 14px; position: relative; margin-top: auto;}
         .footer-grid { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 40px; padding-bottom: 50px; }
         .footer-col { flex: 1; min-width: 250px; }
@@ -241,7 +223,6 @@
         .footer-links a:hover { color: #fff; transform: translateX(5px); }
         .copyright { background-color: rgba(0,0,0,0.1); text-align: center; padding: 25px 0; color: rgba(255,255,255,0.6); border-top: 1px solid rgba(255,255,255,0.1); }
 
-        /* --- CHAT WIDGET & SEARCH --- */
         .chat-toggle-btn { position: fixed; bottom: 30px; right: 30px; width: 65px; height: 65px; background: linear-gradient(135deg, var(--primary-color), var(--primary-dark)); color: #ffffff; border: none; border-radius: 50%; box-shadow: 0 8px 25px rgba(0, 111, 176, 0.4); cursor: pointer; z-index: 10000; display: flex; align-items: center; justify-content: center; transition: all 0.3s; }
         .chat-toggle-btn:hover { transform: scale(1.1); box-shadow: 0 12px 30px rgba(0, 111, 176, 0.5); }
         .chat-toggle-btn.on-footer { background: var(--accent-yellow); color: var(--text-dark); }
@@ -259,7 +240,7 @@
         .chat-info h4 { margin: 0; font-size: 16px; font-weight: 700; }
         .chat-status { display: flex; align-items: center; gap: 6px; font-size: 12px; color: rgba(255,255,255,0.9); }
         .status-dot { width: 8px; height: 8px; background-color: #00ff9d; border-radius: 50%; }
-        
+
         @media (max-width: 768px) {
             .chat-toggle-btn { bottom: 20px; right: 20px; }
             .chat-box-container { width: calc(100% - 40px) !important; height: 65vh !important; right: 20px !important; left: 20px !important; bottom: 100px !important; border-radius: 16px !important; }
@@ -278,60 +259,17 @@
         .search-item:hover { background: var(--bg-light-blue); border-color: var(--primary-color); transform: translateX(5px); }
         .search-item h4 { margin: 0 0 5px 0; color: var(--primary-color); font-size: 16px; }
         .search-item p { margin: 0; font-size: 13px; color: var(--text-gray); }
-
-        /* ===== GAYA KOMENTAR (SESUAI GALERI) ===== */
-        .comment-item {
-            border-bottom: 1px solid #eee;
-            padding: 20px 0;
-        }
-        .comment-item:last-child {
-            border-bottom: none;
-        }
-        .comment-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            margin-bottom: 8px;
-        }
-        .comment-name {
-            font-weight: 700;
-            color: var(--primary-color);
-            font-size: 1.1rem;
-        }
-        .comment-date {
-            font-size: 0.8rem;
-            color: var(--text-gray);
-        }
-        .comment-email {
-            font-size: 0.85rem;
-            color: var(--text-gray);
-            margin-top: 2px;
-        }
-        .comment-body {
-            font-size: 1rem;
-            line-height: 1.6;
-            background-color: #f8f9fc;
-            padding: 15px 20px;
-            border-radius: 16px;
-            margin-top: 10px;
-            border-left: 3px solid var(--primary-color);
-        }
-        .form-control:focus {
-            border-color: var(--primary-color);
-            box-shadow: 0 0 0 0.2rem rgba(0, 111, 176, 0.25);
-        }
     </style>
 </head>
 <body>
 
     <div id="pageLoader" class="page-loader">
         <div class="loader-spinner"></div>
-        <div class="loader-text">MEMUAT...</div>
+        <div class="loader-text">MEMUAT ESTIMATOR...</div>
     </div>
 
     <header id="mainHeader">
-        <div class="container-custom header-content">
+        <div class="container header-content">
             <div class="brand-area" onclick="window.location.href='index.html'" role="button" tabindex="0">
                 <img src="balmonsmd1.png" alt="Logo Balmon" class="brand-logo-img">
                 <div class="brand-text">
@@ -341,22 +279,17 @@
             </div>
 
             <div class="header-socials">
-                <a href="https://wa.me/6285648283012" target="_blank" rel="noopener noreferrer" class="social-icon wa-icon" aria-label="WhatsApp">
+                <a href="https://wa.me/6285648283012" target="_blank" class="social-icon wa-icon" aria-label="WhatsApp">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg>
                 </a>
-                <a href="https://www.instagram.com/balmonsamarinda/" target="_blank" rel="noopener noreferrer" class="social-icon" aria-label="Instagram">
+                <a href="https://www.instagram.com/balmonsamarinda/" target="_blank" class="social-icon" aria-label="Instagram">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.163 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
                 </a>
-                <a href="https://www.facebook.com/profile.php?id=100068963927418" target="_blank" rel="noopener noreferrer" class="social-icon" aria-label="Facebook">
+                <a href="https://www.facebook.com/profile.php?id=100068963927418" class="social-icon" aria-label="Facebook">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9 8h-3v4h3v12h5v-12h3.642l.358-4h-4v-1.667c0-.955.192-1.333 1.115-1.333h2.885v-5h-3.808c-3.596 0-5.192 1.583-5.192 4.615v3.385z"/></svg>
                 </a>
-                <a href="https://youtube.com/@balmonsamarindaa?si=EZUAjSarJaMD-7R9" target="_blank" rel="noopener noreferrer" class="social-icon" aria-label="YouTube">
+                <a href="https://youtube.com/@balmonsamarindaa?si=EZUAjSarJaMD-7R9" class="social-icon" aria-label="YouTube">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z"/></svg>
-                </a>
-                <a href="https://www.tiktok.com/@balmon.samarinda?lang=en" target="_blank" rel="noopener noreferrer" class="social-icon" aria-label="TikTok">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" stroke="none">
-                        <path d="M12.53.02C13.84 0 15.14.01 16.44 0c.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.65-1.58-1.09-.1-.09-.19-.2-.29-.3v6.52c.02 4.07-3.23 7.49-7.29 7.49-3.93.04-7.3-3.13-7.48-7.05-.07-1.84.58-3.66 1.83-5.01 1.25-1.35 3.03-2.14 4.86-2.16v4.03c-1.11-.02-2.19.46-2.95 1.29a4.106 4.106 0 0 0-1.1 2.89c.04 2.22 1.84 4.02 4.06 4.02 2.22 0 4.02-1.8 4.02-4.02V.02h.22z"/>
-                    </svg>
                 </a>
             </div>
             
@@ -371,7 +304,7 @@
                             <li role="none"><a href="fm.html" role="menuitem">Izin Penyiaran FM</a></li>
                             <li role="none"><a href="arsip.html" role="menuitem">Download</a></li>
                             <li role="none"><a href="faq.html" role="menuitem">FAQ</a></li>
-                            <li role="none"><a href="simulasibhp.html" role="menuitem">Simulasi Estimasi BHP ISR</a></li>
+                            <li role="none"><a href="simulasibhp.html" role="menuitem">Simulasi Estimasi BHP ISR</a>
                         </ul>
                     </li>
                     <li class="menu-item" onclick="window.location.href='galeri.html'" role="button" tabindex="0">Publikasi</li>
@@ -386,9 +319,7 @@
             </nav>
             
             <button class="hamburger-btn" id="hamburgerBtn" onclick="toggleMobileMenu()" aria-label="Buka menu navigasi">
-                <span></span>
-                <span></span>
-                <span></span>
+                <span></span><span></span><span></span>
             </button>
         </div>
 
@@ -410,117 +341,76 @@
         <div id="mobileNavOverlay" class="mobile-nav-overlay"></div>
     </header>
 
-    <div id="error-area" class="container-custom d-none" style="margin-top: 150px; margin-bottom: 50px;">
-        <div class="alert py-5 text-center shadow-sm">
-            <h2 class="fw-bold" style="color: var(--accent-red);">Berita Tidak Ditemukan</h2>
-            <p class="lead">ID tidak valid atau data telah dihapus dari database.</p>
-            <p class="small text-muted mb-4">ID: <span id="debug-id-display">-</span></p>
-            <a href="index.html" class="btn btn-primary" style="background-color: var(--primary-color); border: none; padding: 10px 25px; border-radius: 50px;">Kembali ke Beranda</a>
+    <div class="page-header-custom">
+        <div class="container">
+            <h1>Simulasi Estimasi BHP ISR</h1>
+            <p>Hitung perkiraan Biaya Hak Penggunaan Izin Stasiun Radio berdasarkan parameter teknis dan regulasi terbaru.</p>
         </div>
     </div>
 
-    <main id="main-content">
-        <div class="page-header">
-            <div class="container-custom">
-                <nav aria-label="breadcrumb">
-                    <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="index.html">Beranda</a></li>
-                        <li class="breadcrumb-item active" id="breadcrumb-title" aria-current="page" style="color: var(--accent-yellow);">Memuat...</li>
-                    </ol>
-                </nav>
-                <!-- H1 TIDAK ADA DI SINI LAGI -->
+    <main class="container">
+        <div class="estimator-card fade-in-section">
+            <form id="bhpForm">
+                <div class="form-group">
+                    <label><span>*</span> Jenis Layanan / Penggunaan</label>
+                    <select class="form-control" id="serviceType" required>
+                        <option value="">-- Pilih Jenis Layanan --</option>
+                        <option value="ht">Handy Talky (HT) - Keperluan Sendiri</option>
+                        <option value="base">Base Station / Repeater - Komunikasi Radio</option>
+                        <option value="microwave">Microwave Link - Jaringan Tertutup</option>
+                        <option value="unar">UNAR (Amatir Radio)</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label><span>*</span> Zona Lokasi</label>
+                    <select class="form-control" id="zone" required>
+                        <option value="">-- Pilih Zona --</option>
+                        <option value="zona1">Zona 1 (Jawa, Bali)</option>
+                        <option value="zona2">Zona 2 (Sumatra, Kalimantan)</option>
+                        <option value="zona3">Zona 3 (Sulawesi, NTB, NTT)</option>
+                        <option value="zona4">Zona 4 (Maluku, Papua)</option>
+                    </select>
+                    <small class="text-muted">Samarinda termasuk Zona 2.</small>
+                </div>
+
+                <div class="form-group">
+                    <label><span>*</span> Lebar Pita (Bandwidth)</label>
+                    <div class="input-group">
+                        <input type="number" class="form-control" id="bandwidth" placeholder="contoh: 16" step="0.1" min="0" required>
+                        <span>kHz</span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Daya Pancar (Ketik salah satu)</label>
+                    <div class="input-group" style="margin-bottom:10px;">
+                        <input type="number" class="form-control" id="powerWatt" placeholder="Daya dalam Watt" step="0.1" min="0">
+                        <span>Watt</span>
+                    </div>
+                    <div class="input-group">
+                        <input type="number" class="form-control" id="powerDbm" placeholder="Daya dalam dBm" step="0.1" min="0">
+                        <span>dBm</span>
+                    </div>
+                    <small class="text-muted">Isi salah satu, nilai akan dikonversi secara otomatis.</small>
+                </div>
+
+                <button type="button" class="btn-estimate" onclick="calculateBHP()">Hitung Estimasi</button>
+            </form>
+
+            <div id="resultBox" class="result-box">
+                <h3>Hasil Estimasi BHP ISR per Tahun</h3>
+                <div class="result-amount" id="resultAmount">Rp 0</div>
+                <p class="disclaimer">
+                    <i class="bi bi-info-circle"></i> <strong>Catatan:</strong> Hasil ini adalah estimasi berdasarkan formula umum dan contoh parameter yang mendekati regulasi (PP No. 43/2023, Permenkominfo No. 9/2023). Nilai sebenarnya dapat berbeda karena faktor teknis lainnya dan penetapan resmi dari Kementerian Kominfo. Gunakan sebagai referensi awal.
+                </p>
             </div>
         </div>
+    </main>
 
-        <div class="container-custom content-grid">
-            <div class="content-left">
-                <div class="content-card">
-                    
-                    <!-- JUDUL BERITA DIPINDAHKAN KE SINI -->
-                    <h1 class="page-title-inside" id="article-title">
-                        <span class="skeleton d-inline-block" style="height: 40px; width: 80%;"></span>
-                    </h1>
-
-                    <div class="meta-data">
-                        <span class="meta-item"><i class="bi bi-calendar3"></i> <span id="article-date">--/--/----</span></span>
-                        <span class="meta-item"><i class="bi bi-tag-fill"></i> <span id="article-category">News</span></span>
-                    </div>
-
-                    <div id="img-container">
-                        <div class="skeleton article-featured-img"></div>
-                    </div>
-
-                    <article class="article-content" id="article-body">
-                        <div class="skeleton w-100 mb-2" style="height: 20px;"></div>
-                        <div class="skeleton w-100 mb-2" style="height: 20px;"></div>
-                        <div class="skeleton w-75 mb-2" style="height: 20px;"></div>
-                    </article>
-
-                </div>
-            </div>
-
-            <div class="sidebar-area">
-                <div class="sidebar-card">
-                    <h5 class="sidebar-title">Publikasi Terbaru</h5>
-                    <div id="recent-posts-container">
-                        <div class="recent-post-item">
-                            <div class="skeleton recent-post-img"></div>
-                            <div style="flex-grow: 1;">
-                                <div class="skeleton" style="height:15px; width:100%; margin-bottom:5px;"></div>
-                                <div class="skeleton" style="height:15px; width:60%;"></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <section class="container-custom" style="margin-top: 60px; margin-bottom: 40px;">
-            <div class="content-card">
-                <h3 class="sidebar-title" style="margin-bottom: 30px;">
-                    <i class="bi bi-chat-dots me-2"></i>Komentar Pengunjung
-                </h3>
-
-                <form id="commentForm" style="margin-bottom: 40px;">
-                    <div class="row g-3">
-                        <div class="col-md-6">
-                            <label for="commentName" class="form-label fw-semibold">Nama <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control" id="commentName" required placeholder="Nama lengkap">
-                        </div>
-                        <div class="col-md-6">
-                            <label for="commentEmail" class="form-label fw-semibold">Email (opsional)</label>
-                            <input type="email" class="form-control" id="commentEmail" placeholder="email@contoh.com">
-                        </div>
-                        <div class="col-12">
-                            <label for="commentMessage" class="form-label fw-semibold">Komentar <span class="text-danger">*</span></label>
-                            <textarea class="form-control" id="commentMessage" rows="4" required placeholder="Tulis komentar Anda..."></textarea>
-                        </div>
-                        <div class="col-12 mt-4">
-                            <button type="submit" id="submitCommentBtn" class="btn text-white fw-bold px-4 py-2" style="background-color: var(--primary-color); border-radius: 50px; transition: 0.3s;">
-                                Kirim Komentar
-                            </button>
-                        </div>
-                    </div>
-                </form>
-
-                <div class="mt-5 border-top pt-4">
-                    <h5 class="fw-semibold mb-4">
-                        <i class="bi bi-chat me-2"></i>Komentar Sebelumnya
-                    </h5>
-                    <div id="commentsList">
-                        <div class="text-center text-muted py-4" id="noComments">
-                            <div class="spinner-border spinner-border-sm text-primary me-2" role="status"></div> 
-                            Memuat komentar...
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-        </main>
-
-    <footer id="mainFooter">
-        <div class="container-custom">
-            <div class="footer-grid">
+    <footer id="mainFooter" class="fade-in-section">
+        <div class="container">
+            <div class="footer-grid fade-stagger-children">
                 <div class="footer-col">
                     <h3>Balmon Samarinda</h3>
                     <p style="color:rgba(255,255,255,0.7); line-height:1.8;">
@@ -558,7 +448,7 @@
                 </div>
             </div>
         </div>
-        <iframe id="chatFrame" data-src="https://MagangBalmon2619-Chat-Balmon.hf.space" style="width: 100%; height: 100%; border: none; background: #fff;" allow="clipboard-write; microphone" loading="lazy" width="350" height="500"></iframe>
+        <iframe id="chatFrame" data-src="https://MagangBalmon2619-Chat-Balmon.hf.space" style="width: 100%; height: 100%; border: none; background: #fff;" allow="clipboard-write; microphone" loading="lazy"></iframe>
     </div>
 
     <button class="chat-toggle-btn" id="toggleBtn" onclick="animateChatToggle()" aria-label="Buka chat">
@@ -575,8 +465,212 @@
         </div>
     </div>
 
-  
-    <script src="dist_js/news_detail.min.js" type="module"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        // ==================== 1. ANIMASI FADE-IN (Observer) ====================
+        document.addEventListener("DOMContentLoaded", function() {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('is-visible');
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            document.querySelectorAll('.fade-in-section').forEach(section => {
+                observer.observe(section);
+            });
+        });
+
+        // ==================== 2. FUNGSI UMUM (HEADER, MOBILE, CHAT, SEARCH) ====================
+        let ticking = false;
+        function updateScroll() {
+            const scrollY = window.scrollY;
+            const header = document.getElementById('mainHeader');
+            const chatBtn = document.getElementById('toggleBtn');
+            const footer = document.getElementById('mainFooter');
+
+            if (scrollY > 50) header.classList.add('header-minimal');
+            else header.classList.remove('header-minimal');
+
+            if (footer) {
+                const footerRect = footer.getBoundingClientRect();
+                if (footerRect.top < window.innerHeight) chatBtn.classList.add('on-footer');
+                else chatBtn.classList.remove('on-footer');
+            }
+            ticking = false;
+        }
+        window.addEventListener('scroll', function() {
+            if (!ticking) { window.requestAnimationFrame(updateScroll); ticking = true; }
+        }, { passive: true });
+
+        function toggleMobileMenu() {
+            const btn = document.getElementById('hamburgerBtn');
+            const menu = document.getElementById('mobileNavDropdown');
+            const overlay = document.getElementById('mobileNavOverlay');
+            btn.classList.toggle('active'); menu.classList.toggle('active'); overlay.classList.toggle('active');
+            document.body.style.overflow = menu.classList.contains('active') ? 'hidden' : '';
+        }
+
+        function closeMobileMenu() {
+            document.getElementById('hamburgerBtn').classList.remove('active');
+            document.getElementById('mobileNavDropdown').classList.remove('active');
+            document.getElementById('mobileNavOverlay').classList.remove('active');
+            document.body.style.overflow = '';
+            document.querySelectorAll('.mobile-submenu').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.mobile-menu-item.has-submenu').forEach(i => i.classList.remove('active'));
+        }
+
+        function toggleMobileSubmenu(element) {
+            const submenu = element.nextElementSibling;
+            element.classList.toggle('active');
+            if (submenu && submenu.classList.contains('mobile-submenu')) submenu.classList.toggle('active');
+        }
+
+        function handleMobileMenuItem(element, action) {
+            if (action === 'beranda') window.location.href = 'index.html';
+            else if (action === 'profil') window.location.href = 'profil.html';
+            else if (action === 'kontak') window.location.href = 'kontak.html';
+            else if (action === 'publikasi') window.location.href = 'galeri.html';
+            closeMobileMenu();
+        }
+
+        document.addEventListener('click', function(event) {
+            const overlay = document.getElementById('mobileNavOverlay');
+            if (overlay && overlay.classList.contains('active') && event.target === overlay) closeMobileMenu();
+        });
+
+        function animateChatToggle() {
+            const btn = document.getElementById("toggleBtn");
+            const box = document.getElementById("chatBox");
+            const iframe = document.getElementById("chatFrame");
+            if (!iframe.getAttribute('src')) iframe.setAttribute('src', iframe.getAttribute('data-src'));
+            
+            if (btn.classList.contains("active")) { btn.classList.remove("active"); box.classList.remove("active"); }
+            else { btn.classList.add("active"); box.classList.add("active"); }
+        }
+
+        const pages = [
+            { title: "Beranda", url: "index.html", desc: "Halaman utama Balmon Samarinda" },
+            { title: "Profil", url: "profil.html", desc: "Informasi tentang Balmon Samarinda." },
+            { title: "Estimasi BHP ISR", url: "bhp-estimator.html", desc: "Simulasi estimasi Biaya Hak Penggunaan Izin Stasiun Radio." }
+        ];
+
+        function openSearch() {
+            document.getElementById('searchOverlay').classList.add('active');
+            setTimeout(() => document.getElementById('searchInput').focus(), 300);
+        }
+        function closeSearch() {
+            document.getElementById('searchOverlay').classList.remove('active');
+            document.getElementById('searchInput').value = '';
+            document.getElementById('searchResults').innerHTML = '';
+        }
+        function performSearch() {
+            const input = document.getElementById('searchInput').value.toLowerCase();
+            const resultContainer = document.getElementById('searchResults');
+            resultContainer.innerHTML = '';
+            if (input.length < 2) return;
+            
+            const results = pages.filter(page => page.title.toLowerCase().includes(input) || page.desc.toLowerCase().includes(input));
+            if (results.length > 0) {
+                results.forEach(page => {
+                    const item = document.createElement('a');
+                    item.href = page.url; item.className = 'search-item';
+                    item.innerHTML = `<h4>${page.title}</h4><p>${page.desc}</p>`;
+                    resultContainer.appendChild(item);
+                });
+            } else {
+                resultContainer.innerHTML = '<div style="text-align:center; color:#888;">Tidak ditemukan hasil yang cocok.</div>';
+            }
+        }
+        document.addEventListener('keydown', (e) => { if(e.key === "Escape") closeSearch(); });
+
+        window.addEventListener('load', () => {
+            const loader = document.getElementById('pageLoader');
+            if(loader) loader.classList.add('hidden');
+        });
+
+        // ==================== 3. KALKULATOR BHP ISR ====================
+        const serviceData = {
+            ht: { name: "Handy Talky", Ib: 1.0, Ip: 1.0 },
+            base: { name: "Base Station", Ib: 1.5, Ip: 1.5 },
+            microwave: { name: "Microwave Link", Ib: 2.0, Ip: 2.0 },
+            unar: { name: "UNAR", Ib: 0.5, Ip: 0.5 }
+        };
+
+        const zoneData = {
+            zona1: { HDLP: 5000, HDDP: 1000 },
+            zona2: { HDLP: 4500, HDDP: 900 },
+            zona3: { HDLP: 4000, HDDP: 800 },
+            zona4: { HDLP: 3500, HDDP: 700 }
+        };
+
+        // Sinkronisasi Input Watt dan dBm secara Real-time
+        const inputWatt = document.getElementById('powerWatt');
+        const inputDbm = document.getElementById('powerDbm');
+
+        inputWatt.addEventListener('input', function() {
+            const watt = parseFloat(this.value);
+            if (!isNaN(watt) && watt > 0) {
+                const dbm = 10 * Math.log10(watt * 1000);
+                inputDbm.value = dbm.toFixed(2);
+            } else {
+                inputDbm.value = '';
+            }
+        });
+
+        inputDbm.addEventListener('input', function() {
+            const dbm = parseFloat(this.value);
+            if (!isNaN(dbm)) {
+                const watt = Math.pow(10, dbm / 10) / 1000;
+                inputWatt.value = watt.toFixed(4);
+            } else {
+                inputWatt.value = '';
+            }
+        });
+
+        function calculateBHP() {
+            const service = document.getElementById('serviceType').value;
+            const zone = document.getElementById('zone').value;
+            const bandwidth = parseFloat(document.getElementById('bandwidth').value);
+            const dayaDbm = parseFloat(document.getElementById('powerDbm').value);
+
+            // Validasi Input
+            if (!service || !zone || isNaN(bandwidth) || bandwidth <= 0) {
+                alert('Harap isi semua field bertanda bintang (*) dengan benar.');
+                return;
+            }
+
+            if (isNaN(dayaDbm)) {
+                alert('Harap ketik nilai Daya Pancar pada kolom Watt atau dBm.');
+                return;
+            }
+
+            // Ambil koefisien dari data
+            const srv = serviceData[service];
+            const zn = zoneData[zone];
+
+            // Hitung Biaya
+            const biayaLebarPita = srv.Ib * zn.HDLP * bandwidth;
+            const dDbm = dayaDbm < 0 ? 0 : dayaDbm; // Mencegah nilai minus jika daya terlalu kecil
+            const biayaDaya = srv.Ip * zn.HDDP * dDbm;
+            
+            const total = biayaLebarPita + biayaDaya;
+
+            // Tampilkan hasil dengan format Rupiah
+            document.getElementById('resultAmount').innerText = 'Rp ' + Math.round(total).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+            
+            const resultBox = document.getElementById('resultBox');
+            resultBox.classList.add('show');
+            
+            // Auto scroll ke kotak hasil
+            setTimeout(() => {
+                resultBox.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }, 100);
+        }
+    </script>
+
+    <script src="dist_js/TTS_Adaptif.min.js"></script>
 </body>
 </html>
