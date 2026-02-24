@@ -1,0 +1,31 @@
+{
+    "compact": true,
+    "controlFlowFlattening": false,
+    "deadCodeInjection": false,
+    "debugProtection": false,
+    "disableConsoleOutput": false,
+    "identifierNamesGenerator": "hexadecimal",
+    "renameGlobals": false,
+    "selfDefending": false,
+    "stringArray": true,
+    "stringArrayEncoding": ["base64"],
+    "stringArrayThreshold": 0.5,
+    "reservedNames": [
+        "initScrollAnimations",
+        "toggleDropdown",
+        "animateChatToggle",
+        "scrollToTop",
+        "toggleMobileMenu",
+        "closeMobileMenu",
+        "toggleMobileSubmenu",
+        "handleMobileMenuItem",
+        "playVideoFromSlider",
+        "slideVideo",
+        "openSearch",
+        "closeSearch",
+        "performSearch",
+        "nextNews",
+        "prevNews",
+        "initVideoSlider"
+    ]
+}
