@@ -16,7 +16,7 @@
     
     <style>
         /* ========================================= */
-        /* --- 1. SETUP WARNA & GLOBAL (dari news_detail) --- */
+        /* --- 1. SETUP WARNA & GLOBAL --- */
         /* ========================================= */
         :root {
             --primary-color: #006fb0;
@@ -189,7 +189,7 @@
         }
         .breadcrumb a:hover { border-bottom-color: #fff; }
 
-        /* --- INFO KONTAK CARD (sama seperti di FAQ sebelumnya) --- */
+        /* --- INFO KONTAK CARD --- */
         .info-card {
             background: white;
             border-radius: 16px;
@@ -229,7 +229,7 @@
             color: #64748b;
         }
 
-        /* --- FAQ SECTION (dari FAQ sebelumnya) --- */
+        /* --- FAQ SECTION --- */
         .faq-section {
             background: white;
             border-radius: 16px;
@@ -327,7 +327,7 @@
             background-color: #005082;
         }
 
-        /* FOOTER (dari news_detail) */
+        /* FOOTER */
         footer { background-color: var(--primary-color); color: white; padding-top: 70px; font-size: 14px; position: relative; margin-top: auto;}
         .footer-grid { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 40px; padding-bottom: 50px; max-width: 1200px; margin: 0 auto; padding: 0 20px 50px; }
         .footer-col { flex: 1; min-width: 250px; }
@@ -336,7 +336,7 @@
         .footer-links a:hover { color: #fff; transform: translateX(5px); }
         .copyright { background-color: rgba(0,0,0,0.1); text-align: center; padding: 25px 0; color: rgba(255,255,255,0.6); border-top: 1px solid rgba(255,255,255,0.1); }
 
-        /* CHAT WIDGET & SEARCH (dari news_detail) */
+        /* CHAT WIDGET & SEARCH */
         .chat-toggle-btn { position: fixed; bottom: 30px; right: 30px; width: 65px; height: 65px; background: linear-gradient(135deg, var(--primary-color), var(--primary-dark)); color: #ffffff; border: none; border-radius: 50%; box-shadow: 0 8px 25px rgba(0, 111, 176, 0.4); cursor: pointer; z-index: 10000; display: flex; align-items: center; justify-content: center; transition: all 0.3s; }
         .chat-toggle-btn:hover { transform: scale(1.1); box-shadow: 0 12px 30px rgba(0, 111, 176, 0.5); }
         .chat-toggle-btn.on-footer { background: var(--accent-yellow); color: var(--text-dark); }
@@ -355,11 +355,6 @@
         .chat-status { display: flex; align-items: center; gap: 6px; font-size: 12px; color: rgba(255,255,255,0.9); }
         .status-dot { width: 8px; height: 8px; background-color: #00ff9d; border-radius: 50%; }
 
-        @media (max-width: 768px) {
-            .chat-toggle-btn { bottom: 20px; right: 20px; }
-            .chat-box-container { width: calc(100% - 40px) !important; height: 65vh !important; right: 20px !important; left: 20px !important; bottom: 100px !important; border-radius: 16px !important; }
-        }
-
         .search-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); z-index: 99999; display: flex; justify-content: center; align-items: flex-start; padding-top: 100px; opacity: 0; visibility: hidden; transition: all 0.3s; }
         .search-overlay.active { opacity: 1; visibility: visible; }
         .search-content { width: 100%; max-width: 600px; position: relative; padding: 0 20px; transform: translateY(-20px); transition: 0.4s; }
@@ -373,6 +368,68 @@
         .search-item:hover { background: var(--bg-light-blue); border-color: var(--primary-color); transform: translateX(5px); }
         .search-item h4 { margin: 0 0 5px 0; color: var(--primary-color); font-size: 16px; }
         .search-item p { margin: 0; font-size: 13px; color: var(--text-gray); }
+
+        /* ===== PERBAIKAN RESPONSIV ===== */
+        @media (max-width: 768px) {
+            .page-header-faq h1 {
+                font-size: 2rem;
+            }
+            .page-header-faq p {
+                font-size: 1rem;
+            }
+            .info-card {
+                flex-direction: column;
+                gap: 20px;
+                padding: 20px;
+            }
+            .info-item {
+                width: 100%;
+            }
+            .faq-section {
+                padding: 25px;
+            }
+            .faq-question {
+                font-size: 1rem;
+                padding: 15px 0;
+            }
+            .faq-question i {
+                font-size: 1rem;
+            }
+            .faq-answer.show {
+                max-height: 800px; /* lebih longgar untuk konten panjang */
+            }
+            .back-home .btn-primary {
+                padding: 10px 20px;
+                font-size: 0.9rem;
+            }
+            /* Perbaikan tambahan untuk footer */
+            .footer-grid {
+                flex-direction: column;
+                gap: 30px;
+                text-align: center;
+            }
+            .footer-col {
+                min-width: auto;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .page-header-faq h1 {
+                font-size: 1.5rem;
+            }
+            .container-custom {
+                padding: 0 15px;
+            }
+            .info-content h3 {
+                font-size: 1rem;
+            }
+            .info-content p {
+                font-size: 0.9rem;
+            }
+            .faq-title {
+                font-size: 1.5rem;
+            }
+        }
     </style>
 </head>
 <body>
@@ -383,7 +440,7 @@
         <div class="loader-text">MEMUAT...</div>
     </div>
 
-    <!-- HEADER (sama persis dengan news_detail) -->
+    <!-- HEADER -->
     <header id="mainHeader">
         <div class="container-custom header-content">
             <div class="brand-area" onclick="window.location.href='index.html'" role="button" tabindex="0">
@@ -471,30 +528,6 @@
         </div>
     </div>
 
-    <!-- INFO KONTAK -->
-    <div class="info-card">
-        <div class="info-item">
-            <div class="info-icon"><i class="bi bi-geo-alt-fill"></i></div>
-            <div class="info-content">
-                <h3>Alamat</h3>
-                <p>Jalan Sultan Sulaiman No. 123<br>Samarinda, Kalimantan Timur 75123</p>
-            </div>
-        </div>
-        <div class="info-item">
-            <div class="info-icon"><i class="bi bi-clock-fill"></i></div>
-            <div class="info-content">
-                <h3>Jam Kerja</h3>
-                <p>Senin - Jumat : 08.00 - 16.00 WITA</p>
-            </div>
-        </div>
-        <div class="info-item">
-            <div class="info-icon"><i class="bi bi-envelope-fill"></i></div>
-            <div class="info-content">
-                <h3>Kontak</h3>
-                <p>pelayananuptbalmonsamarinda@gmail.com<br>0856-4828-3012</p>
-            </div>
-        </div>
-    </div>
 
     <!-- FAQ SECTION -->
     <div class="faq-section">
@@ -574,10 +607,7 @@
 
     <!-- SCRIPT FUNGSI UMUM (HEADER, MOBILE, CHAT, SEARCH) dan FAQ -->
     <script>
-        // ==================== FUNGSI UMUM (HEADER, MOBILE, CHAT, SEARCH) ====================
-        // Fungsi-fungsi ini diambil dari news_detail.html
-
-        // HEADER SCROLL
+        // ==================== FUNGSI UMUM ====================
         let ticking = false;
         function updateScroll() {
             const scrollY = window.scrollY;
@@ -599,7 +629,6 @@
             if (!ticking) { window.requestAnimationFrame(updateScroll); ticking = true; }
         }, { passive: true });
 
-        // MOBILE MENU
         function toggleMobileMenu() {
             const btn = document.getElementById('hamburgerBtn');
             const menu = document.getElementById('mobileNavDropdown');
@@ -649,7 +678,6 @@
             if (overlay && overlay.classList.contains('active') && event.target === overlay) closeMobileMenu();
         });
 
-        // CHAT TOGGLE
         function animateChatToggle() {
             const btn = document.getElementById("toggleBtn");
             const box = document.getElementById("chatBox");
@@ -665,7 +693,6 @@
             btn.classList.add("active"); box.classList.add("active");
         }
 
-        // SEARCH
         const pages = [
             { title: "Beranda", url: "index.html", desc: "Halaman utama Balmon Samarinda" },
             { title: "Profil", url: "profil.html", desc: "Informasi tentang Balmon Samarinda." },
@@ -708,7 +735,6 @@
         }
         document.addEventListener('keydown', (e) => { if(e.key === "Escape") closeSearch(); });
 
-        // LOADER
         window.addEventListener('load', () => {
             const loader = document.getElementById('pageLoader');
             if(loader) loader.classList.add('hidden');
@@ -718,7 +744,7 @@
             if (event.persisted && loader) loader.classList.add('hidden');
         });
 
-        // ==================== DATA FAQ (dari konten Balmon Jogja) ====================
+        // ==================== DATA FAQ ====================
         const faqData = [
             {
                 question: "Dimanakah pengajuan izin frekuensi radio dilakukan?",
@@ -883,8 +909,6 @@
             answerDiv.innerHTML = `<p>${item.answer}</p>`;
 
             questionBtn.addEventListener('click', function() {
-                const isActive = this.classList.contains('active');
-                // Tutup semua jawaban lain (opsional)
                 document.querySelectorAll('.faq-question').forEach(q => {
                     if (q !== this) {
                         q.classList.remove('active');
