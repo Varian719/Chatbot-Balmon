@@ -154,121 +154,50 @@
         /* ===== MOBILE SIDEBAR (OFF-CANVAS) ===== */
         /* Overlay */
         .mobile-nav-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
-            backdrop-filter: blur(3px);
-            z-index: 1000;
-            opacity: 0;
-            visibility: hidden;
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-color: rgba(0, 0, 0, 0.5); backdrop-filter: blur(3px);
+            z-index: 1000; opacity: 0; visibility: hidden;
             transition: opacity 0.3s ease, visibility 0.3s ease;
         }
 
         /* Sidebar */
         .mobile-nav-dropdown {
-            position: fixed;
-            top: 0;
-            left: -280px; /* tersembunyi di kiri */
-            width: 280px;
-            height: 100vh;
-            background-color: #ffffff;
-            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
-            z-index: 1001;
-            overflow-y: auto;
-            transition: left 0.3s ease;
-            display: block;
-            padding-top: 20px;
+            position: fixed; top: 0; left: -280px; width: 280px; height: 100vh;
+            background-color: #ffffff; box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+            z-index: 1001; overflow-y: auto; transition: left 0.3s ease;
+            display: block; padding-top: 20px;
         }
 
-        .mobile-nav-dropdown.active {
-            left: 0;
-        }
-
-        .mobile-nav-overlay.active {
-            opacity: 1;
-            visibility: visible;
-        }
+        .mobile-nav-dropdown.active { left: 0; }
+        .mobile-nav-overlay.active { opacity: 1; visibility: visible; }
 
         /* Styling menu item dalam sidebar */
         .mobile-menu-item {
-            padding: 15px 25px;
-            border-bottom: 1px solid #f0f0f0;
-            font-weight: 600;
-            color: var(--text-dark);
-            cursor: pointer;
-            transition: background 0.2s;
+            padding: 15px 25px; border-bottom: 1px solid #f0f0f0;
+            font-weight: 600; color: var(--text-dark); cursor: pointer; transition: background 0.2s;
         }
+        .mobile-menu-item:hover { background-color: var(--bg-light-blue); color: var(--primary-color); }
+        .mobile-menu-item.has-submenu { display: flex; justify-content: space-between; align-items: center; }
+        .mobile-menu-item.has-submenu::after { content: '▼'; font-size: 12px; transition: transform 0.3s; }
+        .mobile-menu-item.has-submenu.active::after { transform: rotate(-180deg); }
 
-        .mobile-menu-item:hover {
-            background-color: var(--bg-light-blue);
-            color: var(--primary-color);
-        }
-
-        .mobile-menu-item.has-submenu {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .mobile-menu-item.has-submenu::after {
-            content: '▼';
-            font-size: 12px;
-            transition: transform 0.3s;
-        }
-
-        .mobile-menu-item.has-submenu.active::after {
-            transform: rotate(-180deg);
-        }
-
-        .mobile-submenu {
-            max-height: 0;
-            overflow: hidden;
-            background-color: #f8f9fa;
-            transition: max-height 0.3s ease;
-        }
-
-        .mobile-submenu.active {
-            max-height: 500px;
-        }
-
-        .mobile-submenu a {
-            display: block;
-            padding: 12px 40px;
-            color: var(--text-gray);
-            font-size: 14px;
-            border-bottom: 1px solid #eee;
-            transition: all 0.2s;
-        }
-
-        .mobile-submenu a:hover {
-            background-color: #ffffff;
-            color: var(--primary-color);
-            padding-left: 48px;
-        }
+        .mobile-submenu { max-height: 0; overflow: hidden; background-color: #f8f9fa; transition: max-height 0.3s ease; }
+        .mobile-submenu.active { max-height: 500px; }
+        .mobile-submenu a { display: block; padding: 12px 40px; color: var(--text-gray); font-size: 14px; border-bottom: 1px solid #eee; transition: all 0.2s; }
+        .mobile-submenu a:hover { background-color: #ffffff; color: var(--primary-color); padding-left: 48px; }
 
         /* ========================================= */
         /* --- 3. HERO FULL SCREEN CAROUSEL --- */
         /* ========================================= */
         .hero-full-screen {
-            position: relative;
-            height: 100vh;
-            width: 100vw;
-            display: flex;
-            align-items: center; /* Teks di tengah secara vertikal */
-            overflow: hidden;
+            position: relative; height: 100vh; width: 100vw;
+            display: flex; align-items: center; overflow: hidden;
         }
 
         /* Carousel Background */
         .hero-carousel-background {
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            z-index: 1;
-            background-color: #000;
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; background-color: #000;
         }
-
         .carousel-slide {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             background-size: cover; background-position: center;
@@ -277,32 +206,22 @@
         }
         .carousel-slide.active { opacity: 1; transform: scale(1); z-index: 2; }
 
-        /* Gradasi agar teks di kiri bisa dibaca jelas dengan background foto apapun */
+        /* --- HERO OVERLAY (NO GRADIENT) --- */
         .hero-overlay {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background: linear-gradient(90deg, rgba(0, 80, 130, 0.95) 0%, rgba(0, 80, 130, 0.6) 45%, rgba(0, 80, 130, 0.1) 100%);
+            /* Warna solid hitam transparan rata */
+            background: rgba(0, 0, 0, 0.4);
             z-index: 3; pointer-events: none;
         }
 
         /* Konten Teks melayang di atas */
-        .hero-content {
-            position: relative;
-            z-index: 4;
-            width: 100%;
-        }
+        .hero-content { position: relative; z-index: 4; width: 100%; }
 
         .hero-text-wrapper {
-            max-width: 700px; /* Batasan lebar teks di sebelah kiri */
-            color: #ffffff;
-            padding-top: 60px; /* Offset dari header */
+            max-width: 700px; color: #ffffff; padding-top: 60px;
         }
-
-        .hero-text-wrapper .breadcrumb {
-            font-size: 14px; opacity: 0.9; margin-bottom: 25px; font-weight: 500; color: powderblue;
-        }
-        .hero-text-wrapper .breadcrumb a {
-            color: white; text-decoration: none; border-bottom: 1px solid rgba(255,255,255,0.4); transition: 0.3s;
-        }
+        .hero-text-wrapper .breadcrumb { font-size: 14px; opacity: 0.9; margin-bottom: 25px; font-weight: 500; color: powderblue; }
+        .hero-text-wrapper .breadcrumb a { color: white; text-decoration: none; border-bottom: 1px solid rgba(255,255,255,0.4); transition: 0.3s; }
         .hero-text-wrapper .breadcrumb a:hover { border-bottom-color: #fff; text-decoration: none; }
 
         .hero-text-wrapper .hero-title { 
@@ -353,50 +272,58 @@
         
         .intro-image img {
             width: 100%; max-width: 350px; border-radius: 16px; 
-            box-shadow: none; /* Shadow dihilangkan */
-            border: none; 
-            position: relative; z-index: 2;
+            box-shadow: none; border: none; position: relative; z-index: 2;
         }
-
-        /* Bagian ini dimatikan agar box di belakang hilang */
-        .intro-image::before {
-            display: none; 
-        }
+        .intro-image::before { display: none; }
 
         .intro-image h3 { margin: 20px 0 5px 0; color: var(--primary-dark); font-size: 22px; }
         .intro-image p { margin: 0; color: var(--accent-red); font-weight: 600; font-size: 14px; text-transform: uppercase; }
-        
-        .intro-text p {
-            font-size: 16px; line-height: 1.8; color: var(--text-dark); margin-bottom: 20px; text-align: justify;
+        .intro-text p { font-size: 16px; line-height: 1.8; color: var(--text-dark); margin-bottom: 20px; text-align: justify; }
+
+        /* TUGAS & FUNGSI SECTION (MINIMALIST & CLEAN) */
+        .tf-grid { 
+            display: grid; 
+            grid-template-columns: 1fr; /* 1 Kolom ke bawah */
+            gap: 50px; 
         }
 
-        /* TUGAS & FUNGSI SECTION */
-        .tf-grid { display: grid; grid-template-columns: 1fr 1.5fr; gap: 40px; }
         .tf-card {
-            background: #fff; padding: 40px; border-radius: 16px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.05); border: 1px solid rgba(0,0,0,0.03);
-            position: relative; overflow: hidden;
+            background: transparent; 
+            padding: 0; 
+            border: none; 
+            box-shadow: none;
+            position: relative; 
+            overflow: visible;
         }
-        .tf-card::before {
-            content: ''; position: absolute; top: 0; left: 0; width: 4px; height: 100%;
-            background-color: var(--primary-color);
-        }
+        .tf-card::before { display: none; }
+
         .tf-card h3 { 
-            font-size: 24px; color: var(--primary-dark); margin-top: 0; margin-bottom: 20px;
-            display: flex; align-items: center; gap: 10px;
+            font-size: 26px; 
+            font-weight: 800;
+            color: var(--primary-dark); 
+            margin-top: 0; 
+            margin-bottom: 20px;
+            /* Garis bawah tipis minimalis */
+            border-bottom: 1px solid #ddd; 
+            padding-bottom: 10px;
+            display: inline-block;
         }
-        .tf-card h3 i { color: var(--accent-yellow); font-size: 28px; }
+        /* Ikon dihapus total di sini */
+        
         .tf-card p { font-size: 16px; line-height: 1.8; color: var(--text-dark); text-align: justify; }
         
+        /* List Point Minimalis (Titik) */
         .check-list-custom { list-style: none; padding: 0; margin: 0; }
         .check-list-custom li { 
-            position: relative; padding-left: 40px; margin-bottom: 16px; 
-            color: var(--text-dark); font-weight: 500; font-size: 15px; line-height: 1.6; text-align: justify;
+            position: relative; padding-left: 25px; margin-bottom: 10px; 
+            color: var(--text-dark); font-weight: 400; font-size: 15px; line-height: 1.6; text-align: justify;
         }
         .check-list-custom li::before {
-            content: '\F26A'; /* Bootstrap Icon Check Circle */
-            font-family: 'bootstrap-icons'; position: absolute; left: 0; top: 2px; 
-            color: var(--primary-color); font-size: 20px;
+            content: ''; /* Kosongkan konten, ganti jadi titik */
+            position: absolute; left: 5px; top: 10px;
+            width: 6px; height: 6px;
+            background-color: var(--primary-color);
+            border-radius: 50%; /* Membuat kotak jadi bulat */
         }
 
         /* STRUKTUR ORGANISASI */
@@ -448,10 +375,11 @@
             .tf-grid { grid-template-columns: 1fr; }
         }
         @media (max-width: 768px) {
-            /* Tampilan layar kecil (HP) */
             .hero-full-screen { height: auto; min-height: 100vh; display: flex; align-items: center; text-align: center; }
-            /* Mengubah gradasi dari ke kanan menjadi ke bawah pada layar kecil */
-            .hero-overlay { background: linear-gradient(180deg, rgba(0, 80, 130, 0.95) 0%, rgba(0, 80, 130, 0.7) 100%); }
+            
+            /* --- HERO OVERLAY MOBILE (SOLID TRANSPARENT) --- */
+            .hero-overlay { background: rgba(0, 0, 0, 0.4); }
+
             .hero-text-wrapper { margin: 0 auto; padding-top: 100px; padding-bottom: 80px; }
             .hero-text-wrapper .hero-title { font-size: 2rem; }
             
@@ -508,7 +436,9 @@
         .chat-box-container.active { opacity: 1; visibility: visible; transform: translateY(0) scale(1); }
         
         .chat-header {
-            background: linear-gradient(135deg, var(--primary-color) 0%, #00406b 100%); padding: 20px; 
+            /* --- HEADER CHAT SOLID BIRU (NO GRADIENT) --- */
+            background: var(--primary-color);
+            padding: 20px; 
             display: flex; align-items: center; justify-content: space-between;
             border-bottom: 3px solid var(--accent-yellow); color: #fff; flex-shrink: 0;
         }
@@ -563,7 +493,10 @@
                 <a href="https://www.instagram.com/balmonsamarinda/" target="_blank" class="social-icon" aria-label="Instagram"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.163 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg></a>
                 <a href="https://www.facebook.com/profile.php?id=100068963927418" target="_blank" class="social-icon" aria-label="Facebook"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9 8h-3v4h3v12h5v-12h3.642l.358-4h-4v-1.667c0-.955.192-1.333 1.115-1.333h2.885v-5h-3.808c-3.596 0-5.192 1.583-5.192 4.615v3.385z"/></svg></a>
                 <a href="https://youtube.com/@balmonsamarindaa?si=EZUAjSarJaMD-7R9" target="_blank" class="social-icon" aria-label="YouTube"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z"/></svg></a>
-                <a href="https://www.tiktok.com/@balmon.samarinda?lang=en" target="_blank" class="social-icon" aria-label="TikTok"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M12.53.02C13.84 0 15.14.01 16.44 0c.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.65-1.58-1.09-.1-.09-.19-.2-.29-.3v6.52c.02 4.07-3.23 7.49-7.29 7.49-3.93.04-7.3-3.13-7.48-7.05-.07-1.84.58-3.66 1.83-5.01 1.25-1.35 3.03-2.14 4.86-2.16v4.03c-1.11-.02-2.19.46-2.95 1.29a4.106 4.106 0 0 0-1.1 2.89c.04 2.22 1.84 4.02 4.06 4.02 2.22 0 4.02-1.8 4.02-4.02V.02h.22z"/></svg></a>
+                <a href="https://www.tiktok.com/@balmon.samarinda?lang=en" target="_blank" class="social-icon" aria-label="TikTok">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" stroke="none">
+                    <path d="M18.2 4.5c-2.3-.2-4.1-1.9-4.4-4.2V0h-3.4v13.8c0 1.4-1.2 2.6-2.8 2.6-1.4 0-2.6-1.1-2.6-2.6s1.1-2.6 2.6-2.6h.2l.5.1V7.5h-.7c-3.4 0-6.2 2.8-6.2 6.2S4.2 20 7.7 20s6.2-2.8 6.2-6.2v-7c1.1 1.1 2.4 1.6 3.9 1.6h.8V4.6l-.4-.1z"/>
+                </svg></a>
             </div>
             
             <nav class="nav-menu" role="navigation" aria-label="Menu Utama">
@@ -575,7 +508,7 @@
                             <li role="none"><a href="konsesi.html" role="menuitem">Izin Konsesi</a></li>
                             <li role="none"><a href="maritim.html" role="menuitem">Izin Maritim</a></li>
                             <li role="none"><a href="fm.html" role="menuitem">Izin Penyiaran FM</a></li>
-                            <li role="none"><a href="arsip.html" role="menuitem">Download</a>
+                            <li role="none"><a href="arsip.html" role="menuitem">Download</a></li>
                             <li role="none"><a href="faq.html" role="menuitem">FAQ</a></li>
                             <li role="none"><a href="simulasibhp.html" role="menuitem">Simulasi Estimasi BHP ISR</a></li>
                         </ul>
@@ -630,10 +563,8 @@
         <div class="hero-content">
             <div class="container">
                 <div class="hero-text-wrapper">
-                    <div class="breadcrumb">
-                        <a href="index.html">Beranda</a> / <span style="color: var(--accent-yellow);">Profil Organisasi</span>
-                    </div>
-                    <h1 class="hero-title">Profil Balai Monitor Spektrum Frekuensi Radio Kelas I Samarinda</h1>
+                    <h1 class="hero-title" style="color: lightskyblue; font-size: 24px;">Berkenalan Dengan</h1>
+                    <h1 class="hero-title">Balai Monitor Spektrum Frekuensi Radio Kelas I Samarinda</h1>
                 </div>
             </div>
         </div>
@@ -655,7 +586,7 @@
         </div>
     </section>
 
-    <section class="bg-light">
+    <section class="bg-white">
         <div class="container">
             <div class="section-header">
                 <h2>Tugas & Fungsi</h2>
@@ -663,7 +594,7 @@
             
             <div class="tf-grid">
                 <div class="tf-card">
-                    <h3><i class="bi bi-shield-check"></i> Tugas</h3>
+                    <h3>Tugas</h3>
                     <p> Balai Monitor Spektrum Frekuensi Radio Kelas I Samarinda mempunyai tugas melaksanakan pengawasan dan pengendalian di bidang penggunaan spektrum frekuensi radio.</p>
                     <p> Sebagai garda terdepan dalam pengawasan spektrum frekuensi, Balmon Samarinda melaksanakan berbagai kegiatan utama, antara lain:</p>
                     <ul class="check-list-custom" style="margin-top: 15px;">
@@ -676,7 +607,7 @@
                 </div>
                 
                 <div class="tf-card">
-                    <h3><i class="bi bi-gear-wide-connected"></i> Fungsi</h3>
+                    <h3>Fungsi</h3>
                     <p> Dalam melaksanakan tugas tersebut, Balai Monitor Spektrum Frekuensi Radio Kelas I Samarinda menyelenggarakan tugas fungsi :</p>
                     <ul class="check-list-custom">
                         <li> Penyusunan Rencana dan Program;</li>
@@ -719,7 +650,7 @@
             
             <div class="helpdesk-grid">
                 <div class="helpdesk-card">
-                    <div class="helpdesk-icon"><i class="bi bi-headset"></i></div>
+                    <div class="helpdesk-icon"><i class="bi bi-whatsapp"></i></div>
                     <h3>Helpdesk 1</h3>
                     <p>Pelaporan dan Gangguan Frekuensi Radio</p>
                 </div>
@@ -729,7 +660,7 @@
                     <p>Konsultasi & Perizinan Frekuensi (ISR)</p>
                 </div>
                 <div class="helpdesk-card">
-                    <div class="helpdesk-icon"><i class="bi bi-chat-dots"></i></div>
+                    <div class="helpdesk-icon"><i class="bi bi-whatsapp"></i></div>
                     <h3>Helpdesk 3</h3>
                     <p>Pengaduan Layanan Masyarakat</p>
                 </div>
