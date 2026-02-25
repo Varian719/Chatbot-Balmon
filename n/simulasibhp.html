@@ -405,6 +405,7 @@
                         <option value="base">Radio Konvensional (Base Station)</option>
                         <option value="repeater">Radio Konvensional (Repeater)</option>
                         <option value="bwa">BWA / Wireless Data (FS - PMP) - Sekunder</option>
+                        <option value="bwa_primer">BWA / Wireless Data (FS - PMP) - Primer</option>
                         <option value="penyiaran_radio_le30">Jasa Penyiaran Radio ≤ 30 MHz</option>
                         <option value="penyiaran_radio_gt30">Jasa Penyiaran Radio > 30 MHz</option>
                         <option value="penyiaran_tv">Jasa Penyiaran Televisi</option>
@@ -454,8 +455,10 @@
                 <h3>Hasil Estimasi BHP ISR per Tahun</h3>
                 <div class="result-amount" id="resultAmount">Rp 0</div>
                 <p class="disclaimer">
-                    <i class="bi bi-info-circle"></i> <strong>Catatan:</strong> Hasil ini adalah estimasi berdasarkan PP No. 43/2023 dan data IB/IP dari SDPPI Maps. Untuk perhitungan resmi, gunakan aplikasi resmi Kominfo.
-                </p>
+                    <i class="bi bi-info-circle"></i> <strong>Catatan:</strong> Hasil ini adalah estimasi berdasarkan PP No. 43/2023 dan data IB/IP dari SDPPI Maps. Untuk perhitungan resmi, gunakan aplikasi resmi Komdigi berikut.
+                    <br><button onclick="window.open('https://www.postel.go.id/sdppi_maps/10-20200601-sdppi-maps-simulasi-bhp.php', '_blank')" class="btn-estimate" style="font-size:14px; padding:8px 20px; width:auto; margin-top:10px;">
+                              Akses web resmi Simulasi BHP
+                    </button></p>
             </div>
         </div>
     </main>
@@ -683,6 +686,7 @@
             base: { name: "Radio Konvensional (Base Station)", Ib: 2.7200, Ip: 0.1300, isAngkasa: false },
             repeater: { name: "Radio Konvensional (Repeater)", Ib: 11.8900, Ip: 0.6500, isAngkasa: false },
             bwa: { name: "BWA / Wireless Data (FS - PMP) - Sekunder", Ib: 0.0200, Ip: 0.0600, isAngkasa: false },
+            bwa_primer: { name: "BWA / Wireless Data (FS - PMP) - Primer", Ib: 0.4100, Ip: 0.9100, isAngkasa: false },
             penyiaran_radio_le30: { name: "Jasa Penyiaran Radio ≤ 30 MHz", Ib: 10.9300, Ip: 0.2400, isAngkasa: false },
             penyiaran_radio_gt30: { name: "Jasa Penyiaran Radio > 30 MHz", Ib: 0.8400, Ip: 0.4900, isAngkasa: false },
             penyiaran_tv: { name: "Jasa Penyiaran Televisi", Ib: 0.6400, Ip: 8.4300, isAngkasa: false },
