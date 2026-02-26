@@ -3,243 +3,274 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Peta Monitor Kaltim</title>
+    <title>Estimasi BHP ISR Kaltim - Auto Calculate</title>
     
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link href="https://fonts.googleapis.com/css2?family=Albert+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
     <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 0;
-            padding: 20px;
-            background-color: #f8f9fa;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 15px;
+        :root {
+            --primary-color: #006fb0;
+            --primary-dark: #005082;
+            --accent-yellow: #ecbb1d;
+            --bg-light-blue: #f4f9fc;
+            --text-dark: #1e293b;
+            --text-gray: #64748b;
         }
 
-        h2 { color: #444; margin-bottom: 5px; }
+        body { 
+            margin: 0; font-family: 'Albert Sans', sans-serif; 
+            background-color: var(--bg-light-blue); color: var(--text-dark); 
+        }
 
-        /* Container Peta */
-        #map-container {
-            width: 100%;
-            max-width: 1000px;
-            height: 600px;
-            border-radius: 15px;
+        .main-wrapper {
+            display: flex;
+            flex-direction: row;
+            height: calc(100vh - 80px);
+            margin-top: 80px;
             overflow: hidden;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
-            border: 1px solid #ddd;
-        }
-        #map { width: 100%; height: 100%; background: #fff; }
-
-        /* Area Tombol */
-        #buttons-area {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-            justify-content: center;
-            max-width: 1000px;
         }
 
-        /* Style Tombol yang Elegan & Minimalis */
-        .btn-kota {
-            padding: 8px 15px;
-            border: 1px solid #ced4da;
-            background-color: white;
-            color: #555;
-            border-radius: 50px; /* Bulat */
-            cursor: pointer;
-            font-size: 13px;
-            font-weight: 500;
-            transition: all 0.2s ease;
+        /* SISI KIRI: PETA */
+        .map-section {
+            flex: 1.2;
+            position: relative;
+            border-right: 2px solid #e2e8f0;
+        }
+        #map { width: 100%; height: 100%; z-index: 1; }
+
+        /* SISI KANAN: FORM */
+        .estimator-section {
+            flex: 0.8;
+            background: white;
+            overflow-y: auto;
+            padding: 30px;
         }
 
-        .btn-kota:hover {
-            background-color: #f1f3f5;
-            transform: translateY(-1px);
+        .info-zona {
+            background-color: #e8f4fe; border-radius: 12px;
+            padding: 15px; margin-bottom: 20px;
+            border-left: 4px solid var(--accent-yellow); font-size: 14px;
         }
 
-        /* Tombol Aktif (Sedikit lebih gelap tapi tetap soft) */
-        .btn-kota.active {
-            background-color: #495057;
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; font-weight: 600; margin-bottom: 5px; font-size: 13px; color: var(--text-gray); }
+        
+        .form-control { 
+            width: 100%; padding: 10px; border: 2px solid #e2e8f0; 
+            border-radius: 8px; font-size: 15px; font-family: inherit;
+        }
+
+        /* TAMPILAN HASIL OTOMATIS */
+        .result-container {
+            margin-top: 20px;
+            padding: 20px;
+            background: linear-gradient(135deg, #006fb0 0%, #004a77 100%);
+            border-radius: 12px;
             color: white;
-            border-color: #495057;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0,111,176,0.2);
         }
 
-        .btn-reset {
-            border-color: #e03131;
-            color: #e03131;
-        }
-        .btn-reset:hover { background-color: #fff5f5; }
+        .result-label { font-size: 12px; opacity: 0.8; text-transform: uppercase; letter-spacing: 1px; }
+        .result-amount { font-size: 28px; font-weight: 800; margin: 5px 0; color: #fff; }
 
+        .label-kota {
+            background: transparent !important; border: none !important;
+            box-shadow: none !important; color: #333; font-weight: bold;
+            text-shadow: 1px 1px 0 #fff, -1px -1px 0 #fff;
+        }
+
+        header {
+            height: 80px; background: white; position: fixed; top: 0; 
+            width: 100%; z-index: 1000; box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            display: flex; align-items: center; justify-content: space-between; padding: 0 30px;
+        }
+
+        @media (max-width: 992px) {
+            .main-wrapper { flex-direction: column; height: auto; overflow: visible; }
+            .map-section { height: 350px; flex: none; }
+        }
     </style>
 </head>
 <body>
 
-    <h2>Peta Wilayah Kaltim</h2>
+    <header>
+        <div style="display:flex; align-items:center; gap:12px;">
+            <img src="balmonsmd1.png" alt="Logo" style="height:40px;">
+            <strong style="color:var(--primary-color)">ESTIMATOR BHP</strong>
+        </div>
+        <small style="color:var(--text-gray)">Real-time Calculation</small>
+    </header>
 
-    <div id="buttons-area">
-        <button class="btn-kota btn-reset" onclick="resetPeta()">↺ Reset Peta</button>
+    <div class="main-wrapper">
+        <div class="map-section">
+            <div id="map"></div>
         </div>
 
-    <div id="map-container">
-        <div id="map"></div>
+        <div class="estimator-section">
+            <div class="info-zona" id="infoZona">
+                <i class="bi bi-geo-alt-fill"></i> Klik wilayah pada peta
+            </div>
+
+            <form id="autoBhpForm">
+                <div class="form-group">
+                    <label>Kabupaten / Kota</label>
+                    <select class="form-control auto-calc" id="kabupatenSelect">
+                        <option value="">-- Pilih Wilayah --</option>
+                        <option value="SAMARINDA">SAMARINDA (Zona 2)</option>
+                        <option value="BALIKPAPAN">BALIKPAPAN (Zona 2)</option>
+                        <option value="BONTANG">BONTANG (Zona 3)</option>
+                        <option value="KUTAI KARTANEGARA">KUTAI KARTANEGARA (Zona 3)</option>
+                        <option value="KUTAI BARAT">KUTAI BARAT (Zona 3)</option>
+                        <option value="KUTAI TIMUR">KUTAI TIMUR (Zona 3)</option>
+                        <option value="MAHAKAM ULU">MAHAKAM ULU (Zona 3)</option>
+                        <option value="PENAJAM PASER UTARA">PENAJAM PASER UTARA (Zona 3)</option>
+                        <option value="BERAU">BERAU (Zona 4)</option>
+                        <option value="PASER">PASER (Zona 4)</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Layanan</label>
+                    <select class="form-control auto-calc" id="serviceType">
+                        <option value="ht_5w">HT (5 Watt)</option>
+                        <option value="mu_ht">MU/HT (5-10 Watt)</option>
+                        <option value="base">Base Station</option>
+                        <option value="repeater">Repeater</option>
+                        <option value="trunking">Radio Trunking</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Pita Frekuensi</label>
+                    <select class="form-control auto-calc" id="bandSelect">
+                        <option value="vhf">VHF</option>
+                        <option value="uhf">UHF</option>
+                        <option value="shf">SHF</option>
+                    </select>
+                </div>
+
+                <div style="display: flex; gap: 15px;">
+                    <div class="form-group" style="flex: 1;">
+                        <label>Bandwidth (kHz)</label>
+                        <input type="number" class="form-control auto-calc" id="bandwidth" value="16">
+                    </div>
+                    <div class="form-group" style="flex: 1;">
+                        <label>Daya (Watt)</label>
+                        <input type="number" class="form-control auto-calc" id="powerWatt" value="5">
+                    </div>
+                </div>
+            </form>
+
+            <div class="result-container">
+                <div class="result-label">Estimasi Biaya / Tahun</div>
+                <div class="result-amount" id="resultAmount">Rp 0</div>
+                <div id="dbmDisplay" style="font-size: 11px; opacity: 0.7;">36.99 dBm</div>
+            </div>
+            
+            <p style="font-size: 11px; color: var(--text-gray); margin-top: 15px; text-align: center;">
+                *Hasil akan berubah otomatis setiap kali input diperbarui.
+            </p>
+        </div>
     </div>
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
-        // --- 1. CONFIG & DATA ---
-        
-        // Palet Warna Soft/Pastel (Tidak Mencolok)
-        var softColors = {
-            "SAMARINDA": "#88b3c8",       // Biru Pudar
-            "BALIKPAPAN": "#eebb9a",      // Orange Salmon Soft
-            "BONTANG": "#f7d794",         // Kuning Mustard Soft
-            "KUTAI KARTANEGARA": "#a3cb38", // Hijau Olive Soft
-            "KUTAI TIMUR": "#d980fa",     // Ungu Lavender
-            "KUTAI BARAT": "#f8a5c2",     // Pink Pudar
-            "BERAU": "#55e6c1",           // Tosca Soft
-            "PASER": "#b2bec3",           // Abu Kebiruan
-            "PENAJAM PASER UTARA": "#e77f67", // Merah Bata Soft
-            "MAHAKAM ULU": "#58b19f"      // Hijau Laut Pudar
+        const kabupatenZona = {
+            "SAMARINDA": 2, "BALIKPAPAN": 2, "BONTANG": 3, "KUTAI KARTANEGARA": 3,
+            "KUTAI BARAT": 3, "KUTAI TIMUR": 3, "MAHAKAM ULU": 3, "PENAJAM PASER UTARA": 3,
+            "BERAU": 4, "PASER": 4
         };
 
-        var map = L.map('map').setView([0.5386586, 116.419389], 7);
+        const zonaData = {
+            2: { vhf: { HDLP: 10310, HDDP: 95732 }, uhf: { HDLP: 9418, HDDP: 87585 }, shf: { HDLP: 7745, HDDP: 71491 } },
+            3: { vhf: { HDLP: 7733, HDDP: 71799 }, uhf: { HDLP: 7063, HDDP: 65688 }, shf: { HDLP: 5809, HDDP: 53618 } },
+            4: { vhf: { HDLP: 5155, HDDP: 47866 }, uhf: { HDLP: 4709, HDDP: 43792 }, shf: { HDLP: 3873, HDDP: 35745 } }
+        };
+
+        const serviceData = {
+            ht_5w: { Ib: 0.3900, Ip: 0.0200 }, mu_ht: { Ib: 0.3900, Ip: 0.0200 },
+            base: { Ib: 2.7200, Ip: 0.1300 }, repeater: { Ib: 11.8900, Ip: 0.6500 },
+            trunking: { Ib: 14.8700, Ip: 0.5800 }
+        };
+
+        // --- PETA ---
+        var map = L.map('map').setView([0.5386, 116.4194], 7);
+        L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png').addTo(map);
+
         var geojsonLayer;
-
-        // Base Map (Versi Clean/Putih agar warna pastel terlihat jelas)
-        L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
-            attribution: '&copy; OpenStreetMap & CartoDB',
-            subdomains: 'abcd',
-            maxZoom: 19
-        }).addTo(map);
-
-        // --- 2. LOGIKA STYLE PETA ---
-
-        function getFeatureName(feature) {
-            var p = feature.properties;
-            var name = p.name || p.WADMKK || p.NAMOBJ || p.kabupaten || "";
-            return name.toUpperCase().replace("KOTA ", "").replace("KABUPATEN ", "").trim();
-        }
-
-        // Style Default (Saat tidak ada yang dipilih atau kota yang tidak aktif)
-        // KITA BUAT JADI ABU-ABU POLOS
-        var defaultStyle = {
-            fillColor: "#ececec",  // Abu-abu sangat muda (seperti kertas)
-            weight: 1,             // Garis tipis
-            opacity: 1,
-            color: "#bdc3c7",      // Garis abu-abu
-            fillOpacity: 0.7       // Agak transparan
-        };
-
-        // Style Aktif (Hanya untuk kota yang dipilih)
-        function getActiveStyle(namaKota) {
-            return {
-                fillColor: softColors[namaKota] || "#95a5a6", // Ambil warna pastel
-                weight: 2,
-                opacity: 1,
-                color: "#555",    // Garis lebih tegas sedikit
-                fillOpacity: 0.9  // Warna lebih solid
-            };
-        }
-
-        // --- 3. LOGIKA UTAMA ---
+        var styleDefault = { fillColor: "#ececec", weight: 1, color: "#bdc3c7", fillOpacity: 0.7 };
+        var styleActive = { fillColor: "#006fb0", weight: 2, color: "#005082", fillOpacity: 0.8 };
 
         fetch('batas_kaltim.geojson')
             .then(res => res.json())
             .then(data => {
                 geojsonLayer = L.geoJSON(data, {
-                    style: defaultStyle, // Mula-mula semua abu-abu
-                    onEachFeature: function(feature, layer) {
-                        var nama = getFeatureName(feature);
-                        
-                        // Popup simpel
-                        layer.bindPopup(nama, {closeButton: false});
-                        
-                        // Hover Effect (Biar interaktif dikit saat mouse lewat)
-                        layer.on('mouseover', function(e) {
-                            if (!layer._isSelected) { // Jangan ubah jika sedang dipilih
-                                layer.setStyle({ fillOpacity: 1, color: '#999' });
-                            }
-                        });
-                        layer.on('mouseout', function(e) {
-                            if (!layer._isSelected) {
-                                layer.setStyle(defaultStyle); // Balik ke abu-abu
-                            }
-                        });
-
-                        // Klik di Peta = Klik Tombol
-                        layer.on('click', function() {
-                            selectRegion(nama);
+                    style: styleDefault,
+                    onEachFeature: (feature, layer) => {
+                        layer.on('click', () => {
+                            let n = feature.properties.name || feature.properties.WADMKK || "";
+                            let nama = n.toUpperCase().replace("KOTA ", "").replace("KABUPATEN ", "").trim();
+                            document.getElementById('kabupatenSelect').value = nama;
+                            updateSelection(nama);
                         });
                     }
                 }).addTo(map);
-
-                generateButtons();
-            })
-            .catch(err => console.error(err));
-
-
-        // --- 4. FUNGSI KONTROL ---
-
-        function generateButtons() {
-            var container = document.getElementById('buttons-area');
-            
-            // Urutkan tombol berdasarkan abjad
-            var sortedKeys = Object.keys(softColors).sort();
-
-            sortedKeys.forEach(kota => {
-                var btn = document.createElement("button");
-                btn.className = "btn-kota";
-                btn.innerText = kota;
-                btn.id = "btn-" + kota.replace(/\s+/g, '');
-                btn.onclick = function() { selectRegion(kota); };
-                container.appendChild(btn);
             });
-        }
 
-        function selectRegion(targetName) {
-            // 1. Reset visual tombol
-            document.querySelectorAll('.btn-kota').forEach(b => b.classList.remove('active'));
-            
-            // 2. Aktifkan tombol yang sesuai
-            var btnId = "btn-" + targetName.replace(/\s+/g, '');
-            var activeBtn = document.getElementById(btnId);
-            if(activeBtn) activeBtn.classList.add('active');
+        function updateSelection(nama) {
+            geojsonLayer.eachLayer(layer => {
+                let n = layer.feature.properties.name || layer.feature.properties.WADMKK || "";
+                let layerName = n.toUpperCase().replace("KOTA ", "").replace("KABUPATEN ", "").trim();
+                layer.unbindTooltip();
 
-            // 3. Update Peta
-            geojsonLayer.eachLayer(function(layer) {
-                var layerName = getFeatureName(layer.feature);
-                
-                if (layerName === targetName) {
-                    // INI YANG DIPILIH -> Beri Warna Pastel
-                    layer.setStyle(getActiveStyle(targetName));
-                    layer._isSelected = true; // Tandai agar hover tidak merusak warna
-                    map.fitBounds(layer.getBounds()); // Zoom ke lokasi
+                if (layerName === nama) {
+                    layer.setStyle(styleActive);
+                    map.fitBounds(layer.getBounds());
+                    layer.bindTooltip(layerName, { permanent: true, direction: "center", className: "label-kota" });
+                    document.getElementById('infoZona').innerHTML = `<b>${nama}</b> (Zona ${kabupatenZona[nama]})`;
                 } else {
-                    // INI YANG LAIN -> Kembalikan ke Abu-abu
-                    layer.setStyle(defaultStyle);
-                    layer._isSelected = false;
+                    layer.setStyle(styleDefault);
                 }
             });
+            calculateBHP(); // Langsung hitung saat peta diklik
         }
 
-        function resetPeta() {
-            // Hapus status tombol
-            document.querySelectorAll('.btn-kota').forEach(b => b.classList.remove('active'));
+        // --- FUNGSI HITUNG OTOMATIS ---
+        function calculateBHP() {
+            const kab = document.getElementById('kabupatenSelect').value;
+            const srvKey = document.getElementById('serviceType').value;
+            const bandKey = document.getElementById('bandSelect').value;
+            const bw = parseFloat(document.getElementById('bandwidth').value) || 0;
+            const watt = parseFloat(document.getElementById('powerWatt').value) || 0;
+
+            if (!kab) {
+                document.getElementById('resultAmount').innerText = "Rp 0";
+                return;
+            }
+
+            const zona = kabupatenZona[kab];
+            const dataFreq = zonaData[zona][bandKey];
+            const dataSrv = serviceData[srvKey];
+            const dbm = 10 * Math.log10(watt * 1000);
             
-            // Kembalikan semua peta ke abu-abu
-            geojsonLayer.eachLayer(function(layer) {
-                layer.setStyle(defaultStyle);
-                layer._isSelected = false;
+            document.getElementById('dbmDisplay').innerText = isNaN(dbm) ? "0 dBm" : dbm.toFixed(2) + " dBm";
+
+            // Rumus BHP
+            const total = (dataFreq.HDLP * dataSrv.Ib * bw + dataFreq.HDDP * dataSrv.Ip * dbm) / 2;
+
+            document.getElementById('resultAmount').innerText = isNaN(total) ? "Rp 0" : 'Rp ' + Math.round(total).toLocaleString('id-ID');
+        }
+
+        // Event Listener untuk semua input dengan class .auto-calc
+        document.querySelectorAll('.auto-calc').forEach(element => {
+            element.addEventListener('input', calculateBHP);
+            element.addEventListener('change', () => {
+                if (element.id === 'kabupatenSelect') updateSelection(element.value);
             });
-            
-            // Zoom out
-            map.setView([0.5386586, 116.419389], 7);
-        }
-
+        });
     </script>
 </body>
 </html>

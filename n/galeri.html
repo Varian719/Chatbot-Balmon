@@ -660,9 +660,12 @@
                     <li class="menu-item" onclick="window.location.href='galeri.html'">Publikasi</li>
                     <li class="menu-item" onclick="window.location.href='kontak.html'">Kontak</li>
                 </ul>
-                <button onclick="openSearch()" style="margin-left:10px; border:none; background:transparent; color:var(--text-dark); cursor:pointer;">
-                    <i class="bi bi-search" style="font-size:18px;"></i>
-                </button>
+            <button class="nav-search-btn" onclick="openSearch()" style="margin-left:10px; border:none; background:transparent; color:white; cursor:pointer;" aria-label="Cari">
+                <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                </svg>
+            </button>
             </nav>
             <button class="hamburger-btn" id="hamburgerBtn" onclick="toggleMobileMenu()">
                 <span></span><span></span><span></span>
@@ -687,7 +690,7 @@
     </header>
 
     <div class="page-header">
-        <div class="breadcrumb">
+        <div class="breadcrumb" style="justify-content: center;">
             <a href="index.html">Beranda</a> / <span style="color:var(--accent-yellow)">Galeri</span>
         </div>
         <h1 class="page-title">Galeri Publikasi</h1>
@@ -838,7 +841,7 @@
     <div id="searchOverlay" class="search-overlay">
         <div class="search-content">
             <button class="close-search" onclick="closeSearch()">&times;</button>
-            <h2 style="color:var(--primary-color); margin-bottom:20px;">Pencarian</h2>
+            <h2 style="color:var(--primary-color); margin-bottom:20px;">Pencarian Website</h2>
             <input type="text" id="searchInput" placeholder="Ketik kata kunci (misal: Izin, Maritim)..." onkeyup="performSearch()">
             <div id="searchResults" class="search-results"></div>
         </div>
