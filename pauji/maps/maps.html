@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Peta Monitor Kaltim</title>
+    
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f8f9fa;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+        }
+
+        h2 { color: #444; margin-bottom: 5px; }
+
+        /* Container Peta */
+        #map-container {
+            width: 100%;
+            max-width: 1000px;
+            height: 600px;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            border: 1px solid #ddd;
+        }
+        #map { width: 100%; height: 100%; background: #fff; }
+
+        /* Area Tombol */
+        #buttons-area {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            justify-content: center;
+            max-width: 1000px;
+        }
+
+        /* Style Tombol yang Elegan & Minimalis */
+        .btn-kota {
+            padding: 8px 15px;
+            border: 1px solid #ced4da;
+            background-color: white;
+            color: #555;
+            border-radius: 50px; /* Bulat */
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+
+        .btn-kota:hover {
+            background-color: #f1f3f5;
+            transform: translateY(-1px);
+        }
+
+        /* Tombol Aktif (Sedikit lebih gelap tapi tetap soft) */
+        .btn-kota.active {
+            background-color: #495057;
+            color: white;
+            border-color: #495057;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+        .btn-reset {
+            border-color: #e03131;
+            color: #e03131;
+        }
+        .btn-reset:hover { background-color: #fff5f5; }
+
+    </style>
+</head>
+<body>
+
+    <h2>Peta Wilayah Kaltim</h2>
+
+    <div id="buttons-area">
+        <button class="btn-kota btn-reset" onclick="resetPeta()">↺ Reset Peta</button>
+        </div>
+
+    <div id="map-container">
+        <div id="map"></div>
+    </div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script>
+        // --- 1. CONFIG & DATA ---
+        
+        // Palet Warna Soft/Pastel (Tidak Mencolok)
+        var softColors = {
+            "SAMARINDA": "#88b3c8",       // Biru Pudar
+            "BALIKPAPAN": "#eebb9a",      // Orange Salmon Soft
+            "BONTANG": "#f7d794",         // Kuning Mustard Soft
+            "KUTAI KARTANEGARA": "#a3cb38", // Hijau Olive Soft
+            "KUTAI TIMUR": "#d980fa",     // Ungu Lavender
+            "KUTAI BARAT": "#f8a5c2",     // Pink Pudar
+            "BERAU": "#55e6c1",           // Tosca Soft
+            "PASER": "#b2bec3",           // Abu Kebiruan
+            "PENAJAM PASER UTARA": "#e77f67", // Merah Bata Soft
+            "MAHAKAM ULU": "#58b19f"      // Hijau Laut Pudar
+        };
+
+        var map = L.map('map').setView([0.5386586, 116.419389], 7);
+        var geojsonLayer;
+
+        // Base Map (Versi Clean/Putih agar warna pastel terlihat jelas)
+        L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+            attribution: '&copy; OpenStreetMap & CartoDB',
+            subdomains: 'abcd',
+            maxZoom: 19
+        }).addTo(map);
+
+        // --- 2. LOGIKA STYLE PETA ---
+
+        function getFeatureName(feature) {
+            var p = feature.properties;
+            var name = p.name || p.WADMKK || p.NAMOBJ || p.kabupaten || "";
+            return name.toUpperCase().replace("KOTA ", "").replace("KABUPATEN ", "").trim();
+        }
+
+        // Style Default (Saat tidak ada yang dipilih atau kota yang tidak aktif)
+        // KITA BUAT JADI ABU-ABU POLOS
+        var defaultStyle = {
+            fillColor: "#ececec",  // Abu-abu sangat muda (seperti kertas)
+            weight: 1,             // Garis tipis
+            opacity: 1,
+            color: "#bdc3c7",      // Garis abu-abu
+            fillOpacity: 0.7       // Agak transparan
+        };
+
+        // Style Aktif (Hanya untuk kota yang dipilih)
+        function getActiveStyle(namaKota) {
+            return {
+                fillColor: softColors[namaKota] || "#95a5a6", // Ambil warna pastel
+                weight: 2,
+                opacity: 1,
+                color: "#555",    // Garis lebih tegas sedikit
+                fillOpacity: 0.9  // Warna lebih solid
+            };
+        }
+
+        // --- 3. LOGIKA UTAMA ---
+
+        fetch('batas_kaltim.geojson')
+            .then(res => res.json())
+            .then(data => {
+                geojsonLayer = L.geoJSON(data, {
+                    style: defaultStyle, // Mula-mula semua abu-abu
+                    onEachFeature: function(feature, layer) {
+                        var nama = getFeatureName(feature);
+                        
+                        // Popup simpel
+                        layer.bindPopup(nama, {closeButton: false});
+                        
+                        // Hover Effect (Biar interaktif dikit saat mouse lewat)
+                        layer.on('mouseover', function(e) {
+                            if (!layer._isSelected) { // Jangan ubah jika sedang dipilih
+                                layer.setStyle({ fillOpacity: 1, color: '#999' });
+                            }
+                        });
+                        layer.on('mouseout', function(e) {
+                            if (!layer._isSelected) {
+                                layer.setStyle(defaultStyle); // Balik ke abu-abu
+                            }
+                        });
+
+                        // Klik di Peta = Klik Tombol
+                        layer.on('click', function() {
+                            selectRegion(nama);
+                        });
+                    }
+                }).addTo(map);
+
+                generateButtons();
+            })
+            .catch(err => console.error(err));
+
+
+        // --- 4. FUNGSI KONTROL ---
+
+        function generateButtons() {
+            var container = document.getElementById('buttons-area');
+            
+            // Urutkan tombol berdasarkan abjad
+            var sortedKeys = Object.keys(softColors).sort();
+
+            sortedKeys.forEach(kota => {
+                var btn = document.createElement("button");
+                btn.className = "btn-kota";
+                btn.innerText = kota;
+                btn.id = "btn-" + kota.replace(/\s+/g, '');
+                btn.onclick = function() { selectRegion(kota); };
+                container.appendChild(btn);
+            });
+        }
+
+        function selectRegion(targetName) {
+            // 1. Reset visual tombol
+            document.querySelectorAll('.btn-kota').forEach(b => b.classList.remove('active'));
+            
+            // 2. Aktifkan tombol yang sesuai
+            var btnId = "btn-" + targetName.replace(/\s+/g, '');
+            var activeBtn = document.getElementById(btnId);
+            if(activeBtn) activeBtn.classList.add('active');
+
+            // 3. Update Peta
+            geojsonLayer.eachLayer(function(layer) {
+                var layerName = getFeatureName(layer.feature);
+                
+                if (layerName === targetName) {
+                    // INI YANG DIPILIH -> Beri Warna Pastel
+                    layer.setStyle(getActiveStyle(targetName));
+                    layer._isSelected = true; // Tandai agar hover tidak merusak warna
+                    map.fitBounds(layer.getBounds()); // Zoom ke lokasi
+                } else {
+                    // INI YANG LAIN -> Kembalikan ke Abu-abu
+                    layer.setStyle(defaultStyle);
+                    layer._isSelected = false;
+                }
+            });
+        }
+
+        function resetPeta() {
+            // Hapus status tombol
+            document.querySelectorAll('.btn-kota').forEach(b => b.classList.remove('active'));
+            
+            // Kembalikan semua peta ke abu-abu
+            geojsonLayer.eachLayer(function(layer) {
+                layer.setStyle(defaultStyle);
+                layer._isSelected = false;
+            });
+            
+            // Zoom out
+            map.setView([0.5386586, 116.419389], 7);
+        }
+
+    </script>
+</body>
+</html>

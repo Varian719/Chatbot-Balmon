@@ -1,0 +1,81 @@
+import os
+import shutil
+import geopandas as gpd
+import py7zr
+
+# --- KONFIGURASI ---
+NAMA_FILE_ARSIP = 'Provinsi SHP.7z' # Nama dasar file (tanpa .001)
+NAMA_OUTPUT = 'batas_kaltim.geojson'
+TARGET_PROVINSI = 'KALIMANTAN TIMUR'
+
+def gabungkan_file_7z(nama_dasar):
+    """Menggabungkan file .001, .002, dst menjadi satu file .7z"""
+    print(f"Menggabungkan bagian-bagian file {nama_dasar}...")
+    with open(nama_dasar, 'wb') as outfile:
+        part_num = 1
+        while True:
+            part_name = f"{nama_dasar}.{part_num:03d}"
+            if not os.path.exists(part_name):
+                break
+            print(f"  + Membaca {part_name}")
+            with open(part_name, 'rb') as infile:
+                shutil.copyfileobj(infile, outfile)
+            part_num += 1
+    print("Penggabungan selesai.")
+
+def ekstrak_dan_konversi():
+    # 1. Gabungkan File
+    if not os.path.exists(NAMA_FILE_ARSIP):
+        gabungkan_file_7z(NAMA_FILE_ARSIP)
+    
+    # 2. Ekstrak Arsip
+    print("Mengekstrak arsip...")
+    folder_ekstrak = 'temp_shp_extracted'
+    with py7zr.SevenZipFile(NAMA_FILE_ARSIP, mode='r') as z:
+        z.extractall(path=folder_ekstrak)
+    
+    # 3. Cari File .shp
+    shp_file = None
+    for root, dirs, files in os.walk(folder_ekstrak):
+        for file in files:
+            if file.endswith(".shp"):
+                shp_file = os.path.join(root, file)
+                break
+        if shp_file: break
+    
+    if not shp_file:
+        print("Gagal: File .shp tidak ditemukan dalam arsip.")
+        return
+
+    # 4. Baca dan Filter dengan Geopandas
+    print(f"Membaca Shapefile: {shp_file}")
+    gdf = gpd.read_file(shp_file)
+    
+    # Cek nama kolom (biasanya WADMPR untuk Provinsi, WADMKK untuk Kab/Kota)
+    # Kita standarisasi nama kolom agar script tidak error
+    kolom_prov = 'WADMPR' if 'WADMPR' in gdf.columns else 'PROVINSI'
+    
+    print(f"Memfilter data untuk provinsi: {TARGET_PROVINSI}")
+    # Filter data hanya Kalimantan Timur
+    gdf_kaltim = gdf[gdf[kolom_prov].str.upper() == TARGET_PROVINSI].copy()
+    
+    if gdf_kaltim.empty:
+        print("Peringatan: Data kosong setelah difilter. Cek ejaan nama provinsi.")
+        return
+
+    # 5. Sederhanakan Geometri (PENTING untuk Web)
+    # GeoJSON yang terlalu detail akan berat dimuat di browser.
+    # tolerance=0.001 derajat kira-kira setara 100 meter (cukup detail untuk peta provinsi)
+    print("Menyederhanakan geometri (Simplify)...")
+    gdf_kaltim['geometry'] = gdf_kaltim.simplify(tolerance=0.001, preserve_topology=True)
+
+    # 6. Simpan ke GeoJSON
+    print(f"Menyimpan ke {NAMA_OUTPUT}...")
+    gdf_kaltim.to_file(NAMA_OUTPUT, driver='GeoJSON')
+    print("Berhasil! File siap digunakan.")
+
+    # Bersihkan file sementara (Opsional)
+    # shutil.rmtree(folder_ekstrak)
+
+if __name__ == "__main__":
+    ekstrak_dan_konversi()
