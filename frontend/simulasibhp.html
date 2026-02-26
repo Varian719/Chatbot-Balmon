@@ -7,16 +7,15 @@
     <title>Estimasi BHP ISR Kaltim - Balmon Samarinda</title>
     <link rel="icon" type="image/png" href="logo-ikon.png" sizes="32x32">
 
-    <!-- Leaflet & Icons -->
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
-    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Albert+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
     <style>
-        /* ===== GLOBAL & VARIABEL ===== */
+        /* ========================================= */
+        /* --- 1. SETUP WARNA & GLOBAL --- */
+        /* ========================================= */
         :root {
             --primary-color: #006fb0;
             --primary-dark: #005082;
@@ -41,43 +40,58 @@
             overflow-x: hidden; 
             -webkit-font-smoothing: antialiased;
         }
-        a { text-decoration: none; color: inherit; transition: all 0.3s ease; }
+        
+        a { text-decoration: none; color: inherit; transition: color 0.3s ease, transform 0.3s ease; }
         ul { list-style: none; padding: 0; margin: 0; }
         * { box-sizing: border-box; }
 
         .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; width: 100%; }
 
-        /* ===== HEADER (ditingkatkan kontrasnya) ===== */
-        header {
-            background-color: transparent;
-            backdrop-filter: none;
-            -webkit-backdrop-filter: none;
-            box-shadow: none;
-            height: 80px;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            z-index: 1000;
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        /* --- ANIMASI FADE-IN --- */
+        .fade-in-section {
+            opacity: 0; transform: translateY(30px);
+            transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1), transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
         }
-        /* Header dengan gradien yang sama dengan page-header-custom */
-        header:not(.header-minimal) {
-            background: linear-gradient(135deg, rgba(0,111,176,0.85), rgba(0,80,130,0.85));
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
+        .fade-in-section.is-visible { opacity: 1; transform: translateY(0); }
+
+        /* --- LOADER --- */
+        .page-loader {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-color: #ffffff; z-index: 99999;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            transition: opacity 0.5s ease, visibility 0.5s ease; opacity: 1; visibility: visible;
+        }
+        .page-loader.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
+        .loader-spinner {
+            width: 50px; height: 50px; border: 4px solid rgba(0, 111, 176, 0.1);
+            border-left-color: var(--primary-color); border-radius: 50%;
+            animation: spin 1s linear infinite; margin-bottom: 15px;
+        }
+        .loader-text {
+            color: var(--primary-color); font-weight: 600; font-size: 14px; letter-spacing: 1px;
+            animation: pulseText 1.5s infinite ease-in-out;
+        }
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+        @keyframes pulseText { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+
+        /* ========================================= */
+        /* --- 2. HEADER STYLE --- */
+        /* ========================================= */
+        header {
+            background-color: transparent; backdrop-filter: none; -webkit-backdrop-filter: none;
+            box-shadow: none; height: 80px; position: fixed; top: 0; left: 0; width: 100%; z-index: 1000;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
         .header-content { display: flex; align-items: center; justify-content: space-between; height: 100%; }
         
         .brand-area { 
             display: flex; align-items: center; gap: 12px; transition: all 0.4s ease; cursor: pointer;
-            background-color: rgba(255, 255, 255, 0.15); /* sedikit lebih terang */
-            backdrop-filter: blur(8px); padding: 8px 20px; border-radius: 50px; border: 1px solid rgba(255, 255, 255, 0.2); box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            background-color: rgba(255, 255, 255, 0.1); backdrop-filter: blur(8px); padding: 8px 20px; border-radius: 50px; border: 1px solid rgba(255, 255, 255, 0.2); box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
         }
-        .brand-area:hover { background-color: rgba(255, 255, 255, 0.25); transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0, 111, 176, 0.3); }
+        .brand-area:hover { background-color: rgba(255, 255, 255, 0.2); transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0, 111, 176, 0.3); }
         .brand-logo-img { height: 50px; width: auto; filter: drop-shadow(0 2px 5px rgba(0, 0, 0, 0.5)); transition: all 0.3s; }
-        .brand-text { font-size: 18px; font-weight: 800; color: #ffffff; line-height: 1.2; display: flex; flex-direction: column; text-shadow: 0 2px 10px rgba(0, 0, 0, 0.8); transition: color 0.3s; } /* shadow lebih tebal */
-        .brand-text span { font-size: 11px; font-weight: 500; color: rgba(255,255,255,0.95); letter-spacing: 0.5px; transition: color 0.3s; text-shadow: 0 1px 5px rgba(0, 0, 0, 0.8); }
+        .brand-text { font-size: 18px; font-weight: 800; color: #ffffff; line-height: 1.2; display: flex; flex-direction: column; text-shadow: 0 2px 10px rgba(0, 0, 0, 0.6); transition: color 0.3s; }
+        .brand-text span { font-size: 11px; font-weight: 500; color: rgba(255,255,255,0.9); letter-spacing: 0.5px; transition: color 0.3s; text-shadow: 0 1px 5px rgba(0, 0, 0, 0.6); }
 
         header.header-minimal { background-color: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); box-shadow: 0 2px 20px rgba(0, 0, 0, 0.08); height: 70px; }
         header.header-minimal .brand-text { color: var(--primary-color); text-shadow: none; }
@@ -89,6 +103,7 @@
         header.header-minimal .hamburger-btn span { background-color: var(--primary-color); }
         header.header-minimal .nav-search-btn { color: var(--primary-color) !important; }
 
+        /* Social Icons */
         .header-socials { display: flex; align-items: center; gap: 15px; margin-left: auto; margin-right: 30px; padding-right: 30px; border-right: 1px solid rgba(255, 255, 255, 0.3); height: 40px; }
         .social-icon { display: flex; align-items: center; justify-content: center; transition: transform 0.3s ease; }
         .social-icon svg { width: 20px; height: 20px; fill: #ffffff; transition: all 0.3s ease; opacity: 0.9; }
@@ -100,9 +115,10 @@
         header.header-minimal .social-icon.wa-icon:hover svg { fill: #25D366; }
         @media (max-width: 992px) { .header-socials { display: none; } }
 
+        /* Nav Menu */
         .nav-menu { height: 100%; display: flex; align-items: center; transition: all 0.4s ease; }
         .menu-list { display: flex; gap: 8px; height: 100%; align-items: center; margin:0; padding:0;}
-        .menu-item { position: relative; height: 100%; display: flex; align-items: center; padding: 0 12px; font-size: 14px; font-weight: 600; color: #ffffff; cursor: pointer; transition: color 0.3s; text-shadow: 0 2px 8px rgba(0,0,0,0.7); } /* shadow lebih tebal */
+        .menu-item { position: relative; height: 100%; display: flex; align-items: center; padding: 0 12px; font-size: 14px; font-weight: 600; color: #ffffff; cursor: pointer; transition: color 0.3s; text-shadow: 0 1px 5px rgba(0,0,0,0.4); }
         .menu-item:hover { color: var(--accent-yellow); opacity: 1; }
         .menu-item::after { content: ''; position: absolute; bottom: 0; left: 0; width: 0%; height: 3px; background: var(--accent-yellow); transition: width 0.3s ease; }
         .menu-item:hover::after { width: 100%; }
@@ -113,6 +129,7 @@
         .dropdown-content li a:hover { background-color: var(--bg-light-blue); color: var(--primary-color); padding-left: 25px; }
         @keyframes slideDown { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
+        /* HAMBURGER & MOBILE SIDEBAR */
         .hamburger-btn { display: none; flex-direction: column; gap: 6px; background: none; border: none; cursor: pointer; padding: 8px; z-index: 1001; }
         .hamburger-btn span { width: 24px; height: 2.5px; background-color: white; border-radius: 2px; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); transform-origin: center; }
         .hamburger-btn.active span:nth-child(1) { transform: translateY(8.5px) rotate(45deg); }
@@ -145,92 +162,69 @@
             .header-socials { display: none; }
         }
 
-        /* ===== PAGE HEADER (LATAR BIRU) ===== */
+        /* ========================================= */
+        /* --- PAGE CONTENT (Estimator) --- */
+        /* ========================================= */
         .page-header-custom {
-            padding: 70px 20px 60px;
-            margin-top: 30px; /* agar tidak tertutup header fixed */
-            background: linear-gradient(135deg, rgba(0, 111, 176, 0.9) 0%, rgba(0, 80, 130, 0.8) 100%), url('https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=1600&q=80');
+            padding: 150px 20px 60px;
+            background: linear-gradient(135deg, rgba(0,111,176,0.9), rgba(0,80,130,0.8)), url('https://images.unsplash.com/photo-1581092335871-4c7f7d6f1b3a?auto=format&fit=crop&w=1600&q=80');
             background-size: cover; background-position: center;
             color: white; text-align: center;
         }
         .page-header-custom h1 { font-size: 38px; font-weight: 800; margin: 0 0 10px; }
         .page-header-custom p { font-size: 18px; opacity: 0.9; max-width: 700px; margin: 0 auto; }
 
-        /* ===== LAYOUT UTAMA (DUA KOLOM) ===== */
-        .main-wrapper {
-            display: flex;
-            min-height: calc(100vh - 80px - 200px); /* menyesuaikan, opsional */
-        }
-
-        .map-section {
-            flex: 1.2;
-            position: relative;
-            background: #eee;
-        }
-        #map { width: 100%; height: 100%; z-index: 1; }
-
-        .estimator-section {
-            flex: 0.8;
-            background: white;
-            overflow-y: auto;
-            padding: 30px;
-            box-shadow: -5px 0 15px rgba(0,0,0,0.05);
+        .estimator-card {
+            background: white; border-radius: 24px; padding: 40px;
+            margin-top: -50px; margin-bottom: 60px;
+            box-shadow: 0 20px 40px -10px rgba(0,0,0,0.1);
+            border: 1px solid rgba(0,111,176,0.1);
         }
 
         .info-zona {
-            background-color: #e8f4fe; border-radius: 12px;
-            padding: 15px; margin-bottom: 25px;
-            border-left: 4px solid var(--accent-yellow); font-size: 15px;
+            background-color: #e8f4fe;
+            border-radius: 12px;
+            padding: 15px 20px;
+            margin-bottom: 30px;
+            border-left: 4px solid var(--accent-yellow);
+            font-size: 16px;
         }
+        .info-zona strong { color: var(--primary-dark); }
 
-        .form-group { margin-bottom: 20px; }
-        .form-group label { display: block; font-weight: 600; margin-bottom: 8px; font-size: 14px; }
+        .form-group { margin-bottom: 25px; }
+        .form-group label { display: block; font-weight: 600; margin-bottom: 8px; color: var(--text-dark); }
         .form-group label span { color: var(--accent-red); }
-        
-        .form-control { 
-            width: 100%; padding: 12px; border: 2px solid #e2e8f0; 
-            border-radius: 10px; font-size: 15px; font-family: inherit;
-        }
+        .form-control { width: 100%; padding: 14px 18px; border: 2px solid #e2e8f0; border-radius: 12px; font-family: 'Albert Sans', sans-serif; font-size: 16px; transition: 0.2s; }
         .form-control:focus { outline: none; border-color: var(--primary-color); box-shadow: 0 0 0 4px rgba(0,111,176,0.1); }
-
-        .param-info {
-            background-color: #e8f4fe; border-radius: 8px;
-            padding: 10px; margin-top: 8px; font-size: 13px;
-            border-left: 3px solid var(--primary-color);
-        }
-
-        .input-group { display: flex; gap: 10px; align-items: center; }
+        .input-group { display: flex; gap: 15px; align-items: center; }
         .input-group .form-control { flex: 1; }
+        .input-group span { font-weight: 600; color: var(--text-gray); min-width: 50px; }
 
-        /* Dropdown daya untuk MU/HT (awal tersembunyi) */
-        #powerDropdownGroup { display: none; }
-        #powerDropdownGroup select { flex: 1; }
+        .btn-estimate {
+            background: var(--primary-color); color: white; border: none;
+            padding: 16px 40px; border-radius: 60px; font-weight: 700; font-size: 18px;
+            cursor: pointer; transition: all 0.3s; box-shadow: 0 8px 20px rgba(0,111,176,0.3);
+            width: 100%; margin-top: 20px;
+        }
+        .btn-estimate:hover { background: var(--primary-dark); transform: translateY(-2px); box-shadow: 0 12px 30px rgba(0,111,176,0.4); }
 
-        .dbm-display {
-            background-color: #f0f0f0; padding: 10px; border-radius: 8px;
-            text-align: center; font-weight: 600; color: var(--primary-dark);
-            margin-top: 8px; font-size: 14px;
+        .result-box {
+            background: #e8f4fe; border-radius: 20px; padding: 30px;
+            margin-top: 40px; border-left: 6px solid var(--accent-yellow);
+            display: none;
+        }
+        .result-box.show { display: block; animation: slideDown 0.4s ease; }
+        .result-box h3 { color: var(--primary-dark); margin: 0 0 15px; font-size: 24px; }
+        .result-amount { font-size: 48px; font-weight: 800; color: var(--primary-color); margin: 10px 0; line-height: 1.2; }
+        .disclaimer { font-size: 14px; color: var(--text-gray); margin-top: 20px; border-top: 1px dashed #ccc; padding-top: 20px; }
+
+        @media (max-width: 768px) {
+            .page-header-custom h1 { font-size: 28px; }
+            .estimator-card { padding: 25px; }
+            .input-group { flex-direction: column; align-items: stretch; }
         }
 
-        .result-container {
-            margin-top: 25px; padding: 25px;
-            background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
-            border-radius: 16px; color: white; text-align: center;
-        }
-        .result-amount { font-size: 36px; font-weight: 800; margin: 10px 0; }
-        
-        .disclaimer { 
-            font-size: 13px; color: var(--text-gray); 
-            margin-top: 20px; border-top: 1px dashed #ccc; padding-top: 15px; 
-        }
-
-        .label-kota {
-            background: transparent !important; border: none !important;
-            box-shadow: none !important; color: #333; font-weight: bold;
-            text-shadow: 2px 2px 0px #fff, -1px -1px 0 #fff;
-        }
-
-        /* ===== FOOTER (dari versi sebelumnya) ===== */
+        /* FOOTER & CHAT */
         footer { background-color: var(--primary-color); color: white; padding-top: 70px; font-size: 14px; position: relative; margin-top: auto;}
         .footer-grid { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 40px; padding-bottom: 50px; }
         .footer-col { flex: 1; min-width: 250px; }
@@ -239,7 +233,6 @@
         .footer-links a:hover { color: #fff; transform: translateX(5px); }
         .copyright { background-color: rgba(0,0,0,0.1); text-align: center; padding: 25px 0; color: rgba(255,255,255,0.6); border-top: 1px solid rgba(255,255,255,0.1); }
 
-        /* ===== CHAT & SEARCH (dari versi sebelumnya) ===== */
         .chat-toggle-btn { position: fixed; bottom: 30px; right: 30px; width: 65px; height: 65px; background: linear-gradient(135deg, var(--primary-color), var(--primary-dark)); color: #ffffff; border: none; border-radius: 50%; box-shadow: 0 8px 25px rgba(0, 111, 176, 0.4); cursor: pointer; z-index: 10000; display: flex; align-items: center; justify-content: center; transition: all 0.3s; }
         .chat-toggle-btn:hover { transform: scale(1.1); box-shadow: 0 12px 30px rgba(0, 111, 176, 0.5); }
         .chat-toggle-btn.on-footer { background: var(--accent-yellow); color: var(--text-dark); }
@@ -258,6 +251,11 @@
         .chat-status { display: flex; align-items: center; gap: 6px; font-size: 12px; color: rgba(255,255,255,0.9); }
         .status-dot { width: 8px; height: 8px; background-color: #00ff9d; border-radius: 50%; }
 
+        @media (max-width: 768px) {
+            .chat-toggle-btn { bottom: 20px; right: 20px; }
+            .chat-box-container { width: calc(100% - 40px) !important; height: 65vh !important; right: 20px !important; left: 20px !important; bottom: 100px !important; border-radius: 16px !important; }
+        }
+
         .search-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); z-index: 99999; display: flex; justify-content: center; align-items: flex-start; padding-top: 100px; opacity: 0; visibility: hidden; transition: all 0.3s; }
         .search-overlay.active { opacity: 1; visibility: visible; }
         .search-content { width: 100%; max-width: 600px; position: relative; padding: 0 20px; transform: translateY(-20px); transition: 0.4s; }
@@ -272,19 +270,41 @@
         .search-item h4 { margin: 0 0 5px 0; color: var(--primary-color); font-size: 16px; }
         .search-item p { margin: 0; font-size: 13px; color: var(--text-gray); }
 
-        @media (max-width: 768px) {
-            .page-header-custom h1 { font-size: 28px; }
-            .page-header-custom { padding: 120px 20px 40px; }
-            .main-wrapper { flex-direction: column; height: auto; }
-            .map-section { height: 350px; flex: none; }
-            .estimator-section { flex: none; }
-            .chat-toggle-btn { bottom: 20px; right: 20px; }
-            .chat-box-container { width: calc(100% - 40px) !important; height: 65vh !important; right: 20px !important; left: 20px !important; bottom: 100px !important; border-radius: 16px !important; }
+        /* Style untuk tampilan dBm */
+        .dbm-display {
+            background-color: #f0f0f0;
+            padding: 14px 18px;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            font-family: 'Albert Sans', sans-serif;
+            font-size: 16px;
+            color: var(--text-gray);
+            display: inline-block;
+            min-width: 150px;
+            text-align: center;
+        }
+
+        /* Style untuk parameter info */
+        .param-info {
+            background-color: #e8f4fe;
+            border-radius: 8px;
+            padding: 12px 16px;
+            margin-top: 10px;
+            font-size: 14px;
+            border-left: 3px solid var(--primary-color);
+        }
+        .param-info strong {
+            color: var(--primary-dark);
         }
     </style>
 </head>
 <body>
-    <!-- HEADER LENGKAP (ditingkatkan kontrasnya) -->
+
+    <div id="pageLoader" class="page-loader">
+        <div class="loader-spinner"></div>
+        <div class="loader-text">MEMUAT ESTIMATOR...</div>
+    </div>
+
     <header id="mainHeader">
         <div class="container header-content">
             <div class="brand-area" onclick="window.location.href='index.html'" role="button" tabindex="0">
@@ -363,7 +383,6 @@
         <div id="mobileNavOverlay" class="mobile-nav-overlay"></div>
     </header>
 
-    <!-- PAGE HEADER DENGAN LATAR BIRU (seperti program pertama) -->
     <div class="page-header-custom">
         <div class="container">
             <h1>Simulasi Estimasi BHP ISR</h1>
@@ -371,99 +390,120 @@
         </div>
     </div>
 
-    <!-- KONTEN UTAMA DUA KOLOM (MAP + ESTIMATOR) -->
-    <div class="main-wrapper">
-        <div class="map-section">
-            <div id="map"></div>
-        </div>
-
-        <div class="estimator-section">
+    <main class="container">
+        <div class="estimator-card fade-in-section">
+            <!-- Info zona akan diperbarui oleh JavaScript -->
             <div class="info-zona" id="infoZona">
-                <i class="bi bi-geo-alt-fill"></i> <strong>Wilayah:</strong> Pilih kabupaten/kota pada peta atau dropdown
+                <i class="bi bi-geo-alt-fill" style="margin-right: 8px;"></i>
+                <strong>Wilayah:</strong> Pilih kabupaten/kota
             </div>
 
             <form id="bhpForm">
+                <!-- Provinsi (fixed) -->
+                <div class="form-group">
+                    <label>Provinsi</label>
+                    <input type="text" class="form-control" value="KALIMANTAN TIMUR" readonly disabled style="background-color:#f0f0f0;">
+                </div>
+
+                <!-- Kabupaten / Kota -->
                 <div class="form-group">
                     <label><span>*</span> Kabupaten / Kota</label>
-                    <select class="form-control auto-calc" id="kabupatenSelect" required>
+                    <select class="form-control" id="kabupatenSelect" required>
                         <option value="">-- Pilih Kabupaten/Kota --</option>
-                        <option value="SAMARINDA">KOTA SAMARINDA (Zona 2)</option>
-                        <option value="BALIKPAPAN">KOTA BALIKPAPAN (Zona 2)</option>
-                        <option value="BONTANG">KOTA BONTANG (Zona 3)</option>
-                        <option value="KUTAI KARTANEGARA">KUTAI KARTANEGARA (Zona 3)</option>
-                        <option value="KUTAI BARAT">KUTAI BARAT (Zona 3)</option>
-                        <option value="KUTAI TIMUR">KUTAI TIMUR (Zona 3)</option>
-                        <option value="MAHAKAM ULU">MAHAKAM ULU (Zona 3)</option>
-                        <option value="PENAJAM PASER UTARA">PENAJAM PASER UTARA (Zona 3)</option>
-                        <option value="BERAU">BERAU (Zona 4)</option>
-                        <option value="PASER">PASER (Zona 4)</option>
+                        <option value="samarinda">KOTA SAMARINDA (Zona 2)</option>
+                        <option value="balikpapan">KOTA BALIKPAPAN (Zona 2)</option>
+                        <option value="bontang">KOTA BONTANG (Zona 3)</option>
+                        <option value="kukar">KUTAI KARTANEGARA (Zona 3)</option>
+                        <option value="kubar">KUTAI BARAT (Zona 3)</option>
+                        <option value="kutim">KUTAI TIMUR (Zona 3)</option>
+                        <option value="mahakam">MAHAKAM ULU (Zona 3)</option>
+                        <option value="penajam">PENAJAM PASER UTARA (Zona 3)</option>
+                        <option value="berau">BERAU (Zona 4)</option>
+                        <option value="paser">PASER (Zona 4)</option>
                     </select>
                 </div>
 
+                <!-- Jenis Layanan -->
                 <div class="form-group">
                     <label><span>*</span> Jenis Layanan / Penggunaan</label>
-                    <select class="form-control auto-calc" id="serviceType" required>
+                    <select class="form-control" id="serviceType" required>
+                        <option value="">-- Pilih Jenis Layanan --</option>
                         <option value="ht_5w">HT (5 Watt)</option>
                         <option value="mu_ht">MU/HT (5-10 Watt)</option>
                         <option value="base">Radio Konvensional (Base Station) - High Power</option>
                         <option value="repeater">Radio Konvensional (Repeater)</option>
                         <option value="trunking">Radio Trunking (Operator)</option>
                     </select>
-                    <div id="paramInfo" class="param-info"></div>
+                    <!-- Info parameter layanan -->
+                    <div id="paramInfo" class="param-info" style="margin-top: 10px;">
+                        <i class="bi bi-info-circle"></i> Pilih layanan untuk melihat parameter IB dan IP
+                    </div>
                 </div>
 
+                <!-- Pita Frekuensi -->
                 <div class="form-group">
                     <label><span>*</span> Pita Frekuensi</label>
-                    <select class="form-control auto-calc" id="bandSelect" required>
+                    <select class="form-control" id="bandSelect" required>
+                        <option value="">-- Pilih Pita Frekuensi --</option>
                         <option value="vhf">VHF (30 - 300 MHz)</option>
                         <option value="uhf">UHF (300 - 3000 MHz)</option>
                         <option value="shf">SHF (3 - 30 GHz)</option>
                     </select>
-                    <div id="freqParamInfo" class="param-info"></div>
+                    <!-- Info parameter frekuensi -->
+                    <div id="freqParamInfo" class="param-info" style="margin-top: 10px;">
+                        <i class="bi bi-info-circle"></i> Pilih pita frekuensi untuk melihat HDLP dan HDDP
+                    </div>
                 </div>
 
-                <div style="display:flex; gap:15px;">
-                    <div class="form-group" style="flex:1;">
-                        <label><span>*</span> Lebar Pita (kHz)</label>
-                        <input type="number" class="form-control auto-calc" id="bandwidth" value="16" step="0.1" min="0">
-                    </div>
-                    <div class="form-group" style="flex:1;">
-                        <label><span>*</span> Daya (Watt)</label>
-                        <!-- Input biasa untuk sebagian besar layanan -->
-                        <div id="powerInputGroup" style="display: flex; gap:5px;">
-                            <input type="number" class="form-control auto-calc" id="powerWatt" value="5" step="0.1" min="0">
-                        </div>
-                        <!-- Dropdown khusus untuk MU/HT (awal tersembunyi) -->
-                        <div id="powerDropdownGroup" style="display: none; gap:5px;">
-                            <select class="form-control auto-calc" id="powerSelect">
-                                <option value="5">5 Watt</option>
-                                <option value="10">10 Watt</option>
-                            </select>
-                        </div>
-                        <div id="dbmDisplay" class="dbm-display">0.00 dBm</div>
+                <!-- Lebar Pita (default 16 kHz) -->
+                <div class="form-group">
+                    <label><span>*</span> Lebar Pita (Bandwidth)</label>
+                    <div class="input-group">
+                        <input type="number" class="form-control" id="bandwidth" value="16" step="0.1" min="0" required>
+                        <span>kHz</span>
                     </div>
                 </div>
+
+                <!-- Daya Pancar: input biasa untuk sebagian besar, dropdown untuk MU/HT -->
+                <div class="form-group">
+                    <label>Daya Pancar (Watt) <strong>wajib diisi</strong></label>
+                    <!-- Input biasa (untuk semua kecuali MU/HT) -->
+                    <div class="input-group" id="powerInputGroup">
+                        <input type="number" class="form-control" id="powerWatt" placeholder="Daya dalam Watt" step="0.1" min="0" required>
+                        <span>Watt</span>
+                    </div>
+                    <!-- Dropdown khusus untuk MU/HT (awal tersembunyi) -->
+                    <div class="input-group" id="powerDropdownGroup" style="display: none;">
+                        <select class="form-control" id="powerSelect">
+                            <option value="5">5 Watt</option>
+                            <option value="10">10 Watt</option>
+                        </select>
+                        <span>Watt</span>
+                    </div>
+                    <div style="margin-top: 10px;">
+                        <span class="dbm-display" id="dbmDisplay">0.00 dBm</span>
+                        <small class="text-muted" style="margin-left: 10px;">Nilai dBm otomatis</small>
+                    </div>
+                </div>
+
+                <button type="button" class="btn-estimate" onclick="calculateBHP()">Hitung Estimasi</button>
             </form>
 
-            <div class="result-container">
-                <div style="font-size:13px; opacity:0.8; text-transform:uppercase;">Estimasi BHP ISR per Tahun</div>
+            <div id="resultBox" class="result-box">
+                <h3>Hasil Estimasi BHP ISR per Tahun</h3>
                 <div class="result-amount" id="resultAmount">Rp 0</div>
-            </div>
-
-            <div class="disclaimer">
-                <i class="bi bi-info-circle"></i> <strong>Catatan:</strong> Hasil ini adalah estimasi berdasarkan PP No. 43/2023 dan data IB/IP dari SDPPI Maps. Untuk perhitungan resmi, gunakan aplikasi resmi Komdigi berikut:
-                <br>
-                <button onclick="window.open('https://www.postel.go.id/sdppi_maps/10-20200601-sdppi-maps-simulasi-bhp.php', '_blank')" class="form-control" style="margin-top:10px; background:var(--bg-light-blue); cursor:pointer; font-weight:600;">
-                    Akses Web Resmi Simulasi BHP
-                </button>
+                <p class="disclaimer">
+                    <i class="bi bi-info-circle"></i> <strong>Catatan:</strong> Hasil ini adalah estimasi berdasarkan PP No. 43/2023 dan data IB/IP dari SDPPI Maps. Untuk perhitungan resmi, gunakan aplikasi resmi Komdigi berikut.
+                    <br><button onclick="window.open('https://www.postel.go.id/sdppi_maps/10-20200601-sdppi-maps-simulasi-bhp.php', '_blank')" class="btn-estimate" style="font-size:14px; padding:8px 20px; width:auto; margin-top:10px;">
+                              Akses web resmi Simulasi BHP
+                    </button></p>
             </div>
         </div>
-    </div>
+    </main>
 
-    <!-- FOOTER (dari versi sebelumnya) -->
-    <footer id="mainFooter">
+    <footer id="mainFooter" class="fade-in-section">
         <div class="container">
-            <div class="footer-grid">
+            <div class="footer-grid fade-stagger-children">
                 <div class="footer-col">
                     <h3>Balmon Samarinda</h3>
                     <p style="color:rgba(255,255,255,0.7); line-height:1.8;">
@@ -489,7 +529,6 @@
         <div class="copyright">Copyright@2024 Balai Monitor Spektrum Frekuensi Radio Kelas I Samarinda</div>
     </footer>
 
-    <!-- CHAT & SEARCH (dari versi sebelumnya) -->
     <div class="chat-box-container" id="chatBox">
         <div class="chat-header">
             <div class="chat-header-content">
@@ -519,186 +558,25 @@
         </div>
     </div>
 
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
     <script>
-        // ==================== DATA DAN FUNGSI ESTIMATOR ====================
-        const kabupatenZona = {
-            "SAMARINDA": 2, "BALIKPAPAN": 2, "BONTANG": 3, "KUTAI KARTANEGARA": 3,
-            "KUTAI BARAT": 3, "KUTAI TIMUR": 3, "MAHAKAM ULU": 3, "PENAJAM PASER UTARA": 3,
-            "BERAU": 4, "PASER": 4
-        };
+        // ==================== 1. ANIMASI FADE-IN ====================
+        document.addEventListener("DOMContentLoaded", function() {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('is-visible');
+                    }
+                });
+            }, { threshold: 0.1 });
 
-        const zonaData = {
-            2: { vhf: { HDLP: 10310, HDDP: 95732 }, uhf: { HDLP: 9418, HDDP: 87585 }, shf: { HDLP: 7745, HDDP: 71491 } },
-            3: { vhf: { HDLP: 7733, HDDP: 71799 }, uhf: { HDLP: 7063, HDDP: 65688 }, shf: { HDLP: 5809, HDDP: 53618 } },
-            4: { vhf: { HDLP: 5155, HDDP: 47866 }, uhf: { HDLP: 4709, HDDP: 43792 }, shf: { HDLP: 3873, HDDP: 35745 } }
-        };
-
-        const serviceData = {
-            ht_5w: { name: "HT (5 Watt)", Ib: 0.3900, Ip: 0.0200, defaultPower: 5 },
-            mu_ht: { name: "MU/HT (5-10 Watt)", Ib: 0.3900, Ip: 0.0200, defaultPower: 5 }, // default 5
-            base: { name: "Base Station", Ib: 2.7200, Ip: 0.1300, defaultPower: 40 },
-            repeater: { name: "Repeater", Ib: 11.8900, Ip: 0.6500, defaultPower: 40 },
-            trunking: { name: "Radio Trunking", Ib: 14.8700, Ip: 0.5800, defaultPower: 10 }
-        };
-
-        // Elemen DOM estimator
-        const kabupatenSelect = document.getElementById('kabupatenSelect');
-        const serviceType = document.getElementById('serviceType');
-        const bandSelect = document.getElementById('bandSelect');
-        const bandwidth = document.getElementById('bandwidth');
-        const powerWatt = document.getElementById('powerWatt');
-        const powerSelect = document.getElementById('powerSelect');
-        const powerInputGroup = document.getElementById('powerInputGroup');
-        const powerDropdownGroup = document.getElementById('powerDropdownGroup');
-        const dbmDisplay = document.getElementById('dbmDisplay');
-        const paramInfo = document.getElementById('paramInfo');
-        const freqParamInfo = document.getElementById('freqParamInfo');
-        const infoZona = document.getElementById('infoZona');
-        const resultAmount = document.getElementById('resultAmount');
-
-        // Fungsi untuk mengatur tampilan input daya berdasarkan layanan
-        function setPowerInputMode() {
-            const selected = serviceType.value;
-            if (selected === 'mu_ht') {
-                // Tampilkan dropdown, sembunyikan input biasa
-                powerInputGroup.style.display = 'none';
-                powerDropdownGroup.style.display = 'flex';
-                // Set default dropdown ke 5
-                powerSelect.value = '5';
-            } else {
-                // Tampilkan input biasa, sembunyikan dropdown
-                powerInputGroup.style.display = 'flex';
-                powerDropdownGroup.style.display = 'none';
-                // Set nilai default dari serviceData
-                if (serviceData[selected]) {
-                    powerWatt.value = serviceData[selected].defaultPower;
-                }
-            }
-            updateDbmAndCalculate();
-        }
-
-        // Konversi Watt ke dBm
-        function wattToDbm(watt) {
-            if (isNaN(watt) || watt <= 0) return 0;
-            return 10 * Math.log10(watt * 1000);
-        }
-
-        // Update tampilan dBm dan hitung ulang
-        function updateDbmAndCalculate() {
-            let watt;
-            if (serviceType.value === 'mu_ht') {
-                watt = parseFloat(powerSelect.value);
-            } else {
-                watt = parseFloat(powerWatt.value);
-            }
-            if (isNaN(watt) || watt <= 0) {
-                dbmDisplay.textContent = '0.00 dBm';
-            } else {
-                const dbm = wattToDbm(watt);
-                dbmDisplay.textContent = dbm.toFixed(2) + ' dBm';
-            }
-            calculateBHP();
-        }
-
-        // Hitung BHP
-        function calculateBHP() {
-            const kab = kabupatenSelect.value;
-            const srvKey = serviceType.value;
-            const bandKey = bandSelect.value;
-            const bw = parseFloat(bandwidth.value) || 0;
-            let watt;
-            if (srvKey === 'mu_ht') {
-                watt = parseFloat(powerSelect.value);
-            } else {
-                watt = parseFloat(powerWatt.value);
-            }
-
-            if (!kab || !srvKey || !bandKey || bw <= 0 || watt <= 0) {
-                resultAmount.innerText = 'Rp 0';
-                return;
-            }
-
-            const zona = kabupatenZona[kab];
-            const srv = serviceData[srvKey];
-            const band = zonaData[zona][bandKey];
-
-            // Tampilkan info parameter
-            paramInfo.innerHTML = `<strong>IB:</strong> ${srv.Ib} | <strong>IP:</strong> ${srv.Ip}`;
-            freqParamInfo.innerHTML = `<strong>HDLP:</strong> ${band.HDLP.toLocaleString()} | <strong>HDDP:</strong> ${band.HDDP.toLocaleString()}`;
-
-            const dbm = wattToDbm(watt);
-            const p = dbm < 0 ? 0 : dbm;
-            const total = (band.HDLP * srv.Ib * bw + band.HDDP * srv.Ip * p) / 2;
-
-            resultAmount.innerText = 'Rp ' + Math.round(total).toLocaleString('id-ID');
-        }
-
-        // Event listeners untuk auto-calc
-        document.querySelectorAll('.auto-calc').forEach(el => {
-            el.addEventListener('input', updateDbmAndCalculate);
-            el.addEventListener('change', function() {
-                if (el.id === 'serviceType') {
-                    setPowerInputMode();
-                } else if (el.id === 'kabupatenSelect') {
-                    syncSelection(el.value);
-                }
-                updateDbmAndCalculate();
+            document.querySelectorAll('.fade-in-section').forEach(section => {
+                observer.observe(section);
             });
         });
 
-        // Inisialisasi
-        setPowerInputMode();
-        updateDbmAndCalculate();
-
-        // ==================== PETA (Leaflet) ====================
-        var map = L.map('map').setView([0.5386, 116.4194], 7);
-        L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png').addTo(map);
-
-        var geojsonLayer;
-        var styleDefault = { fillColor: "#ececec", weight: 1, color: "#bdc3c7", fillOpacity: 0.7 };
-        var styleActive = { fillColor: "#88b3c8", weight: 2, color: "#006fb0", fillOpacity: 0.9 };
-
-        fetch('batas_kaltim.geojson')
-            .then(res => res.json())
-            .then(data => {
-                geojsonLayer = L.geoJSON(data, {
-                    style: styleDefault,
-                    onEachFeature: (feature, layer) => {
-                        layer.on('click', () => {
-                            let raw = feature.properties.name || feature.properties.WADMKK || "";
-                            let nama = raw.toUpperCase().replace("KOTA ", "").replace("KABUPATEN ", "").trim();
-                            kabupatenSelect.value = nama;
-                            syncSelection(nama);
-                        });
-                    }
-                }).addTo(map);
-            })
-            .catch(err => console.error('GeoJSON tidak ditemukan atau error:', err));
-
-        function syncSelection(nama) {
-            if (!geojsonLayer) return;
-            geojsonLayer.eachLayer(layer => {
-                let raw = layer.feature.properties.name || layer.feature.properties.WADMKK || "";
-                let layerName = raw.toUpperCase().replace("KOTA ", "").replace("KABUPATEN ", "").trim();
-                layer.unbindTooltip();
-
-                if (layerName === nama) {
-                    layer.setStyle(styleActive);
-                    map.fitBounds(layer.getBounds());
-                    layer.bindTooltip(layerName, { permanent: true, direction: "center", className: "label-kota" });
-                    
-                    const zona = kabupatenZona[nama];
-                    infoZona.innerHTML = `<i class="bi bi-geo-alt-fill"></i> <strong>Wilayah:</strong> ${nama} (Zona ${zona})`;
-                } else {
-                    layer.setStyle(styleDefault);
-                }
-            });
-            calculateBHP();
-        }
-
-        // ==================== HEADER & FUNGSI UMUM (dari versi sebelumnya) ====================
-        // Scroll header
+        // ==================== 2. FUNGSI UMUM (HEADER, MOBILE, CHAT, SEARCH) ====================
         let ticking = false;
         function updateScroll() {
             const scrollY = window.scrollY;
@@ -720,7 +598,6 @@
             if (!ticking) { window.requestAnimationFrame(updateScroll); ticking = true; }
         }, { passive: true });
 
-        // Mobile menu
         function toggleMobileMenu() {
             const btn = document.getElementById('hamburgerBtn');
             const menu = document.getElementById('mobileNavDropdown');
@@ -757,7 +634,6 @@
             if (overlay && overlay.classList.contains('active') && event.target === overlay) closeMobileMenu();
         });
 
-        // Chat
         function animateChatToggle() {
             const btn = document.getElementById("toggleBtn");
             const box = document.getElementById("chatBox");
@@ -768,12 +644,10 @@
             else { btn.classList.add("active"); box.classList.add("active"); }
         }
 
-        // Search
         const pages = [
             { title: "Beranda", url: "index.html", desc: "Halaman utama Balmon Samarinda" },
             { title: "Profil", url: "profil.html", desc: "Informasi tentang Balmon Samarinda." },
             { title: "Estimasi BHP Kaltim", url: "simulasibhp.html", desc: "Simulasi estimasi Biaya Hak Penggunaan Izin Stasiun Radio khusus Kalimantan Timur." }
-            
         ];
 
         function openSearch() {
@@ -804,6 +678,209 @@
             }
         }
         document.addEventListener('keydown', (e) => { if(e.key === "Escape") closeSearch(); });
+
+        window.addEventListener('load', () => {
+            const loader = document.getElementById('pageLoader');
+            if(loader) loader.classList.add('hidden');
+        });
+
+        // ==================== 3. DATA ZONA KABUPATEN ====================
+        const kabupatenZona = {
+            samarinda: 2,
+            balikpapan: 2,
+            bontang: 3,
+            kukar: 3,
+            kubar: 3,
+            kutim: 3,
+            mahakam: 3,
+            penajam: 3,
+            berau: 4,
+            paser: 4
+        };
+
+        const zonaData = {
+            2: {
+                vhf: { HDLP: 10310, HDDP: 95732 },
+                uhf: { HDLP: 9418, HDDP: 87585 },
+                shf: { HDLP: 7745, HDDP: 71491 }
+            },
+            3: {
+                vhf: { HDLP: 7733, HDDP: 71799 },
+                uhf: { HDLP: 7063, HDDP: 65688 },
+                shf: { HDLP: 5809, HDDP: 53618 }
+            },
+            4: {
+                vhf: { HDLP: 5155, HDDP: 47866 },
+                uhf: { HDLP: 4709, HDDP: 43792 },
+                shf: { HDLP: 3873, HDDP: 35745 }
+            }
+        };
+
+        // Nilai IB dan IP + daya default
+        const serviceData = {
+            ht_5w: { name: "HT (5 Watt)", Ib: 0.3900, Ip: 0.0200, defaultPower: 5 },
+            mu_ht: { name: "MU/HT (5-10 Watt)", Ib: 0.3900, Ip: 0.0200, defaultPower: 5 }, // default 5, tapi pakai dropdown
+            base: { name: "Radio Konvensional (Base Station) - High Power", Ib: 2.7200, Ip: 0.1300, defaultPower: 40 },
+            repeater: { name: "Radio Konvensional (Repeater)", Ib: 11.8900, Ip: 0.6500, defaultPower: 40 },
+            trunking: { name: "Radio Trunking (Operator)", Ib: 14.8700, Ip: 0.5800, defaultPower: 10 }
+        };
+
+        // Elemen
+        const kabupatenSelect = document.getElementById('kabupatenSelect');
+        const bandSelect = document.getElementById('bandSelect');
+        const infoZona = document.getElementById('infoZona');
+        const inputWatt = document.getElementById('powerWatt');
+        const powerSelect = document.getElementById('powerSelect');
+        const powerInputGroup = document.getElementById('powerInputGroup');
+        const powerDropdownGroup = document.getElementById('powerDropdownGroup');
+        const dbmDisplay = document.getElementById('dbmDisplay');
+        const serviceType = document.getElementById('serviceType');
+        const paramInfo = document.getElementById('paramInfo');
+        const freqParamInfo = document.getElementById('freqParamInfo');
+
+        // Update info zona saat kabupaten berubah
+        function updateInfoZona() {
+            const kab = kabupatenSelect.value;
+            if (!kab) {
+                infoZona.innerHTML = `<i class="bi bi-geo-alt-fill"></i> <strong>Wilayah:</strong> Pilih kabupaten/kota`;
+                return;
+            }
+            const zona = kabupatenZona[kab];
+            const kabName = kabupatenSelect.options[kabupatenSelect.selectedIndex].text;
+            infoZona.innerHTML = `<i class="bi bi-geo-alt-fill"></i> <strong>Wilayah:</strong> ${kabName} (Zona ${zona})`;
+        }
+        kabupatenSelect.addEventListener('change', updateInfoZona);
+
+        // Update info frekuensi saat pita atau kabupaten berubah
+        function updateFreqParam() {
+            const kab = kabupatenSelect.value;
+            const bandKey = bandSelect.value;
+            if (!kab || !bandKey) {
+                freqParamInfo.innerHTML = `<i class="bi bi-info-circle"></i> Pilih kabupaten dan pita frekuensi untuk melihat HDLP dan HDDP`;
+                return;
+            }
+            const zona = kabupatenZona[kab];
+            if (!zonaData[zona] || !zonaData[zona][bandKey]) {
+                freqParamInfo.innerHTML = `<i class="bi bi-info-circle"></i> Data tidak tersedia`;
+                return;
+            }
+            const band = zonaData[zona][bandKey];
+            freqParamInfo.innerHTML = `<i class="bi bi-info-circle"></i> <strong>HDLP = ${band.HDLP.toLocaleString()} Rp/kHz</strong>, <strong>HDDP = ${band.HDDP.toLocaleString()} Rp/dBm</strong> (Zona ${zona})`;
+        }
+        kabupatenSelect.addEventListener('change', updateFreqParam);
+        bandSelect.addEventListener('change', updateFreqParam);
+
+        // Fungsi konversi Watt ke dBm dan update display (dari input biasa atau dropdown)
+        function updateDbmFromWatt() {
+            let watt;
+            if (serviceType.value === 'mu_ht') {
+                watt = parseFloat(powerSelect.value);
+            } else {
+                watt = parseFloat(inputWatt.value);
+            }
+            if (!isNaN(watt) && watt > 0) {
+                const dbm = 10 * Math.log10(watt * 1000);
+                dbmDisplay.textContent = dbm.toFixed(2) + ' dBm';
+            } else {
+                dbmDisplay.textContent = '0.00 dBm';
+            }
+        }
+
+        inputWatt.addEventListener('input', updateDbmFromWatt);
+        powerSelect.addEventListener('change', updateDbmFromWatt);
+
+        // Fungsi untuk mengatur tampilan input daya dan nilai default berdasarkan layanan
+        function setDefaultAndParam() {
+            const selected = serviceType.value;
+            if (!selected) {
+                paramInfo.innerHTML = `<i class="bi bi-info-circle"></i> Pilih layanan untuk melihat parameter IB dan IP`;
+                return;
+            }
+            const srv = serviceData[selected];
+            if (srv) {
+                // Tampilkan parameter
+                paramInfo.innerHTML = `<i class="bi bi-info-circle"></i> <strong>IB = ${srv.Ib}</strong>, <strong>IP = ${srv.Ip}</strong>`;
+
+                // Atur tampilan input daya
+                if (selected === 'mu_ht') {
+                    // Tampilkan dropdown, sembunyikan input biasa
+                    powerInputGroup.style.display = 'none';
+                    powerDropdownGroup.style.display = 'flex';
+                    // Set default dropdown ke 5
+                    powerSelect.value = '5';
+                    updateDbmFromWatt();
+                } else {
+                    // Tampilkan input biasa, sembunyikan dropdown
+                    powerInputGroup.style.display = 'flex';
+                    powerDropdownGroup.style.display = 'none';
+                    // Set nilai default dari srv.defaultPower
+                    inputWatt.value = srv.defaultPower;
+                    updateDbmFromWatt();
+                }
+            }
+        }
+
+        serviceType.addEventListener('change', setDefaultAndParam);
+
+        // Panggil sekali untuk inisialisasi
+        setDefaultAndParam();
+        updateFreqParam();
+
+        function calculateBHP() {
+            const kab = kabupatenSelect.value;
+            const serviceKey = document.getElementById('serviceType').value;
+            const bandKey = bandSelect.value;
+            const bandwidth = parseFloat(document.getElementById('bandwidth').value);
+
+            // Ambil daya yang benar (dari dropdown atau input)
+            let dayaWatt;
+            if (serviceKey === 'mu_ht') {
+                dayaWatt = parseFloat(powerSelect.value);
+            } else {
+                dayaWatt = parseFloat(inputWatt.value);
+            }
+
+            // Validasi
+            if (!kab || !serviceKey || !bandKey || isNaN(bandwidth) || bandwidth <= 0) {
+                alert('Harap pilih Kabupaten/Kota, Jenis Layanan, Pita Frekuensi, dan isi Lebar Pita dengan benar.');
+                return;
+            }
+
+            if (isNaN(dayaWatt) || dayaWatt <= 0) {
+                alert('Harap isi nilai Daya Pancar (nilai harus positif).');
+                return;
+            }
+
+            const srv = serviceData[serviceKey];
+            const zona = kabupatenZona[kab];
+            
+            if (!zonaData[zona] || !zonaData[zona][bandKey]) {
+                alert('Data untuk pita frekuensi ini belum tersedia untuk zona yang dipilih.');
+                return;
+            }
+
+            const band = zonaData[zona][bandKey];
+
+            // Konversi Watt ke dBm untuk perhitungan
+            const dayaDbm = 10 * Math.log10(dayaWatt * 1000);
+
+            const b = bandwidth;
+            const HDLP = band.HDLP;
+            const HDDP = band.HDDP;
+            const Ib = srv.Ib;
+            const Ip = srv.Ip;
+
+            const p = dayaDbm < 0 ? 0 : dayaDbm;
+            const total = (HDLP * Ib * b + HDDP * Ip * p) / 2;
+
+            document.getElementById('resultAmount').innerText = 'Rp ' + Math.round(total).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+            document.getElementById('resultBox').classList.add('show');
+            setTimeout(() => {
+                document.getElementById('resultBox').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }, 100);
+        }
     </script>
+
+    <script src="dist_js/TTS_Adaptif.min.js"></script>
 </body>
 </html>
