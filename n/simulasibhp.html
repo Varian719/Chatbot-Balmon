@@ -269,6 +269,33 @@
         .search-item:hover { background: var(--bg-light-blue); border-color: var(--primary-color); transform: translateX(5px); }
         .search-item h4 { margin: 0 0 5px 0; color: var(--primary-color); font-size: 16px; }
         .search-item p { margin: 0; font-size: 13px; color: var(--text-gray); }
+
+        /* Style untuk tampilan dBm */
+        .dbm-display {
+            background-color: #f0f0f0;
+            padding: 14px 18px;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            font-family: 'Albert Sans', sans-serif;
+            font-size: 16px;
+            color: var(--text-gray);
+            display: inline-block;
+            min-width: 150px;
+            text-align: center;
+        }
+
+        /* Style untuk parameter info */
+        .param-info {
+            background-color: #e8f4fe;
+            border-radius: 8px;
+            padding: 12px 16px;
+            margin-top: 10px;
+            font-size: 14px;
+            border-left: 3px solid var(--primary-color);
+        }
+        .param-info strong {
+            color: var(--primary-dark);
+        }
     </style>
 </head>
 <body>
@@ -401,17 +428,16 @@
                     <label><span>*</span> Jenis Layanan / Penggunaan</label>
                     <select class="form-control" id="serviceType" required>
                         <option value="">-- Pilih Jenis Layanan --</option>
-                        <option value="konvensional">Radio Konvensional (Portable, MU, HT)</option>
-                        <option value="base">Radio Konvensional (Base Station)</option>
+                        <option value="ht_5w">HT (5 Watt)</option>
+                        <option value="mu_ht">MU/HT (5-10 Watt)</option>
+                        <option value="base">Radio Konvensional (Base Station) - High Power</option>
                         <option value="repeater">Radio Konvensional (Repeater)</option>
-                        <option value="bwa">BWA / Wireless Data (FS - PMP) - Sekunder</option>
-                        <option value="bwa_primer">BWA / Wireless Data (FS - PMP) - Primer</option>
-                        <option value="penyiaran_radio_le30">Jasa Penyiaran Radio ≤ 30 MHz</option>
-                        <option value="penyiaran_radio_gt30">Jasa Penyiaran Radio > 30 MHz</option>
-                        <option value="penyiaran_tv">Jasa Penyiaran Televisi</option>
                         <option value="trunking">Radio Trunking (Operator)</option>
-                        <option value="angkasa">ISR Angkasa (Pesawat/Satelit)</option>
                     </select>
+                    <!-- Info parameter layanan -->
+                    <div id="paramInfo" class="param-info" style="margin-top: 10px;">
+                        <i class="bi bi-info-circle"></i> Pilih layanan untuk melihat parameter IB dan IP
+                    </div>
                 </div>
 
                 <!-- Pita Frekuensi -->
@@ -423,29 +449,41 @@
                         <option value="uhf">UHF (300 - 3000 MHz)</option>
                         <option value="shf">SHF (3 - 30 GHz)</option>
                     </select>
+                    <!-- Info parameter frekuensi -->
+                    <div id="freqParamInfo" class="param-info" style="margin-top: 10px;">
+                        <i class="bi bi-info-circle"></i> Pilih pita frekuensi untuk melihat HDLP dan HDDP
+                    </div>
                 </div>
 
-                <!-- Lebar Pita -->
+                <!-- Lebar Pita (default 16 kHz) -->
                 <div class="form-group">
                     <label><span>*</span> Lebar Pita (Bandwidth)</label>
                     <div class="input-group">
-                        <input type="number" class="form-control" id="bandwidth" placeholder="contoh: 16" step="0.1" min="0" required>
+                        <input type="number" class="form-control" id="bandwidth" value="16" step="0.1" min="0" required>
                         <span>kHz</span>
                     </div>
                 </div>
 
-                <!-- Daya Pancar -->
+                <!-- Daya Pancar: input biasa untuk sebagian besar, dropdown untuk MU/HT -->
                 <div class="form-group">
-                    <label>Daya Pancar (Ketik salah satu, <strong>tidak wajib untuk ISR Angkasa</strong>)</label>
-                    <div class="input-group" style="margin-bottom:10px;">
-                        <input type="number" class="form-control" id="powerWatt" placeholder="Daya dalam Watt" step="0.1" min="0">
+                    <label>Daya Pancar (Watt) <strong>wajib diisi</strong></label>
+                    <!-- Input biasa (untuk semua kecuali MU/HT) -->
+                    <div class="input-group" id="powerInputGroup">
+                        <input type="number" class="form-control" id="powerWatt" placeholder="Daya dalam Watt" step="0.1" min="0" required>
                         <span>Watt</span>
                     </div>
-                    <div class="input-group">
-                        <input type="number" class="form-control" id="powerDbm" placeholder="Daya dalam dBm" step="0.1" min="0">
-                        <span>dBm</span>
+                    <!-- Dropdown khusus untuk MU/HT (awal tersembunyi) -->
+                    <div class="input-group" id="powerDropdownGroup" style="display: none;">
+                        <select class="form-control" id="powerSelect">
+                            <option value="5">5 Watt</option>
+                            <option value="10">10 Watt</option>
+                        </select>
+                        <span>Watt</span>
                     </div>
-                    <small class="text-muted">Isi salah satu, nilai akan dikonversi otomatis.</small>
+                    <div style="margin-top: 10px;">
+                        <span class="dbm-display" id="dbmDisplay">0.00 dBm</span>
+                        <small class="text-muted" style="margin-left: 10px;">Nilai dBm otomatis</small>
+                    </div>
                 </div>
 
                 <button type="button" class="btn-estimate" onclick="calculateBHP()">Hitung Estimasi</button>
@@ -647,7 +685,6 @@
         });
 
         // ==================== 3. DATA ZONA KABUPATEN ====================
-        // Mapping kabupaten ke zona berdasarkan informasi dari gambar
         const kabupatenZona = {
             samarinda: 2,
             balikpapan: 2,
@@ -661,7 +698,6 @@
             paser: 4
         };
 
-        // Data HDLP dan HDDP per zona dan pita frekuensi (berdasarkan PP 43/2023)
         const zonaData = {
             2: {
                 vhf: { HDLP: 10310, HDDP: 95732 },
@@ -680,18 +716,13 @@
             }
         };
 
-        // Nilai IB dan IP untuk setiap jenis layanan (berdasarkan data SDPPI Maps)
+        // Nilai IB dan IP + daya default
         const serviceData = {
-            konvensional: { name: "Radio Konvensional (Portable, MU, HT)", Ib: 0.3900, Ip: 0.0200, isAngkasa: false },
-            base: { name: "Radio Konvensional (Base Station)", Ib: 2.7200, Ip: 0.1300, isAngkasa: false },
-            repeater: { name: "Radio Konvensional (Repeater)", Ib: 11.8900, Ip: 0.6500, isAngkasa: false },
-            bwa: { name: "BWA / Wireless Data (FS - PMP) - Sekunder", Ib: 0.0200, Ip: 0.0600, isAngkasa: false },
-            bwa_primer: { name: "BWA / Wireless Data (FS - PMP) - Primer", Ib: 0.4100, Ip: 0.9100, isAngkasa: false },
-            penyiaran_radio_le30: { name: "Jasa Penyiaran Radio ≤ 30 MHz", Ib: 10.9300, Ip: 0.2400, isAngkasa: false },
-            penyiaran_radio_gt30: { name: "Jasa Penyiaran Radio > 30 MHz", Ib: 0.8400, Ip: 0.4900, isAngkasa: false },
-            penyiaran_tv: { name: "Jasa Penyiaran Televisi", Ib: 0.6400, Ip: 8.4300, isAngkasa: false },
-            trunking: { name: "Radio Trunking (Operator)", Ib: 14.8700, Ip: 0.5800, isAngkasa: false },
-            angkasa: { name: "ISR Angkasa", Ib: 3.0, Ip: 0, isAngkasa: true } // nilai contoh, bisa disesuaikan
+            ht_5w: { name: "HT (5 Watt)", Ib: 0.3900, Ip: 0.0200, defaultPower: 5 },
+            mu_ht: { name: "MU/HT (5-10 Watt)", Ib: 0.3900, Ip: 0.0200, defaultPower: 5 }, // default 5, tapi pakai dropdown
+            base: { name: "Radio Konvensional (Base Station) - High Power", Ib: 2.7200, Ip: 0.1300, defaultPower: 40 },
+            repeater: { name: "Radio Konvensional (Repeater)", Ib: 11.8900, Ip: 0.6500, defaultPower: 40 },
+            trunking: { name: "Radio Trunking (Operator)", Ib: 14.8700, Ip: 0.5800, defaultPower: 10 }
         };
 
         // Elemen
@@ -699,7 +730,13 @@
         const bandSelect = document.getElementById('bandSelect');
         const infoZona = document.getElementById('infoZona');
         const inputWatt = document.getElementById('powerWatt');
-        const inputDbm = document.getElementById('powerDbm');
+        const powerSelect = document.getElementById('powerSelect');
+        const powerInputGroup = document.getElementById('powerInputGroup');
+        const powerDropdownGroup = document.getElementById('powerDropdownGroup');
+        const dbmDisplay = document.getElementById('dbmDisplay');
+        const serviceType = document.getElementById('serviceType');
+        const paramInfo = document.getElementById('paramInfo');
+        const freqParamInfo = document.getElementById('freqParamInfo');
 
         // Update info zona saat kabupaten berubah
         function updateInfoZona() {
@@ -714,33 +751,94 @@
         }
         kabupatenSelect.addEventListener('change', updateInfoZona);
 
-        // Sinkronisasi Watt dan dBm
-        inputWatt.addEventListener('input', function() {
-            const watt = parseFloat(this.value);
+        // Update info frekuensi saat pita atau kabupaten berubah
+        function updateFreqParam() {
+            const kab = kabupatenSelect.value;
+            const bandKey = bandSelect.value;
+            if (!kab || !bandKey) {
+                freqParamInfo.innerHTML = `<i class="bi bi-info-circle"></i> Pilih kabupaten dan pita frekuensi untuk melihat HDLP dan HDDP`;
+                return;
+            }
+            const zona = kabupatenZona[kab];
+            if (!zonaData[zona] || !zonaData[zona][bandKey]) {
+                freqParamInfo.innerHTML = `<i class="bi bi-info-circle"></i> Data tidak tersedia`;
+                return;
+            }
+            const band = zonaData[zona][bandKey];
+            freqParamInfo.innerHTML = `<i class="bi bi-info-circle"></i> <strong>HDLP = ${band.HDLP.toLocaleString()} Rp/kHz</strong>, <strong>HDDP = ${band.HDDP.toLocaleString()} Rp/dBm</strong> (Zona ${zona})`;
+        }
+        kabupatenSelect.addEventListener('change', updateFreqParam);
+        bandSelect.addEventListener('change', updateFreqParam);
+
+        // Fungsi konversi Watt ke dBm dan update display (dari input biasa atau dropdown)
+        function updateDbmFromWatt() {
+            let watt;
+            if (serviceType.value === 'mu_ht') {
+                watt = parseFloat(powerSelect.value);
+            } else {
+                watt = parseFloat(inputWatt.value);
+            }
             if (!isNaN(watt) && watt > 0) {
                 const dbm = 10 * Math.log10(watt * 1000);
-                inputDbm.value = dbm.toFixed(2);
+                dbmDisplay.textContent = dbm.toFixed(2) + ' dBm';
             } else {
-                inputDbm.value = '';
+                dbmDisplay.textContent = '0.00 dBm';
             }
-        });
+        }
 
-        inputDbm.addEventListener('input', function() {
-            const dbm = parseFloat(this.value);
-            if (!isNaN(dbm)) {
-                const watt = Math.pow(10, dbm / 10) / 1000;
-                inputWatt.value = watt.toFixed(4);
-            } else {
-                inputWatt.value = '';
+        inputWatt.addEventListener('input', updateDbmFromWatt);
+        powerSelect.addEventListener('change', updateDbmFromWatt);
+
+        // Fungsi untuk mengatur tampilan input daya dan nilai default berdasarkan layanan
+        function setDefaultAndParam() {
+            const selected = serviceType.value;
+            if (!selected) {
+                paramInfo.innerHTML = `<i class="bi bi-info-circle"></i> Pilih layanan untuk melihat parameter IB dan IP`;
+                return;
             }
-        });
+            const srv = serviceData[selected];
+            if (srv) {
+                // Tampilkan parameter
+                paramInfo.innerHTML = `<i class="bi bi-info-circle"></i> <strong>IB = ${srv.Ib}</strong>, <strong>IP = ${srv.Ip}</strong>`;
+
+                // Atur tampilan input daya
+                if (selected === 'mu_ht') {
+                    // Tampilkan dropdown, sembunyikan input biasa
+                    powerInputGroup.style.display = 'none';
+                    powerDropdownGroup.style.display = 'flex';
+                    // Set default dropdown ke 5
+                    powerSelect.value = '5';
+                    updateDbmFromWatt();
+                } else {
+                    // Tampilkan input biasa, sembunyikan dropdown
+                    powerInputGroup.style.display = 'flex';
+                    powerDropdownGroup.style.display = 'none';
+                    // Set nilai default dari srv.defaultPower
+                    inputWatt.value = srv.defaultPower;
+                    updateDbmFromWatt();
+                }
+            }
+        }
+
+        serviceType.addEventListener('change', setDefaultAndParam);
+
+        // Panggil sekali untuk inisialisasi
+        setDefaultAndParam();
+        updateFreqParam();
 
         function calculateBHP() {
             const kab = kabupatenSelect.value;
             const serviceKey = document.getElementById('serviceType').value;
             const bandKey = bandSelect.value;
             const bandwidth = parseFloat(document.getElementById('bandwidth').value);
-            const dayaDbm = parseFloat(inputDbm.value);
+
+            // Ambil daya yang benar (dari dropdown atau input)
+            let dayaWatt;
+            if (serviceKey === 'mu_ht') {
+                dayaWatt = parseFloat(powerSelect.value);
+            } else {
+                dayaWatt = parseFloat(inputWatt.value);
+            }
 
             // Validasi
             if (!kab || !serviceKey || !bandKey || isNaN(bandwidth) || bandwidth <= 0) {
@@ -748,10 +846,14 @@
                 return;
             }
 
+            if (isNaN(dayaWatt) || dayaWatt <= 0) {
+                alert('Harap isi nilai Daya Pancar (nilai harus positif).');
+                return;
+            }
+
             const srv = serviceData[serviceKey];
             const zona = kabupatenZona[kab];
             
-            // Pastikan zona memiliki data untuk pita yang dipilih
             if (!zonaData[zona] || !zonaData[zona][bandKey]) {
                 alert('Data untuk pita frekuensi ini belum tersedia untuk zona yang dipilih.');
                 return;
@@ -759,10 +861,8 @@
 
             const band = zonaData[zona][bandKey];
 
-            if (!srv.isAngkasa && isNaN(dayaDbm)) {
-                alert('Harap ketik nilai Daya Pancar pada kolom Watt atau dBm.');
-                return;
-            }
+            // Konversi Watt ke dBm untuk perhitungan
+            const dayaDbm = 10 * Math.log10(dayaWatt * 1000);
 
             const b = bandwidth;
             const HDLP = band.HDLP;
@@ -770,13 +870,8 @@
             const Ib = srv.Ib;
             const Ip = srv.Ip;
 
-            let total = 0;
-            if (srv.isAngkasa) {
-                total = HDLP * Ib * b;
-            } else {
-                const p = dayaDbm < 0 ? 0 : dayaDbm;
-                total = (HDLP * Ib * b + HDDP * Ip * p) / 2;
-            }
+            const p = dayaDbm < 0 ? 0 : dayaDbm;
+            const total = (HDLP * Ib * b + HDDP * Ip * p) / 2;
 
             document.getElementById('resultAmount').innerText = 'Rp ' + Math.round(total).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
             document.getElementById('resultBox').classList.add('show');
