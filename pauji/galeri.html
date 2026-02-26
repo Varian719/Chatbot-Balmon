@@ -639,7 +639,7 @@
                 </a>
                 <a href="https://www.tiktok.com/@balmon.samarinda?lang=en" target="_blank" class="social-icon" aria-label="TikTok">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" stroke="none">
-                        <path d="M18.2 4.5c-2.3-.2-4.1-1.9-4.4-4.2V0h-3.4v13.8c0 1.4-1.2 2.6-2.8 2.6-1.4 0-2.6-1.1-2.6-2.6s1.1-2.6 2.6-2.6h.2l.5.1V7.5h-.7c-3.4 0-6.2 2.8-6.2 6.2S4.2 20 7.7 20s6.2-2.8 6.2-6.2v-7c1.1 1.1 2.4 1.6 3.9 1.6h.8V4.6l-.4-.1z"/>
+                        <path d="M12.53.02C13.84 0 15.14.01 16.44 0c.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.65-1.58-1.09-.1-.09-.19-.2-.29-.3v6.52c.02 4.07-3.23 7.49-7.29 7.49-3.93.04-7.3-3.13-7.48-7.05-.07-1.84.58-3.66 1.83-5.01 1.25-1.35 3.03-2.14 4.86-2.16v4.03c-1.11-.02-2.19.46-2.95 1.29a4.106 4.106 0 0 0-1.1 2.89c.04 2.22 1.84 4.02 4.06 4.02 2.22 0 4.02-1.8 4.02-4.02V.02h.22z"/>
                     </svg>
                 </a>
             </div>
@@ -660,9 +660,12 @@
                     <li class="menu-item" onclick="window.location.href='galeri.html'">Publikasi</li>
                     <li class="menu-item" onclick="window.location.href='kontak.html'">Kontak</li>
                 </ul>
-                <button onclick="openSearch()" style="margin-left:10px; border:none; background:transparent; color:var(--text-dark); cursor:pointer;">
-                    <i class="bi bi-search" style="font-size:18px;"></i>
-                </button>
+            <button class="nav-search-btn" onclick="openSearch()" style="margin-left:10px; border:none; background:transparent; color:white; cursor:pointer;" aria-label="Cari">
+                <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                </svg>
+            </button>
             </nav>
             <button class="hamburger-btn" id="hamburgerBtn" onclick="toggleMobileMenu()">
                 <span></span><span></span><span></span>
@@ -838,7 +841,7 @@
     <div id="searchOverlay" class="search-overlay">
         <div class="search-content">
             <button class="close-search" onclick="closeSearch()">&times;</button>
-            <h2 style="color:var(--primary-color); margin-bottom:20px;">Pencarian</h2>
+            <h2 style="color:var(--primary-color); margin-bottom:20px;">Pencarian Website</h2>
             <input type="text" id="searchInput" placeholder="Ketik kata kunci (misal: Izin, Maritim)..." onkeyup="performSearch()">
             <div id="searchResults" class="search-results"></div>
         </div>
