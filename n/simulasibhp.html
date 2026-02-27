@@ -226,9 +226,16 @@
         }
 
         .label-kota {
-            background: transparent !important; border: none !important;
-            box-shadow: none !important; color: #333; font-weight: bold;
+            background: transparent !important; 
+            border: none !important;
+            box-shadow: none !important; 
+            color: #333; 
+            font-weight: bold;
             text-shadow: 2px 2px 0px #fff, -1px -1px 0 #fff;
+            /* Tambahan agar teks lurus dan rapi */
+            white-space: nowrap; 
+            text-align: center;
+            font-size: 13px; /* Opsional: kecilkan sedikit agar lebih pas di peta */
         }
 
         /* ===== FOOTER (dari versi sebelumnya) ===== */
@@ -652,7 +659,7 @@
         updateDbmAndCalculate();
 
         // ==================== PETA (Leaflet) ====================
-        var map = L.map('map').setView([0.5386, 116.4194], 7);
+        var map = L.map('map').setView([0.5386, 116.4194], 6);
         L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png').addTo(map);
 
         var geojsonLayer;
@@ -676,26 +683,48 @@
             })
             .catch(err => console.error('GeoJSON tidak ditemukan atau error:', err));
 
-        function syncSelection(nama) {
-            if (!geojsonLayer) return;
-            geojsonLayer.eachLayer(layer => {
-                let raw = layer.feature.properties.name || layer.feature.properties.WADMKK || "";
-                let layerName = raw.toUpperCase().replace("KOTA ", "").replace("KABUPATEN ", "").trim();
-                layer.unbindTooltip();
+            function syncSelection(nama) {
+                if (!geojsonLayer) return;
+                geojsonLayer.eachLayer(layer => {
+                    let raw = layer.feature.properties.name || layer.feature.properties.WADMKK || "";
+                    let layerName = raw.toUpperCase().replace("KOTA ", "").replace("KABUPATEN ", "").trim();
+                    layer.unbindTooltip();
 
-                if (layerName === nama) {
-                    layer.setStyle(styleActive);
-                    map.fitBounds(layer.getBounds());
-                    layer.bindTooltip(layerName, { permanent: true, direction: "center", className: "label-kota" });
-                    
-                    const zona = kabupatenZona[nama];
-                    infoZona.innerHTML = `<i class="bi bi-geo-alt-fill"></i> <strong>Wilayah:</strong> ${nama} (Zona ${zona})`;
-                } else {
-                    layer.setStyle(styleDefault);
-                }
-            });
-            calculateBHP();
-        }
+                    if (layerName === nama) {
+                        layer.setStyle(styleActive);
+                        map.fitBounds(layer.getBounds());
+                        
+                        // --- BAGIAN BARU: Atur Offset Manual ---
+                        // Format: [geser_X, geser_Y] dalam pixel. Minus (-) untuk ke kiri/atas.
+                        let labelOffset = [0, 0]; 
+                        
+                        // Atur angka-angka ini sesuai kebutuhan visual peta Anda
+                        if (layerName === "KUTAI KARTANEGARA") {
+                            labelOffset = [-40, -10]; // Contoh: Geser ke kiri 40px, ke atas 10px
+                        } else if (layerName === "MAHAKAM ULU") {
+                            labelOffset = [10, 20];   // Contoh: Geser ke kanan 10px, ke bawah 20px
+                        } else if (layerName === "KUTAI BARAT") {
+                            labelOffset = [0, -15];   // Contoh: Geser ke atas 15px
+                        }
+                        // Silakan tambahkan 'else if' lagi untuk kabupaten lain jika letaknya masih kurang pas
+
+                        // Pasang tooltip dengan offset yang sudah disesuaikan
+                        layer.bindTooltip(layerName, { 
+                            permanent: true, 
+                            direction: "center", 
+                            className: "label-kota",
+                            offset: labelOffset 
+                        });
+                        // ----------------------------------------
+                        
+                        const zona = kabupatenZona[nama];
+                        infoZona.innerHTML = `<i class="bi bi-geo-alt-fill"></i> <strong>Wilayah:</strong> ${nama} (Zona ${zona})`;
+                    } else {
+                        layer.setStyle(styleDefault);
+                    }
+                });
+                calculateBHP();
+            }
 
         // ==================== HEADER & FUNGSI UMUM (dari versi sebelumnya) ====================
         // Scroll header
