@@ -34,7 +34,7 @@
         body { 
             margin: 0; padding: 0; 
             font-family: 'Albert Sans', sans-serif; 
-            background-color: var(--bg-light-blue);
+            background-color: var(--bg-white);
             color: var(--text-dark); 
             line-height: 1.6; 
             overflow-x: hidden; 
@@ -510,8 +510,9 @@
             padding: 30px 0;
             background-color: var(--bg-white);
             position: relative;
-            margin-top: -2px;  /* Menarik section ke atas untuk menutup celah */
-            z-index: 5;        /* Memastikan section ini menumpuk di atas celah tsb */
+            margin-top: -2px; 
+            margin-bottom: 80px; /* Tambahkan baris ini, sesuaikan angkanya (misal 80px atau 100px) */
+            z-index: 5;
         }
         .news-section::before {
             content: '';
@@ -813,20 +814,61 @@
             .video-slider-wrapper { padding: 0; }
         }
 
-        /* RESPONSIVE NEWS (MOBILE STACK) */
         @media (max-width: 900px) {
             .news-container {
-                flex-direction: column-reverse; /* Gambar atas, Teks bawah */
-                height: auto; /* Auto height di HP */
-                min-height: 500px;
+                flex-direction: column-reverse;
+                height: auto;
+                min-height: unset;
             }
             .news-image-col {
-                width: 100%; height: 250px; flex: none; border-radius: 16px 16px 0 0;
+                width: 100%; 
+                height: 200px; 
+                flex: none; 
+                border-radius: 16px 16px 0 0;
             }
             .news-text-col {
-                width: 100%; flex: none; padding: 25px;
+                width: 100%; 
+                flex: none; 
+                padding: 20px;
+                justify-content: flex-start;
             }
-            .news-title-anim { font-size: 24px; }
+            .news-header-row {
+                margin-bottom: 12px;
+            }
+            .news-badge {
+                font-size: 10px;
+                padding: 4px 10px;
+            }
+            .news-counter {
+                font-size: 12px;
+            }
+            .news-title-anim { 
+                font-size: 18px;
+                margin-bottom: 8px;
+                -webkit-line-clamp: 2;
+            }
+            .news-meta {
+                font-size: 12px;
+                margin-bottom: 10px;
+            }
+            
+            /* SEMBUNYIKAN deskripsi di mobile - ini penyebab layout berubah-ubah */
+            .news-desc-anim {
+                display: none;
+            }
+
+            .news-footer-row {
+                padding-top: 14px;
+                margin-top: 0;
+            }
+            .news-btn-readmore {
+                font-size: 12px;
+                padding: 8px 16px;
+            }
+            .news-btn-nav {
+                width: 36px;
+                height: 36px;
+            }
         }
 
         /* ARCHIVE */
