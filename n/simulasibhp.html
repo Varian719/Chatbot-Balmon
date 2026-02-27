@@ -159,7 +159,8 @@
         /* ===== LAYOUT UTAMA (DUA KOLOM) ===== */
         .main-wrapper {
             display: flex;
-            min-height: calc(100vh - 80px - 200px); /* menyesuaikan, opsional */
+            min-height: calc(100vh - 80px - 200px);
+                /* Tambah ini juga */ /* menyesuaikan, opsional */
         }
 
         .map-section {
@@ -387,16 +388,16 @@
                     <label><span>*</span> Kabupaten / Kota</label>
                     <select class="form-control auto-calc" id="kabupatenSelect" required>
                         <option value="">-- Pilih Kabupaten/Kota --</option>
-                        <option value="SAMARINDA">KOTA SAMARINDA (Zona 2)</option>
-                        <option value="BALIKPAPAN">KOTA BALIKPAPAN (Zona 2)</option>
-                        <option value="BONTANG">KOTA BONTANG (Zona 3)</option>
-                        <option value="KUTAI KARTANEGARA">KUTAI KARTANEGARA (Zona 3)</option>
-                        <option value="KUTAI BARAT">KUTAI BARAT (Zona 3)</option>
-                        <option value="KUTAI TIMUR">KUTAI TIMUR (Zona 3)</option>
-                        <option value="MAHAKAM ULU">MAHAKAM ULU (Zona 3)</option>
-                        <option value="PENAJAM PASER UTARA">PENAJAM PASER UTARA (Zona 3)</option>
-                        <option value="BERAU">BERAU (Zona 4)</option>
-                        <option value="PASER">PASER (Zona 4)</option>
+                        <option value="SAMARINDA">KOTA SAMARINDA</option>
+                        <option value="BALIKPAPAN">KOTA BALIKPAPAN</option>
+                        <option value="BONTANG">KOTA BONTANG</option>
+                        <option value="KUTAI KARTANEGARA">KUTAI KARTANEGARA</option>
+                        <option value="KUTAI BARAT">KUTAI BARAT</option>
+                        <option value="KUTAI TIMUR">KUTAI TIMUR</option>
+                        <option value="MAHAKAM ULU">MAHAKAM ULU</option>
+                        <option value="PENAJAM PASER UTARA">PENAJAM PASER UTARA </option>
+                        <option value="BERAU">BERAU</option>
+                        <option value="PASER">PASER</option>
                     </select>
                 </div>
 
@@ -404,7 +405,7 @@
                     <label><span>*</span> Jenis Layanan / Penggunaan</label>
                     <select class="form-control auto-calc" id="serviceType" required>
                         <option value="ht_5w">HT (5 Watt)</option>
-                        <option value="mu_ht">MU/HT (5-10 Watt)</option>
+                        <option value="mu_ht">MU (10-25 Watt)</option>
                         <option value="base">Radio Konvensional (Base Station) - High Power</option>
                         <option value="repeater">Radio Konvensional (Repeater)</option>
                         <option value="trunking">Radio Trunking (Operator)</option>
@@ -417,7 +418,6 @@
                     <select class="form-control auto-calc" id="bandSelect" required>
                         <option value="vhf">VHF (30 - 300 MHz)</option>
                         <option value="uhf">UHF (300 - 3000 MHz)</option>
-                        <option value="shf">SHF (3 - 30 GHz)</option>
                     </select>
                     <div id="freqParamInfo" class="param-info"></div>
                 </div>
@@ -436,8 +436,8 @@
                         <!-- Dropdown khusus untuk MU/HT (awal tersembunyi) -->
                         <div id="powerDropdownGroup" style="display: none; gap:5px;">
                             <select class="form-control auto-calc" id="powerSelect">
-                                <option value="5">5 Watt</option>
-                                <option value="10">10 Watt</option>
+                                <option value="5">10 Watt</option>
+                                <option value="25">25 Watt</option>
                             </select>
                         </div>
                         <div id="dbmDisplay" class="dbm-display">0.00 dBm</div>
@@ -536,8 +536,8 @@
 
         const serviceData = {
             ht_5w: { name: "HT (5 Watt)", Ib: 0.3900, Ip: 0.0200, defaultPower: 5 },
-            mu_ht: { name: "MU/HT (5-10 Watt)", Ib: 0.3900, Ip: 0.0200, defaultPower: 5 }, // default 5
-            base: { name: "Base Station", Ib: 2.7200, Ip: 0.1300, defaultPower: 40 },
+            mu_ht: { name: "MU (10-25 Watt)", Ib: 0.3900, Ip: 0.0200, defaultPower: 10 }, // default 5
+            base: { name: "Base Station", Ib: 2.7200, Ip: 0.1300, defaultPower: 25 },
             repeater: { name: "Repeater", Ib: 11.8900, Ip: 0.6500, defaultPower: 40 },
             trunking: { name: "Radio Trunking", Ib: 14.8700, Ip: 0.5800, defaultPower: 10 }
         };
