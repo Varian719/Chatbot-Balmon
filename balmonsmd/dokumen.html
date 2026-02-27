@@ -17,6 +17,22 @@
     ::-webkit-scrollbar-track { background: #f1f1f1; }
     ::-webkit-scrollbar-thumb { background: #ccc; border-radius: 4px; }
     ::-webkit-scrollbar-thumb:hover { background: #aaa; }
+    
+    /* Style untuk tombol edit */
+    .btn-edit {
+        transition: all 0.2s;
+    }
+    .btn-edit:hover {
+        background-color: #ffc107;
+        border-color: #ffc107;
+        color: white;
+    }
+    
+    /* Animasi untuk card yang sedang diedit */
+    .card-editing {
+        border: 2px solid #ffc107 !important;
+        box-shadow: 0 0 0 3px rgba(255,193,7,0.3) !important;
+    }
   </style>
 </head>
 
@@ -123,11 +139,10 @@
 
   <script type="module">
     import { initAdminPage } from "./security.js";
-    import { ref, push, onValue, remove, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+    import { ref, push, onValue, remove, update, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
     import { getAuth, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
     // --- KONFIGURASI GOOGLE DRIVE ---
-    // (Menggunakan data dari file sebelumnya)
     const CLIENT_ID = '1053263347737-g32v5386cnfl8dbe49i0t9i9pv9fg44t.apps.googleusercontent.com'; 
     const API_KEY = 'AIzaSyAcIVdG6dQxewbNNlvRCWb0yGjCWoeqdE4'; 
     const DISCOVERY_DOC = 'https://www.googleapis.com/discovery/v1/apis/drive/v3/rest';
@@ -140,7 +155,7 @@
     let dbInstance;
     let allDocs = [];
 
-    // --- SETUP GOOGLE API (DI BELAKANG LAYAR) ---
+    // --- SETUP GOOGLE API ---
     window.gapiLoaded = function() {
         gapi.load('client', async () => {
             await gapi.client.init({ apiKey: API_KEY, discoveryDocs: [DISCOVERY_DOC] });
@@ -181,7 +196,7 @@
         });
     });
 
-    // --- LOGIKA UPLOAD (OTOMATIS LOGIN JIKA BELUM) ---
+    // --- LOGIKA UPLOAD ---
     window.handleUpload = async function() {
         const fileInput = document.getElementById('docFile');
         const judul = document.getElementById('docJudul').value;
@@ -191,31 +206,24 @@
             return Swal.fire({ title: 'Data Kurang', text: 'Mohon isi judul dan pilih file.', icon: 'warning' });
         }
 
-        // Cek apakah API siap
         if (!gapiInited || !gisInited) {
             return Swal.fire('Tunggu Sebentar', 'Koneksi Google Drive sedang disiapkan...', 'info');
         }
 
-        // Cek Token / Minta Izin
         tokenClient.callback = async (resp) => {
             if (resp.error) throw (resp);
-            // Jika token didapat, Lanjutkan Upload
             await executeUpload(file, judul);
         };
 
-        // Jika belum ada akses token yang valid, ini akan memunculkan popup login
-        // Jika sudah ada (di cache browser), biasanya langsung lanjut atau popup sebentar
         const token = gapi.client.getToken();
         if (token === null) {
-            // Minta login
             tokenClient.requestAccessToken({prompt: ''});
         } else {
-            // Sudah login, langsung gas
             await executeUpload(file, judul);
         }
     }
 
-    // --- PROSES UPLOAD SEBENARNYA ---
+    // --- PROSES UPLOAD ---
     async function executeUpload(file, judul) {
         Swal.fire({
             title: 'Mengupload ke Drive...',
@@ -236,7 +244,6 @@
             form.append('metadata', new Blob([JSON.stringify(metadata)], { type: 'application/json' }));
             form.append('file', file);
 
-            // Upload ke Google Drive
             const response = await fetch('https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&fields=id', {
                 method: 'POST',
                 headers: new Headers({ 'Authorization': 'Bearer ' + accessToken }),
@@ -246,7 +253,6 @@
             const driveData = await response.json();
             if(driveData.error) throw new Error(driveData.error.message);
 
-            // Simpan Metadata ke Firebase
             if(!dbInstance) throw new Error("Database belum siap.");
 
             await push(ref(dbInstance, 'arsip_drive'), {
@@ -266,7 +272,87 @@
         }
     }
 
-    // --- RENDER GRID ---
+    // --- FUNGSI EDIT JUDUL (TAMBAHAN BARU) ---
+    window.editJudul = function(key, currentJudul) {
+        // Tampilkan dialog edit
+        Swal.fire({
+            title: 'Edit Judul Dokumen',
+            input: 'text',
+            inputValue: currentJudul,
+            inputLabel: 'Judul Baru',
+            inputPlaceholder: 'Masukkan judul dokumen',
+            showCancelButton: true,
+            confirmButtonText: 'Simpan',
+            cancelButtonText: 'Batal',
+            confirmButtonColor: '#ffc107',
+            cancelButtonColor: '#6c757d',
+            inputValidator: (value) => {
+                if (!value) {
+                    return 'Judul tidak boleh kosong!';
+                }
+                if (value.length > 100) {
+                    return 'Judul maksimal 100 karakter!';
+                }
+            },
+            // Tampilkan loading saat proses
+            preConfirm: (newJudul) => {
+                return updateJudul(key, newJudul);
+            },
+            allowOutsideClick: () => !Swal.isLoading()
+        }).then((result) => {
+            if (result.isConfirmed) {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Berhasil!',
+                    text: 'Judul dokumen telah diperbarui.',
+                    timer: 2000,
+                    showConfirmButton: false
+                });
+            }
+        });
+
+        // Efek highlight pada card yang diedit
+        const cardElement = document.querySelector(`[data-key="${key}"]`);
+        if (cardElement) {
+            cardElement.classList.add('card-editing');
+            setTimeout(() => {
+                cardElement.classList.remove('card-editing');
+            }, 2000);
+        }
+    }
+
+    // --- FUNGSI UPDATE JUDUL KE FIREBASE ---
+    async function updateJudul(key, newJudul) {
+        if (!dbInstance) {
+            throw new Error('Database tidak tersedia');
+        }
+
+        try {
+            // Update ke Firebase
+            await update(ref(dbInstance, `arsip_drive/${key}`), {
+                judul: newJudul,
+                last_edited: serverTimestamp(),
+                editor: document.getElementById('user-display')?.innerText || 'Admin'
+            });
+            
+            // Update local data
+            const docIndex = allDocs.findIndex(d => d.key === key);
+            if (docIndex !== -1) {
+                allDocs[docIndex].judul = newJudul;
+            }
+            
+            // Re-render grid
+            renderGrid(allDocs);
+            
+            return true;
+        } catch (error) {
+            console.error('Error updating judul:', error);
+            Swal.showValidationMessage(`Gagal update: ${error.message}`);
+            return false;
+        }
+    }
+
+    // --- RENDER GRID (DIMODIFIKASI DENGAN TOMBOL EDIT) ---
     function renderGrid(dataList) {
         const grid = document.getElementById('gridDokumen');
         if(dataList.length === 0) {
@@ -279,9 +365,10 @@
             let isPdf = d.tipe && d.tipe.toLowerCase().includes('pdf');
             let iconClass = isPdf ? 'bi-file-earmark-pdf-fill text-danger' : 'bi-file-earmark-word-fill text-primary';
             let dateStr = new Date(d.timestamp || Date.now()).toLocaleDateString('id-ID', {day: 'numeric', month: 'short', year: 'numeric'});
-
+            
+            // Tambahkan data-key untuk highlight
             html += `
-                <div class="col-md-4 col-lg-3 mb-4">
+                <div class="col-md-4 col-lg-3 mb-4" data-key="${d.key}">
                     <div class="card h-100 border-0 shadow-sm card-doc">
                         <div class="card-body text-center d-flex flex-column">
                             <div class="mb-3"><i class="bi ${iconClass}" style="font-size: 3rem;"></i></div>
@@ -291,10 +378,22 @@
                                 <a href="https://drive.google.com/uc?export=view&id=${d.drive_id}" target="_blank" class="btn btn-sm btn-light border" title="Lihat">
                                     <i class="bi bi-eye"></i>
                                 </a>
+                                <!-- TOMBOL EDIT BARU -->
+                                <button onclick="editJudul('${d.key}', '${d.judul.replace(/'/g, "\\'")}')" 
+                                        class="btn btn-sm btn-light border btn-edit" 
+                                        title="Edit Judul">
+                                    <i class="bi bi-pencil"></i>
+                                </button>
                                 <button onclick="hapusData('${d.key}')" class="btn btn-sm btn-outline-danger" title="Hapus">
                                     <i class="bi bi-trash"></i>
                                 </button>
                             </div>
+                            <!-- Tampilkan info editor jika ada -->
+                            ${d.editor ? `
+                                <small class="text-muted mt-2">
+                                    <i class="bi bi-pencil-square"></i> Edit terakhir: ${d.editor}
+                                </small>
+                            ` : ''}
                         </div>
                     </div>
                 </div>`;
@@ -302,13 +401,14 @@
         grid.innerHTML = html;
     }
 
+    // --- SEARCH (TETAP SAMA) ---
     document.getElementById('searchBox').addEventListener('keyup', (e) => {
         const keyword = e.target.value.toLowerCase();
         const filtered = allDocs.filter(doc => doc.judul.toLowerCase().includes(keyword));
         renderGrid(filtered);
     });
 
-    // --- HAPUS DATA ---
+    // --- HAPUS DATA (TETAP SAMA) ---
     window.hapusData = function(key) {
         Swal.fire({
             title: 'Hapus Arsip?',
@@ -329,7 +429,7 @@
         });
     }
 
-    // --- LOGOUT SYSTEM (YANG SUDAH DIPERBAIKI) ---
+    // --- LOGOUT SYSTEM ---
     const setupLogout = () => {
         const btnLogout = document.getElementById('btnSystemLogout');
         if (!btnLogout) return;
