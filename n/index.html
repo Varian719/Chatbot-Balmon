@@ -1043,6 +1043,164 @@
             }
         }
 
+        /* =========================================== */
+        /* LINK TERKAIT SIMPLE CAROUSEL */
+        /* =========================================== */
+        .link-terkait-section {
+            padding: 60px 0;
+            background-color: #f9fafc;
+            position: relative;
+            z-index: 2;
+        }
+
+        .link-terkait-section .section-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .link-terkait-section .section-header h2 {
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin: 0 0 10px 0;
+            position: relative;
+            display: inline-block;
+        }
+
+        .link-terkait-section .section-header h2:after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 3px;
+            background-color: var(--accent-yellow);
+        }
+
+        .link-terkait-section .section-header p {
+            font-size: 16px;
+            color: var(--text-gray);
+            margin: 20px 0 0 0;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+            line-height: 1.7;
+        }
+
+        /* Tombol Navigasi Carousel */
+        .link-carousel-nav {
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .link-carousel-btn {
+            width: 45px;
+            height: 45px;
+            background: rgba(0, 111, 176, 0.1);
+            border: 1px solid rgba(0, 111, 176, 0.2);
+            border-radius: 8px;
+            color: var(--primary-color);
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(5px);
+        }
+
+        .link-carousel-btn:hover {
+            background: var(--primary-color);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 111, 176, 0.3);
+        }
+
+        /* Window Carousel */
+        .link-carousel-window {
+            width: 100%;
+            overflow-x: auto;
+            padding: 10px 5px;
+            position: relative;
+            scroll-behavior: smooth;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+            scroll-snap-type: x mandatory;
+        }
+
+        .link-carousel-window::-webkit-scrollbar {
+            display: none;
+        }
+
+        .link-carousel-track {
+            display: flex;
+            gap: 30px;
+            width: max-content;
+        }
+
+        /* Item carousel sederhana */
+        .carousel-item {
+            flex: 0 0 180px;
+            scroll-snap-align: start;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        .carousel-item:hover {
+            transform: translateY(-5px);
+        }
+
+        .carousel-item a {
+            text-decoration: none;
+            color: var(--text-dark);
+            display: block;
+        }
+
+        .carousel-item .link-logo {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            object-fit: contain;
+            background-color: #e6f0fa;
+            padding: 10px;
+            margin: 0 auto 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            transition: box-shadow 0.3s ease;
+        }
+
+        .carousel-item:hover .link-logo {
+            box-shadow: 0 10px 25px rgba(0,111,176,0.15);
+        }
+
+        .carousel-item span {
+            font-weight: 600;
+            font-size: 14px;
+            color: var(--primary-color);
+            display: block;
+            line-height: 1.4;
+        }
+
+        /* Responsif: sembunyikan tombol di mobile */
+        @media (max-width: 768px) {
+            .link-carousel-nav {
+                display: none;
+            }
+            .link-carousel-window {
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+            }
+            .carousel-item {
+                flex: 0 0 140px;
+            }
+            .carousel-item .link-logo {
+                width: 70px;
+                height: 70px;
+            }
+        }
+
         /* FOOTER */
         footer { background-color: var(--primary-color); color: white; padding-top: 70px; font-size: 14px; position: relative; }
         .footer-grid { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 40px; padding-bottom: 50px; }
@@ -1755,6 +1913,104 @@
             </div>
         </div>
     </div>
+
+    <!-- =========================================== -->
+    <!-- LINK TERKAIT - SIMPLE CAROUSEL (TANPA CARD) -->
+    <!-- =========================================== -->
+    <div class="link-terkait-section fade-in-section">
+        <div class="container">
+            <div class="section-header">
+                <h2>Link Terkait</h2>
+                <p>Balai Monitoring Spektrum Frekuensi Radio Kelas I Samarinda</p>
+            </div>
+
+            <!-- Tombol Navigasi Carousel -->
+            <div class="link-carousel-nav">
+                <button class="link-carousel-btn" id="linkPrevBtn" aria-label="Previous">
+                    <i class="bi bi-chevron-left"></i>
+                </button>
+                <button class="link-carousel-btn" id="linkNextBtn" aria-label="Next">
+                    <i class="bi bi-chevron-right"></i>
+                </button>
+            </div>
+
+            <!-- Wrapper Carousel -->
+            <div class="link-carousel-window" id="linkCarouselWindow">
+                <div class="link-carousel-track fade-stagger-children" id="linkCarouselTrack">
+                    <!-- Item 1: KOMDIGI -->
+                    <div class="carousel-item">
+                        <a href="https://www.komdigi.go.id/" target="_blank">
+                            <img src="logo-komdigi.png" alt="KOMDIGI" class="link-logo" onerror="this.onerror=null; this.src='https://via.placeholder.com/80/006fb0/ffffff?text=K'">
+                            <span>KOMDIGI</span>
+                        </a>
+                    </div>
+                      <div class="carousel-item">
+                        <a href="https://www.lapor.go.id/" target="_blank">
+                            <img src="laporL.jpeg" alt="Lapor" class="link-logo" onerror="this.onerror=null; this.src='https://via.placeholder.com/80/006fb0/ffffff?text=L'">
+                            <span>Lapor</span>
+                        </a>
+                    </div>
+                    <!-- Item 2: DJID -->
+                    <div class="carousel-item">
+                        <a href="https://postel.go.id/" target="_blank">
+                            <img src="DJID.jpeg" alt="DJID" class="link-logo" onerror="this.onerror=null; this.src='https://via.placeholder.com/80/006fb0/ffffff?text=D'">
+                            <span>DJID</span>
+                        </a>
+                    </div>
+                    <!-- Item 3: JDIH -->
+                    <div class="carousel-item">
+                        <a href="https://jdih.komdigi.go.id/" target="_blank">
+                            <img src="JDIH_KOMDIGI.png" alt="JDIH" class="link-logo" onerror="this.onerror=null; this.src='https://via.placeholder.com/80/006fb0/ffffff?text=J'">
+                            <span>JDIH Komdigi</span>
+                        </a>
+                    </div>
+                    <!-- Item 4: Domain.go.id -->
+                    <div class="carousel-item">
+                        <a href="https://domain.go.id" target="_blank">
+                            <img src="Domain.go.id.png" alt="Domain.go.id" class="link-logo" onerror="this.onerror=null; this.src='https://via.placeholder.com/80/006fb0/ffffff?text=DO'">
+                            <span>Domain.go.id</span>
+                        </a>
+                    </div>
+                    <!-- Item 5: IAR-IKRAP -->
+                    <div class="carousel-item">
+                        <a href="https://iar-ikrap.postel.go.id/" target="_blank">
+                            <img src="DJID.jpeg" alt="IAR-IKRAP" class="link-logo" onerror="this.onerror=null; this.src='https://via.placeholder.com/80/006fb0/ffffff?text=I'">
+                            <span>IAR-IKRAP</span>
+                        </a>
+                    </div>
+                    <!-- Item 6: ISR Online -->
+                    <div class="carousel-item">
+                        <a href="https://isr.postel.go.id" target="_blank">
+                            <img src="DJID.jpeg" alt="ISR Online" class="link-logo" onerror="this.onerror=null; this.src='https://via.placeholder.com/80/006fb0/ffffff?text=ISR'">
+                            <span>ISR Online</span>
+                        </a>
+                    </div>
+                    <!-- Item 7: REOR Online -->
+                    <div class="carousel-item">
+                        <a href="https://antrian.postel.go.id/" target="_blank">
+                            <img src="DJID.jpeg" alt="REOR Online" class="link-logo" onerror="this.onerror=null; this.src='https://via.placeholder.com/80/006fb0/ffffff?text=R'">
+                            <span>REOR Online</span>
+                        </a>
+                    </div>
+                    <!-- Item 8: OSS -->
+                    <div class="carousel-item">
+                        <a href="https://oss.go.id" target="_blank">
+                            <img src="OSS.png" alt="OSS" class="link-logo" onerror="this.onerror=null; this.src='https://via.placeholder.com/80/006fb0/ffffff?text=OSS'">
+                            <span>OSS</span>
+                        </a>
+                    </div>
+                    <!-- Item 9: Lapor Gangguan SFR -->
+                    <div class="carousel-item">
+                        <a href="https://laporgangguansfr.postel.go.id/" target="_blank">
+                            <img src="logo-komdigi.png" alt="Lapor Gangguan SFR" class="link-logo" onerror="this.onerror=null; this.src='https://via.placeholder.com/80/006fb0/ffffff?text=L'">
+                            <span>Lapor Gangguan</span>
+                        </a>
+                    </div>
+                 
+                </div>
+            </div>
+        </div>
+    </div>
     
     <footer id="mainFooter" class="fade-in-section">
         <div class="container">
@@ -1813,6 +2069,7 @@
     <script src="dist_js/scriptindex2.min.js"></script>
     <script>
     document.addEventListener('DOMContentLoaded', () => {
+        // Video carousel navigation
         const prevBtn = document.getElementById('videoPrevBtn');
         const nextBtn = document.getElementById('videoNextBtn');
         const windowContainer = document.querySelector('.vc-window');
@@ -1826,6 +2083,23 @@
             prevBtn.addEventListener('click', () => {
                 const scrollAmount = windowContainer.clientWidth;
                 windowContainer.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
+            });
+        }
+
+        // Carousel Link Terkait
+        const linkPrev = document.getElementById('linkPrevBtn');
+        const linkNext = document.getElementById('linkNextBtn');
+        const linkWindow = document.getElementById('linkCarouselWindow');
+
+        if (linkPrev && linkNext && linkWindow) {
+            linkNext.addEventListener('click', () => {
+                const scrollAmount = linkWindow.clientWidth;
+                linkWindow.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+            });
+
+            linkPrev.addEventListener('click', () => {
+                const scrollAmount = linkWindow.clientWidth;
+                linkWindow.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
             });
         }
     });

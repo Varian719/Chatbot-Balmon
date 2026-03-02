@@ -88,7 +88,7 @@ def generate_audio_sync(text):
     else:
         return loop.run_until_complete(_generate_audio_async(text))
 
-# --- 4. CSS TAMPILAN (CLEAN WHITE LOOK WITH IMPROVED DESIGN AND FIXED FOOTER - TEXTBOX WITHOUT ANY BORDER) ---
+# --- 4. CSS TAMPILAN ---
 st.markdown("""
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
@@ -116,66 +116,79 @@ st.markdown("""
     div[data-testid="stChatMessage"] { 
         padding: 15px; 
         border-radius: 12px; 
-        margin-bottom: 10px; 
+        margin-bottom: 15px; 
         border: none;
         box-shadow: 0 1px 3px rgba(0,0,0,0.05);
     }
     
-    div[data-testid="stChatMessage"][data-testid="assistant"] { 
-        background-color: #ffffff; 
-        border: 1px solid #e0e0e0;
-        border-left: 5px solid #006fb0; 
+    /* STYLE UNTUK CHAT BOT (ASSISTANT) */
+    div[data-testid="stChatMessage"]:has(img[alt="assistant avatar"]),
+    div[data-testid="stChatMessage"]:has(img[alt="logo_komdigi.png"]) { 
+        background-color: #ffffff !important; 
+        border: 1px solid #e0e0e0 !important;
+        border-left: 5px solid #006fb0 !important; /* Highlight Kiri */
+        color: #333333 !important;
     }
     
-    div[data-testid="stChatMessage"][data-testid="user"] { 
-        background-color: #e3f2fd; 
-        color: #000000;
+    /* STYLE UNTUK CHAT USER */
+    div[data-testid="stChatMessage"]:has(img[alt="user avatar"]),
+    div[data-testid="stChatMessage"]:has(img[alt="user.png"]),
+    div[data-testid="stChatMessage"]:has(div[data-testid="chatAvatarIcon-user"]) { 
+        background-color: #e3f2fd !important; /* Biru muda terang */
+        border: 1px solid #bbdefb !important;
+        border-right: 5px solid #2196f3 !important; /* Highlight Kanan untuk User */
+        color: #333333 !important;
+    }
+
+    /* Memaksa warna font di dalam chat konten tetap gelap */
+    div[data-testid="stChatMessageContent"] {
+        color: #333333 !important;
     }
     
-    /* --- FOOTER (INPUT AREA) - PUTIH BERSIH, FIXED AND FITTING COLOR SCHEME, REMOVED BLACK ELEMENTS --- */
+    /* --- FOOTER (INPUT AREA) --- */
     div[data-testid="stBottom"] {
         background-color: #ffffff !important;
-        border-top: 1px solid #e0e0e0; /* Subtle border matching the theme */
-        padding: 20px 0; /* Added padding for better spacing */
+        border-top: 1px solid #e0e0e0;
+        padding: 20px 0;
         position: fixed;
         bottom: 0;
         left: 0;
         right: 0;
-        z-index: 1000; /* Ensure it stays on top */
-        box-shadow: none !important; /* Remove any shadow */
+        z-index: 1000;
+        box-shadow: none !important;
     }
 
     div[data-testid="stBottomBlockContainer"] {
         background-color: #ffffff !important;
-        max-width: 800px; /* Center and limit width for better design */
+        max-width: 800px;
         margin: 0 auto;
         padding: 0 20px;
-        box-shadow: none !important; /* Remove any shadow */
+        box-shadow: none !important;
     }
 
     /* Paksa semua elemen di dalam footer jadi putih backgroundnya, tanpa shadow hitam */
     div[data-testid="stBottom"] > div {
         background-color: #ffffff !important;
-        box-shadow: none !important; /* Remove any shadow */
-        border: none !important; /* Remove any border */
+        box-shadow: none !important;
+        border: none !important;
     }
     
-    /* --- INPUT BOX (TEXTAREA) - NO BORDER AT ALL --- */
+    /* --- INPUT BOX (TEXTAREA) --- */
     .stChatInput textarea {
-        background-color: #ffffff !important; /* Putih */
+        background-color: #ffffff !important; 
         color: #333333 !important;
-        border: none !important; /* No border */
+        border: none !important;
         border-radius: 25px !important;
         padding: 12px 20px !important;
-        box-shadow: none !important; /* Remove any shadow */
-        font-size: 16px !important; /* Prevent zoom on mobile */
-        outline: none !important; /* Remove outline */
+        box-shadow: none !important;
+        font-size: 16px !important;
+        outline: none !important;
     }
     
     .stChatInput textarea:focus {
-        border: none !important; /* No border on focus */
-        box-shadow: none !important; /* No shadow */
-        outline: none !important; /* No outline */
+        border: none !important;
+        box-shadow: none !important;
+        outline: none !important;
     }
     
     /* Placeholder */
@@ -191,10 +204,10 @@ st.markdown("""
         color: white !important;
         height: 40px !important;
         width: 40px !important;
-        margin-left: 10px !important; /* Space from input */
-        transition: background-color 0.3s ease; /* Smooth hover */
-        box-shadow: none !important; /* Remove any shadow */
-        outline: none !important; /* Remove outline */
+        margin-left: 10px !important;
+        transition: background-color 0.3s ease;
+        box-shadow: none !important;
+        outline: none !important;
     }
     button[kind="primary"]:hover {
         background-color: #005082 !important;
@@ -312,11 +325,10 @@ def get_vectorstore():
 db = get_vectorstore()
 
 # --- 8. LOGIKA CHAT ---
-# --- 8. LOGIKA CHAT ---
 
 # --- KONFIGURASI ICON (UBAH DISINI) ---
 # Gunakan URL gambar, path file lokal, atau Emoji
-ICON_USER = "👤"              # Bisa ganti "user.png" jika sudah upload file
+ICON_USER = "user.png"              # Bisa ganti "user.png" jika sudah upload file
 ICON_BOT = "logo_komdigi.png" # Menggunakan file logo yg sudah ada di folder
 
 if "messages" not in st.session_state:
@@ -364,6 +376,8 @@ if user_input := st.chat_input("Tanyakan sesuatu..."):
     5. Berikan info contact person WA: 0856-4828-3012 jika user ingin informasi lebih lanjut.
 
     6. Gunakan Bahasa Indonesia yang formal dan sopan.
+
+    7. Anda adalah asisten AI Balai monitor spektrum frekuensi radio kelas 1 Samarinda
 
     """ 
 

@@ -891,6 +891,158 @@
         .btn-download-primary:hover { background-color: #003d80; transform: translateY(-4px); box-shadow: 0 15px 35px rgba(0, 86, 179, 0.35); }
         .btn-download-primary svg { width: 24px; height: 24px; stroke-width: 3; }
 
+        /* =========================================== */
+        /* LAPORAN KINERJA - SEDERHANA DENGAN SAMPUL */
+        /* =========================================== */
+        .laporan-kinerja-section {
+            padding: 80px 0;
+            background-color: #f9fafc;
+            position: relative;
+            z-index: 2;
+        }
+
+        .laporan-kinerja-section .section-header {
+            text-align: left;
+            margin-bottom: 50px;
+        }
+
+        .laporan-kinerja-section .section-header h2 {
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin: 0 0 10px 0;
+            position: relative;
+            display: inline-block;
+        }
+
+        .laporan-kinerja-section .section-header h2:after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 0;
+            width: 60px;
+            height: 3px;
+            background-color: var(--primary-color);
+        }
+
+        .laporan-kinerja-section .section-header p {
+            font-size: 16px;
+            color: var(--text-gray);
+            margin: 20px 0 0 0;
+            max-width: 700px;
+            line-height: 1.7;
+        }
+
+        .laporan-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+
+        .laporan-card {
+            background: #ffffff;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: 1px solid #eef2f6;
+        }
+
+        .laporan-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 12px 24px rgba(0,111,176,0.12);
+            border-color: var(--primary-color);
+        }
+
+        .laporan-cover {
+            position: relative;
+            aspect-ratio: 3/4;
+            overflow: hidden;
+            background-color: #e6edf5;
+        }
+
+        .laporan-cover img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .laporan-card:hover .laporan-cover img {
+            transform: scale(1.05);
+        }
+
+        .laporan-info {
+            padding: 15px;
+            text-align: center;
+        }
+
+        .laporan-info h3 {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin: 0;
+            line-height: 1.4;
+        }
+
+        .btn-laporan-semua {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 14px 32px;
+            background-color: var(--primary-color);
+            color: white;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 15px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            border: none;
+            box-shadow: 0 8px 20px rgba(0,111,176,0.2);
+        }
+
+        .btn-laporan-semua:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-3px);
+            box-shadow: 0 12px 28px rgba(0,111,176,0.3);
+        }
+
+        .btn-laporan-semua i {
+            font-size: 16px;
+            transition: transform 0.3s ease;
+        }
+
+        .btn-laporan-semua:hover i {
+            transform: translateX(5px);
+        }
+
+        @media (max-width: 992px) {
+            .laporan-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 20px;
+            }
+            .laporan-kinerja-section .section-header h2 {
+                font-size: 28px;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .laporan-grid {
+                grid-template-columns: 1fr;
+                max-width: 320px;
+                margin-left: auto;
+                margin-right: auto;
+            }
+            .laporan-kinerja-section {
+                padding: 60px 0;
+            }
+            .laporan-kinerja-section .section-header h2 {
+                font-size: 24px;
+            }
+        }
+
         /* FOOTER */
         footer { background-color: var(--primary-color); color: white; padding-top: 70px; font-size: 14px; position: relative; }
         .footer-grid { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 40px; padding-bottom: 50px; }
@@ -1513,40 +1665,95 @@
     </div>
 
     <div class="archive-section fade-in-section">
-    <div class="archive-content fade-stagger-children">
-        <div class="archive-icon">
-            <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                <polyline points="14 2 14 8 20 8"></polyline>
-                <line x1="16" y1="13" x2="8" y2="13"></line>
-                <line x1="16" y1="17" x2="8" y2="17"></line>
-                <polyline points="10 9 9 9 8 9"></polyline>
-            </svg>
+        <div class="archive-content fade-stagger-children">
+            <div class="archive-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                    <polyline points="14 2 14 8 20 8"></polyline>
+                    <line x1="16" y1="13" x2="8" y2="13"></line>
+                    <line x1="16" y1="17" x2="8" y2="17"></line>
+                    <polyline points="10 9 9 9 8 9"></polyline>
+                </svg>
+            </div>
+
+            <h2 class="archive-title">Pusat Arsip & Regulasi</h2>
+            <p class="archive-desc">
+                Akses dan unduh kebutuhan dokumen perizinan Anda secara lengkap. Kami menyediakan formulir permohonan ISR, Standar Operasional Prosedur (SOP), serta kumpulan regulasi terbaru terkait penggunaan spektrum frekuensi radio.
+            </p>
+
+            <a href="arsip.html" class="btn-download-primary">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                    <polyline points="7 10 12 15 17 10"></polyline>
+                    <line x1="12" y1="15" x2="12" y2="3"></line>
+                </svg>
+                Unduh Dokumen & Regulasi
+            </a>
+            
+            <a href="arsip.html?search=Laporan Kinerja" class="btn-download-primary">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                    <polyline points="7 10 12 15 17 10"></polyline>
+                    <line x1="12" y1="15" x2="12" y2="3"></line>
+                </svg>
+                Laporan Kinerja
+            </a>
         </div>
-
-        <h2 class="archive-title">Pusat Arsip & Regulasi</h2>
-        <p class="archive-desc">
-            Akses dan unduh kebutuhan dokumen perizinan Anda secara lengkap. Kami menyediakan formulir permohonan ISR, Standar Operasional Prosedur (SOP), serta kumpulan regulasi terbaru terkait penggunaan spektrum frekuensi radio.
-        </p>
-
-        <a href="arsip.html" class="btn-download-primary">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                <polyline points="7 10 12 15 17 10"></polyline>
-                <line x1="12" y1="15" x2="12" y2="3"></line>
-            </svg>
-            Unduh Dokumen & Regulasi
-        </a>
-        
-        <a href="arsip.html?search=Laporan Kinerja" class="btn-download-primary">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                <polyline points="7 10 12 15 17 10"></polyline>
-                <line x1="12" y1="15" x2="12" y2="3"></line>
-            </svg>
-            Laporan Kinerja
-        </a>
     </div>
+
+    <!-- LAPORAN KINERJA TAHUNAN - SEDERHANA DENGAN SAMPUL -->
+    <div class="laporan-kinerja-section fade-in-section">
+        <div class="container">
+            <div class="section-header">
+                <h2>Laporan Kinerja Tahunan</h2>
+                <p>Dokumen akuntabilitas kinerja Balmon Samarinda sebagai wujud transparansi dan komitmen pelayanan publik.</p>
+            </div>
+
+            <div class="laporan-grid fade-stagger-children">
+                <!-- Laporan 2024 -->
+                <div class="laporan-card" onclick="window.location.href='arsip.html?search=Laporan Kinerja 2024'">
+                    <div class="laporan-cover">
+                        <img src="Lakip2024.png" alt="Laporan Kinerja 2024" loading="lazy" onerror="this.src='https://via.placeholder.com/300x400?text=Cover+2024'">
+                    </div>
+                    <div class="laporan-info">
+                        <h3>Laporan Kinerja 2024</h3>
+                    </div>
+                </div>
+                <!-- Laporan 2023 -->
+                <div class="laporan-card" onclick="window.location.href='arsip.html?search=Laporan Kinerja 2023'">
+                    <div class="laporan-cover">
+                        <img src="Lakip2023.png" alt="Laporan Kinerja 2023" loading="lazy" onerror="this.src='https://via.placeholder.com/300x400?text=Cover+2023'">
+                    </div>
+                    <div class="laporan-info">
+                        <h3>Laporan Kinerja 2023</h3>
+                    </div>
+                </div>
+                <!-- Laporan 2022 -->
+                <div class="laporan-card" onclick="window.location.href='arsip.html?search=Laporan Kinerja 2021'">
+                    <div class="laporan-cover">
+                        <img src="Lakip2021.jpeg" alt="Laporan Kinerja 2021" loading="lazy" onerror="this.src='https://via.placeholder.com/300x400?text=Cover+2022'">
+                    </div>
+                    <div class="laporan-info">
+                        <h3>Laporan Kinerja 2021</h3>
+                    </div>
+                </div>
+                <!-- Laporan 2021 -->
+                <div class="laporan-card" onclick="window.location.href='arsip.html?search=Laporan Kinerja 2019'">
+                    <div class="laporan-cover">
+                        <img src="Lakip2019.JPG" alt="Laporan Kinerja 2019" loading="lazy" onerror="this.src='https://via.placeholder.com/300x400?text=Cover+2021'">
+                    </div>
+                    <div class="laporan-info">
+                        <h3>Laporan Kinerja 2019</h3>
+                    </div>
+                </div>
+            </div>
+
+            <div style="text-align: center;">
+                <a href="arsip.html?search=Laporan Kinerja" class="btn-laporan-semua">
+                    Lihat Semua Laporan Kinerja <i class="bi bi-arrow-right"></i>
+                </a>
+            </div>
+        </div>
     </div>
     
     <footer id="mainFooter" class="fade-in-section">
