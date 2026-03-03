@@ -1,23 +1,20 @@
 <!DOCTYPE html>
 <html lang="id">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description"
-        content="Simulasi Sanksi Administratif Pelanggaran Spektrum Frekuensi Radio - Balmon Samarinda">
+    <meta name="description" content="Simulasi Sanksi Administratif Pelanggaran Spektrum Frekuensi Radio - Balmon Samarinda">
     <title>Simulasi Sanksi SFR - Balmon Samarinda</title>
     <link rel="icon" type="image/png" href="logo-ikon.png" sizes="32x32">
-
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Albert+Sans:wght@300;400;500;600;700;800&display=swap"
-        rel="stylesheet">
-
+    <link href="https://fonts.googleapis.com/css2?family=Albert+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- SheetJS untuk ekspor Excel -->
+    <script src="https://cdn.sheetjs.com/xlsx-0.20.2/package/dist/xlsx.full.min.js"></script>
     <style>
-        /* ===== GLOBAL & VARIABEL (sama seperti contoh) ===== */
+        /* ===== GLOBAL & VARIABEL ===== */
         :root {
             --primary-color: #006fb0;
             --primary-dark: #005082;
@@ -32,7 +29,6 @@
             --radius-md: 12px;
             --wa-green: #25D366;
         }
-
         body {
             margin: 0;
             padding: 0;
@@ -43,31 +39,16 @@
             overflow-x: hidden;
             -webkit-font-smoothing: antialiased;
         }
-
-        a {
-            text-decoration: none;
-            color: inherit;
-            transition: all 0.3s ease;
-        }
-
-        ul {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-        }
-
-        * {
-            box-sizing: border-box;
-        }
-
+        a { text-decoration: none; color: inherit; transition: all 0.3s ease; }
+        ul { list-style: none; padding: 0; margin: 0; }
+        * { box-sizing: border-box; }
         .container {
             max-width: 1200px;
             margin: 0 auto;
             padding: 0 20px;
             width: 100%;
         }
-
-        /* ===== HEADER ===== */
+        /* ===== HEADER (sama seperti sebelumnya) ===== */
         header {
             background-color: transparent;
             backdrop-filter: none;
@@ -81,47 +62,37 @@
             z-index: 1000;
             transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
-
-        header:not(.header-minimal) {
-            background: transparent;
-            backdrop-filter: none;
-            -webkit-backdrop-filter: none;
-        }
-
+        header:not(.header-minimal) { background: transparent; }
         .header-content {
             display: flex;
             align-items: center;
             justify-content: space-between;
             height: 100%;
         }
-
         .brand-area {
             display: flex;
             align-items: center;
             gap: 12px;
             transition: all 0.4s ease;
             cursor: pointer;
-            background-color: rgba(255, 255, 255, 0.15);
+            background-color: rgba(255,255,255,0.15);
             backdrop-filter: blur(8px);
             padding: 8px 20px;
             border-radius: 50px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255,255,255,0.2);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
         }
-
         .brand-area:hover {
-            background-color: rgba(255, 255, 255, 0.25);
+            background-color: rgba(255,255,255,0.25);
             transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(0, 111, 176, 0.3);
+            box-shadow: 0 8px 20px rgba(0,111,176,0.3);
         }
-
         .brand-logo-img {
             height: 50px;
             width: auto;
-            filter: drop-shadow(0 2px 5px rgba(0, 0, 0, 0.5));
+            filter: drop-shadow(0 2px 5px rgba(0,0,0,0.5));
             transition: all 0.3s;
         }
-
         .brand-text {
             font-size: 18px;
             font-weight: 800;
@@ -129,65 +100,30 @@
             line-height: 1.2;
             display: flex;
             flex-direction: column;
-            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.8);
+            text-shadow: 0 2px 10px rgba(0,0,0,0.8);
             transition: color 0.3s;
         }
-
         .brand-text span {
             font-size: 11px;
             font-weight: 500;
-            color: rgba(255, 255, 255, 0.95);
+            color: rgba(255,255,255,0.95);
             letter-spacing: 0.5px;
-            transition: color 0.3s;
-            text-shadow: 0 1px 5px rgba(0, 0, 0, 0.8);
+            text-shadow: 0 1px 5px rgba(0,0,0,0.8);
         }
-
         header.header-minimal {
-            background-color: rgba(255, 255, 255, 0.95);
+            background-color: rgba(255,255,255,0.95);
             backdrop-filter: blur(10px);
-            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.08);
+            box-shadow: 0 2px 20px rgba(0,0,0,0.08);
             height: 70px;
         }
-
-        header.header-minimal .brand-text {
-            color: var(--primary-color);
-            text-shadow: none;
-        }
-
-        header.header-minimal .brand-text span {
-            color: var(--text-gray);
-            text-shadow: none;
-        }
-
-        header.header-minimal .brand-logo-img {
-            filter: none;
-        }
-
-        header.header-minimal .menu-item {
-            color: var(--text-dark);
-            text-shadow: none;
-        }
-
-        header.header-minimal .menu-item:hover {
-            color: var(--primary-color);
-        }
-
-        header.header-minimal .brand-area {
-            background: transparent;
-            border: none;
-            box-shadow: none;
-            padding-left: 0;
-            backdrop-filter: none;
-        }
-
-        header.header-minimal .hamburger-btn span {
-            background-color: var(--primary-color);
-        }
-
-        header.header-minimal .nav-search-btn {
-            color: var(--primary-color) !important;
-        }
-
+        header.header-minimal .brand-text { color: var(--primary-color); text-shadow: none; }
+        header.header-minimal .brand-text span { color: var(--text-gray); text-shadow: none; }
+        header.header-minimal .brand-logo-img { filter: none; }
+        header.header-minimal .menu-item { color: var(--text-dark); text-shadow: none; }
+        header.header-minimal .menu-item:hover { color: var(--primary-color); }
+        header.header-minimal .brand-area { background: transparent; border: none; box-shadow: none; padding-left: 0; backdrop-filter: none; }
+        header.header-minimal .hamburger-btn span { background-color: var(--primary-color); }
+        header.header-minimal .nav-search-btn { color: var(--primary-color) !important; }
         .header-socials {
             display: flex;
             align-items: center;
@@ -195,64 +131,29 @@
             margin-left: auto;
             margin-right: 30px;
             padding-right: 30px;
-            border-right: 1px solid rgba(255, 255, 255, 0.3);
+            border-right: 1px solid rgba(255,255,255,0.3);
             height: 40px;
         }
-
         .social-icon {
             display: flex;
             align-items: center;
             justify-content: center;
             transition: transform 0.3s ease;
         }
-
-        .social-icon svg {
-            width: 20px;
-            height: 20px;
-            fill: #ffffff;
-            transition: all 0.3s ease;
-            opacity: 0.9;
-        }
-
-        .social-icon:hover {
-            transform: translateY(-2px);
-        }
-
-        .social-icon:hover svg {
-            opacity: 1;
-            fill: var(--accent-yellow);
-        }
-
-        header.header-minimal .header-socials {
-            border-right-color: #e2e8f0;
-            border-left: none;
-        }
-
-        header.header-minimal .social-icon svg {
-            fill: var(--text-gray);
-        }
-
-        header.header-minimal .social-icon:hover svg {
-            fill: var(--primary-color);
-        }
-
-        header.header-minimal .social-icon.wa-icon:hover svg {
-            fill: #25D366;
-        }
-
-        @media (max-width: 992px) {
-            .header-socials {
-                display: none;
-            }
-        }
-
+        .social-icon svg { width: 20px; height: 20px; fill: #ffffff; transition: all 0.3s ease; opacity: 0.9; }
+        .social-icon:hover { transform: translateY(-2px); }
+        .social-icon:hover svg { opacity: 1; fill: var(--accent-yellow); }
+        header.header-minimal .header-socials { border-right-color: #e2e8f0; }
+        header.header-minimal .social-icon svg { fill: var(--text-gray); }
+        header.header-minimal .social-icon:hover svg { fill: var(--primary-color); }
+        header.header-minimal .social-icon.wa-icon:hover svg { fill: #25D366; }
+        @media (max-width: 992px) { .header-socials { display: none; } }
         .nav-menu {
             height: 100%;
             display: flex;
             align-items: center;
             transition: all 0.4s ease;
         }
-
         .menu-list {
             display: flex;
             gap: 8px;
@@ -261,7 +162,6 @@
             margin: 0;
             padding: 0;
         }
-
         .menu-item {
             position: relative;
             height: 100%;
@@ -273,14 +173,9 @@
             color: #ffffff;
             cursor: pointer;
             transition: color 0.3s;
-            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.7);
+            text-shadow: 0 2px 8px rgba(0,0,0,0.7);
         }
-
-        .menu-item:hover {
-            color: var(--accent-yellow);
-            opacity: 1;
-        }
-
+        .menu-item:hover { color: var(--accent-yellow); }
         .menu-item::after {
             content: '';
             position: absolute;
@@ -291,11 +186,7 @@
             background: var(--accent-yellow);
             transition: width 0.3s ease;
         }
-
-        .menu-item:hover::after {
-            width: 100%;
-        }
-
+        .menu-item:hover::after { width: 100%; }
         .dropdown-content {
             display: none;
             position: absolute;
@@ -303,46 +194,31 @@
             left: 0;
             background-color: #ffffff;
             min-width: 240px;
-            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.1);
             border-radius: 0 0 8px 8px;
             z-index: 1000;
             padding: 10px 0;
             border-top: 3px solid var(--primary-color);
             animation: slideDown 0.3s ease;
         }
-
-        .menu-item:hover .dropdown-content {
-            display: block;
-        }
-
+        .menu-item:hover .dropdown-content { display: block; }
         .dropdown-content li a {
             display: block;
             padding: 10px 20px;
             color: var(--text-dark);
             font-weight: 400;
             font-size: 14px;
-            text-shadow: none;
             text-decoration: none;
         }
-
         .dropdown-content li a:hover {
             background-color: var(--bg-light-blue);
             color: var(--primary-color);
             padding-left: 25px;
         }
-
         @keyframes slideDown {
-            from {
-                opacity: 0;
-                transform: translateY(10px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
-
         .hamburger-btn {
             display: none;
             flex-direction: column;
@@ -353,52 +229,32 @@
             padding: 8px;
             z-index: 1001;
         }
-
         .hamburger-btn span {
             width: 24px;
             height: 2.5px;
             background-color: white;
             border-radius: 2px;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: all 0.3s cubic-bezier(0.4,0,0.2,1);
             transform-origin: center;
         }
-
-        .hamburger-btn.active span:nth-child(1) {
-            transform: translateY(8.5px) rotate(45deg);
-        }
-
-        .hamburger-btn.active span:nth-child(2) {
-            opacity: 0;
-            transform: translateX(10px);
-        }
-
-        .hamburger-btn.active span:nth-child(3) {
-            transform: translateY(-8.5px) rotate(-45deg);
-        }
-
-        .hamburger-btn.active span {
-            background-color: #ffffff !important;
-        }
-
+        .hamburger-btn.active span:nth-child(1) { transform: translateY(8.5px) rotate(45deg); }
+        .hamburger-btn.active span:nth-child(2) { opacity: 0; transform: translateX(10px); }
+        .hamburger-btn.active span:nth-child(3) { transform: translateY(-8.5px) rotate(-45deg); }
+        .hamburger-btn.active span { background-color: #ffffff !important; }
         .mobile-nav-overlay {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
+            background-color: rgba(0,0,0,0.5);
             backdrop-filter: blur(3px);
             z-index: 1000;
             opacity: 0;
             visibility: hidden;
             transition: opacity 0.3s ease, visibility 0.3s ease;
         }
-
-        .mobile-nav-overlay.active {
-            opacity: 1;
-            visibility: visible;
-        }
-
+        .mobile-nav-overlay.active { opacity: 1; visibility: visible; }
         .mobile-nav-dropdown {
             position: fixed;
             top: 0;
@@ -406,18 +262,14 @@
             width: 280px;
             height: 100vh;
             background-color: #ffffff;
-            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+            box-shadow: 2px 0 10px rgba(0,0,0,0.1);
             z-index: 1001;
             overflow-y: auto;
             transition: left 0.3s ease;
             display: block;
             padding-top: 20px;
         }
-
-        .mobile-nav-dropdown.active {
-            left: 0;
-        }
-
+        .mobile-nav-dropdown.active { left: 0; }
         .mobile-menu-item {
             padding: 15px 25px;
             border-bottom: 1px solid #f0f0f0;
@@ -426,39 +278,21 @@
             cursor: pointer;
             transition: background 0.2s;
         }
-
-        .mobile-menu-item:hover {
-            background-color: var(--bg-light-blue);
-            color: var(--primary-color);
-        }
-
+        .mobile-menu-item:hover { background-color: var(--bg-light-blue); color: var(--primary-color); }
         .mobile-menu-item.has-submenu {
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
-
-        .mobile-menu-item.has-submenu::after {
-            content: '▼';
-            font-size: 12px;
-            transition: transform 0.3s;
-        }
-
-        .mobile-menu-item.has-submenu.active::after {
-            transform: rotate(-180deg);
-        }
-
+        .mobile-menu-item.has-submenu::after { content: '▼'; font-size: 12px; transition: transform 0.3s; }
+        .mobile-menu-item.has-submenu.active::after { transform: rotate(-180deg); }
         .mobile-submenu {
             max-height: 0;
             overflow: hidden;
             background-color: #f8f9fa;
             transition: max-height 0.3s ease;
         }
-
-        .mobile-submenu.active {
-            max-height: 500px;
-        }
-
+        .mobile-submenu.active { max-height: 500px; }
         .mobile-submenu a {
             display: block;
             padding: 12px 40px;
@@ -468,74 +302,32 @@
             transition: all 0.2s;
             text-decoration: none;
         }
-
         .mobile-submenu a:hover {
             background-color: #ffffff;
             color: var(--primary-color);
             padding-left: 48px;
         }
-
         @media (max-width: 768px) {
-            .hamburger-btn {
-                display: flex;
-            }
-
-            .menu-list {
-                display: none;
-            }
-
-            .nav-menu {
-                display: flex;
-            }
-
-            header.header-minimal {
-                background-color: #fff;
-            }
-
-            .brand-area {
-                background: transparent !important;
-                backdrop-filter: none !important;
-                border: none !important;
-                box-shadow: none !important;
-                padding-left: 0 !important;
-            }
-
-            .brand-logo-img {
-                height: 35px;
-            }
-
-            .brand-text {
-                font-size: 14px;
-            }
-
-            .header-socials {
-                display: none;
-            }
+            .hamburger-btn { display: flex; }
+            .menu-list { display: none; }
+            .nav-menu { display: flex; }
+            header.header-minimal { background-color: #fff; }
+            .brand-area { background: transparent !important; backdrop-filter: none !important; border: none !important; box-shadow: none !important; padding-left: 0 !important; }
+            .brand-logo-img { height: 35px; }
+            .brand-text { font-size: 14px; }
+            .header-socials { display: none; }
         }
-
         /* ===== PAGE HEADER ===== */
         .page-header-custom {
             padding: 100px 20px 25px;
-            background: linear-gradient(135deg, rgba(0, 111, 176, 0.9) 0%, rgba(0, 80, 130, 0.8) 100%), url('https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=1600&q=80');
+            background: linear-gradient(135deg, rgba(0,111,176,0.9) 0%, rgba(0,80,130,0.8) 100%), url('https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=1600&q=80');
             background-size: cover;
             background-position: center;
             color: white;
             text-align: center;
         }
-
-        .page-header-custom h1 {
-            font-size: 32px;
-            font-weight: 800;
-            margin: 0 0 5px;
-        }
-
-        .page-header-custom p {
-            font-size: 16px;
-            opacity: 0.9;
-            max-width: 700px;
-            margin: 0 auto;
-        }
-
+        .page-header-custom h1 { font-size: 32px; font-weight: 800; margin: 0 0 5px; }
+        .page-header-custom p { font-size: 16px; opacity: 0.9; max-width: 700px; margin: 0 auto; }
         .breadcrumb {
             display: flex;
             justify-content: center;
@@ -544,7 +336,6 @@
             margin-bottom: 8px;
             opacity: 0.9;
         }
-
         /* ===== LAYOUT UTAMA ===== */
         .main-wrapper {
             display: flex;
@@ -557,7 +348,6 @@
             width: 100%;
             gap: 25px;
         }
-
         .map-section {
             flex: 1.3;
             position: relative;
@@ -567,13 +357,7 @@
             box-shadow: var(--shadow-soft);
             height: 100%;
         }
-
-        #map {
-            width: 100%;
-            height: 100%;
-            z-index: 1;
-        }
-
+        #map { width: 100%; height: 100%; z-index: 1; }
         .estimator-section {
             flex: 0.7;
             background: white;
@@ -583,25 +367,10 @@
             box-shadow: var(--shadow-soft);
             height: 100%;
         }
-
-        .estimator-section::-webkit-scrollbar {
-            width: 8px;
-        }
-
-        .estimator-section::-webkit-scrollbar-track {
-            background: #f1f1f1;
-            border-radius: 8px;
-        }
-
-        .estimator-section::-webkit-scrollbar-thumb {
-            background: #cbd5e1;
-            border-radius: 8px;
-        }
-
-        .estimator-section::-webkit-scrollbar-thumb:hover {
-            background: #94a3b8;
-        }
-
+        .estimator-section::-webkit-scrollbar { width: 8px; }
+        .estimator-section::-webkit-scrollbar-track { background: #f1f1f1; border-radius: 8px; }
+        .estimator-section::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 8px; }
+        .estimator-section::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
         .info-zona {
             background-color: #e8f4fe;
             border-radius: 12px;
@@ -610,22 +379,9 @@
             border-left: 4px solid var(--accent-yellow);
             font-size: 14px;
         }
-
-        .form-group {
-            margin-bottom: 15px;
-        }
-
-        .form-group label {
-            display: block;
-            font-weight: 600;
-            margin-bottom: 6px;
-            font-size: 13px;
-        }
-
-        .form-group label span {
-            color: var(--accent-red);
-        }
-
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; font-weight: 600; margin-bottom: 6px; font-size: 13px; }
+        .form-group label span { color: var(--accent-red); }
         .form-control {
             width: 100%;
             padding: 10px 12px;
@@ -634,13 +390,11 @@
             font-size: 14px;
             font-family: inherit;
         }
-
         .form-control:focus {
             outline: none;
             border-color: var(--primary-color);
-            box-shadow: 0 0 0 4px rgba(0, 111, 176, 0.1);
+            box-shadow: 0 0 0 4px rgba(0,111,176,0.1);
         }
-
         .param-info {
             background-color: #e8f4fe;
             border-radius: 8px;
@@ -649,25 +403,10 @@
             font-size: 12px;
             border-left: 3px solid var(--primary-color);
         }
-
-        .input-group {
-            display: flex;
-            gap: 10px;
-            align-items: center;
-        }
-
-        .input-group .form-control {
-            flex: 1;
-        }
-
-        #powerDropdownGroup {
-            display: none;
-        }
-
-        #powerDropdownGroup select {
-            flex: 1;
-        }
-
+        .input-group { display: flex; gap: 10px; align-items: center; }
+        .input-group .form-control { flex: 1; }
+        #powerDropdownGroup { display: none; }
+        #powerDropdownGroup select { flex: 1; }
         .dbm-display {
             background-color: #f0f0f0;
             padding: 10px;
@@ -678,7 +417,6 @@
             margin-top: 8px;
             font-size: 13px;
         }
-
         .result-container {
             margin-top: 20px;
             padding: 20px;
@@ -687,13 +425,7 @@
             color: white;
             text-align: center;
         }
-
-        .result-amount {
-            font-size: 30px;
-            font-weight: 800;
-            margin: 5px 0;
-        }
-
+        .result-amount { font-size: 30px; font-weight: 800; margin: 5px 0; }
         .sanction-info {
             margin-top: 15px;
             padding: 15px;
@@ -703,11 +435,7 @@
             font-size: 14px;
             color: #856404;
         }
-
-        .sanction-info p {
-            margin: 5px 0;
-        }
-
+        .sanction-info p { margin: 5px 0; }
         .disclaimer {
             font-size: 12px;
             color: var(--text-gray);
@@ -716,7 +444,6 @@
             padding-top: 12px;
             line-height: 1.4;
         }
-
         .label-kota {
             background: transparent !important;
             border: none !important;
@@ -725,7 +452,45 @@
             font-weight: bold;
             text-shadow: 2px 2px 0px #fff, -1px -1px 0 #fff;
         }
-
+        /* ===== TABEL RINGKASAN ===== */
+        .summary-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            font-size: 12px;
+        }
+        .summary-table th {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 8px;
+            text-align: center;
+        }
+        .summary-table td {
+            border: 1px solid #ddd;
+            padding: 6px;
+            text-align: center;
+        }
+        .summary-table tr:nth-child(even) { background-color: #f2f2f2; }
+        .btn-delete {
+            background-color: var(--accent-red);
+            color: white;
+            border: none;
+            padding: 4px 8px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .btn-add, .btn-total, .btn-export {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            margin-right: 10px;
+            margin-top: 10px;
+        }
+        .btn-add:hover, .btn-total:hover, .btn-export:hover { background-color: var(--primary-dark); }
         /* ===== FOOTER ===== */
         footer {
             background-color: var(--primary-color);
@@ -735,7 +500,6 @@
             position: relative;
             margin-top: auto;
         }
-
         .footer-grid {
             display: flex;
             flex-wrap: wrap;
@@ -743,40 +507,23 @@
             gap: 40px;
             padding-bottom: 40px;
         }
-
-        .footer-col {
-            flex: 1;
-            min-width: 250px;
-        }
-
-        .footer-col h3 {
-            color: var(--accent-yellow);
-            margin-bottom: 20px;
-            font-size: 18px;
-            font-weight: 700;
-        }
-
+        .footer-col { flex: 1; min-width: 250px; }
+        .footer-col h3 { color: var(--accent-yellow); margin-bottom: 20px; font-size: 18px; font-weight: 700; }
         .footer-links a {
-            color: rgba(255, 255, 255, 0.8);
+            color: rgba(255,255,255,0.8);
             display: block;
             margin-bottom: 10px;
             transition: 0.2s;
             text-decoration: none;
         }
-
-        .footer-links a:hover {
-            color: #fff;
-            transform: translateX(5px);
-        }
-
+        .footer-links a:hover { color: #fff; transform: translateX(5px); }
         .copyright {
-            background-color: rgba(0, 0, 0, 0.1);
+            background-color: rgba(0,0,0,0.1);
             text-align: center;
             padding: 20px 0;
-            color: rgba(255, 255, 255, 0.6);
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: rgba(255,255,255,0.6);
+            border-top: 1px solid rgba(255,255,255,0.1);
         }
-
         /* ===== CHAT & SEARCH ===== */
         .chat-toggle-btn {
             position: fixed;
@@ -788,7 +535,7 @@
             color: #ffffff;
             border: none;
             border-radius: 50%;
-            box-shadow: 0 8px 25px rgba(0, 111, 176, 0.4);
+            box-shadow: 0 8px 25px rgba(0,111,176,0.4);
             cursor: pointer;
             z-index: 10000;
             display: flex;
@@ -796,49 +543,13 @@
             justify-content: center;
             transition: all 0.3s;
         }
-
-        .chat-toggle-btn:hover {
-            transform: scale(1.1);
-            box-shadow: 0 12px 30px rgba(0, 111, 176, 0.5);
-        }
-
-        .chat-toggle-btn.on-footer {
-            background: var(--accent-yellow);
-            color: var(--text-dark);
-        }
-
-        .chat-toggle-btn svg {
-            position: absolute;
-            width: 28px;
-            height: 28px;
-            transition: all 0.4s;
-        }
-
-        .icon-message {
-            opacity: 1;
-            transform: scale(1) rotate(0deg);
-            fill: currentColor;
-        }
-
-        .icon-close {
-            opacity: 0;
-            transform: scale(0) rotate(-180deg);
-            stroke: currentColor;
-            stroke-width: 2.5;
-            stroke-linecap: round;
-            stroke-linejoin: round;
-        }
-
-        .chat-toggle-btn.active .icon-message {
-            opacity: 0;
-            transform: scale(0) rotate(90deg);
-        }
-
-        .chat-toggle-btn.active .icon-close {
-            opacity: 1;
-            transform: scale(1) rotate(0deg);
-        }
-
+        .chat-toggle-btn:hover { transform: scale(1.1); box-shadow: 0 12px 30px rgba(0,111,176,0.5); }
+        .chat-toggle-btn.on-footer { background: var(--accent-yellow); color: var(--text-dark); }
+        .chat-toggle-btn svg { position: absolute; width: 28px; height: 28px; transition: all 0.4s; }
+        .icon-message { opacity: 1; transform: scale(1) rotate(0deg); fill: currentColor; }
+        .icon-close { opacity: 0; transform: scale(0) rotate(-180deg); stroke: currentColor; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+        .chat-toggle-btn.active .icon-message { opacity: 0; transform: scale(0) rotate(90deg); }
+        .chat-toggle-btn.active .icon-close { opacity: 1; transform: scale(1) rotate(0deg); }
         .chat-box-container {
             position: fixed;
             bottom: 110px;
@@ -848,8 +559,8 @@
             max-height: 70vh;
             background-color: #fff;
             border-radius: 16px;
-            box-shadow: 0 20px 50px -10px rgba(0, 60, 100, 0.25);
-            border: 1px solid rgba(0, 111, 176, 0.1);
+            box-shadow: 0 20px 50px -10px rgba(0,60,100,0.25);
+            border: 1px solid rgba(0,111,176,0.1);
             z-index: 9999;
             opacity: 0;
             visibility: hidden;
@@ -859,13 +570,7 @@
             display: flex;
             flex-direction: column;
         }
-
-        .chat-box-container.active {
-            opacity: 1;
-            visibility: visible;
-            transform: translateY(0) scale(1);
-        }
-
+        .chat-box-container.active { opacity: 1; visibility: visible; transform: translateY(0) scale(1); }
         .chat-header {
             background: linear-gradient(135deg, var(--primary-color) 0%, #00406b 100%);
             padding: 20px;
@@ -875,51 +580,26 @@
             border-bottom: 3px solid var(--accent-yellow);
             color: #fff;
         }
-
-        .chat-header-content {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-
+        .chat-header-content { display: flex; align-items: center; gap: 15px; }
         .chat-logo-bg {
             width: 48px;
             height: 48px;
-            background: rgba(255, 255, 255, 0.15);
+            background: rgba(255,255,255,0.15);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
         }
-
-        .chat-info h4 {
-            margin: 0;
-            font-size: 16px;
-            font-weight: 700;
-        }
-
-        .chat-status {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            font-size: 12px;
-            color: rgba(255, 255, 255, 0.9);
-        }
-
-        .status-dot {
-            width: 8px;
-            height: 8px;
-            background-color: #00ff9d;
-            border-radius: 50%;
-        }
-
+        .chat-info h4 { margin: 0; font-size: 16px; font-weight: 700; }
+        .chat-status { display: flex; align-items: center; gap: 6px; font-size: 12px; color: rgba(255,255,255,0.9); }
+        .status-dot { width: 8px; height: 8px; background-color: #00ff9d; border-radius: 50%; }
         .search-overlay {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(255, 255, 255, 0.95);
+            background: rgba(255,255,255,0.95);
             backdrop-filter: blur(10px);
             z-index: 99999;
             display: flex;
@@ -930,12 +610,7 @@
             visibility: hidden;
             transition: all 0.3s;
         }
-
-        .search-overlay.active {
-            opacity: 1;
-            visibility: visible;
-        }
-
+        .search-overlay.active { opacity: 1; visibility: visible; }
         .search-content {
             width: 100%;
             max-width: 600px;
@@ -944,11 +619,7 @@
             transform: translateY(-20px);
             transition: 0.4s;
         }
-
-        .search-overlay.active .search-content {
-            transform: translateY(0);
-        }
-
+        .search-overlay.active .search-content { transform: translateY(0); }
         .close-search {
             position: absolute;
             top: -50px;
@@ -959,11 +630,7 @@
             cursor: pointer;
             color: var(--text-dark);
         }
-
-        .close-search:hover {
-            color: var(--accent-red);
-        }
-
+        .close-search:hover { color: var(--accent-red); }
         #searchInput {
             width: 100%;
             padding: 20px;
@@ -973,17 +640,8 @@
             outline: none;
             font-family: 'Albert Sans', sans-serif;
         }
-
-        #searchInput:focus {
-            border-color: var(--primary-color);
-        }
-
-        .search-results {
-            margin-top: 20px;
-            max-height: 60vh;
-            overflow-y: auto;
-        }
-
+        #searchInput:focus { border-color: var(--primary-color); }
+        .search-results { margin-top: 20px; max-height: 60vh; overflow-y: auto; }
         .search-item {
             background: #fff;
             padding: 15px;
@@ -995,69 +653,20 @@
             color: var(--text-dark);
             transition: 0.2s;
         }
-
-        .search-item:hover {
-            background: var(--bg-light-blue);
-            border-color: var(--primary-color);
-            transform: translateX(5px);
-        }
-
-        .search-item h4 {
-            margin: 0 0 5px 0;
-            color: var(--primary-color);
-            font-size: 16px;
-        }
-
-        .search-item p {
-            margin: 0;
-            font-size: 13px;
-            color: var(--text-gray);
-        }
-
+        .search-item:hover { background: var(--bg-light-blue); border-color: var(--primary-color); transform: translateX(5px); }
+        .search-item h4 { margin: 0 0 5px 0; color: var(--primary-color); font-size: 16px; }
+        .search-item p { margin: 0; font-size: 13px; color: var(--text-gray); }
         @media (max-width: 768px) {
-            .page-header-custom h1 {
-                font-size: 24px;
-            }
-
-            .page-header-custom {
-                padding: 90px 20px 20px;
-            }
-
-            .main-wrapper {
-                flex-direction: column;
-                height: auto;
-                max-height: none;
-                margin-bottom: 40px;
-            }
-
-            .map-section {
-                height: 350px;
-                flex: none;
-            }
-
-            .estimator-section {
-                flex: none;
-                height: auto;
-                overflow: visible;
-            }
-
-            .chat-toggle-btn {
-                bottom: 20px;
-                right: 20px;
-            }
-
-            .chat-box-container {
-                width: calc(100% - 40px) !important;
-                height: 65vh !important;
-                right: 20px !important;
-                left: 20px !important;
-                bottom: 100px !important;
-                border-radius: 16px !important;
-            }
+            .page-header-custom h1 { font-size: 24px; }
+            .page-header-custom { padding: 90px 20px 20px; }
+            .main-wrapper { flex-direction: column; height: auto; max-height: none; margin-bottom: 40px; }
+            .map-section { height: 350px; flex: none; }
+            .estimator-section { flex: none; height: auto; overflow: visible; }
+            .chat-toggle-btn { bottom: 20px; right: 20px; }
+            .chat-box-container { width: calc(100% - 40px) !important; height: 65vh !important; right: 20px !important; left: 20px !important; bottom: 100px !important; border-radius: 16px !important; }
         }
     </style>
 </head>
-
 <body>
     <header id="mainHeader">
         <div class="container header-content">
@@ -1068,49 +677,27 @@
                     <span>Kementerian Komunikasi & Digital</span>
                 </div>
             </div>
-
             <div class="header-socials">
                 <a href="https://wa.me/6285648283012" target="_blank" class="social-icon wa-icon" aria-label="WhatsApp">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                        <path
-                            d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.346.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z" />
-                    </svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.346.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg>
                 </a>
-                <a href="https://www.instagram.com/balmonsamarinda/" target="_blank" class="social-icon"
-                    aria-label="Instagram">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                        <path
-                            d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.163 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" />
-                    </svg>
+                <a href="https://www.instagram.com/balmonsamarinda/" target="_blank" class="social-icon" aria-label="Instagram">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.163 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
                 </a>
-                <a href="https://www.facebook.com/profile.php?id=100068963927418" class="social-icon"
-                    aria-label="Facebook">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                        <path
-                            d="M9 8h-3v4h3v12h5v-12h3.642l.358-4h-4v-1.667c0-.955.192-1.333 1.115-1.333h2.885v-5h-3.808c-3.596 0-5.192 1.583-5.192 4.615v3.385z" />
-                    </svg>
+                <a href="https://www.facebook.com/profile.php?id=100068963927418" class="social-icon" aria-label="Facebook">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9 8h-3v4h3v12h5v-12h3.642l.358-4h-4v-1.667c0-.955.192-1.333 1.115-1.333h2.885v-5h-3.808c-3.596 0-5.192 1.583-5.192 4.615v3.385z"/></svg>
                 </a>
-                <a href="https://youtube.com/@balmonsamarindaa?si=EZUAjSarJaMD-7R9" class="social-icon"
-                    aria-label="YouTube">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                        <path
-                            d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z" />
-                    </svg>
+                <a href="https://youtube.com/@balmonsamarindaa?si=EZUAjSarJaMD-7R9" class="social-icon" aria-label="YouTube">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z"/></svg>
                 </a>
                 <a href="https://www.tiktok.com/@balmon.samarinda?lang=en" class="social-icon" aria-label="TikTok">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" stroke="none">
-                        <path
-                            d="M18.2 4.5c-2.3-.2-4.1-1.9-4.4-4.2V0h-3.4v13.8c0 1.4-1.2 2.6-2.8 2.6-1.4 0-2.6-1.1-2.6-2.6s1.1-2.6 2.6-2.6h.2l.5.1V7.5h-.7c-3.4 0-6.2 2.8-6.2 6.2S4.2 20 7.7 20s6.2-2.8 6.2-6.2v-7c1.1 1.1 2.4 1.6 3.9 1.6h.8V4.6l-.4-.1z" />
-                    </svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M18.2 4.5c-2.3-.2-4.1-1.9-4.4-4.2V0h-3.4v13.8c0 1.4-1.2 2.6-2.8 2.6-1.4 0-2.6-1.1-2.6-2.6s1.1-2.6 2.6-2.6h.2l.5.1V7.5h-.7c-3.4 0-6.2 2.8-6.2 6.2S4.2 20 7.7 20s6.2-2.8 6.2-6.2v-7c1.1 1.1 2.4 1.6 3.9 1.6h.8V4.6l-.4-.1z"/></svg>
                 </a>
             </div>
-
             <nav class="nav-menu" role="navigation" aria-label="Menu Utama">
                 <ul class="menu-list">
-                    <li class="menu-item" onclick="window.location.href='index.html'" role="button" tabindex="0">Beranda
-                    </li>
-                    <li class="menu-item" onclick="window.location.href='profil.html'" role="button" tabindex="0">Profil
-                    </li>
+                    <li class="menu-item" onclick="window.location.href='index.html'" role="button" tabindex="0">Beranda</li>
+                    <li class="menu-item" onclick="window.location.href='profil.html'" role="button" tabindex="0">Profil</li>
                     <li class="menu-item" aria-haspopup="true" aria-expanded="false">Layanan
                         <ul class="dropdown-content" role="menu">
                             <li role="none"><a href="konsesi.html" role="menuitem">Izin Konsesi</a></li>
@@ -1119,38 +706,24 @@
                             <li role="none"><a href="arsip.html" role="menuitem">Download</a></li>
                             <li role="none"><a href="faq.html" role="menuitem">FAQ</a></li>
                             <li role="none"><a href="simulasibhp.html" role="menuitem">Estimasi BHP Kaltim</a></li>
-                            <li role="none"><a href="simulasisanksi.html" role="menuitem" style="color:var(--accent-yellow);">Simulasi Sanksi</a></li>
+                            <li role="none"><a href="simulasidenda.html" role="menuitem" style="color:var(--accent-yellow);">Simulasi Estimasi Sanksi Denda</a></li>
                         </ul>
                     </li>
-                    <li class="menu-item" onclick="window.location.href='galeri.html'" role="button" tabindex="0">
-                        Publikasi</li>
-                    <li class="menu-item" onclick="window.location.href='kontak.html'" role="button" tabindex="0">Kontak
-                    </li>
+                    <li class="menu-item" onclick="window.location.href='galeri.html'" role="button" tabindex="0">Publikasi</li>
+                    <li class="menu-item" onclick="window.location.href='kontak.html'" role="button" tabindex="0">Kontak</li>
                 </ul>
-                <button class="nav-search-btn" onclick="openSearch()"
-                    style="margin-left:10px; border:none; background:transparent; color:white; cursor:pointer;"
-                    aria-label="Cari">
-                    <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"
-                        stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                        <circle cx="11" cy="11" r="8"></circle>
-                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-                    </svg>
+                <button class="nav-search-btn" onclick="openSearch()" style="margin-left:10px; border:none; background:transparent; color:white; cursor:pointer;" aria-label="Cari">
+                    <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
                 </button>
             </nav>
-
-            <button class="hamburger-btn" id="hamburgerBtn" onclick="toggleMobileMenu()"
-                aria-label="Buka menu navigasi">
+            <button class="hamburger-btn" id="hamburgerBtn" onclick="toggleMobileMenu()" aria-label="Buka menu navigasi">
                 <span></span><span></span><span></span>
             </button>
         </div>
-
         <div class="mobile-nav-dropdown" id="mobileNavDropdown">
-            <div class="mobile-menu-item" onclick="handleMobileMenuItem(this, 'beranda')" role="button" tabindex="0">
-                Beranda</div>
-            <div class="mobile-menu-item" onclick="handleMobileMenuItem(this, 'profil')" role="button" tabindex="0">
-                Profil</div>
-            <div class="mobile-menu-item has-submenu" onclick="toggleMobileSubmenu(this)" role="button" tabindex="0">
-                Layanan</div>
+            <div class="mobile-menu-item" onclick="handleMobileMenuItem(this, 'beranda')" role="button" tabindex="0">Beranda</div>
+            <div class="mobile-menu-item" onclick="handleMobileMenuItem(this, 'profil')" role="button" tabindex="0">Profil</div>
+            <div class="mobile-menu-item has-submenu" onclick="toggleMobileSubmenu(this)" role="button" tabindex="0">Layanan</div>
             <div class="mobile-submenu">
                 <a href="konsesi.html" onclick="closeMobileMenu()">Izin Konsesi</a>
                 <a href="maritim.html" onclick="closeMobileMenu()">Izin Maritim</a>
@@ -1158,12 +731,10 @@
                 <a href="arsip.html" onclick="closeMobileMenu()">Download</a>
                 <a href="faq.html" onclick="closeMobileMenu()">FAQ</a>
                 <a href="simulasibhp.html" onclick="closeMobileMenu()">Estimasi BHP Kaltim</a>
-                <a href="simulasisanksi.html" onclick="closeMobileMenu()" style="color:var(--accent-yellow);">Simulasi Sanksi</a>
+                <a href="simulasidenda.html" onclick="closeMobileMenu()" style="color:var(--accent-yellow);">Simulasi Estimasi Sanksi Denda</a>
             </div>
-            <div class="mobile-menu-item" onclick="handleMobileMenuItem(this, 'publikasi')" role="button" tabindex="0">
-                Publikasi</div>
-            <div class="mobile-menu-item" onclick="handleMobileMenuItem(this, 'kontak')" role="button" tabindex="0">
-                Kontak</div>
+            <div class="mobile-menu-item" onclick="handleMobileMenuItem(this, 'publikasi')" role="button" tabindex="0">Publikasi</div>
+            <div class="mobile-menu-item" onclick="handleMobileMenuItem(this, 'kontak')" role="button" tabindex="0">Kontak</div>
         </div>
         <div id="mobileNavOverlay" class="mobile-nav-overlay"></div>
     </header>
@@ -1174,7 +745,7 @@
         </div>
         <div class="container">
             <h1>Simulasi Sanksi Administratif SFR</h1>
-            <p>Hitung estimasi denda dan sanksi berdasarkan pelanggaran spektrum frekuensi radio di Kalimantan Timur</p>
+            <p>Hitung estimasi denda berdasarkan Permen Kominfo No. 9/2023 dan PP No. 43/2023</p>
         </div>
     </div>
 
@@ -1188,6 +759,7 @@
                 <i class="bi bi-geo-alt-fill"></i> <strong>Wilayah:</strong> Pilih kabupaten/kota pada peta atau dropdown
             </div>
 
+            <!-- Form Input -->
             <form id="sanksiForm">
                 <div class="form-group">
                     <label><span>*</span> Kabupaten / Kota</label>
@@ -1213,8 +785,18 @@
                         <option value="daya_lebih">Daya pancar melebihi izin</option>
                         <option value="frekuensi_geser">Frekuensi tidak sesuai izin</option>
                         <option value="bandwidth_lebih">Bandwidth melebihi izin</option>
-                        <option value="perangkat_tidak_sertifikat">Menggunakan perangkat tidak bersertifikat</option>
+                        <option value="perangkat_tidak_sertifikat">Menggunakan / memperdagangkan perangkat tidak bersertifikat (APT)</option>
                         <option value="parameter_lain">Parameter teknis tidak sesuai lainnya</option>
+                    </select>
+                </div>
+
+                <!-- Sub-jenis pelanggaran APT -->
+                <div class="form-group" id="aptSubTypeGroup" style="display: none;">
+                    <label><span>*</span> Kategori Pelanggaran APT</label>
+                    <select class="form-control auto-calc" id="aptSubType">
+                        <option value="memperdagangkan">Memperdagangkan APT tidak bersertifikat (badan usaha)</option>
+                        <option value="menggunakan_badan_usaha">Menggunakan APT tidak bersertifikat (badan usaha)</option>
+                        <option value="menggunakan_perorangan">Menggunakan APT tidak bersertifikat (perorangan)</option>
                     </select>
                 </div>
 
@@ -1235,6 +817,17 @@
                         <option value="vhf">VHF (30 - 300 MHz)</option>
                         <option value="uhf">UHF (300 - 3000 MHz)</option>
                     </select>
+                </div>
+
+                <div style="display:flex; gap:15px;">
+                    <div class="form-group" style="flex:1;">
+                        <label> Frekuensi TX (MHz)</label>
+                        <input type="number" class="form-control auto-calc" id="freqTX" value="160" step="0.001" min="0">
+                    </div>
+                    <div class="form-group" style="flex:1;">
+                        <label> Frekuensi RX (MHz)</label>
+                        <input type="number" class="form-control auto-calc" id="freqRX" value="160" step="0.001" min="0">
+                    </div>
                 </div>
 
                 <div style="display:flex; gap:15px;">
@@ -1263,32 +856,56 @@
                 </div>
 
                 <div class="form-group">
-                    <label> Status Peringatan Sebelumnya</label>
-                    <select class="form-control auto-calc" id="peringatanSelect">
-                        <option value="0">Belum pernah ditegur</option>
-                        <option value="1">Pernah mendapat teguran lisan</option>
-                        <option value="2">Pernah mendapat teguran tertulis</option>
+                    <label><span>*</span> Jumlah Unit</label>
+                    <input type="number" class="form-control auto-calc" id="jumlahUnit" value="1" min="1" step="1" required>
+                </div>
+
+                <div class="form-group">
+                    <label> Status Pelanggaran</label>
+                    <select class="form-control auto-calc" id="ulangSelect">
+                        <option value="pertama">Pelanggaran Pertama</option>
+                        <option value="berulang">Pelanggaran Berulang</option>
                     </select>
                 </div>
 
-                <!-- Parameter info (otomatis) -->
                 <div id="paramInfo" class="param-info"></div>
                 <div id="freqParamInfo" class="param-info"></div>
             </form>
 
-            <div class="result-container">
-                <div style="font-size:12px; opacity:0.8; text-transform:uppercase;">Estimasi Denda Administratif</div>
-                <div class="result-amount" id="resultAmount">Rp 0</div>
-                <div id="sanctionDetail" style="font-size:14px; margin-top:10px; background:rgba(255,255,255,0.2); padding:8px; border-radius:6px;"></div>
+            <!-- Tombol Tambah Baris -->
+            <button class="btn-add" onclick="tambahBaris()"><i class="bi bi-plus-circle"></i> Tambah Pelanggaran</button>
+            <button class="btn-total" onclick="hitungTotal()"><i class="bi bi-calculator"></i> Hitung Total</button>
+            <button class="btn-export" onclick="exportToExcel()"><i class="bi bi-file-excel"></i> Ekspor ke Excel</button>
+
+            <!-- Tabel Ringkasan -->
+            <div id="summaryContainer">
+                <table class="summary-table" id="summaryTable">
+                    <thead>
+                        <tr>
+                            <th>No</th>
+                            <th>Kabupaten</th>
+                            <th>Jenis Pelanggaran</th>
+                            <th>Layanan</th>
+                            <th>TX (MHz)</th>
+                            <th>Jumlah Unit</th>
+                            <th>Denda (Rp)</th>
+                            <th>Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody id="summaryBody">
+                        <!-- diisi oleh JavaScript -->
+                    </tbody>
+                </table>
             </div>
 
-            <div id="sanctionInfo" class="sanction-info">
-                <p><strong>Sanksi Tambahan:</strong> <span id="tambahanSanksi">-</span></p>
-                <p><strong>Catatan:</strong> <span id="catatanSanksi">Hasil simulasi berdasarkan PP No. 43/2023</span></p>
+            <!-- Total Denda dengan tampilan seperti BHP -->
+            <div class="result-container">
+                <div style="font-size:12px; opacity:0.8; text-transform:uppercase;">Total Estimasi Sanksi</div>
+                <div class="result-amount" id="totalDenda">Rp 0</div>
             </div>
 
             <div class="disclaimer">
-                <i class="bi bi-info-circle"></i> <strong>Catatan:</strong> Hasil ini adalah estimasi untuk simulasi. Penetapan sanksi resmi dilakukan oleh pejabat berwenang berdasarkan hasil pemeriksaan.
+                <i class="bi bi-info-circle"></i> <strong>Catatan:</strong> Hasil ini adalah estimasi berdasarkan tabel indeks pelanggaran Permen Kominfo No. 9/2023. Penetapan sanksi resmi dilakukan oleh pejabat berwenang.
             </div>
         </div>
     </div>
@@ -1300,8 +917,7 @@
                     <h3>Balmon Samarinda</h3>
                     <p style="color:rgba(255,255,255,0.7); line-height:1.8;">
                         Jalan Sultan Sulaiman No. 123<br>Samarinda, Kalimantan Timur.<br><br>
-                        <strong>Telp:</strong> 0856-4828-3012<br><strong>Email:</strong>
-                        pelayananuptbalmonsamarinda@gmail.com
+                        <strong>Telp:</strong> 0856-4828-3012<br><strong>Email:</strong> pelayananuptbalmonsamarinda@gmail.com
                     </p>
                 </div>
                 <div class="footer-col">
@@ -1315,8 +931,7 @@
                 </div>
                 <div class="footer-col">
                     <h3>Jam Pelayanan</h3>
-                    <p style="color:rgba(255,255,255,0.7);">Senin - Kamis: 08.00 - 16.00<br>Jumat: 08.00 -
-                        16.30<br>Sabtu - Minggu: Libur</p>
+                    <p style="color:rgba(255,255,255,0.7);">Senin - Kamis: 08.00 - 16.00<br>Jumat: 08.00 - 16.30<br>Sabtu - Minggu: Libur</p>
                 </div>
             </div>
         </div>
@@ -1327,12 +942,7 @@
         <div class="chat-header">
             <div class="chat-header-content">
                 <div class="chat-logo-bg">
-                    <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"
-                        stroke-linecap="round" stroke-linejoin="round">
-                        <path
-                            d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z">
-                        </path>
-                    </svg>
+                    <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
                 </div>
                 <div class="chat-info">
                     <h4>Sobat Digi</h4>
@@ -1340,28 +950,19 @@
                 </div>
             </div>
         </div>
-        <iframe id="chatFrame" data-src="https://MagangBalmon2619-Chat-Balmon.hf.space"
-            style="width: 100%; height: 100%; border: none; background: #fff;" allow="clipboard-write; microphone"
-            loading="lazy"></iframe>
+        <iframe id="chatFrame" data-src="https://MagangBalmon2619-Chat-Balmon.hf.space" style="width: 100%; height: 100%; border: none; background: #fff;" allow="clipboard-write; microphone" loading="lazy"></iframe>
     </div>
 
     <button class="chat-toggle-btn" id="toggleBtn" onclick="animateChatToggle()" aria-label="Buka chat">
-        <svg class="icon-message" viewBox="0 0 24 24">
-            <path
-                d="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 9h12v2H6V9zm8 5H6v-2h8v2zm4-6H6V6h12v2z" />
-        </svg>
-        <svg class="icon-close" viewBox="0 0 24 24">
-            <line x1="18" y1="6" x2="6" y2="18"></line>
-            <line x1="6" y1="6" x2="18" y2="18"></line>
-        </svg>
+        <svg class="icon-message" viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 9h12v2H6V9zm8 5H6v-2h8v2zm4-6H6V6h12v2z"/></svg>
+        <svg class="icon-close" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
     </button>
 
     <div id="searchOverlay" class="search-overlay">
         <div class="search-content">
             <button class="close-search" onclick="closeSearch()" aria-label="Tutup pencarian">&times;</button>
             <h2 style="color:var(--primary-color); margin-bottom:20px;">Pencarian</h2>
-            <input type="text" id="searchInput" placeholder="Ketik kata kunci (misal: Izin, Maritim)..."
-                onkeyup="performSearch()">
+            <input type="text" id="searchInput" placeholder="Ketik kata kunci (misal: Izin, Maritim)..." onkeyup="performSearch()">
             <div id="searchResults" class="search-results"></div>
         </div>
     </div>
@@ -1376,9 +977,9 @@
         };
 
         const zonaData = {
-            2: { vhf: { HDLP: 10310, HDDP: 95732 }, uhf: { HDLP: 9418, HDDP: 87585 }, shf: { HDLP: 7745, HDDP: 71491 } },
-            3: { vhf: { HDLP: 7733, HDDP: 71799 }, uhf: { HDLP: 7063, HDDP: 65688 }, shf: { HDLP: 5809, HDDP: 53618 } },
-            4: { vhf: { HDLP: 5155, HDDP: 47866 }, uhf: { HDLP: 4709, HDDP: 43792 }, shf: { HDLP: 3873, HDDP: 35745 } }
+            2: { vhf: { HDLP: 10310, HDDP: 95732 }, uhf: { HDLP: 9418, HDDP: 87585 } },
+            3: { vhf: { HDLP: 7733, HDDP: 71799 }, uhf: { HDLP: 7063, HDDP: 65688 } },
+            4: { vhf: { HDLP: 5155, HDDP: 47866 }, uhf: { HDLP: 4709, HDDP: 43792 } }
         };
 
         const serviceData = {
@@ -1389,175 +990,195 @@
             trunking: { name: "Radio Trunking", Ib: 14.8700, Ip: 0.5800, defaultPower: 10 }
         };
 
-        // Faktor pengali denda berdasarkan jenis pelanggaran
-        const faktorPelanggaran = {
-            "tanpa_izin": 2.0,
-            "daya_lebih": 1.5,
-            "frekuensi_geser": 1.3,
-            "bandwidth_lebih": 1.2,
-            "perangkat_tidak_sertifikat": 1.0,
-            "parameter_lain": 1.2
+        const indeksISR = {
+            ht_5w: { vhf: { 2: 0.0015, 3: 0.0012, 4: 0.0009 }, uhf: { 2: 0.0015, 3: 0.0012, 4: 0.0009 } },
+            mu_ht: { vhf: { 2: 0.0015, 3: 0.0012, 4: 0.0009 }, uhf: { 2: 0.0015, 3: 0.0012, 4: 0.0009 } },
+            base: { vhf: { 2: 0.019, 3: 0.014, 4: 0.010 }, uhf: { 2: 0.019, 3: 0.014, 4: 0.010 } },
+            repeater: { vhf: { 2: 0.029, 3: 0.022, 4: 0.015 }, uhf: { 2: 0.029, 3: 0.022, 4: 0.015 } },
+            trunking: { vhf: { 2: 0.064, 3: 0.046, 4: 0.029 }, uhf: { 2: 0.064, 3: 0.046, 4: 0.029 } }
         };
 
-        // Deskripsi sanksi tambahan
-        const sanksiTambahan = {
-            "tanpa_izin": "Penghentian sementara operasional + kewajiban mengurus izin",
-            "daya_lebih": "Teguran tertulis + penyesuaian daya dalam 7 hari",
-            "frekuensi_geser": "Teguran tertulis + penyesuaian frekuensi",
-            "bandwidth_lebih": "Teguran tertulis + penyesuaian bandwidth",
-            "perangkat_tidak_sertifikat": "Penyitaan perangkat + teguran",
-            "parameter_lain": "Teguran tertulis"
+        const indeksAPT = {
+            memperdagangkan: 0.40,
+            menggunakan_badan_usaha: 0.20,
+            menggunakan_perorangan: 0.00
         };
 
-        const kabupatenSelect = document.getElementById('kabupatenSelect');
-        const pelanggaranSelect = document.getElementById('pelanggaranSelect');
-        const serviceType = document.getElementById('serviceType');
-        const bandSelect = document.getElementById('bandSelect');
-        const bandwidth = document.getElementById('bandwidth');
-        const powerWatt = document.getElementById('powerWatt');
-        const powerSelect = document.getElementById('powerSelect');
-        const powerInputGroup = document.getElementById('powerInputGroup');
-        const powerDropdownGroup = document.getElementById('powerDropdownGroup');
-        const dbmDisplay = document.getElementById('dbmDisplay');
-        const paramInfo = document.getElementById('paramInfo');
-        const freqParamInfo = document.getElementById('freqParamInfo');
-        const infoZona = document.getElementById('infoZona');
-        const resultAmount = document.getElementById('resultAmount');
-        const sanctionDetail = document.getElementById('sanctionDetail');
-        const tambahanSanksi = document.getElementById('tambahanSanksi');
-        const catatanSanksi = document.getElementById('catatanSanksi');
-        const durasiInput = document.getElementById('durasi');
-        const peringatanSelect = document.getElementById('peringatanSelect');
+        const tarifPerPoin = 100000;
 
-        function setPowerInputMode() {
-            const selected = serviceType.value;
-            if (selected === 'mu_ht') {
-                powerInputGroup.style.display = 'none';
-                powerDropdownGroup.style.display = 'flex';
-                powerSelect.value = '10';
+        function getBobot(pelanggaran, durasi) {
+            if (pelanggaran === 'tanpa_izin') {
+                if (durasi <= 12) return 33;
+                if (durasi <= 24) return 67;
+                return 100;
+            } else if (pelanggaran === 'perangkat_tidak_sertifikat') {
+                return 100;
             } else {
-                powerInputGroup.style.display = 'flex';
-                powerDropdownGroup.style.display = 'none';
-                if (serviceData[selected]) powerWatt.value = serviceData[selected].defaultPower;
+                return 17;
             }
-            updateDbmAndCalculate();
         }
 
-        function wattToDbm(watt) {
-            if (isNaN(watt) || watt <= 0) return 0;
-            return 10 * Math.log10(watt * 1000);
-        }
+        // ==================== MULTI BARIS ====================
+        let barisData = []; // array of objects
 
-        function updateDbmAndCalculate() {
-            let watt = (serviceType.value === 'mu_ht') ? parseFloat(powerSelect.value) : parseFloat(powerWatt.value);
-            if (isNaN(watt) || watt <= 0) {
-                dbmDisplay.textContent = '0.00 dBm';
+        // Fungsi untuk menghitung denda per baris berdasarkan input
+        function hitungDendaFromInput(data) {
+            const { kab, pelanggaran, aptSub, srvKey, bandKey, bw, watt, durasi, jumlahUnit, isBerulang } = data;
+            let maxPoin, indeks, bobot;
+            if (pelanggaran === 'perangkat_tidak_sertifikat') {
+                maxPoin = 5000;
+                bobot = 100;
+                indeks = indeksAPT[aptSub] || 0.20;
             } else {
-                dbmDisplay.textContent = wattToDbm(watt).toFixed(2) + ' dBm';
+                maxPoin = 7000;
+                bobot = getBobot(pelanggaran, durasi);
+                const zona = kabupatenZona[kab];
+                indeks = indeksISR[srvKey]?.[bandKey]?.[zona] || 0.1;
+                if (isBerulang) indeks *= 1.5;
             }
-            hitungSanksi();
+            let poin = indeks * maxPoin * (bobot / 100);
+            let denda = poin * tarifPerPoin * jumlahUnit;
+            return { poin, indeks, bobot, denda };
         }
 
-        // Fungsi menghitung BHP (sama seperti di simulasibhp)
-        function hitungBHP() {
-            const kab = kabupatenSelect.value;
-            const srvKey = serviceType.value;
-            const bandKey = bandSelect.value;
-            const bw = parseFloat(bandwidth.value) || 0;
-            let watt = (srvKey === 'mu_ht') ? parseFloat(powerSelect.value) : parseFloat(powerWatt.value);
-
-            if (!kab || !srvKey || !bandKey || bw <= 0 || watt <= 0) return 0;
-
-            const zona = kabupatenZona[kab];
-            const srv = serviceData[srvKey];
-            const band = zonaData[zona][bandKey];
-
-            const dbm = wattToDbm(watt);
-            const p = dbm < 0 ? 0 : dbm;
-            const total = (band.HDLP * srv.Ib * bw + band.HDDP * srv.Ip * p) / 2;
-            return total;
-        }
-
-        function hitungSanksi() {
-            // Ambil nilai input
-            const kab = kabupatenSelect.value;
-            const pelanggaran = pelanggaranSelect.value;
-            const srvKey = serviceType.value;
-            const bandKey = bandSelect.value;
-            const bw = parseFloat(bandwidth.value) || 0;
-            let watt = (srvKey === 'mu_ht') ? parseFloat(powerSelect.value) : parseFloat(powerWatt.value);
-            const durasi = parseInt(durasiInput.value) || 1;
-            const peringatan = parseInt(peringatanSelect.value) || 0;
+        // Tambah baris dari form
+        function tambahBaris() {
+            // Validasi form
+            const kab = document.getElementById('kabupatenSelect').value;
+            if (!kab) { alert('Pilih kabupaten/kota'); return; }
+            const pelanggaran = document.getElementById('pelanggaranSelect').value;
+            const aptSub = document.getElementById('aptSubType').value;
+            const srvKey = document.getElementById('serviceType').value;
+            const bandKey = document.getElementById('bandSelect').value;
+            const bw = parseFloat(document.getElementById('bandwidth').value) || 0;
+            let watt = (srvKey === 'mu_ht') ? parseFloat(document.getElementById('powerSelect').value) : parseFloat(document.getElementById('powerWatt').value);
+            const durasi = parseInt(document.getElementById('durasi').value) || 1;
+            const jumlahUnit = parseInt(document.getElementById('jumlahUnit').value) || 1;
+            const isBerulang = document.getElementById('ulangSelect').value === 'berulang';
+            const freqTX = parseFloat(document.getElementById('freqTX').value) || 0;
+            const freqRX = parseFloat(document.getElementById('freqRX').value) || 0;
 
             if (!kab || !pelanggaran || !srvKey || !bandKey || bw <= 0 || watt <= 0) {
-                resultAmount.innerText = 'Rp 0';
-                sanctionDetail.innerText = '';
-                tambahanSanksi.innerText = '-';
-                catatanSanksi.innerText = 'Lengkapi semua data';
+                alert('Lengkapi semua data wajib');
                 return;
             }
 
-            // Hitung BHP tahunan
-            const bhpTahunan = hitungBHP();
-            if (bhpTahunan === 0) {
-                resultAmount.innerText = 'Rp 0';
-                return;
-            }
+            const data = {
+                kab, pelanggaran, aptSub, srvKey, bandKey, bw, watt, durasi, jumlahUnit, isBerulang, freqTX, freqRX
+            };
+            const hasil = hitungDendaFromInput(data);
+            data.denda = hasil.denda;
+            data.indeks = hasil.indeks;
+            data.bobot = hasil.bobot;
+            data.poin = hasil.poin;
 
-            // Hitung denda dasar = (BHP tahunan / 12) * durasi * faktor pelanggaran
-            let faktor = faktorPelanggaran[pelanggaran] || 1.0;
-            // Tambahan jika sudah pernah ditegur
-            if (peringatan === 1) faktor += 0.2; // pernah teguran lisan
-            else if (peringatan === 2) faktor += 0.5; // pernah teguran tertulis
-
-            const denda = (bhpTahunan / 12) * durasi * faktor;
-
-            // Format rupiah
-            resultAmount.innerText = 'Rp ' + Math.round(denda).toLocaleString('id-ID');
-
-            // Tampilkan rincian
-            sanctionDetail.innerText = `BHP/tahun: Rp ${Math.round(bhpTahunan).toLocaleString()} | Faktor: ${faktor.toFixed(2)}x | Durasi: ${durasi} bln`;
-
-            // Sanksi tambahan
-            let sanksiText = sanksiTambahan[pelanggaran] || 'Teguran tertulis';
-            if (peringatan === 2 && pelanggaran === 'tanpa_izin') {
-                sanksiText += ' + rekomendasi pencabutan izin (jika ada)';
-            } else if (durasi > 12) {
-                sanksiText += ' + penghentian sementara operasional';
-            }
-            tambahanSanksi.innerText = sanksiText;
-
-            // Catatan
-            let catatan = 'Berdasarkan PP No. 43/2023.';
-            if (pelanggaran === 'tanpa_izin') {
-                catatan += ' Pelanggaran tanpa izin dapat dikenakan pidana penjara maksimal 4 tahun.';
-            }
-            catatanSanksi.innerText = catatan;
-
-            // Tampilkan parameter IB/IP
-            const zona = kabupatenZona[kab];
-            const srv = serviceData[srvKey];
-            const band = zonaData[zona][bandKey];
-            paramInfo.innerHTML = `<strong>IB:</strong> ${srv.Ib} | <strong>IP:</strong> ${srv.Ip}`;
-            freqParamInfo.innerHTML = `<strong>HDLP:</strong> ${band.HDLP.toLocaleString()} | <strong>HDDP:</strong> ${band.HDDP.toLocaleString()}`;
+            barisData.push(data);
+            renderTable();
+            // Opsional: reset form atau tidak
         }
 
-        // Event listener
-        document.querySelectorAll('.auto-calc').forEach(el => {
-            el.addEventListener('input', function() {
-                if (el.id === 'serviceType') setPowerInputMode();
-                else if (el.id === 'kabupatenSelect') syncSelection(el.value);
-                hitungSanksi();
-            });
-            el.addEventListener('change', function() {
-                if (el.id === 'serviceType') setPowerInputMode();
-                else if (el.id === 'kabupatenSelect') syncSelection(el.value);
-                hitungSanksi();
-            });
-        });
+        // Hapus baris
+        function hapusBaris(index) {
+            barisData.splice(index, 1);
+            renderTable();
+        }
 
-        setPowerInputMode();
-        hitungSanksi();
+        // Render tabel ringkasan
+        function renderTable() {
+            const tbody = document.getElementById('summaryBody');
+            tbody.innerHTML = '';
+            barisData.forEach((item, idx) => {
+                const row = document.createElement('tr');
+                let jenisTeks = item.pelanggaran;
+                if (item.pelanggaran === 'perangkat_tidak_sertifikat') {
+                    if (item.aptSub === 'memperdagangkan') jenisTeks = 'Memperdagangkan APT';
+                    else if (item.aptSub === 'menggunakan_badan_usaha') jenisTeks = 'Menggunakan APT (badan usaha)';
+                    else if (item.aptSub === 'menggunakan_perorangan') jenisTeks = 'Menggunakan APT (perorangan)';
+                } else {
+                    const map = {
+                        tanpa_izin: 'Tanpa Izin',
+                        daya_lebih: 'Daya Lebih',
+                        frekuensi_geser: 'Frekuensi Geser',
+                        bandwidth_lebih: 'Bandwidth Lebih',
+                        parameter_lain: 'Parameter Lain'
+                    };
+                    jenisTeks = map[item.pelanggaran] || item.pelanggaran;
+                }
+                row.innerHTML = `
+                    <td>${idx+1}</td>
+                    <td>${item.kab} (Z${kabupatenZona[item.kab]})</td>
+                    <td>${jenisTeks}</td>
+                    <td>${serviceData[item.srvKey]?.name || item.srvKey}</td>
+                    <td>${item.freqTX.toFixed(3)}</td>
+                    <td>${item.jumlahUnit}</td>
+                    <td>Rp ${Math.round(item.denda).toLocaleString('id-ID')}</td>
+                    <td><button class="btn-delete" onclick="hapusBaris(${idx})">Hapus</button></td>
+                `;
+                tbody.appendChild(row);
+            });
+            hitungTotal();
+        }
+
+        // Hitung total semua denda
+        function hitungTotal() {
+            let total = barisData.reduce((sum, item) => sum + item.denda, 0);
+            document.getElementById('totalDenda').innerText = 'Rp ' + Math.round(total).toLocaleString('id-ID');
+        }
+
+        // Ekspor ke Excel
+        function exportToExcel() {
+            if (barisData.length === 0) {
+                alert('Tidak ada data untuk diekspor');
+                return;
+            }
+            // Siapkan array untuk worksheet
+            const wsData = [];
+            // Header
+            wsData.push([
+                'No', 'Kabupaten', 'Zona', 'Jenis Pelanggaran', 'Sub-APT', 'Layanan', 'Pita',
+                'Lebar Pita (kHz)', 'Daya (W)', 'Frekuensi TX (MHz)', 'Frekuensi RX (MHz)',
+                'Durasi (bln)', 'Jumlah Unit', 'Status', 'Indeks', 'Bobot (%)', 'Poin per Unit',
+                'Tarif per Poin', 'Denda per Unit', 'Total Denda'
+            ]);
+            // Isi
+            barisData.forEach((item, idx) => {
+                const zona = kabupatenZona[item.kab];
+                const pelText = item.pelanggaran;
+                const subApt = item.aptSub || '-';
+                const layanan = serviceData[item.srvKey]?.name || item.srvKey;
+                const pita = item.bandKey === 'vhf' ? 'VHF' : 'UHF';
+                const status = item.isBerulang ? 'Berulang' : 'Pertama';
+                const dendaPerUnit = item.poin * tarifPerPoin;
+                wsData.push([
+                    idx+1,
+                    item.kab,
+                    zona,
+                    pelText,
+                    subApt,
+                    layanan,
+                    pita,
+                    item.bw,
+                    item.watt,
+                    item.freqTX.toFixed(3),
+                    item.freqRX.toFixed(3),
+                    item.durasi,
+                    item.jumlahUnit,
+                    status,
+                    item.indeks.toFixed(4),
+                    item.bobot,
+                    item.poin.toFixed(2),
+                    tarifPerPoin,
+                    Math.round(dendaPerUnit),
+                    Math.round(item.denda)
+                ]);
+            });
+            // Buat workbook
+            const wb = XLSX.utils.book_new();
+            const ws = XLSX.utils.aoa_to_sheet(wsData);
+            XLSX.utils.book_append_sheet(wb, ws, 'Sanksi');
+            // Simpan file
+            XLSX.writeFile(wb, 'simulasi_sanksi_sfr.xlsx');
+        }
 
         // ==================== PETA (Leaflet) ====================
         var map = L.map('map').setView([0.5386, 116.4194], 6);
@@ -1576,9 +1197,8 @@
                         layer.on('click', () => {
                             let raw = feature.properties.name || feature.properties.WADMKK || "";
                             let nama = raw.toUpperCase().replace("KOTA ", "").replace("KABUPATEN ", "").trim();
-                            kabupatenSelect.value = nama;
+                            document.getElementById('kabupatenSelect').value = nama;
                             syncSelection(nama);
-                            hitungSanksi();
                         });
                     }
                 }).addTo(map);
@@ -1599,15 +1219,69 @@
                     layer.bindTooltip(layerName, { permanent: true, direction: "center", className: "label-kota" });
 
                     const zona = kabupatenZona[nama];
-                    infoZona.innerHTML = `<i class="bi bi-geo-alt-fill"></i> <strong>Wilayah:</strong> ${nama} (Zona ${zona})`;
+                    document.getElementById('infoZona').innerHTML = `<i class="bi bi-geo-alt-fill"></i> <strong>Wilayah:</strong> ${nama} (Zona ${zona})`;
                 } else {
                     layer.setStyle(styleDefault);
                 }
             });
-            hitungSanksi();
         }
 
-        // ==================== HEADER & FUNGSI UMUM (sama seperti contoh) ====================
+        // ==================== FUNGSI FORM LAINNYA ====================
+        const pelanggaranSelect = document.getElementById('pelanggaranSelect');
+        const aptSubTypeGroup = document.getElementById('aptSubTypeGroup');
+        const durasiInput = document.getElementById('durasi');
+        const powerSelect = document.getElementById('powerSelect');
+        const powerWatt = document.getElementById('powerWatt');
+        const powerInputGroup = document.getElementById('powerInputGroup');
+        const powerDropdownGroup = document.getElementById('powerDropdownGroup');
+        const dbmDisplay = document.getElementById('dbmDisplay');
+        const freqTX = document.getElementById('freqTX');
+        const bandSelect = document.getElementById('bandSelect');
+
+        function toggleAptFields() {
+            const isApt = pelanggaranSelect.value === 'perangkat_tidak_sertifikat';
+            aptSubTypeGroup.style.display = isApt ? 'block' : 'none';
+            durasiInput.disabled = isApt;
+            if (isApt) durasiInput.value = 1;
+        }
+        pelanggaranSelect.addEventListener('change', toggleAptFields);
+        toggleAptFields();
+
+        freqTX.addEventListener('input', function() {
+            let f = parseFloat(this.value);
+            if (!isNaN(f) && f > 0) {
+                bandSelect.value = f < 300 ? 'vhf' : 'uhf';
+            }
+        });
+
+        function setPowerInputMode() {
+            const selected = document.getElementById('serviceType').value;
+            if (selected === 'mu_ht') {
+                powerInputGroup.style.display = 'none';
+                powerDropdownGroup.style.display = 'flex';
+                powerSelect.value = '10';
+            } else {
+                powerInputGroup.style.display = 'flex';
+                powerDropdownGroup.style.display = 'none';
+                if (serviceData[selected]) powerWatt.value = serviceData[selected].defaultPower;
+            }
+            updateDbm();
+        }
+        function wattToDbm(watt) {
+            if (isNaN(watt) || watt <= 0) return 0;
+            return 10 * Math.log10(watt * 1000);
+        }
+        function updateDbm() {
+            let watt = (document.getElementById('serviceType').value === 'mu_ht') ? parseFloat(powerSelect.value) : parseFloat(powerWatt.value);
+            if (isNaN(watt) || watt <= 0) dbmDisplay.textContent = '0.00 dBm';
+            else dbmDisplay.textContent = wattToDbm(watt).toFixed(2) + ' dBm';
+        }
+        document.getElementById('serviceType').addEventListener('change', setPowerInputMode);
+        powerSelect.addEventListener('change', updateDbm);
+        powerWatt.addEventListener('input', updateDbm);
+        setPowerInputMode();
+
+        // ==================== HEADER & FUNGSI UMUM ====================
         let ticking = false;
         function updateScroll() {
             const scrollY = window.scrollY;
@@ -1679,7 +1353,7 @@
             { title: "Beranda", url: "index.html", desc: "Halaman utama Balmon Samarinda" },
             { title: "Profil", url: "profil.html", desc: "Informasi tentang Balmon Samarinda." },
             { title: "Estimasi BHP Kaltim", url: "simulasibhp.html", desc: "Simulasi estimasi Biaya Hak Penggunaan Izin Stasiun Radio khusus Kalimantan Timur." },
-            { title: "Simulasi Sanksi", url: "simulasisanksi.html", desc: "Simulasi sanksi administratif pelanggaran spektrum frekuensi radio." }
+            { title: "Simulasi Sanksi", url: "simulasidenda.html", desc: "Simulasi sanksi administratif pelanggaran spektrum frekuensi radio." }
         ];
 
         function openSearch() {
@@ -1712,5 +1386,4 @@
         document.addEventListener('keydown', (e) => { if (e.key === "Escape") closeSearch(); });
     </script>
 </body>
-
 </html>
