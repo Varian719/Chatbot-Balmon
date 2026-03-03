@@ -904,6 +904,11 @@
                 <div class="result-amount" id="totalDenda">Rp 0</div>
             </div>
 
+            <!-- Tombol untuk mencari PP No. 43 di arsip -->
+            <button onclick="window.location.href='arsip.html?search=Pp no.43'" class="form-control" style="margin-top:10px; background:var(--bg-light-blue); cursor:pointer; font-weight:600; font-size:13px; padding:8px;">
+                <i class="bi bi-search"></i> Cari Regulasi PP No. 43 di Arsip
+            </button>
+
             <div class="disclaimer">
                 <i class="bi bi-info-circle"></i> <strong>Catatan:</strong> Hasil ini adalah estimasi berdasarkan tabel indeks pelanggaran Permen Kominfo No. 9/2023. Penetapan sanksi resmi dilakukan oleh pejabat berwenang.
             </div>
@@ -1218,8 +1223,8 @@
                     map.fitBounds(layer.getBounds(), { padding: [20, 20] });
                     layer.bindTooltip(layerName, { permanent: true, direction: "center", className: "label-kota" });
 
-                    const zona = kabupatenZona[nama];
-                    document.getElementById('infoZona').innerHTML = `<i class="bi bi-geo-alt-fill"></i> <strong>Wilayah:</strong> ${nama} (Zona ${zona})`;
+                    // Update info zona hanya dengan nama (tanpa zona) agar konsisten dengan halaman BHP
+                    document.getElementById('infoZona').innerHTML = `<i class="bi bi-geo-alt-fill"></i> <strong>Wilayah:</strong> ${nama}`;
                 } else {
                     layer.setStyle(styleDefault);
                 }
