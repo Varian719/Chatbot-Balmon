@@ -1119,7 +1119,7 @@
                                     style="color:var(--accent-yellow);">Estimasi BHP Kaltim</a></li>
                             <li role="none"><a href="simulasidenda.html" role="menuitem"
                                     style="color:var(--accent-yellow);">Estimasi Sanksi Denda</a></li>
-                                
+
                         </ul>
                     </li>
                     <li class="menu-item" onclick="window.location.href='galeri.html'" role="button" tabindex="0">
@@ -1487,7 +1487,7 @@
                 if (layerName === nama) {
                     layer.setStyle(styleActive);
                     map.fitBounds(layer.getBounds(), { padding: [20, 20] });
-                    layer.bindTooltip(layerName, { permanent: true, direction: "center", className: "label-kota" });
+                    // layer.bindTooltip(layerName, { permanent: true, direction: "center", className: "label-kota" });
 
                     const zona = kabupatenZona[nama];
                     infoZona.innerHTML = `<i class="bi bi-geo-alt-fill"></i> <strong>Wilayah:</strong> ${nama}`;
