@@ -1360,15 +1360,16 @@
                 </div>
 
                 <div class="form-group">
-                    <label> Status Pelanggaran</label>
+                    <label> Status Pelanggaran <span style="font-weight:normal; color:var(--text-gray);">(pelanggaran berulang: indeks × 1.5)</span></label>
                     <select class="form-control auto-calc" id="ulangSelect">
                         <option value="pertama">Pelanggaran Pertama</option>
                         <option value="berulang">Pelanggaran Berulang</option>
                     </select>
                 </div>
 
-                <div id="paramInfo" class="param-info"></div>
-                <div id="freqParamInfo" class="param-info"></div>
+                <!-- Parameter info -->
+                <div id="paramInfo" class="param-info">Pilih parameter untuk melihat detail</div>
+                <div id="freqParamInfo" class="param-info">Pilih parameter untuk melihat detail</div>
             </form>
 
             <!-- Tombol Tambah Baris -->
@@ -1389,6 +1390,7 @@
                             <th>Layanan</th>
                             <th>TX (MHz)</th>
                             <th>Jumlah Unit</th>
+                            <th>Poin per Unit</th>
                             <th>Denda (Rp)</th>
                             <th>Aksi</th>
                         </tr>
@@ -1403,6 +1405,18 @@
             <div class="result-container">
                 <div style="font-size:12px; opacity:0.8; text-transform:uppercase;">Total Estimasi Sanksi</div>
                 <div class="result-amount" id="totalDenda">Rp 0</div>
+            </div>
+
+            <!-- Informasi Parameter dan Rumus -->
+            <div style="margin-top: 20px; background-color: #f0f7ff; border-radius: 8px; padding: 15px; border-left: 4px solid var(--primary-color);">
+                <h5 style="margin: 0 0 10px 0; color: var(--primary-color);"><i class="bi bi-info-circle"></i> Parameter & Rumus Perhitungan</h5>
+                <ul style="margin: 0; padding-left: 20px; font-size: 12px; color: var(--text-dark);">
+                    <li><strong>Max Poin:</strong> ISR = 7000, APT = 5000</li>
+                    <li><strong>Bobot:</strong> Tanpa Izin: 33% (0-12 bln), 67% (12-24 bln), 100% (>24 bln); Pelanggaran lain 17%; APT 100%</li>
+                    <li><strong>Indeks ISR:</strong> Bergantung jenis layanan, pita, dan zona (0,0015 - 0,064). Pelanggaran berulang dikalikan 1,5.</li>
+                    <li><strong>Indeks APT:</strong> Memperdagangkan 0,40; Menggunakan (badan usaha) 0,20; (perorangan) 0,00</li>
+                    <li><strong>Rumus:</strong> Poin = Indeks × MaxPoin × (Bobot/100) <br> Denda = Poin × Rp100.000 × Jumlah Unit</li>
+                </ul>
             </div>
 
             <!-- Tombol untuk mencari PP No. 43 di arsip -->
@@ -1542,6 +1556,54 @@
             }
         }
 
+        // ==================== FUNGSI UPDATE PARAMETER INFO ====================
+        function updateParamInfo() {
+            const kab = document.getElementById('kabupatenSelect').value;
+            const pelanggaran = document.getElementById('pelanggaranSelect').value;
+            const aptSub = document.getElementById('aptSubType').value;
+            const srvKey = document.getElementById('serviceType').value;
+            const bandKey = document.getElementById('bandSelect').value;
+            const durasiRange = document.getElementById('durasiSelect').value;
+            const isBerulang = document.getElementById('ulangSelect').value === 'berulang';
+            const paramInfo = document.getElementById('paramInfo');
+            const freqParamInfo = document.getElementById('freqParamInfo');
+
+            if (!kab || !pelanggaran || !srvKey || !bandKey) {
+                paramInfo.innerHTML = 'Pilih semua data wajib untuk melihat parameter';
+                freqParamInfo.innerHTML = 'Pilih semua data wajib untuk melihat parameter';
+                return;
+            }
+
+            const zona = kabupatenZona[kab];
+            const srv = serviceData[srvKey];
+            const band = zonaData[zona]?.[bandKey];
+
+            if (!band) {
+                paramInfo.innerHTML = 'Data tidak ditemukan untuk pita/zona ini';
+                freqParamInfo.innerHTML = '';
+                return;
+            }
+
+            let maxPoin, indeks, bobot;
+            if (pelanggaran === 'perangkat_tidak_sertifikat') {
+                maxPoin = 5000;
+                bobot = 100;
+                indeks = indeksAPT[aptSub] || 0.20;
+                paramInfo.innerHTML = `<strong>Max Poin:</strong> ${maxPoin} | <strong>Bobot:</strong> ${bobot}% | <strong>Indeks APT:</strong> ${indeks}`;
+            } else {
+                maxPoin = 7000;
+                bobot = getBobot(pelanggaran, durasiRange);
+                indeks = indeksISR[srvKey]?.[bandKey]?.[zona] || 0.1;
+                if (isBerulang) {
+                    paramInfo.innerHTML = `<strong>Max Poin:</strong> ${maxPoin} | <strong>Bobot:</strong> ${bobot}% | <strong>Indeks ISR (asli):</strong> ${(indeks/1.5).toFixed(4)} | <strong>Indeks (berulang ×1.5):</strong> ${indeks.toFixed(4)}`;
+                } else {
+                    paramInfo.innerHTML = `<strong>Max Poin:</strong> ${maxPoin} | <strong>Bobot:</strong> ${bobot}% | <strong>Indeks ISR:</strong> ${indeks.toFixed(4)}`;
+                }
+            }
+
+            freqParamInfo.innerHTML = `<strong>Zona:</strong> ${zona} | <strong>HDLP:</strong> ${band.HDLP.toLocaleString()} | <strong>HDDP:</strong> ${band.HDDP.toLocaleString()} | <strong>IB:</strong> ${srv.Ib} | <strong>IP:</strong> ${srv.Ip}`;
+        }
+
         // ==================== MULTI BARIS ====================
         let barisData = []; // array of objects
 
@@ -1636,6 +1698,7 @@
                     <td>${serviceData[item.srvKey]?.name || item.srvKey}</td>
                     <td>${item.freqTX.toFixed(3)}</td>
                     <td>${item.jumlahUnit}</td>
+                    <td>${item.poin.toFixed(2)}</td>
                     <td>Rp ${Math.round(item.denda).toLocaleString('id-ID')}</td>
                     <td><button class="btn-delete" onclick="hapusBaris(${idx})">Hapus</button></td>
                 `;
@@ -1749,6 +1812,7 @@
                     layer.setStyle(styleDefault);
                 }
             });
+            updateParamInfo();
         }
 
         // Event listener synchronize select dengan peta
@@ -1777,6 +1841,7 @@
             } else {
                 durasiSelect.disabled = false;
             }
+            updateParamInfo();
         }
         pelanggaranSelect.addEventListener('change', toggleAptFields);
         toggleAptFields();
@@ -1786,6 +1851,7 @@
             if (!isNaN(f) && f > 0) {
                 bandSelect.value = f < 300 ? 'vhf' : 'uhf';
             }
+            updateParamInfo();
         });
 
         function setPowerInputMode() {
@@ -1800,6 +1866,7 @@
                 if (serviceData[selected]) powerWatt.value = serviceData[selected].defaultPower;
             }
             updateDbm();
+            updateParamInfo();
         }
         function wattToDbm(watt) {
             if (isNaN(watt) || watt <= 0) return 0;
@@ -1814,6 +1881,15 @@
         powerSelect.addEventListener('change', updateDbm);
         powerWatt.addEventListener('input', updateDbm);
         setPowerInputMode();
+
+        // Tambahkan event listener untuk semua elemen yang mempengaruhi parameter
+        document.querySelectorAll('.auto-calc').forEach(el => {
+            el.addEventListener('change', updateParamInfo);
+            el.addEventListener('input', updateParamInfo);
+        });
+
+        // Panggil pertama kali
+        updateParamInfo();
 
         // ==================== HEADER & FUNGSI UMUM ====================
         let ticking = false;
