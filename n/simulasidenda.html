@@ -1847,9 +1847,6 @@
                 if (layerName === nama) {
                     layer.setStyle(styleActive);
                     map.fitBounds(layer.getBounds(), { padding: [20, 20] });
-                    // layer.bindTooltip(layerName, { permanent: true, direction: "center", className: "label-kota" });
-
-                    // Update info zona hanya dengan nama (tanpa zona) agar konsisten dengan halaman BHP
                     document.getElementById('infoZona').innerHTML = `<i class="bi bi-geo-alt-fill"></i> <strong>Wilayah:</strong> ${nama}`;
                 } else {
                     layer.setStyle(styleDefault);
@@ -1925,13 +1922,12 @@
         powerWatt.addEventListener('input', updateDbm);
         setPowerInputMode();
 
-        // Tambahkan event listener untuk semua elemen yang mempengaruhi parameter
+      
         document.querySelectorAll('.auto-calc').forEach(el => {
             el.addEventListener('change', updateParamInfo);
             el.addEventListener('input', updateParamInfo);
         });
 
-        // Panggil pertama kali
         updateParamInfo();
 
         // ==================== HEADER & FUNGSI UMUM ====================
@@ -2038,6 +2034,7 @@
         }
         document.addEventListener('keydown', (e) => { if (e.key === "Escape") closeSearch(); });
     </script>
+    <script src="dist_js/TTS_Adaptif.min.js"></script>
 </body>
 
 </html>
