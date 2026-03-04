@@ -1062,6 +1062,17 @@
             color: var(--text-gray);
         }
 
+        /* ===== DURASI DROPDOWN (TAMBAHAN) ===== */
+        select#durasiSelect {
+            background-color: #fff;
+            cursor: pointer;
+        }
+        select#durasiSelect:disabled {
+            background-color: #e9ecef;
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
         @media (max-width: 768px) {
             .page-header-custom h1 {
                 font-size: 24px;
@@ -1332,9 +1343,14 @@
                     </div>
                 </div>
 
+                <!-- Durasi Pelanggaran dengan dropdown -->
                 <div class="form-group">
-                    <label><span>*</span> Durasi Pelanggaran (bulan)</label>
-                    <input type="number" class="form-control auto-calc" id="durasi" value="1" min="1" step="1" required>
+                    <label><span>*</span> Durasi Pelanggaran</label>
+                    <select class="form-control auto-calc" id="durasiSelect" required>
+                        <option value="0-12">0–12 bulan</option>
+                        <option value="12-24">12–24 bulan</option>
+                        <option value=">24">&gt;24 bulan</option>
+                    </select>
                 </div>
 
                 <div class="form-group">
@@ -1513,11 +1529,12 @@
 
         const tarifPerPoin = 100000;
 
-        function getBobot(pelanggaran, durasi) {
+        function getBobot(pelanggaran, rentang) {
             if (pelanggaran === 'tanpa_izin') {
-                if (durasi <= 12) return 33;
-                if (durasi <= 24) return 67;
-                return 100;
+                if (rentang === '0-12') return 33;
+                if (rentang === '12-24') return 67;
+                if (rentang === '>24') return 100;
+                return 33; // default
             } else if (pelanggaran === 'perangkat_tidak_sertifikat') {
                 return 100;
             } else {
@@ -1559,7 +1576,8 @@
             const bandKey = document.getElementById('bandSelect').value;
             const bw = parseFloat(document.getElementById('bandwidth').value) || 0;
             let watt = (srvKey === 'mu_ht') ? parseFloat(document.getElementById('powerSelect').value) : parseFloat(document.getElementById('powerWatt').value);
-            const durasi = parseInt(document.getElementById('durasi').value) || 1;
+            const durasiRange = document.getElementById('durasiSelect').value;
+            if (!durasiRange) { alert('Pilih rentang durasi'); return; }
             const jumlahUnit = parseInt(document.getElementById('jumlahUnit').value) || 1;
             const isBerulang = document.getElementById('ulangSelect').value === 'berulang';
             const freqTX = parseFloat(document.getElementById('freqTX').value) || 0;
@@ -1571,7 +1589,7 @@
             }
 
             const data = {
-                kab, pelanggaran, aptSub, srvKey, bandKey, bw, watt, durasi, jumlahUnit, isBerulang, freqTX, freqRX
+                kab, pelanggaran, aptSub, srvKey, bandKey, bw, watt, durasi: durasiRange, jumlahUnit, isBerulang, freqTX, freqRX
             };
             const hasil = hitungDendaFromInput(data);
             data.denda = hasil.denda;
@@ -1741,7 +1759,6 @@
         // ==================== FUNGSI FORM LAINNYA ====================
         const pelanggaranSelect = document.getElementById('pelanggaranSelect');
         const aptSubTypeGroup = document.getElementById('aptSubTypeGroup');
-        const durasiInput = document.getElementById('durasi');
         const powerSelect = document.getElementById('powerSelect');
         const powerWatt = document.getElementById('powerWatt');
         const powerInputGroup = document.getElementById('powerInputGroup');
@@ -1749,12 +1766,17 @@
         const dbmDisplay = document.getElementById('dbmDisplay');
         const freqTX = document.getElementById('freqTX');
         const bandSelect = document.getElementById('bandSelect');
+        const durasiSelect = document.getElementById('durasiSelect');
 
         function toggleAptFields() {
             const isApt = pelanggaranSelect.value === 'perangkat_tidak_sertifikat';
             aptSubTypeGroup.style.display = isApt ? 'block' : 'none';
-            durasiInput.disabled = isApt;
-            if (isApt) durasiInput.value = 1;
+            if (isApt) {
+                durasiSelect.disabled = true;
+                durasiSelect.value = '0-12'; // set default meskipun tidak dipakai
+            } else {
+                durasiSelect.disabled = false;
+            }
         }
         pelanggaranSelect.addEventListener('change', toggleAptFields);
         toggleAptFields();
