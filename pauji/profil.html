@@ -545,7 +545,7 @@
         }
 
         /* ========================================= */
-        /* --- 3. HERO FULL SCREEN CAROUSEL --- */
+        /* --- 3. HERO FULL SCREEN (STATIC) --- */
         /* ========================================= */
         .hero-full-screen {
             position: relative;
@@ -556,52 +556,36 @@
             overflow: hidden;
         }
 
-        /* Carousel Background */
-        .hero-carousel-background {
+        .hero-bg-image {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            z-index: 1;
-            background-color: #000;
-        }
-
-        .carousel-slide {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+            background-image: url('tentang.JPG');
             background-size: cover;
             background-position: center;
-            opacity: 0;
-            transition: opacity 1.5s ease-in-out, transform 5s ease-out;
+            filter: blur(4px);
             transform: scale(1.05);
+            z-index: 1;
         }
 
-        .carousel-slide.active {
-            opacity: 1;
-            transform: scale(1);
-            z-index: 2;
-        }
-
-        /* --- HERO OVERLAY (NO GRADIENT) --- */
+        /* --- HERO OVERLAY --- */
         .hero-overlay {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.4);
-            z-index: 3;
+            background: linear-gradient(to bottom, rgba(5, 10, 20, 0.75) 0%, rgba(0, 25, 50, 0.65) 50%, rgba(5, 10, 20, 0.8) 100%);
+            z-index: 2;
             pointer-events: none;
         }
 
         /* Konten Teks melayang di atas */
         .hero-content {
             position: relative;
-            z-index: 4;
+            z-index: 3;
             width: 100%;
         }
 
@@ -646,33 +630,6 @@
             color: var(--accent-yellow);
             line-height: 1.6;
             text-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
-        }
-
-        /* Indikator Carousel */
-        .carousel-indicators {
-            position: absolute;
-            bottom: 40px;
-            left: 50%;
-            transform: translateX(-50%);
-            display: flex;
-            gap: 10px;
-            z-index: 10;
-        }
-
-        .carousel-indicators .dot {
-            width: 12px;
-            height: 5px;
-            background-color: rgba(255, 255, 255, 0.4);
-            border-radius: 0%;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            border: 2px solid transparent;
-        }
-
-        .carousel-indicators .dot.active {
-            background-color: var(--accent-yellow);
-            border-color: #fff;
-            transform: scale(1.2);
         }
 
         /* ========================================= */
@@ -958,29 +915,37 @@
             font-size: 14px;
         }
 
-        /* CAKUPAN WILAYAH */
+        /* CAKUPAN WILAYAH — MINIMALIST */
         .wilayah-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 15px;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 0;
         }
 
         .wilayah-item {
-            background: var(--bg-light-blue);
-            padding: 15px 20px;
-            border-radius: 50px;
+            padding: 14px 16px;
             font-weight: 600;
-            color: var(--primary-dark);
-            text-align: center;
-            border: 1px solid rgba(0, 111, 176, 0.1);
-            transition: 0.3s;
+            font-size: 14px;
+            color: var(--text-dark);
+            text-align: left;
+            border-bottom: 1px solid #f0f0f0;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .wilayah-item::before {
+            content: '\F3E8';
+            font-family: 'bootstrap-icons';
+            color: var(--primary-color);
+            font-size: 14px;
+            flex-shrink: 0;
         }
 
         .wilayah-item:hover {
-            background: var(--primary-color);
-            color: #fff;
-            transform: translateY(-3px);
-            box-shadow: 0 5px 15px rgba(0, 111, 176, 0.2);
+            color: var(--primary-color);
+            padding-left: 22px;
         }
 
         /* RESPONSIVE MEDIA QUERIES */
@@ -1484,23 +1449,8 @@
     </header>
 
     <section class="hero-full-screen">
-        <div class="hero-carousel-background">
-            <div class="carousel-slide active"
-                style="background-image: url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=1600&q=80');">
-            </div>
-            <div class="carousel-slide"
-                style="background-image: url('https://images.unsplash.com/photo-1516321497487-e288fb19713f?auto=format&fit=crop&w=1600&q=80');">
-            </div>
-            <div class="carousel-slide"
-                style="background-image: url('https://images.unsplash.com/photo-1563986768609-322da13575f3?auto=format&fit=crop&w=1600&q=80');">
-            </div>
-            <div class="hero-overlay"></div>
-            <div class="carousel-indicators">
-                <span class="dot active" onclick="currentSlide(0)"></span>
-                <span class="dot" onclick="currentSlide(1)"></span>
-                <span class="dot" onclick="currentSlide(2)"></span>
-            </div>
-        </div>
+        <div class="hero-bg-image"></div>
+        <div class="hero-overlay"></div>
 
         <div class="hero-content">
             <div class="container">
@@ -1590,19 +1540,16 @@
             <div class="section-header">
                 <h2>Struktur Organisasi</h2>
             </div>
-            <div class="struktur-card">
-                <div class="struktur-header">Kepala Subbagian Umum</div>
-                <div class="struktur-body">
-                    <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=400&q=80"
-                        alt="Kasubbag Umum">
-                    <h4>Nama Kasubbag</h4>
-                    <p>Subbagian Tata Usaha / Umum</p>
-                </div>
+            <div style="text-align: center;">
+                <img src="struktur-organisasi-djid.png"
+                    alt="Struktur Organisasi Direktorat Jenderal Infrastruktur Digital"
+                    style="max-width: 100%; height: auto; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.08);"
+                    loading="lazy">
             </div>
         </div>
     </section>
 
-    <section class="bg-light" id="layananinformasi">
+    <section class="bg-white" id="layananinformasi">
         <div class="container">
             <div class="section-header">
                 <h2>Layanan Informasi & Konsultasi Publik</h2>
@@ -1906,34 +1853,16 @@
         }
         document.addEventListener('keydown', (e) => { if (e.key === "Escape") closeSearch(); });
 
-        // --- CAROUSEL LOGIC ---
-        let slideIndex = 0;
-        let slideInterval;
-        const slides = document.querySelectorAll('.carousel-slide');
-        const dots = document.querySelectorAll('.carousel-indicators .dot');
+        window.addEventListener('load', () => {
+            const loader = document.getElementById('pageLoader');
+            if (loader) loader.classList.add('hidden');
+        });
+        window.addEventListener('pageshow', (event) => {
+            const loader = document.getElementById('pageLoader');
+            if (event.persisted && loader) loader.classList.add('hidden');
+        });
 
-        function showSlides() {
-            slides.forEach(s => s.classList.remove('active'));
-            dots.forEach(d => d.classList.remove('active'));
 
-            slideIndex++;
-            if (slideIndex > slides.length) { slideIndex = 1; }
-
-            slides[slideIndex - 1].classList.add('active');
-            dots[slideIndex - 1].classList.add('active');
-
-            slideInterval = setTimeout(showSlides, 4000);
-        }
-
-        function currentSlide(n) {
-            clearTimeout(slideInterval);
-            slideIndex = n;
-            showSlides();
-        }
-
-        if (slides.length > 0) {
-            showSlides();
-        }
     </script>
     <script src="dist_js/TTS_Adaptif.min.js"></script>
 </body>
