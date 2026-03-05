@@ -1283,7 +1283,7 @@
                     <select class="form-control auto-calc" id="aptSubType">
                         <option value="memperdagangkan">Memperdagangkan APT tidak bersertifikat (badan usaha)</option>
                         <option value="menggunakan_badan_usaha">Menggunakan APT tidak bersertifikat (badan usaha)</option>
-                        <option value="menggunakan_perorangan">Memperdagangkan APT tidak bersertifikat (perorangan)</option>
+                        <option value="memperdagangkan_perorangan">Memperdagangkan APT tidak bersertifikat (perorangan)</option>
                     </select>
                 </div>
 
@@ -1386,7 +1386,7 @@
                     <li><strong>Max Poin:</strong> ISR = 7000, APT = 5000</li>
                     <li><strong>Bobot:</strong> Tanpa Izin: 33% (0-12 bln), 67% (12-24 bln), 100% (>24 bln); APT 100%</li>
                     <li><strong>Indeks ISR:</strong> Bergantung jenis layanan, pita, dan zona (0,0015 - 0,064). Pelanggaran berulang dikalikan 1,5.</li>
-                    <li><strong>Indeks APT:</strong> Memperdagangkan 0,40; Menggunakan (badan usaha) 0,20; Menggunakan (perorangan) 0,00</li>
+                    <li><strong>Indeks APT:</strong> Memperdagangkan 0,40; Menggunakan (badan usaha) 0,20; Memperdagangkan (perorangan) 0,04</li>
                     <li><strong>Rumus:</strong> Poin = Indeks × MaxPoin × (Bobot/100) <br> Denda = Poin × Rp100.000 × Jumlah Unit</li>
                 </ul>
             </div>
@@ -1494,7 +1494,7 @@
         const indeksAPT = {
             memperdagangkan: 0.40,
             menggunakan_badan_usaha: 0.20,
-            menggunakan_perorangan: 0.00
+            memperdagangkan_perorangan: 0.04
         };
 
         const tarifPerPoin = 100000;
@@ -1613,7 +1613,7 @@
                 if (item.pelanggaran === 'perangkat_tidak_sertifikat') {
                     if (item.aptSub === 'memperdagangkan') jenisTeks = 'Memperdagangkan APT';
                     else if (item.aptSub === 'menggunakan_badan_usaha') jenisTeks = 'Menggunakan APT (badan usaha)';
-                    else if (item.aptSub === 'menggunakan_perorangan') jenisTeks = 'Menggunakan APT (perorangan)';
+                    else if (item.aptSub === 'memperdagangkan_perorangan') jenisTeks = 'Memperdagangkan APT (perorangan)';
                 } else {
                     jenisTeks = 'Tanpa Izin';
                 }
@@ -1658,7 +1658,7 @@
                 if (item.pelanggaran === 'perangkat_tidak_sertifikat') {
                     if (item.aptSub === 'memperdagangkan') jenisTeks = 'Memperdagangkan APT';
                     else if (item.aptSub === 'menggunakan_badan_usaha') jenisTeks = 'Menggunakan APT (badan usaha)';
-                    else if (item.aptSub === 'menggunakan_perorangan') jenisTeks = 'Memperdagangkan APT (perorangan)';
+                    else if (item.aptSub === 'memperdagangkan_perorangan') jenisTeks = 'Memperdagangkan APT (perorangan)';
                 } else {
                     jenisTeks = 'Tanpa Izin';
                 }
@@ -1686,11 +1686,10 @@
                     Math.round(item.denda)
                 ]);
             });
-            // Tambahkan baris total
+            // Tambahkan baris total dengan label di kolom terakhir
             const totalDenda = barisData.reduce((sum, item) => sum + item.denda, 0);
             const totalRow = new Array(wsData[0].length).fill('');
-            totalRow[0] = 'TOTAL';
-            totalRow[totalRow.length - 1] = Math.round(totalDenda);
+            totalRow[totalRow.length - 1] = 'TOTAL: ' + Math.round(totalDenda).toLocaleString('id-ID');
             wsData.push(totalRow);
 
             const wb = XLSX.utils.book_new();
