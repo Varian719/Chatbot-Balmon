@@ -79,7 +79,6 @@ onValue(galeriRef, (snapshot) => {
         const dateObj = new Date(item.date);
         const dateStr = dateObj.toLocaleDateString('id-ID', {day:'numeric', month:'short', year:'numeric'});
         
-        // Mencegah XSS pada data dari database
         const safeTitle = escapeHTML(item.title);
         const safeDesc = escapeHTML(item.description || ""); 
         
@@ -119,48 +118,15 @@ onValue(galeriRef, (snapshot) => {
         if(container) container.insertAdjacentHTML('beforeend', html);
     });
     
-    const activeBtn = document.querySelector('.cat-card.active');
-    if(activeBtn && activeBtn.getAttribute('onclick')) {
-        const clickAttr = activeBtn.getAttribute('onclick');
-        const catMatch = clickAttr.match(/'([^']+)'/);
-        if(catMatch && window.filterGallery) {
-            window.filterGallery(catMatch[1], activeBtn);
-        }
-    }
+    // Setelah item ditambahkan, cek apakah ada filter dari URL (sudah ditangani di galeri.js)
 }, (error) => {
     console.error('❌ Gagal membaca galeri:', error);
 });
-
-const activateAutoFilter = () => {
-    const params = new URLSearchParams(window.location.search);
-    const target = params.get('filter');
-
-    if (target) {
-        const targetBtn = document.querySelector(`.cat-card[onclick*="'${target}'"]`);
-        if (targetBtn) {
-            setTimeout(() => {
-                targetBtn.click();
-                targetBtn.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            }, 100);
-        }
-    }
-};
-
-if(container) {
-    const observer = new MutationObserver((mutations, obs) => {
-        if (container.querySelector('.gallery-item')) {
-            activateAutoFilter();
-            obs.disconnect();
-        }
-    });
-    observer.observe(container, { childList: true, subtree: true });
-}
 
 // ==================== BAGIAN KOMENTAR ====================
 const komentarRef = ref(db, 'statistik_web/komentar');
 console.log('📍 Referensi komentar:', komentarRef.toString());
 
-// Fungsi memuat komentar
 function loadComments() {
     console.log('📝 loadComments() dipanggil');
     const commentsList = document.getElementById('commentsList');
@@ -184,7 +150,6 @@ function loadComments() {
 
         let html = '';
         comments.forEach(comment => {
-            // Tangani timestamp null (latency compensation dari Firebase)
             const timeVal = comment.timestamp ? comment.timestamp : Date.now(); 
             const date = new Date(timeVal);
             
@@ -213,7 +178,6 @@ function loadComments() {
     });
 }
 
-// Fungsi submit komentar
 function submitComment(event) {
     if (event) event.preventDefault();
     
@@ -254,7 +218,6 @@ function submitComment(event) {
 
     console.log('⏳ Menyimpan ke Firebase...');
 
-    // PERBAIKAN KRITIS: Menggunakan fungsi set() dari modular SDK, bukan metode objek
     set(newCommentRef, commentData)
         .then(() => {
             console.log('✅ Komentar berhasil disimpan');
@@ -281,7 +244,6 @@ function initCommentButton() {
     }
 }
 
-// Panggil inisialisasi setelah DOM siap
 if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', () => {
         loadComments();

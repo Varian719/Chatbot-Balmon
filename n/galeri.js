@@ -1,4 +1,6 @@
-// --- 1. GLOBAL UI LOGIC ---
+// galeri.js - Non-module (UI umum, filter, lightbox, search, mobile menu)
+
+// ==================== GLOBAL UI ====================
 function initScrollAnimations() {
     const fadeSections = document.querySelectorAll('.fade-in-section');
     const observer = new IntersectionObserver((entries) => {
@@ -67,10 +69,14 @@ window.addEventListener('scroll', function() {
 function toggleMobileMenu() {
     document.getElementById('hamburgerBtn').classList.toggle('active');
     document.getElementById('mobileNavDropdown').classList.toggle('active');
+    document.getElementById('mobileNavOverlay').classList.toggle('active');
+    document.body.style.overflow = document.getElementById('mobileNavDropdown').classList.contains('active') ? 'hidden' : '';
 }
 function closeMobileMenu() {
     document.getElementById('hamburgerBtn').classList.remove('active');
     document.getElementById('mobileNavDropdown').classList.remove('active');
+    document.getElementById('mobileNavOverlay').classList.remove('active');
+    document.body.style.overflow = '';
     document.querySelectorAll('.mobile-submenu').forEach(s => s.classList.remove('active'));
     document.querySelectorAll('.mobile-menu-item.has-submenu').forEach(i => i.classList.remove('active'));
 }
@@ -92,7 +98,7 @@ document.addEventListener('click', function(event) {
     if (!header.contains(event.target) && nav.classList.contains('active')) closeMobileMenu();
 });
 
-// CHAT TOGGLE (LAZY LOAD LOGIC)
+// CHAT TOGGLE
 function animateChatToggle() {
     const btn = document.getElementById("toggleBtn");
     const box = document.getElementById("chatBox");
@@ -111,7 +117,7 @@ function animateChatToggle() {
     box.classList.add("active");
 }
 
-// --- 2. SEARCH LOGIC ---
+// ==================== SEARCH ====================
 const pages = [
     { title: "Beranda", url: "index.html", desc: "Halaman utama Balmon Samarinda" },
     { title: "Izin Konsesi", url: "konsesi.html", desc: "Layanan perizinan frekuensi untuk perusahaan/konsesi." },
@@ -153,47 +159,101 @@ function performSearch() {
 }
 document.addEventListener('keydown', (e) => { if(e.key === "Escape") closeSearch(); });
 
-// --- 3. GALLERY & LIGHTBOX LOGIC ---
+// ==================== GALLERY FILTER & LIGHTBOX ====================
+// Elemen penting
+const subWrapper = document.getElementById('subcategoryWrapper');
+const subBtns = document.querySelectorAll('.subcat-btn');
+
 // Fungsi filter utama (kategori)
 window.filterGallery = function(category, btnElement) {
-    // Hapus active dari semua cat-card biasa dan dari dropdown foto
+    // Update active class pada kategori utama
     document.querySelectorAll('.cat-card').forEach(c => c.classList.remove('active'));
     if(btnElement) btnElement.classList.add('active');
 
+    // Tampilkan/sembunyikan subkategori foto
+    if (category === 'foto') {
+        subWrapper.style.display = 'flex';
+        // Set subkategori ke 'all' (aktifkan tombol Semua Foto)
+        setActiveSubcat('all');
+        filterBySubcategory('all');
+    } else {
+        subWrapper.style.display = 'none';
+        // Filter item berdasarkan kategori
+        const items = document.querySelectorAll('.gallery-item');
+        items.forEach(item => {
+            if (category === 'all' || item.dataset.category === category) {
+                item.classList.remove('hidden');
+                item.style.animation = 'none';
+                item.offsetHeight; 
+                item.style.animation = 'fadeIn 0.6s ease';
+            } else {
+                item.classList.add('hidden');
+            }
+        });
+    }
+};
+
+// Fungsi filter berdasarkan subkategori
+function filterBySubcategory(subcat) {
     const items = document.querySelectorAll('.gallery-item');
     items.forEach(item => {
-        if (category === 'all' || item.dataset.category === category) {
-            item.classList.remove('hidden');
-            item.style.animation = 'none';
-            item.offsetHeight; 
-            item.style.animation = 'fadeIn 0.6s ease';
+        if (item.dataset.category === 'foto') {
+            if (subcat === 'all' || item.dataset.subcategory === subcat) {
+                item.classList.remove('hidden');
+            } else {
+                item.classList.add('hidden');
+            }
         } else {
+            // Sembunyikan item non-foto saat dalam mode foto
             item.classList.add('hidden');
         }
     });
-};
+}
 
-// Fungsi filter berdasarkan subkategori (khusus foto)
-window.filterGalleryBySubcategory = function(subcat) {
-    // Hapus kelas active dari semua cat-card biasa
-    document.querySelectorAll('.cat-card').forEach(c => c.classList.remove('active'));
-    // Tandai tombol foto sebagai aktif (via induk dropdown)
-    const fotoBtn = document.getElementById('fotoDropdown');
-    if (fotoBtn) fotoBtn.classList.add('active');
-
-    const items = document.querySelectorAll('.gallery-item');
-    items.forEach(item => {
-        const cat = item.dataset.category;
-        const sub = item.dataset.subcategory;
-        if (cat === 'foto' && sub === subcat) {
-            item.classList.remove('hidden');
-            item.style.animation = 'fadeIn 0.6s ease';
+// Fungsi untuk mengatur tombol subkategori aktif
+function setActiveSubcat(subcat) {
+    subBtns.forEach(btn => {
+        if (btn.dataset.subcat === subcat) {
+            btn.classList.add('active');
         } else {
-            item.classList.add('hidden');
+            btn.classList.remove('active');
         }
     });
-};
+}
 
+// Event listener untuk tombol subkategori
+subBtns.forEach(btn => {
+    btn.addEventListener('click', function(e) {
+        e.preventDefault();
+        const subcat = this.dataset.subcat;
+        setActiveSubcat(subcat);
+        filterBySubcategory(subcat);
+
+        // Pastikan kategori foto tetap aktif
+        document.querySelectorAll('.cat-card').forEach(c => c.classList.remove('active'));
+        const fotoCat = document.querySelector('.cat-card[data-category="foto"]');
+        if (fotoCat) fotoCat.classList.add('active');
+    });
+});
+
+// Cek parameter URL saat load
+const urlParams = new URLSearchParams(window.location.search);
+const filterParam = urlParams.get('filter');
+if (filterParam === 'foto') {
+    // Trigger klik pada foto setelah gallery dimuat
+    const observer = new MutationObserver((mutations, obs) => {
+        if (document.querySelector('.gallery-item')) {
+            const fotoBtn = document.querySelector('.cat-card[data-category="foto"]');
+            if (fotoBtn) {
+                fotoBtn.click();
+            }
+            obs.disconnect();
+        }
+    });
+    observer.observe(document.getElementById('galleryContainer'), { childList: true, subtree: true });
+}
+
+// LIGHTBOX
 const lightbox = document.getElementById('lightbox');
 const lbImg = document.getElementById('lightboxImg');
 const lbVid = document.getElementById('lightboxVideo');
@@ -236,3 +296,10 @@ window.closeLightbox = function(e) {
         lbVid.src = ""; 
     }
 };
+
+// Keyboard event untuk lightbox
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && lightbox.classList.contains('active')) {
+        closeLightbox({ target: lightbox });
+    }
+});
