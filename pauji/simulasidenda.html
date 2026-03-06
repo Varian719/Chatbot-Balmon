@@ -295,12 +295,19 @@
             left: 0;
             background-color: #ffffff;
             min-width: 240px;
-            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+            box-shadow: none; /* Bayangan dihilangkan */
             border-radius: 0 0 8px 8px;
             z-index: 1000;
             padding: 10px 0;
             border-top: 3px solid var(--primary-color);
             animation: slideDown 0.3s ease;
+        }
+
+        /* Paksakan tanpa bayangan untuk seluruh isi dropdown */
+        .dropdown-content,
+        .dropdown-content * {
+            box-shadow: none !important;
+            filter: none !important;
         }
 
         .menu-item:hover .dropdown-content {
@@ -1476,8 +1483,8 @@
         };
 
         const serviceData = {
-            ht_5w: { name: "HT (5 Watt)" },
-            mu_ht: { name: "MU (10-25 Watt)" },
+            ht_5w: { name: "HT" },
+            mu_ht: { name: "MU" },
             base: { name: "Base Station" },
             repeater: { name: "Repeater" },
             trunking: { name: "Radio Trunking" }
@@ -1686,10 +1693,11 @@
                     Math.round(item.denda)
                 ]);
             });
-            // Tambahkan baris total dengan label di kolom terakhir
+            // Tambahkan baris total dengan label di kolom pertama dan nilai di kolom terakhir
             const totalDenda = barisData.reduce((sum, item) => sum + item.denda, 0);
             const totalRow = new Array(wsData[0].length).fill('');
-            totalRow[totalRow.length - 1] = 'TOTAL: ' + Math.round(totalDenda).toLocaleString('id-ID');
+            totalRow[0] = 'TOTAL';
+            totalRow[totalRow.length - 1] = Math.round(totalDenda).toLocaleString('id-ID');
             wsData.push(totalRow);
 
             const wb = XLSX.utils.book_new();
