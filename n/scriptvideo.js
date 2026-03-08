@@ -18,7 +18,7 @@ try {
         const now = new Date();
         const yearMonth = now.getFullYear() + '-' + String(now.getMonth() + 1).padStart(2, '0');
         const monthlyRef = ref(db, `statistik_web/kunjungan_bulanan/${yearMonth}`);
-        
+
         // Coba dengan transaksi dulu
         runTransaction(monthlyRef, (currentCount) => (currentCount || 0) + 1)
             .then(() => {
@@ -53,46 +53,37 @@ let currentNewsIndex = 0;
 let newsInterval;
 
 function updateNewsDisplay(useAnimation = true) {
-    const titleEl = document.getElementById('newsTitle');
-    const dateEl = document.getElementById('newsDate');
-    const descEl = document.getElementById('newsDesc');
-    const counterEl = document.getElementById('newsCounter');
-    const progressEl = document.getElementById('newsProgress');
     const track = document.getElementById('newsTrack');
-    const container = document.querySelector('.news-image-col');
+    const container = document.querySelector('.news-track-wrapper');
 
     if (!track || !container || newsData.length === 0) return;
 
-    let containerWidth = container.clientWidth;
-    if (containerWidth === 0) {
-        containerWidth = container.offsetWidth || window.innerWidth * 0.9;
+    // Matikan transform di mobile agar bisa scroll manual
+    if (window.innerWidth <= 900) {
+        track.style.transform = 'none';
+        track.style.transition = 'none';
+        return;
     }
 
+    const cards = track.querySelectorAll('.news-card-compact');
+    if (cards.length === 0) return;
+
+    const cardWidth = cards[0].offsetWidth;
+    const gap = 30;
+
+    // Hitung berapa kartu yang benar-benar muat di kontainer
+    const visibleCards = Math.floor(container.offsetWidth / (cardWidth + gap / 2)) || 1;
+
+    // Pastikan index tidak melampaui batas akhir yang masuk akal
+    const maxIndex = Math.max(0, newsData.length - visibleCards);
+    if (currentNewsIndex > maxIndex) {
+        currentNewsIndex = maxIndex;
+    }
+
+    const scrollAmount = currentNewsIndex * (cardWidth + gap);
+
     track.style.transition = useAnimation ? 'transform 0.6s cubic-bezier(0.25, 1, 0.5, 1)' : 'none';
-    track.style.transform = `translateX(-${currentNewsIndex * containerWidth}px)`;
-
-    titleEl.classList.add('text-fade-out');
-    descEl.classList.add('text-fade-out');
-
-    setTimeout(() => {
-        const item = newsData[currentNewsIndex];
-        if (item) {
-            titleEl.textContent = item.title;
-            dateEl.textContent = item.date;
-            descEl.textContent = item.desc;
-            const idx = currentNewsIndex + 1;
-            const total = newsData.length;
-            counterEl.textContent = `${idx < 10 ? '0' + idx : idx} / ${total < 10 ? '0' + total : total}`;
-        }
-        titleEl.classList.remove('text-fade-out');
-        titleEl.classList.add('text-fade-in');
-        descEl.classList.remove('text-fade-out');
-        descEl.classList.add('text-fade-in');
-    }, 300);
-
-    progressEl.classList.remove('active');
-    void progressEl.offsetWidth;
-    progressEl.classList.add('active');
+    track.style.transform = `translateX(-${scrollAmount}px)`;
 }
 
 function initNewsCarousel() {
@@ -101,43 +92,82 @@ function initNewsCarousel() {
     track.innerHTML = '';
 
     if (newsData.length === 0) {
-        document.getElementById('newsTitle').textContent = "Data Kosong";
-        document.getElementById('newsDesc').textContent = "Tidak ada berita ditemukan.";
+        track.innerHTML = '<div style="color:#64748b; padding:40px;">Tidak ada berita ditemukan.</div>';
         return;
     }
 
-    newsData.forEach(news => {
-        const img = document.createElement('img');
-        img.src = news.img;
-        img.className = 'news-slide-img';
-        img.alt = news.title;
-        img.style.minWidth = "100%";
-        img.style.width = "100%";
-        img.style.objectFit = "cover";
-        img.onerror = () => img.src = 'https://via.placeholder.com/800x600?text=No+Image';
-        track.appendChild(img);
+    newsData.forEach((news, index) => {
+        const card = document.createElement('div');
+        card.className = 'news-card-compact';
+
+        card.innerHTML = `
+            <div class="news-card-img-box">
+                <img src="${news.img}" alt="${news.title}" onerror="this.src='https://via.placeholder.com/400x250?text=No+Image'">
+                <div class="news-badge-black">NEWS</div>
+            </div>
+            <div class="news-card-date-compact">${news.date}</div>
+            <h3 class="news-card-title-compact">${news.title}</h3>
+            <p class="news-card-desc-compact">${news.desc}</p>
+        `;
+
+        card.onclick = () => {
+            window.location.href = `news_detail.html?id=${news.id}`;
+        };
+
+        track.appendChild(card);
     });
 
+    // Reset index 
+    if (currentNewsIndex >= newsData.length) currentNewsIndex = 0;
+
     setTimeout(() => updateNewsDisplay(false), 100);
-    startAutoNews();
 }
 
 function nextNews() {
     if (newsData.length <= 1) return;
-    currentNewsIndex = (currentNewsIndex + 1) % newsData.length;
+    const track = document.getElementById('newsTrack');
+    const container = document.querySelector('.news-track-wrapper');
+    const cards = track ? track.querySelectorAll('.news-card-compact') : [];
+    if (!container || cards.length === 0) return;
+
+    const cardWidth = cards[0].offsetWidth;
+    const gap = 30;
+    const visibleCards = Math.floor(container.offsetWidth / (cardWidth + gap / 2)) || 1;
+    const maxIndex = Math.max(0, newsData.length - visibleCards);
+
+    if (currentNewsIndex < maxIndex) {
+        currentNewsIndex++;
+    } else {
+        currentNewsIndex = 0; // Loop back
+    }
     updateNewsDisplay(true);
-    startAutoNews();
 }
+
 function prevNews() {
     if (newsData.length <= 1) return;
-    currentNewsIndex = (currentNewsIndex - 1 + newsData.length) % newsData.length;
+    const track = document.getElementById('newsTrack');
+    const container = document.querySelector('.news-track-wrapper');
+    const cards = track ? track.querySelectorAll('.news-card-compact') : [];
+    if (!container || cards.length === 0) return;
+
+    if (currentNewsIndex > 0) {
+        currentNewsIndex--;
+    } else {
+        const cardWidth = cards[0].offsetWidth;
+        const gap = 30;
+        const visibleCards = Math.floor(container.offsetWidth / (cardWidth + gap / 2)) || 1;
+        currentNewsIndex = Math.max(0, newsData.length - visibleCards);
+    }
     updateNewsDisplay(true);
-    startAutoNews();
 }
+
 function startAutoNews() {
     clearInterval(newsInterval);
-    if (newsData.length > 1) newsInterval = setInterval(nextNews, 5000);
+    if (newsData.length > 1) {
+        newsInterval = setInterval(() => { nextNews(); }, 5000);
+    }
 }
+
 window.nextNews = nextNews;
 window.prevNews = prevNews;
 
@@ -193,6 +223,102 @@ function initDbVideoSlider(videoData) {
     if (trackEl) trackEl.style.transform = 'translateX(0px)';
 }
 
+// ------------------- LOGIKA NAVIGASI VIDEO DITAMBAHKAN DI SINI -------------------
+let currentVideoIndex = 0;
+
+function updateVideoDisplay(useAnimation = true) {
+    const track = document.getElementById('videoTrack');
+    const container = track ? track.parentElement : null; // Membutuhkan wrapper sebagai batas
+
+    if (!track || !container || !window.firebaseVideoData || window.firebaseVideoData.length === 0) return;
+
+    if (window.innerWidth <= 900) {
+        track.style.transform = 'none';
+        track.style.transition = 'none';
+        return;
+    }
+
+    const cards = track.querySelectorAll('.video-card');
+    if (cards.length === 0) return;
+
+    const cardWidth = cards[0].offsetWidth;
+    const gap = 20; // Silakan sesuaikan dengan gap (margin) yang ada di CSS .video-card Anda (misalnya 20 atau 30)
+
+    const visibleCards = Math.floor(container.offsetWidth / (cardWidth + gap / 2)) || 1;
+    const maxIndex = Math.max(0, window.firebaseVideoData.length - visibleCards);
+
+    if (currentVideoIndex > maxIndex) {
+        currentVideoIndex = maxIndex;
+    }
+
+    const scrollAmount = currentVideoIndex * (cardWidth + gap);
+
+    track.style.transition = useAnimation ? 'transform 0.6s cubic-bezier(0.25, 1, 0.5, 1)' : 'none';
+    track.style.transform = `translateX(-${scrollAmount}px)`;
+}
+
+function nextVideo() {
+    const track = document.getElementById('videoTrack');
+    const container = track ? track.parentElement : null;
+    const cards = track ? track.querySelectorAll('.video-card') : [];
+
+    if (!container || cards.length === 0 || !window.firebaseVideoData) return;
+
+    const cardWidth = cards[0].offsetWidth;
+    const gap = 20;
+    const visibleCards = Math.floor(container.offsetWidth / (cardWidth + gap / 2)) || 1;
+    const maxIndex = Math.max(0, window.firebaseVideoData.length - visibleCards);
+
+    if (currentVideoIndex < maxIndex) {
+        currentVideoIndex++;
+    } else {
+        currentVideoIndex = 0; // Loop kembali ke video pertama
+    }
+    updateVideoDisplay(true);
+}
+
+function prevVideo() {
+    const track = document.getElementById('videoTrack');
+    const container = track ? track.parentElement : null;
+    const cards = track ? track.querySelectorAll('.video-card') : [];
+
+    if (!container || cards.length === 0 || !window.firebaseVideoData) return;
+
+    if (currentVideoIndex > 0) {
+        currentVideoIndex--;
+    } else {
+        const cardWidth = cards[0].offsetWidth;
+        const gap = 20;
+        const visibleCards = Math.floor(container.offsetWidth / (cardWidth + gap / 2)) || 1;
+        currentVideoIndex = Math.max(0, window.firebaseVideoData.length - visibleCards);
+    }
+    updateVideoDisplay(true);
+}
+
+function playVideoFromSlider(element, event) {
+    event.preventDefault();
+    const videoId = element.parentElement.dataset.videoId;
+
+    if (videoId) {
+        // Secara default kode ini akan membuka video di tab baru.
+        // Jika Anda memiliki elemen pop-up Modal iframe di index.html, Anda bisa mengganti baris di bawah ini.
+        window.open(`https://www.youtube.com/watch?v=${videoId}`, '_blank');
+    }
+}
+
+// Ekspos semua fungsi video ke window (Wajib agar tombol HTML berfungsi)
+window.nextVideo = nextVideo;
+window.prevVideo = prevVideo;
+window.playVideoFromSlider = playVideoFromSlider;
+
+// Handle resize ulang untuk video agar tidak bug jika ukuran browser diubah
+window.addEventListener('resize', () => {
+    if (window.firebaseVideoData && window.firebaseVideoData.length > 0) {
+        updateVideoDisplay(false);
+    }
+});
+
+
 // ================== FETCH DATA ==================
 const galleryRef = ref(db, 'galeri');
 onValue(galleryRef, (snapshot) => {
@@ -211,6 +337,7 @@ onValue(galleryRef, (snapshot) => {
     }).sort((a, b) => new Date(b.date || 0) - new Date(a.date || 0));
 
     newsData = newsItems.map(item => ({
+        id: item.id,
         title: item.title || 'Tanpa Judul',
         date: new Date(item.date || new Date()).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' }),
         desc: item.description || item.desc || 'Klik selengkapnya.',

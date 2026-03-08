@@ -16,8 +16,8 @@
     
     <link rel="icon" type="image/png" href="logo-ikon.png" sizes="32x32">
     
-    <!-- Bootstrap CSS untuk dropdown -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap CSS untuk dropdown (masih diperlukan? Tidak, kita sudah hapus dropdown, jadi bisa dihapus) -->
+    <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"> -->
     
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -149,27 +149,114 @@
         .dropdown-content li a:hover { background-color: var(--bg-light-blue); color: var(--primary-color); padding-left: 25px; }
         @keyframes slideDown { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* Mobile Menu */
-        .hamburger-btn { display: none; flex-direction: column; gap: 6px; background: none; border: none; cursor: pointer; padding: 8px; z-index: 1001; }
-        .hamburger-btn span { width: 24px; height: 2.5px; background-color: white; border-radius: 2px; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); transform-origin: center; }
+        /* HAMBURGER */
+        .hamburger-btn {
+            display: none; flex-direction: column; gap: 6px; background: none; border: none; cursor: pointer; padding: 8px; z-index: 1001;
+        }
+        .hamburger-btn span {
+            width: 24px; height: 2.5px; 
+            background-color: white;
+            border-radius: 2px; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); transform-origin: center;
+        }
         .hamburger-btn.active span:nth-child(1) { transform: translateY(8.5px) rotate(45deg); }
         .hamburger-btn.active span:nth-child(2) { opacity: 0; transform: translateX(10px); }
         .hamburger-btn.active span:nth-child(3) { transform: translateY(-8.5px) rotate(-45deg); }
-        .hamburger-btn.active span { background-color: #ffffff !important; }
+        .hamburger-btn.active span { background-color: var(--primary-color) !important; }
 
-        .mobile-nav-dropdown { display: none; position: fixed; top: 80px; left: 0; width: 100%; max-height: calc(100vh - 80px); background-color: #ffffff; box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1); flex-direction: column; overflow-y: auto; z-index: 999; animation: slideDownMobile 0.3s ease; }
-        .mobile-nav-dropdown.active { display: flex; }
-        @keyframes slideDownMobile { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
-        
-        .mobile-menu-item { font-family: 'Albert Sans', sans-serif; padding: 16px 20px; border-bottom: 1px solid #eee; color: var(--text-dark); font-weight: 600; font-size: 15px; cursor: pointer; transition: all 0.3s ease; display: flex; justify-content: space-between; align-items: center; }
-        .mobile-menu-item:hover { background-color: var(--bg-light-blue); color: var(--primary-color); }
-        .mobile-menu-item.has-submenu::after { content: '▼'; font-size: 12px; transition: transform 0.3s ease; }
-        .mobile-menu-item.has-submenu.active::after { transform: rotate(-180deg); }
-        
-        .mobile-submenu { max-height: 0; overflow: hidden; background-color: #f8f9fa; transition: max-height 0.3s ease; }
-        .mobile-submenu.active { max-height: 500px; }
-        .mobile-submenu a { display: block; padding: 12px 40px; color: var(--text-gray); font-size: 14px; font-weight: 500; border-bottom: 1px solid #eee; transition: all 0.2s ease; }
-        .mobile-submenu a:hover { background-color: #ffffff; color: var(--primary-color); padding-left: 48px; }
+        /* ===== MOBILE SIDEBAR (OFF-CANVAS) ===== */
+        .mobile-nav-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(3px);
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+
+        .mobile-nav-dropdown {
+            position: fixed;
+            top: 0;
+            left: -280px;
+            width: 280px;
+            height: 100vh;
+            background-color: #ffffff;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+            z-index: 1001;
+            overflow-y: auto;
+            transition: left 0.3s ease;
+            display: block; /* ubah dari none ke block */
+            padding-top: 20px;
+        }
+
+        .mobile-nav-dropdown.active {
+            left: 0;
+        }
+
+        .mobile-nav-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .mobile-menu-item {
+            padding: 15px 25px;
+            border-bottom: 1px solid #f0f0f0;
+            font-weight: 600;
+            color: var(--text-dark);
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .mobile-menu-item:hover {
+            background-color: var(--bg-light-blue);
+            color: var(--primary-color);
+        }
+
+        .mobile-menu-item.has-submenu {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .mobile-menu-item.has-submenu::after {
+            content: '▼';
+            font-size: 12px;
+            transition: transform 0.3s;
+        }
+
+        .mobile-menu-item.has-submenu.active::after {
+            transform: rotate(-180deg);
+        }
+
+        .mobile-submenu {
+            max-height: 0;
+            overflow: hidden;
+            background-color: #f8f9fa;
+            transition: max-height 0.3s ease;
+        }
+
+        .mobile-submenu.active {
+            max-height: 500px;
+        }
+
+        .mobile-submenu a {
+            display: block;
+            padding: 12px 40px;
+            color: var(--text-gray);
+            font-size: 14px;
+            border-bottom: 1px solid #eee;
+            transition: all 0.2s;
+        }
+
+        .mobile-submenu a:hover {
+            background-color: #ffffff;
+            color: var(--primary-color);
+            padding-left: 48px;
+        }
 
         /* ========================================= */
         /* --- 3. PAGE HEADER & GALLERY STYLES --- */
@@ -186,7 +273,7 @@
             grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
             gap: 15px;
             max-width: 1000px;
-            margin: -50px auto 50px;
+            margin: -50px auto 0;
             padding: 0 20px;
             position: relative;
             z-index: 10;
@@ -204,6 +291,7 @@
             flex-direction: column;
             align-items: center;
             gap: 10px;
+        
         }
         .cat-card:hover { transform: translateY(-5px); box-shadow: 0 15px 40px rgba(0, 111, 176, 0.15); }
         .cat-card.active { border-color: var(--primary-color); background-color: #f0f9ff; }
@@ -212,40 +300,40 @@
         .cat-title { font-size: 14px; font-weight: 600; color: var(--text-gray); }
         .cat-card.active .cat-title { color: var(--primary-color); font-weight: 700; }
 
-        /* Gaya dropdown untuk tombol Foto */
-        .dropdown .cat-card {
-            width: 100%;
-            height: 100%;
-            margin: 0;
-            cursor: pointer;
+        /* --- SUBKATEGORI FOTO --- */
+        .subcategory-wrapper {
+            display: none; /* default hidden, akan tampil jika foto aktif */
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            margin: 20px auto 30px;
+            max-width: 1000px;
+            padding: 0 20px;
         }
-        .dropdown-menu {
+        .subcat-btn {
             background: #ffffff;
-            border-radius: 12px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
-            border: 1px solid rgba(0,0,0,0.05);
-            padding: 8px 0;
-            margin-top: 5px;
-        }
-        .dropdown-item {
-            font-family: 'Albert Sans', sans-serif;
+            border: 2px solid transparent;
+            border-radius: 30px;
+            padding: 8px 16px;
             font-size: 13px;
-            font-weight: 500;
-            color: var(--text-dark);
-            padding: 10px 20px;
-            transition: 0.2s;
+            font-weight: 600;
+            color: var(--text-gray);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            white-space: nowrap;
+            border: 1px solid #e2e8f0;
         }
-        .dropdown-item:hover {
-            background-color: var(--bg-light-blue);
+        .subcat-btn:hover {
+            background: var(--bg-light-blue);
             color: var(--primary-color);
+            border-color: var(--primary-color);
+            transform: translateY(-2px);
         }
-        .dropdown-item:active {
-            background-color: var(--primary-color);
+        .subcat-btn.active {
+            background: var(--primary-color);
             color: white;
-        }
-        .dropdown-divider {
-            margin: 5px 0;
-            border-top: 1px solid #eee;
+            border-color: var(--primary-dark);
         }
 
         .gallery-section { max-width: 1200px; margin: 0 auto; padding: 0 20px 100px; }
@@ -303,7 +391,115 @@
         #lightboxCaption { color: #fff; margin-top: 15px; font-weight: 500; font-size: 16px; }
 
         /* ========================================= */
-        /* --- 4. FOOTER & WIDGETS --- */
+        /* --- 4. KOMENTAR SECTION --- */
+        /* ========================================= */
+        .comments-section {
+            background-color: #ffffff;
+            padding: 50px 20px;
+            margin: 0 auto 50px;
+            border-radius: 16px;
+            box-shadow: var(--shadow-soft);
+            border: 1px solid rgba(0,0,0,0.03);
+        }
+        .comments-section .section-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .comments-section .section-title::before {
+            content: '';
+            width: 4px;
+            height: 28px;
+            background: var(--accent-yellow);
+            border-radius: 2px;
+        }
+
+        .comment-form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-bottom: 40px;
+        }
+        .comment-form input,
+        .comment-form textarea {
+            padding: 12px 16px;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            font-family: 'Albert Sans', sans-serif;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+        .comment-form input:focus,
+        .comment-form textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(0,111,176,0.1);
+        }
+        .comment-form textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+        .comment-form button {
+            align-self: flex-start;
+            padding: 12px 30px;
+            background-color: var(--primary-color);
+            color: #fff;
+            border: none;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s;
+        }
+        .comment-form button:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+
+        .comments-list {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        .comment-item {
+            background-color: var(--bg-light-blue);
+            padding: 20px;
+            border-radius: 12px;
+            border-left: 4px solid var(--primary-color);
+        }
+        .comment-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .comment-name {
+            font-weight: 700;
+            color: var(--primary-dark);
+        }
+        .comment-date {
+            font-size: 12px;
+            color: var(--text-gray);
+        }
+        .comment-message {
+            color: var(--text-dark);
+            font-size: 14px;
+            line-height: 1.6;
+            margin: 0;
+        }
+        .empty-comments {
+            text-align: center;
+            color: var(--text-gray);
+            padding: 30px;
+            font-style: italic;
+        }
+
+        /* ========================================= */
+        /* --- 5. FOOTER & WIDGETS --- */
         /* ========================================= */
         footer { background-color: var(--primary-color); color: white; padding-top: 70px; font-size: 14px; position: relative; }
         .footer-grid { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 40px; padding-bottom: 50px; }
@@ -442,9 +638,9 @@
                 <a href="https://youtube.com/@balmonsamarindaa?si=EZUAjSarJaMD-7R9" target="_blank" class="social-icon" aria-label="YouTube">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z"/></svg>
                 </a>
-                <a href="https://www.tiktok.com/@balmon.samarinda?lang=en" target="_blank" class="social-icon" aria-label="TikTok">
+                <a href="https://www.tiktok.com/@balmon.samarinda?lang=en" class="social-icon" aria-label="TikTok">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" stroke="none">
-                        <path d="M12.53.02C13.84 0 15.14.01 16.44 0c.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.65-1.58-1.09-.1-.09-.19-.2-.29-.3v6.52c.02 4.07-3.23 7.49-7.29 7.49-3.93.04-7.3-3.13-7.48-7.05-.07-1.84.58-3.66 1.83-5.01 1.25-1.35 3.03-2.14 4.86-2.16v4.03c-1.11-.02-2.19.46-2.95 1.29a4.106 4.106 0 0 0-1.1 2.89c.04 2.22 1.84 4.02 4.06 4.02 2.22 0 4.02-1.8 4.02-4.02V.02h.22z"/>
+                        <path d="M18.2 4.5c-2.3-.2-4.1-1.9-4.4-4.2V0h-3.4v13.8c0 1.4-1.2 2.6-2.8 2.6-1.4 0-2.6-1.1-2.6-2.6s1.1-2.6 2.6-2.6h.2l.5.1V7.5h-.7c-3.4 0-6.2 2.8-6.2 6.2S4.2 20 7.7 20s6.2-2.8 6.2-6.2v-7c1.1 1.1 2.4 1.6 3.9 1.6h.8V4.6l-.4-.1z"/>
                     </svg>
                 </a>
             </div>
@@ -458,14 +654,20 @@
                             <li><a href="maritim.html">Izin Maritim</a></li>
                             <li><a href="fm.html">Izin Penyiaran FM</a></li>
                             <li><a href="arsip.html">Download</a></li>
+                            <li><a href="faq.html">FAQ</a></li>
+                            <li><a href="simulasibhp.html">Simulasi Estimasi BHP ISR</a></li>
+                            <li><a href="simulasidenda.html">Simulasi Estimasi Sanksi Denda</a></li>
                         </ul>
                     </li>
                     <li class="menu-item" onclick="window.location.href='galeri.html'">Publikasi</li>
                     <li class="menu-item" onclick="window.location.href='kontak.html'">Kontak</li>
                 </ul>
-                <button onclick="openSearch()" style="margin-left:10px; border:none; background:transparent; color:var(--text-dark); cursor:pointer;">
-                    <i class="bi bi-search" style="font-size:18px;"></i>
-                </button>
+            <button class="nav-search-btn" onclick="openSearch()" style="margin-left:10px; border:none; background:transparent; color:white; cursor:pointer;" aria-label="Cari">
+                <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                </svg>
+            </button>
             </nav>
             <button class="hamburger-btn" id="hamburgerBtn" onclick="toggleMobileMenu()">
                 <span></span><span></span><span></span>
@@ -479,24 +681,29 @@
                 <a href="konsesi.html" onclick="closeMobileMenu()">Izin Konsesi</a>
                 <a href="maritim.html" onclick="closeMobileMenu()">Izin Maritim</a>
                 <a href="fm.html" onclick="closeMobileMenu()">Izin Penyiaran FM</a>
+                <a href="arsip.html" onclick="closeMobileMenu()">Download</a>
+                <a href="faq.html" onclick="closeMobileMenu()">FAQ</a>
+                <a href="simulasibhp.html" onclick="closeMobileMenu()">Simulasi Estimasi BHP ISR</a>
+                <a href="simulasidenda.html" onclick="closeMobileMenu()">Simulasi Estimasi Sanksi Denda</a>
             </div>
             <div class="mobile-menu-item" onclick="handleMobileMenuItem(this, 'publikasi')">Publikasi</div>
-            <div class="mobile-menu-item" onclick="handleMobileMenuItem(this, 'download')">Download</div>
             <div class="mobile-menu-item" onclick="handleMobileMenuItem(this, 'kontak')">Kontak</div>
         </div>
+        <div id="mobileNavOverlay" class="mobile-nav-overlay"></div>
     </header>
 
     <div class="page-header">
-        <div class="breadcrumb">
-            <a href="index.html">Beranda</a> / <span style="color:var(--accent-yellow)">Galeri</span>
+        <div class="breadcrumb" style="justify-content: center;">
+            <a href="index.html">Beranda</a> / <span style="color:var(--accent-yellow)">Publikasi</span>
         </div>
         <h1 class="page-title">Galeri Publikasi</h1>
         <p style="opacity: 0.9; margin-top: 10px;">Dokumentasi kegiatan dan informasi Balai Monitor Samarinda</p>
     </div>
 
+    <!-- KATEGORI UTAMA -->
     <div class="category-wrapper fade-in-section">
         <!-- Semua -->
-        <div class="cat-card active" onclick="filterGallery('all', this)">
+        <div class="cat-card active" data-category="all" onclick="filterGallery('all', this)">
             <svg class="cat-icon-svg" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
                 <rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect>
                 <rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect>
@@ -504,32 +711,17 @@
             <span class="cat-title">Semua</span>
         </div>
 
-        <!-- Foto dengan dropdown -->
-        <div class="dropdown">
-            <div class="cat-card dropdown-toggle" id="fotoDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                <svg class="cat-icon-svg" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
-                    <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
-                    <circle cx="12" cy="13" r="4"></circle>
-                </svg>
-                <span class="cat-title">Foto</span>
-            </div>
-            <ul class="dropdown-menu" aria-labelledby="fotoDropdown">
-                <!-- Semua Foto -->
-                <li><a class="dropdown-item" href="#" onclick="filterGallery('foto', document.getElementById('fotoDropdown'))">Semua Foto</a></li>
-                <li><hr class="dropdown-divider"></li>
-                <!-- Subkategori -->
-                <li><a class="dropdown-item" href="#" onclick="filterGalleryBySubcategory('SRC')">SRC dan LRC</a></li>
-                <li><a class="dropdown-item" href="#" onclick="filterGalleryBySubcategory('sosialisasi')">Sosialisasi Denda Izin Stasiun Radio</a></li>
-                <li><a class="dropdown-item" href="#" onclick="filterGalleryBySubcategory('pegawai')">Pegawai Balmon Samarinda</a></li>
-                <li><a class="dropdown-item" href="#" onclick="filterGalleryBySubcategory('capacity')">Capacity Building</a></li>
-                <li><a class="dropdown-item" href="#" onclick="filterGalleryBySubcategory('UNAR')">UNAR</a></li>
-                <li><a class="dropdown-item" href="#" onclick="filterGalleryBySubcategory('monitoring')">Monitoring Spektrum Frekuensi Radio</a></li>
-                <li><a class="dropdown-item" href="#" onclick="filterGalleryBySubcategory('lainnya')">Lainnya</a></li>
-            </ul>
+        <!-- Foto (tanpa dropdown) -->
+        <div class="cat-card" data-category="foto" onclick="filterGallery('foto', this)">
+            <svg class="cat-icon-svg" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
+                <circle cx="12" cy="13" r="4"></circle>
+            </svg>
+            <span class="cat-title">Foto</span>
         </div>
 
         <!-- Video -->
-        <div class="cat-card" onclick="filterGallery('video', this)">
+        <div class="cat-card" data-category="video" onclick="filterGallery('video', this)">
             <svg class="cat-icon-svg" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
                 <rect x="2" y="2" width="20" height="20" rx="2.18" ry="2.18"></rect>
                 <line x1="12" y1="2" x2="12" y2="22"></line><line x1="2" y1="12" x2="22" y2="12"></line>
@@ -538,7 +730,7 @@
         </div>
 
         <!-- Infografis -->
-        <div class="cat-card" onclick="filterGallery('infografis', this)">
+        <div class="cat-card" data-category="infografis" onclick="filterGallery('infografis', this)">
             <svg class="cat-icon-svg" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
                 <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
                 <polyline points="14 2 14 8 20 8"></polyline><line x1="12" y1="18" x2="12" y2="12"></line>
@@ -547,7 +739,7 @@
         </div>
 
         <!-- News -->
-        <div class="cat-card" onclick="filterGallery('news', this)">
+        <div class="cat-card" data-category="news" onclick="filterGallery('news', this)">
             <svg class="cat-icon-svg" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
                 <path d="M19 20H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h10l4 4v10a2 2 0 0 1-2 2z"></path>
                 <polyline points="14 4 14 8 18 8"></polyline>
@@ -559,6 +751,18 @@
         </div>
     </div>
 
+    <!-- SUBKATEGORI FOTO (awalnya tersembunyi) -->
+    <div class="subcategory-wrapper fade-in-section" id="subcategoryWrapper" style="display: none;">
+        <button class="subcat-btn active" data-subcat="all">Semua Foto</button>
+        <button class="subcat-btn" data-subcat="SRC">SRC & LRC</button>
+        <button class="subcat-btn" data-subcat="sosialisasi">Sosialisasi Denda</button>
+        <button class="subcat-btn" data-subcat="pegawai">Pegawai Balmon</button>
+        <button class="subcat-btn" data-subcat="capacity">Capacity Building</button>
+        <button class="subcat-btn" data-subcat="UNAR">UNAR</button>
+        <button class="subcat-btn" data-subcat="monitoring">Monitoring Frekuensi</button>
+        <button class="subcat-btn" data-subcat="lainnya">Lainnya</button>
+    </div>
+
     <div class="gallery-section fade-in-section">
         <div class="gallery-grid" id="galleryContainer">
             <div style="grid-column: 1/-1; text-align: center; padding: 40px; color: #888;">
@@ -566,6 +770,20 @@
             </div>
         </div>
     </div>
+
+    <!-- KOMENTAR SECTION -->
+    <section class="comments-section fade-in-section container">
+        <h2 class="section-title">Komentar Pengunjung</h2>
+        <div class="comment-form">
+            <input type="text" id="commentName" placeholder="Nama Anda" required>
+            <input type="email" id="commentEmail" placeholder="Email (opsional)">
+            <textarea id="commentMessage" placeholder="Tulis komentar..." required></textarea>
+          <button id="submitCommentBtn">Kirim Komentar</button>
+        </div>
+        <div class="comments-list" id="commentsList">
+            <!-- Komentar akan dimuat di sini oleh JavaScript -->
+        </div>
+    </section>
 
     <div id="lightbox" class="lightbox" onclick="closeLightbox(event)">
         <div class="lightbox-content">
@@ -624,18 +842,15 @@
     <div id="searchOverlay" class="search-overlay">
         <div class="search-content">
             <button class="close-search" onclick="closeSearch()">&times;</button>
-            <h2 style="color:var(--primary-color); margin-bottom:20px;">Pencarian</h2>
+            <h2 style="color:var(--primary-color); margin-bottom:20px;">Pencarian Website</h2>
             <input type="text" id="searchInput" placeholder="Ketik kata kunci (misal: Izin, Maritim)..." onkeyup="performSearch()">
             <div id="searchResults" class="search-results"></div>
         </div>
     </div>
 
-    <!-- Bootstrap JS untuk dropdown -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-    <!-- File JS utama -->
-    <script src="dist_js/galeri.min.js"></script>
-    <script src="dist_js/TTS_Adaptif.min.js"></script>
-    <!-- File module Firebase -->
+    <!-- Script eksternal -->
+    <script src="galeri.js"></script>
     <script type="module" src="dist_js/galerimodul.min.js"></script>
+  
 </body>
 </html>
