@@ -431,9 +431,8 @@
             </div>
         </div>
     </div>
-
     <!-- =========================================== -->
-    <!-- FAQ SECTION - diambil dari faq.html -->
+    <!-- FAQ SECTION - diambil dari faq.html (6 PERTANYAAN) -->
     <!-- =========================================== -->
     <div class="faq-home-section fade-in-section">
         <div class="container">
@@ -442,9 +441,85 @@
                 <p>Temukan jawaban atas pertanyaan yang sering diajukan seputar layanan Balmon Samarinda</p>
             </div>
             <div class="faq-container">
-                <div class="faq-list" id="faqList"></div>
-                <div style="text-align: center;">
-                    <a href="faq.html" class="btn-faq-more">
+                <div class="faq-list" id="faqList">
+                    <!-- FAQ 1 -->
+                    <div class="faq-item">
+                        <button class="faq-question" aria-expanded="false">
+                            Dimanakah pengajuan izin frekuensi radio dilakukan? <i class="bi bi-chevron-down"></i>
+                        </button>
+                        <div class="faq-answer">
+                            <p>Pengajuan izin frekuensi radio dilakukan secara online melalui website <a href='https://isr.postel.go.id' target='_blank' style='color:#006fb0;'>isr.postel.go.id</a> setelah akun terdaftar.</p>
+                        </div>
+                    </div>
+                    
+                    <!-- FAQ 2 -->
+                    <div class="faq-item">
+                        <button class="faq-question" aria-expanded="false">
+                            Bagaimanakah persyaratan atau tata cara mengurus izin frekuensi radio? <i class="bi bi-chevron-down"></i>
+                        </button>
+                        <div class="faq-answer">
+                            <p>Ada 2 tahap:</p>
+                            <ol>
+                                <li><strong>Pembuatan Akun</strong>
+                                    <ul>
+                                        <li><strong>Instansi Pemerintah:</strong> Surat Keterangan Berdirinya Instansi, NPWP Instansi, Surat Kuasa (jika dikuasakan), KTP Pemberi dan Penerima Kuasa, form my spectra yang sudah ditandatangani dan distempel.</li>
+                                        <li><strong>Pelaku Usaha/Badan Hukum:</strong> NIB RBA yang sudah memiliki PBUMKU ISR, NPWP Perusahaan, Akta Perusahaan, Surat Kuasa (jika dikuasakan), KTP Direktur/Penerima Kuasa, form my spectra yang ditandatangani dan distempel.</li>
+                                    </ul>
+                                </li>
+                                <li><strong>Pengajuan Teknis Perizinan:</strong>
+                                    <ul>
+                                        <li>Surat Permohonan dan Sanggup Bayar</li>
+                                        <li>Diagram Konfigurasi Jaringan (apabila menggunakan repeater dan/rig)</li>
+                                        <li>IPP yang masih berlaku (untuk izin penyiaran)</li>
+                                    </ul>
+                                </li>
+                            </ol>
+                            <p>Semua file dalam format PDF.</p>
+                        </div>
+                    </div>
+                    
+                    <!-- FAQ 3 -->
+                    <div class="faq-item">
+                        <button class="faq-question" aria-expanded="false">
+                            Bagaimanakah cara mengetahui status pengajuan akun saya? <i class="bi bi-chevron-down"></i>
+                        </button>
+                        <div class="faq-answer">
+                            <p>Status pengajuan akun dapat dicek secara berkala melalui email yang didaftarkan pada sistem.</p>
+                        </div>
+                    </div>
+                    
+                    <!-- FAQ 4 -->
+                    <div class="faq-item">
+                        <button class="faq-question" aria-expanded="false">
+                            Bagaimanakah jika pengajuan akun saya ditolak? <i class="bi bi-chevron-down"></i>
+                        </button>
+                        <div class="faq-answer">
+                            <p>Ajukan kembali dengan memperhatikan alasan penolakan (kelengkapan dokumen, salah pengisian data).</p>
+                        </div>
+                    </div>
+                    
+                    <!-- FAQ 5 -->
+                    <div class="faq-item">
+                        <button class="faq-question" aria-expanded="false">
+                            Apa langkah selanjutnya setelah pengajuan akun saya diterima? <i class="bi bi-chevron-down"></i>
+                        </button>
+                        <div class="faq-answer">
+                            <p>Lanjutkan dengan login pada website perizinan untuk mengajukan ISR dengan mengisi data teknis dan melengkapi dokumen pengajuan teknis perizinan.</p>
+                        </div>
+                    </div>
+                    
+                    <!-- FAQ 6 -->
+                    <div class="faq-item">
+                        <button class="faq-question" aria-expanded="false">
+                            Apakah setelah akun disetujui saya bisa mengubah data akun? <i class="bi bi-chevron-down"></i>
+                        </button>
+                        <div class="faq-answer">
+                            <p>Bisa. Ajukan perubahan data akun/modifikasi data administrasi melalui website perizinan dengan login, kemudian klik profile dan klik ubah data user.</p>
+                        </div>
+                    </div>
+                </div>
+                <div style="text-align: center; margin-top: 30px;">
+                    <a href="faq.html" class="btn-laporan-semua" style="display: inline-flex; align-items: center; gap: 8px; background-color: transparent; color: var(--primary-color); border: 2px solid var(--primary-color); box-shadow: none;">
                         Lihat Semua FAQ <i class="bi bi-arrow-right"></i>
                     </a>
                 </div>
@@ -1027,6 +1102,27 @@
             const loader = document.getElementById('pageLoader');
             if (event.persisted && loader) loader.classList.add('hidden');
         });
+    </script>
+    <script>
+        // Fungsi untuk toggle FAQ
+document.querySelectorAll('.faq-question').forEach(button => {
+    button.addEventListener('click', function() {
+        // Tutup FAQ lain yang terbuka
+        document.querySelectorAll('.faq-question').forEach(btn => {
+            if (btn !== this) {
+                btn.classList.remove('active');
+                btn.nextElementSibling.classList.remove('show');
+                btn.setAttribute('aria-expanded', 'false');
+            }
+        });
+        
+        // Toggle FAQ yang diklik
+        this.classList.toggle('active');
+        const answer = this.nextElementSibling;
+        answer.classList.toggle('show');
+        this.setAttribute('aria-expanded', this.classList.contains('active'));
+    });
+});
     </script>
     <script type="module" src="scriptvideo.js"></script>
     <script src="dist_js/TTS_Adaptif.min.js"></script>
