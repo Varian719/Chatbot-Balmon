@@ -18,6 +18,196 @@
     <link rel="stylesheet" href="style.css">
     
     <style>
+        /* Tambahkan di dalam <style> setelah CSS yang ada */
+
+/* Layout dengan sidebar */
+.simulasi-layout {
+    display: flex;
+    gap: 30px;
+    align-items: flex-start;
+}
+
+.simulasi-utama {
+    flex: 2;
+}
+
+.simulasi-sidebar {
+    flex: 1;
+    background: white;
+    border-radius: 16px;
+    padding: 20px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+    position: sticky;
+    top: 100px;
+}
+
+.ringkasan-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.ringkasan-header h4 {
+    margin: 0;
+    color: var(--primary-color);
+    font-size: 16px;
+    font-weight: 700;
+}
+
+.btn-acak {
+    background: var(--bg-light-blue);
+    border: 1px solid #e2e8f0;
+    border-radius: 30px;
+    padding: 6px 12px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--primary-color);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    transition: all 0.3s ease;
+}
+
+.btn-acak:hover {
+    background: var(--primary-color);
+    color: white;
+    border-color: var(--primary-color);
+}
+
+.btn-acak i {
+    font-size: 12px;
+}
+
+.ringkasan-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 8px;
+    margin: 15px 0;
+}
+
+.badge-soal {
+    width: 100%;
+    aspect-ratio: 1/1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    background: #f1f5f9;
+    color: var(--text-dark);
+    border: 2px solid transparent;
+}
+
+.badge-soal.terjawab {
+    background: var(--primary-color);
+    color: white;
+}
+
+.badge-soal.aktif {
+    border: 2px solid var(--accent-yellow);
+    transform: scale(1.05);
+    box-shadow: 0 0 0 2px rgba(236, 187, 29, 0.3);
+}
+
+.badge-soal:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+}
+
+.ringkasan-footer {
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 1px solid #e2e8f0;
+    display: flex;
+    justify-content: space-between;
+    font-size: 13px;
+    color: var(--text-gray);
+}
+
+.ringkasan-footer span {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.badge-legenda {
+    width: 16px;
+    height: 16px;
+    border-radius: 4px;
+    display: inline-block;
+}
+
+.legenda-terjawab {
+    background: var(--primary-color);
+}
+
+.legenda-belum {
+    background: #f1f5f9;
+    border: 1px solid #cbd5e1;
+}
+
+.progress-reor {
+    margin-bottom: 25px;
+}
+
+.progress-label {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 8px;
+    font-size: 13px;
+    color: var(--text-gray);
+}
+
+.progress-bar {
+    width: 100%;
+    height: 8px;
+    background: #e2e8f0;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.progress-fill {
+    width: 0%;
+    height: 100%;
+    background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+    transition: width 0.3s ease;
+}
+
+.info-reor-box {
+    background: #e8f4fd;
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 30px;
+    border-left: 4px solid var(--primary-color);
+}
+
+@media (max-width: 900px) {
+    .simulasi-layout {
+        flex-direction: column;
+    }
+    
+    .simulasi-sidebar {
+        position: static;
+        width: 100%;
+        order: -1;
+        margin-bottom: 20px;
+    }
+    
+    .ringkasan-grid {
+        grid-template-columns: repeat(10, 1fr);
+    }
+}
+
+@media (max-width: 600px) {
+    .ringkasan-grid {
+        grid-template-columns: repeat(5, 1fr);
+    }
+}
         /* CSS Khusus untuk halaman simulasi REOR */
         .simulasi-section {
             padding: 60px 0;
@@ -208,6 +398,78 @@
                 text-align: center;
             }
         }
+
+        /* Banner Biru */
+        .page-header-blue {
+            background: linear-gradient(135deg, #006fb0 0%, #004b7c 100%);
+            color: white;
+            padding: 80px 0 60px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .page-header-blue::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 60%);
+            pointer-events: none;
+        }
+
+        .page-header-blue .container-custom {
+            position: relative;
+            z-index: 2;
+        }
+
+        .page-header-blue .breadcrumb {
+            font-size: 14px;
+            margin-bottom: 20px;
+            color: rgba(255,255,255,0.8);
+        }
+
+        .page-header-blue .breadcrumb a {
+            color: white;
+            text-decoration: none;
+            border-bottom: 1px solid rgba(255,255,255,0.3);
+            transition: border-color 0.3s;
+        }
+
+        .page-header-blue .breadcrumb a:hover {
+            border-bottom-color: white;
+        }
+
+        .page-header-blue h1 {
+            font-size: 42px;
+            font-weight: 800;
+            margin: 0 0 15px;
+            line-height: 1.2;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        }
+
+        .page-header-blue p {
+            font-size: 18px;
+            opacity: 0.95;
+            max-width: 700px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        @media (max-width: 768px) {
+            .page-header-blue {
+                padding: 60px 0 40px;
+            }
+            .page-header-blue h1 {
+                font-size: 32px;
+            }
+            .page-header-blue p {
+                font-size: 16px;
+                padding: 0 20px;
+            }
+        }
     </style>
 </head>
 
@@ -313,7 +575,8 @@
         </div>
     </header>
 
-    <div class="page-header-faq">
+    <!-- Banner Biru -->
+    <div class="page-header-blue">
         <div class="container-custom">
             <div class="breadcrumb">
                 <a href="index.html">Beranda</a> / <a href="#">Layanan</a> / <span style="color: #ecbb1d;">Simulasi Ujian REOR</span>
@@ -322,45 +585,95 @@
             <p>Latihan soal untuk persiapan ujian sertifikasi Radio Elektronika dan Operator Radio</p>
         </div>
     </div>
-
-    <div class="simulasi-section fade-in-section">
-        <div class="container">
-            <div class="simulasi-container">
-                <!-- Timer -->
-                <div class="timer-box" id="timer">Waktu: 00:00</div>
-                
-                <!-- Soal -->
-                <div class="soal-box" id="soal">
-                    <!-- Soal akan dimuat via JavaScript -->
+<div class="simulasi-section fade-in-section">
+    <div class="container">
+        <div class="simulasi-layout">
+            <!-- Sidebar Ringkasan Soal -->
+            <div class="simulasi-sidebar" id="sidebarRingkasan">
+                <div class="ringkasan-header">
+                    <h4><i class="bi bi-grid-3x3-gap-fill"></i> Navigasi Soal</h4>
+                    <button class="btn-acak" onclick="acakSoal()" title="Acak urutan soal">
+                        <i class="bi bi-shuffle"></i> Acak
+                    </button>
                 </div>
                 
-                <!-- Pilihan Jawaban -->
-                <div class="jawaban-box" id="jawaban">
-                    <!-- Pilihan jawaban akan dimuat via JavaScript -->
+                <!-- Progress Bar -->
+                <div class="progress-reor">
+                    <div class="progress-label">
+                        <span>Progress</span>
+                        <span id="progressText">0%</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progressBar"></div>
+                    </div>
                 </div>
                 
-                <!-- Navigasi -->
-                <div class="nav-box">
-                    <button id="prevBtn" onclick="prevSoal()"><i class="bi bi-chevron-left"></i> Sebelumnya</button>
-                    <span id="soalCounter">Soal 1/20</span>
-                    <button id="nextBtn" onclick="nextSoal()">Selanjutnya <i class="bi bi-chevron-right"></i></button>
-                </div>
+                <!-- Grid Ringkasan Soal -->
+                <div class="ringkasan-grid" id="ringkasanGrid"></div>
                 
-                <!-- Submit -->
-                <div class="submit-box">
-                    <button id="submitBtn" onclick="submitUjian()">Selesai & Lihat Hasil</button>
+                <!-- Legenda -->
+                <div class="ringkasan-footer">
+                    <span><span class="badge-legenda legenda-terjawab"></span> Terjawab: <span id="totalTerjawab">0</span></span>
+                    <span><span class="badge-legenda legenda-belum"></span> Belum: <span id="totalBelum">20</span></span>
                 </div>
-                
-                <!-- Hasil -->
-                <div class="hasil-box" id="hasil" style="display:none;">
-                    <h3><i class="bi bi-trophy-fill"></i> Hasil Simulasi</h3>
-                    <p id="skor"></p>
-                    <div id="pembahasan"></div>
-                    <button onclick="ulangiUjian()" style="margin-top: 20px; background: var(--primary-color); color: white; border: none; padding: 12px 30px; border-radius: 50px; font-weight: 600; cursor: pointer; font-family: 'Albert Sans', sans-serif;">Ulangi Ujian</button>
+            </div>
+            
+            <!-- Konten Utama -->
+            <div class="simulasi-utama">
+                <div class="simulasi-container">
+                    <!-- Info REOR -->
+                    <div class="info-reor-box">
+                        <div style="display: flex; gap: 15px; align-items: flex-start; flex-wrap: wrap;">
+                            <div style="background: var(--primary-color); width: 50px; height: 50px; border-radius: 12px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                                <i class="bi bi-info-circle-fill" style="color: white; font-size: 24px;"></i>
+                            </div>
+                            <div style="flex: 1;">
+                                <h4 style="margin: 0 0 8px 0; color: var(--primary-color); font-weight: 700;">Tentang REOR</h4>
+                                <p style="margin: 0; color: var(--text-gray); font-size: 14px; line-height: 1.6;">
+                                    <strong>REOR (Radio Elektronika dan Operator Radio)</strong> adalah sertifikasi resmi yang wajib dimiliki oleh operator radio di kapal dan bidang maritim. 
+                                    Sertifikat ini berlaku selama 5 tahun dan diatur oleh ITU, IMO, dan SOLAS.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Timer -->
+                    <div class="timer-box" id="timer">Waktu: 00:00</div>
+                    
+                    <!-- Soal -->
+                    <div class="soal-box" id="soal">
+                        <!-- Soal akan dimuat via JavaScript -->
+                    </div>
+                    
+                    <!-- Pilihan Jawaban -->
+                    <div class="jawaban-box" id="jawaban">
+                        <!-- Pilihan jawaban akan dimuat via JavaScript -->
+                    </div>
+                    
+                    <!-- Navigasi -->
+                    <div class="nav-box">
+                        <button id="prevBtn" onclick="prevSoal()"><i class="bi bi-chevron-left"></i> Sebelumnya</button>
+                        <span id="soalCounter">Soal 1/20</span>
+                        <button id="nextBtn" onclick="nextSoal()">Selanjutnya <i class="bi bi-chevron-right"></i></button>
+                    </div>
+                    
+                    <!-- Submit -->
+                    <div class="submit-box">
+                        <button id="submitBtn" onclick="submitUjian()">Selesai & Lihat Hasil</button>
+                    </div>
+                    
+                    <!-- Hasil -->
+                    <div class="hasil-box" id="hasil" style="display:none;">
+                        <h3><i class="bi bi-trophy-fill"></i> Hasil Simulasi</h3>
+                        <p id="skor"></p>
+                        <div id="pembahasan"></div>
+                        <button onclick="ulangiUjian()" style="margin-top: 20px; background: var(--primary-color); color: white; border: none; padding: 12px 30px; border-radius: 50px; font-weight: 600; cursor: pointer; font-family: 'Albert Sans', sans-serif;">Ulangi Ujian</button>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
+</div>
 
     <footer id="mainFooter" class="fade-in-section">
         <div class="container">

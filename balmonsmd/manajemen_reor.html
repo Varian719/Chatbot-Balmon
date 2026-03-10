@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <title>Admin Balmon | Manajemen REOR</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/source-sans-3@5.0.12/index.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.min.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/admin-lte@4.0.0-beta2/dist/css/adminlte.min.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" />
+  <style>
+    .data-table th { background-color: #f8f9fa; }
+    .btn-action { margin: 0 2px; }
+  </style>
+</head>
+<body class="layout-fixed sidebar-expand-lg bg-body-tertiary">
+
+<div class="app-wrapper">
+
+  <!-- Navbar (sama seperti admin-balmon) -->
+  <nav class="app-header navbar navbar-expand bg-body shadow-sm">
+    <div class="container-fluid">
+      <ul class="navbar-nav">
+        <li class="nav-item"><a class="nav-link" data-lte-toggle="sidebar" href="#"><i class="bi bi-list"></i></a></li>
+        <li class="nav-item"><span class="nav-link fw-bold text-primary">MANAJEMEN SERTIFIKAT REOR</span></li>
+      </ul>
+      <ul class="navbar-nav ms-auto">
+        <li class="nav-item d-none d-md-block me-3">
+          <span class="nav-link text-muted" id="user-display">Checking...</span>
+        </li>
+        <li class="nav-item">
+          <button id="btnLogout" class="btn btn-danger btn-sm shadow-sm">
+            <i class="bi bi-power"></i> Keluar
+          </button>
+        </li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- Sidebar (sama seperti admin-balmon) -->
+  <aside class="app-sidebar bg-body-secondary shadow" data-bs-theme="dark">
+    <div class="sidebar-brand">
+      <a href="#" class="brand-link text-center">
+        <span class="brand-text fw-bold">BALMON SAMARINDA</span>
+      </a>
+    </div>
+    <div class="sidebar-wrapper">
+      <nav class="mt-2">
+        <ul class="nav sidebar-menu flex-column">
+          <li class="nav-item"><a href="admin-balmon.html" class="nav-link"><i class="nav-icon bi bi-speedometer"></i><p>Dashboard</p></a></li>
+          <li class="nav-item"><a href="dokumen.html" class="nav-link"><i class="nav-icon bi bi-folder-fill"></i><p>Arsip Digital</p></a></li>
+          <li class="nav-item"><a href="datachat.html" class="nav-link"><i class="nav-icon bi bi-chat-fill"></i><p>History Chatbot</p></a></li>
+          <li class="nav-item"><a href="gform_management.html" class="nav-link"><i class="nav-icon bi bi-ui-checks"></i><p>Manajemen GForm</p></a></li>
+          <li class="nav-item"><a href="manage-gallery.html" class="nav-link"><i class="nav-icon bi bi-image-fill"></i><p>Manajemen Publikasi</p></a></li>
+          <li class="nav-item"><a href="reor-crud.html" class="nav-link active"><i class="nav-icon bi bi-award"></i><p>Manajemen REOR</p></a></li>
+          <li class="nav-item"><a href="../../../frontend/index.html" target="_blank" class="nav-link"><i class="nav-icon bi bi-globe"></i><p>Lihat Website</p></a></li>
+        </ul>
+      </nav>
+    </div>
+  </aside>
+
+  <!-- Main content -->
+  <main class="app-main">
+    <div class="app-content-header">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-sm-6"><h3 class="mb-0">Data Sertifikat REOR</h3></div>
+          <div class="col-sm-6 text-end">
+            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalREOR" onclick="openCreateModal()">
+              <i class="bi bi-plus-circle"></i> Tambah Baru
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="app-content">
+      <div class="container-fluid">
+        <div class="card shadow-sm">
+          <div class="card-body">
+            <div class="table-responsive">
+              <table class="table table-striped table-hover align-middle data-table" id="reorTable">
+                <thead>
+                  <tr>
+                    <th>No</th>
+                    <th>Nama</th>
+                    <th>Nomor Sertifikat</th>
+                    <th>Tanggal Terbit</th>
+                    <th>Masa Berlaku</th>
+                    <th>Status</th>
+                    <th>Aksi</th>
+                  </tr>
+                </thead>
+                <tbody id="reorTableBody">
+                  <tr><td colspan="7" class="text-center">Memuat data...</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="app-footer text-center">
+    <strong>Copyright &copy; 2025 <a href="#" class="text-decoration-none">Balmon Samarinda</a>.</strong> All rights reserved.
+  </footer>
+</div>
+
+<!-- Modal Form REOR (Create/Update) -->
+<div class="modal fade" id="modalREOR" tabindex="-1" aria-labelledby="modalREORLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header bg-primary text-white">
+        <h5 class="modal-title" id="modalREORLabel"><i class="bi bi-pencil-square me-2"></i>Form Sertifikat REOR</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form id="reorForm">
+          <input type="hidden" id="rowIndex" name="rowIndex">
+          <input type="hidden" id="id" name="id">
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label for="nama" class="form-label">Nama Lengkap <span class="text-danger">*</span></label>
+              <input type="text" class="form-control" id="nama" name="nama" required>
+            </div>
+            <div class="col-md-6 mb-3">
+              <label for="nomor_sertifikat" class="form-label">Nomor Sertifikat <span class="text-danger">*</span></label>
+              <input type="text" class="form-control" id="nomor_sertifikat" name="nomor_sertifikat" required>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label for="tanggal_terbit" class="form-label">Tanggal Terbit <span class="text-danger">*</span></label>
+              <input type="date" class="form-control" id="tanggal_terbit" name="tanggal_terbit" required>
+            </div>
+            <div class="col-md-6 mb-3">
+              <label for="masa_berlaku" class="form-label">Masa Berlaku <span class="text-danger">*</span></label>
+              <input type="date" class="form-control" id="masa_berlaku" name="masa_berlaku" required>
+            </div>
+          </div>
+          <div class="mb-3">
+            <label for="status" class="form-label">Status</label>
+            <select class="form-select" id="status" name="status">
+              <option value="aktif">Aktif</option>
+              <option value="kadaluarsa">Kadaluarsa</option>
+              <option value="dicabut">Dicabut</option>
+            </select>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+        <button type="button" class="btn btn-primary" id="saveBtn" onclick="saveData()">Simpan</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Scripts -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/admin-lte@4.0.0-beta2/dist/js/adminlte.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script type="module">
+  // =====================================================
+  // KONFIGURASI FIREBASE (untuk auth, opsional)
+  // =====================================================
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+  import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyDUeIg9Zn_xndPXtChO8KufXFp6EMtqBJ0",
+    authDomain: "admin-pelayanan-balmon.firebaseapp.com",
+    projectId: "admin-pelayanan-balmon",
+    storageBucket: "admin-pelayanan-balmon.firebasestorage.app",
+    messagingSenderId: "1071557110255",
+    appId: "1:1071557110255:web:bff7087da1feacccb7ee1a"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+
+  // =====================================================
+  // GANTI URL INI DENGAN URL WEB APP ANDA
+  // =====================================================
+  const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/.../exec'; // <-- GANTI
+
+  // Elemen global
+  let currentAction = 'create'; // 'create' atau 'update'
+  const modal = new bootstrap.Modal(document.getElementById('modalREOR'));
+
+  // Cek auth
+  onAuthStateChanged(auth, (user) => {
+    if (!user) {
+      window.location.href = "index.html"; // redirect ke login
+    } else {
+      document.getElementById('user-display').innerText = user.email;
+      loadData(); // muat data setelah login
+    }
+  });
+
+  // Logout
+  document.getElementById('btnLogout').addEventListener('click', async () => {
+    const result = await Swal.fire({
+      title: 'Keluar?',
+      text: "Sesi akan diakhiri.",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      confirmButtonText: 'Ya, Keluar'
+    });
+    if (result.isConfirmed) {
+      await signOut(auth);
+      window.location.replace("index.html");
+    }
+  });
+
+  // =====================================================
+  // FUNGSI CRUD
+  // =====================================================
+  window.loadData = async function() {
+    const tbody = document.getElementById('reorTableBody');
+    tbody.innerHTML = '<tr><td colspan="7" class="text-center">Memuat data...</td></tr>';
+    
+    try {
+      const response = await fetch(APPS_SCRIPT_URL + '?action=get');
+      const result = await response.json();
+      
+      if (result.status !== 'success') throw new Error(result.message);
+      
+      if (!result.data || result.data.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="7" class="text-center text-muted">Belum ada data.</td></tr>';
+        return;
+      }
+      
+      let html = '';
+      result.data.forEach((item, index) => {
+        html += `
+          <tr>
+            <td>${index + 1}</td>
+            <td>${escapeHtml(item.nama || '')}</td>
+            <td>${escapeHtml(item.nomor_sertifikat || '')}</td>
+            <td>${escapeHtml(item.tanggal_terbit || '')}</td>
+            <td>${escapeHtml(item.masa_berlaku || '')}</td>
+            <td>
+              <span class="badge ${item.status === 'aktif' ? 'bg-success' : 'bg-secondary'}">${escapeHtml(item.status || '')}</span>
+            </td>
+            <td>
+              <button class="btn btn-sm btn-warning btn-action" onclick="editData(${item.rowIndex}, '${item.id}')" title="Edit"><i class="bi bi-pencil"></i></button>
+              <button class="btn btn-sm btn-danger btn-action" onclick="deleteData(${item.rowIndex}, '${item.id}')" title="Hapus"><i class="bi bi-trash"></i></button>
+            </td>
+          </tr>
+        `;
+      });
+      tbody.innerHTML = html;
+    } catch (error) {
+      Swal.fire('Error', 'Gagal memuat data: ' + error.message, 'error');
+      tbody.innerHTML = '<tr><td colspan="7" class="text-center text-danger">Gagal memuat data.</td></tr>';
+    }
+  };
+
+  // Escape HTML untuk keamanan
+  function escapeHtml(unsafe) {
+    if (!unsafe) return '';
+    return unsafe.replace(/[&<>"]/g, function(m) {
+      if (m === '&') return '&amp;';
+      if (m === '<') return '&lt;';
+      if (m === '>') return '&gt;';
+      if (m === '"') return '&quot;';
+      return m;
+    });
+  }
+
+  window.openCreateModal = function() {
+    currentAction = 'create';
+    document.getElementById('modalREORLabel').innerHTML = '<i class="bi bi-plus-circle me-2"></i>Tambah Sertifikat REOR';
+    document.getElementById('reorForm').reset();
+    document.getElementById('rowIndex').value = '';
+    document.getElementById('id').value = '';
+    modal.show();
+  };
+
+  window.editData = async function(rowIndex, id) {
+    currentAction = 'update';
+    document.getElementById('modalREORLabel').innerHTML = '<i class="bi bi-pencil-square me-2"></i>Edit Sertifikat REOR';
+    
+    // Ambil data dari baris (sebenarnya bisa dimuat ulang, tapi lebih mudah fetch data per id)
+    // Untuk sederhana, kita fetch semua lalu cari
+    try {
+      const response = await fetch(APPS_SCRIPT_URL + '?action=get');
+      const result = await response.json();
+      if (result.status !== 'success') throw new Error(result.message);
+      
+      const item = result.data.find(d => d.rowIndex === rowIndex && d.id === id);
+      if (!item) throw new Error('Data tidak ditemukan');
+      
+      document.getElementById('rowIndex').value = item.rowIndex;
+      document.getElementById('id').value = item.id || '';
+      document.getElementById('nama').value = item.nama || '';
+      document.getElementById('nomor_sertifikat').value = item.nomor_sertifikat || '';
+      document.getElementById('tanggal_terbit').value = item.tanggal_terbit || '';
+      document.getElementById('masa_berlaku').value = item.masa_berlaku || '';
+      document.getElementById('status').value = item.status || 'aktif';
+      
+      modal.show();
+    } catch (error) {
+      Swal.fire('Error', 'Gagal mengambil data: ' + error.message, 'error');
+    }
+  };
+
+  window.saveData = async function() {
+    const form = document.getElementById('reorForm');
+    const formData = new FormData(form);
+    
+    // Validasi sederhana
+    if (!formData.get('nama') || !formData.get('nomor_sertifikat') || !formData.get('tanggal_terbit') || !formData.get('masa_berlaku')) {
+      Swal.fire('Peringatan', 'Harap isi semua field yang wajib!', 'warning');
+      return;
+    }
+    
+    // Tentukan action
+    const action = currentAction === 'create' ? 'create' : 'update';
+    
+    // Siapkan parameter
+    const params = new URLSearchParams();
+    params.append('action', action);
+    params.append('rowIndex', formData.get('rowIndex') || '');
+    params.append('id', formData.get('id') || new Date().getTime().toString());
+    params.append('nama', formData.get('nama'));
+    params.append('nomor_sertifikat', formData.get('nomor_sertifikat'));
+    params.append('tanggal_terbit', formData.get('tanggal_terbit'));
+    params.append('masa_berlaku', formData.get('masa_berlaku'));
+    params.append('status', formData.get('status') || 'aktif');
+    
+    try {
+      const response = await fetch(APPS_SCRIPT_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: params
+      });
+      const result = await response.json();
+      
+      if (result.status === 'success') {
+        Swal.fire({
+          icon: 'success',
+          title: 'Berhasil',
+          text: result.message,
+          timer: 1500,
+          showConfirmButton: false
+        });
+        modal.hide();
+        loadData(); // refresh tabel
+      } else {
+        throw new Error(result.message);
+      }
+    } catch (error) {
+      Swal.fire('Error', 'Gagal menyimpan data: ' + error.message, 'error');
+    }
+  };
+
+  window.deleteData = async function(rowIndex, id) {
+    const confirm = await Swal.fire({
+      title: 'Hapus Data?',
+      text: 'Data yang dihapus tidak dapat dikembalikan!',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      confirmButtonText: 'Ya, Hapus',
+      cancelButtonText: 'Batal'
+    });
+    
+    if (!confirm.isConfirmed) return;
+    
+    const params = new URLSearchParams();
+    params.append('action', 'delete');
+    params.append('rowIndex', rowIndex);
+    params.append('id', id);
+    
+    try {
+      const response = await fetch(APPS_SCRIPT_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: params
+      });
+      const result = await response.json();
+      
+      if (result.status === 'success') {
+        Swal.fire({
+          icon: 'success',
+          title: 'Terhapus',
+          text: result.message,
+          timer: 1500,
+          showConfirmButton: false
+        });
+        loadData();
+      } else {
+        throw new Error(result.message);
+      }
+    } catch (error) {
+      Swal.fire('Error', 'Gagal menghapus data: ' + error.message, 'error');
+    }
+  };
+</script>
+</body>
+</html>

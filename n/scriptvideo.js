@@ -367,3 +367,27 @@ onValue(galleryRef, (snapshot) => {
     console.error("Firebase Error:", err);
     document.getElementById('newsTitle').textContent = "Gagal Koneksi";
 });
+
+// ================== VISITOR COUNTER (TOTAL KUNJUNGAN) ==================
+function loadTotalVisitors() {
+    const visitorsRef = ref(db, 'statistik_web/kunjungan_bulanan');
+    onValue(visitorsRef, (snapshot) => {
+        let total = 0;
+        if (snapshot.exists()) {
+            const data = snapshot.val();
+            // Jumlahkan semua nilai dari tiap bulan
+            Object.values(data).forEach(val => {
+                total += val;
+            });
+        }
+        const visitorEl = document.getElementById('total-visitors');
+        if (visitorEl) {
+            visitorEl.textContent = total.toLocaleString('id-ID');
+        }
+    }, {
+        onlyOnce: true // Ambil data sekali saja, tidak perlu realtime
+    });
+}
+
+// Panggil setelah Firebase siap
+loadTotalVisitors();

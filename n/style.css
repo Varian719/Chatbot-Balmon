@@ -2999,3 +2999,15 @@
 .faq-answer li {
     margin-bottom: 5px;
 }
+
+.visitor-counter-section {
+    background: #0c679b; color: white; border: 3px solid transparent; padding: 20px 30px; margin: 30px auto; max-width: 500px; text-align: center; font-weight: 700; font-size: 1.5rem; box-shadow: 0 4px 12px rgba(0,111,176,0.1);
+}
+
+.visitor-counter-section i{
+    margin-right: 12px; font-size: 1.8rem; vertical-align: middle;
+}
+
+.visitor-counter-section span{
+    vertical-align: middle;
+}

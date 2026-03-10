@@ -1,5 +1,5 @@
-// Bank soal REOR (20 soal lengkap)
-const soalREOR = [
+// Bank soal REOR original
+const soalOriginal = [
     {
         soal: "Apa kepanjangan dari REOR?",
         pilihan: [
@@ -222,10 +222,46 @@ const soalREOR = [
     }
 ];
 
+// Variabel global
+let soalREOR = [...soalOriginal]; // Salinan yang bisa diacak
 let currentSoal = 0;
 let jawabanUser = new Array(soalREOR.length).fill(null);
 let timerInterval;
 let waktu = 0;
+let originalOrder = []; // Menyimpan urutan asli untuk referensi
+
+// Inisialisasi urutan asli
+for (let i = 0; i < soalREOR.length; i++) {
+    originalOrder.push(i);
+}
+
+// Fungsi untuk mengacak soal (Fisher-Yates shuffle)
+function acakSoal() {
+    // Konfirmasi jika sudah ada jawaban
+    const adaJawaban = jawabanUser.some(j => j !== null);
+    if (adaJawaban && !confirm('Mengacak soal akan mereset jawaban Anda. Lanjutkan?')) {
+        return;
+    }
+    
+    // Acak array soal
+    for (let i = soalREOR.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [soalREOR[i], soalREOR[j]] = [soalREOR[j], soalREOR[i]];
+        [originalOrder[i], originalOrder[j]] = [originalOrder[j], originalOrder[i]];
+    }
+    
+    // Reset jawaban
+    jawabanUser = new Array(soalREOR.length).fill(null);
+    currentSoal = 0;
+    
+    // Update tampilan
+    loadSoal(currentSoal);
+    updateRingkasanGrid();
+    updateJumpDropdown();
+    
+    // Tampilkan notifikasi
+    alert('Soal telah diacak!');
+}
 
 // Fungsi untuk memuat soal
 function loadSoal(index) {
@@ -244,6 +280,72 @@ function loadSoal(index) {
     });
     document.getElementById('jawaban').innerHTML = htmlPilihan;
     document.getElementById('soalCounter').innerText = `Soal ${index+1}/${soalREOR.length}`;
+    
+    // Update progress
+    updateProgress(index);
+    
+    // Update ringkasan grid (untuk highlight aktif)
+    updateRingkasanGrid();
+    
+    // Update dropdown
+    updateJumpDropdown();
+}
+
+// Update progress bar
+function updateProgress(index) {
+    const progress = ((index + 1) / soalREOR.length) * 100;
+    document.getElementById('progressBar').style.width = progress + '%';
+    document.getElementById('progressText').innerText = Math.round(progress) + '%';
+}
+
+// Update ringkasan grid
+function updateRingkasanGrid() {
+    const grid = document.getElementById('ringkasanGrid');
+    if (!grid) return;
+    
+    let html = '';
+    for (let i = 0; i < soalREOR.length; i++) {
+        const terjawab = jawabanUser[i] !== null;
+        const aktif = i === currentSoal;
+        html += `<div class="badge-soal ${terjawab ? 'terjawab' : ''} ${aktif ? 'aktif' : ''}" onclick="lompatKeSoal(${i})">${i+1}</div>`;
+    }
+    grid.innerHTML = html;
+    
+    // Update statistik
+    const terjawabCount = jawabanUser.filter(j => j !== null).length;
+    document.getElementById('totalTerjawab').innerText = terjawabCount;
+    document.getElementById('totalBelum').innerText = soalREOR.length - terjawabCount;
+}
+
+// Lompat ke soal dari grid
+function lompatKeSoal(index) {
+    if (index >= 0 && index < soalREOR.length) {
+        currentSoal = index;
+        loadSoal(currentSoal);
+    }
+}
+
+// Update dropdown lompat soal
+function updateJumpDropdown() {
+    const select = document.getElementById('jumpToSoal');
+    if (!select) return;
+    
+    let options = '';
+    for (let i = 0; i < soalREOR.length; i++) {
+        const status = jawabanUser[i] !== null ? '✓' : '○';
+        const selected = i === currentSoal ? 'selected' : '';
+        options += `<option value="${i}" ${selected}>Soal ${i+1} ${status}</option>`;
+    }
+    select.innerHTML = options;
+}
+
+// Lompat ke soal dari dropdown
+function jumpToSoal(index) {
+    index = parseInt(index);
+    if (!isNaN(index) && index >= 0 && index < soalREOR.length) {
+        currentSoal = index;
+        loadSoal(currentSoal);
+    }
 }
 
 // Fungsi navigasi
@@ -264,10 +366,13 @@ function nextSoal() {
 // Fungsi simpan jawaban
 function simpanJawaban(index, nilai) {
     jawabanUser[index] = nilai;
+    updateRingkasanGrid();
+    updateJumpDropdown();
 }
 
 // Timer
 function startTimer() {
+    if (timerInterval) clearInterval(timerInterval);
     timerInterval = setInterval(() => {
         waktu++;
         const menit = Math.floor(waktu / 60);
@@ -290,7 +395,7 @@ function submitUjian() {
     document.getElementById('hasil').style.display = 'block';
     document.getElementById('skor').innerHTML = `Skor Anda: ${skor}% (${benar}/${soalREOR.length} benar)`;
     
-    // Tampilkan pembahasan untuk soal yang salah
+    // Tampilkan pembahasan untuk soal yang salah (gunakan index asli untuk konsistensi)
     let pembahasanHtml = '<h4><i class="bi bi-journal-text"></i> Pembahasan:</h4><ul>';
     let adaSalah = false;
     soalREOR.forEach((soal, i) => {
@@ -310,10 +415,25 @@ function submitUjian() {
     document.querySelector('.jawaban-box').style.display = 'none';
     document.querySelector('.nav-box').style.display = 'none';
     document.querySelector('.submit-box').style.display = 'none';
+    document.querySelector('.soal-jump').style.display = 'none';
 }
 
 // Ulangi ujian
 function ulangiUjian() {
+    // Reset ke urutan asli
+    const jawabanTerisi = jawabanUser.some(j => j !== null);
+    if (jawabanTerisi) {
+        // Kembalikan ke urutan original
+        const tempSoal = [];
+        const tempOrder = [];
+        for (let i = 0; i < originalOrder.length; i++) {
+            tempSoal[originalOrder[i]] = soalREOR[i];
+            tempOrder[originalOrder[i]] = originalOrder[i];
+        }
+        soalREOR = tempSoal;
+        originalOrder = tempOrder;
+    }
+    
     currentSoal = 0;
     jawabanUser = new Array(soalREOR.length).fill(null);
     waktu = 0;
@@ -322,14 +442,19 @@ function ulangiUjian() {
     document.querySelector('.jawaban-box').style.display = 'block';
     document.querySelector('.nav-box').style.display = 'flex';
     document.querySelector('.submit-box').style.display = 'block';
+    document.querySelector('.soal-jump').style.display = 'block';
     document.getElementById('hasil').style.display = 'none';
     
     loadSoal(0);
+    updateRingkasanGrid();
+    updateJumpDropdown();
     startTimer();
 }
 
 // Inisialisasi
 document.addEventListener('DOMContentLoaded', () => {
     loadSoal(0);
+    updateRingkasanGrid();
+    updateJumpDropdown();
     startTimer();
 });
