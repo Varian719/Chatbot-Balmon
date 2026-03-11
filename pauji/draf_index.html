@@ -1,0 +1,1944 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Portal Resmi Balmon Samarinda - Pengawasan Spektrum Frekuensi Radio">
+    
+    <title>Balmon Samarinda - DJID Official</title>
+    <link rel="icon" type="image/png" href="logo-ikon.png" sizes="32x32">
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Albert+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        /* --- 1. SETUP WARNA (Branding Guideline DJID) --- */
+        :root {
+            --primary-color: #006fb0;   /* Biru Utama */
+            --primary-dark: #005082;    /* Biru Gelap untuk Hover */
+            --secondary-color: #00ace0; /* Cyan/Biru Langit */
+            --accent-yellow: #ecbb1d;   /* Kuning Emas */
+            --accent-red: #de262a;      /* Merah */
+            --bg-light-blue: #f4f9fc;   
+            --bg-white: #ffffff;
+            --text-dark: #1e293b;
+            --text-gray: #64748b;
+            --shadow-soft: 0 10px 30px -5px rgba(0, 0, 0, 0.05);
+            --radius-md: 12px;
+            --wa-green: #25D366;
+        }
+
+        /* --- RESET & GLOBAL --- */
+        body { 
+            margin: 0; padding: 0; 
+            font-family: 'Albert Sans', sans-serif; 
+            background-color: var(--bg-light-blue);
+            color: var(--text-dark); 
+            line-height: 1.6; 
+            overflow-x: hidden; 
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        
+        html { 
+            scroll-behavior: smooth; 
+            scroll-padding-top: 100px; 
+        }
+
+        a { text-decoration: none; color: inherit; transition: color 0.3s ease, transform 0.3s ease; }
+        ul { list-style: none; padding: 0; margin: 0; }
+        * { box-sizing: border-box; }
+
+        .container {
+            max-width: 1200px; margin: 0 auto; padding: 0 20px; width: 100%;
+        }
+
+        /* =========================================== */
+        /* ANIMASI FADE-IN PADA SCROLL */
+        /* =========================================== */
+        .fade-in-section {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1), 
+                        transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+            will-change: opacity, transform;
+        }
+        
+        .fade-in-section.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .fade-stagger-children > * {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1) 0.1s, 
+                        transform 0.6s cubic-bezier(0.4, 0, 0.2, 1) 0.1s;
+        }
+        
+        .fade-in-section.is-visible .fade-stagger-children > * {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .fade-stagger-children > *:nth-child(1) { transition-delay: 0.1s; }
+        .fade-stagger-children > *:nth-child(2) { transition-delay: 0.2s; }
+        .fade-stagger-children > *:nth-child(3) { transition-delay: 0.3s; }
+        .fade-stagger-children > *:nth-child(4) { transition-delay: 0.4s; }
+        .fade-stagger-children > *:nth-child(5) { transition-delay: 0.5s; }
+
+        /* PAGE LOADER */
+        .page-loader {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: #ffffff; z-index: 99999; 
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            transition: opacity 0.5s ease, visibility 0.5s ease; opacity: 1; visibility: visible;
+        }
+        .page-loader.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
+        .loader-spinner {
+            width: 50px; height: 50px; border: 4px solid rgba(0, 111, 176, 0.1); border-left-color: var(--primary-color);
+            border-radius: 50%; animation: spin 1s linear infinite; margin-bottom: 15px; will-change: transform;
+        }
+        .loader-text {
+            color: var(--primary-color); font-weight: 600; font-size: 14px; letter-spacing: 1px; animation: pulseText 1.5s infinite ease-in-out;
+        }
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+        @keyframes pulseText { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+
+        /* HEADER */
+        header {
+            background-color: transparent;
+            backdrop-filter: none;
+            -webkit-backdrop-filter: none;
+            box-shadow: none;
+            height: 80px; position: fixed; top: 0; left: 0; width: 100%; z-index: 1000;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            will-change: transform, background-color, backdrop-filter;
+        }
+        .header-content { display: flex; align-items: center; justify-content: space-between; height: 100%; }
+        
+        .brand-area { 
+            display: flex; 
+            align-items: center; 
+            gap: 12px; 
+            transition: all 0.4s ease; 
+            cursor: pointer;
+            background-color: rgba(255, 255, 255, 0.1); 
+            backdrop-filter: blur(8px);                    
+            -webkit-backdrop-filter: blur(8px);            
+            padding: 8px 20px;                              
+            border-radius: 50px;                              
+            border: 1px solid rgba(255, 255, 255, 0.2); 
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);  
+        }
+
+        .brand-area:hover {
+            background-color: rgba(255, 255, 255, 0.2); 
+            transform: translateY(-2px);                     
+            box-shadow: 0 8px 20px rgba(0, 111, 176, 0.3); 
+        }
+        .brand-logo-img { 
+            height: 50px; width: auto; 
+            filter: drop-shadow(0 2px 5px rgba(0, 0, 0, 0.5)); 
+            transition: all 0.3s;
+        }
+        
+        .brand-text { 
+            font-size: 18px; font-weight: 800; color: #ffffff; 
+            line-height: 1.2; display: flex; flex-direction: column; 
+            transition: color 0.3s; 
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.6); 
+        }
+        .brand-text span { 
+            font-size: 11px; font-weight: 500; color: rgba(255,255,255,0.9); 
+            letter-spacing: 0.5px; transition: color 0.3s; 
+            text-shadow: 0 1px 5px rgba(0, 0, 0, 0.6);
+        }
+
+        /* HEADER SAAT SCROLL */
+        header.header-minimal {
+            background-color: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.08);
+            height: 70px;
+        }
+
+        header.header-minimal .brand-text { color: var(--primary-color); text-shadow: none; }
+        header.header-minimal .brand-text span { color: var(--text-gray); text-shadow: none; }
+        header.header-minimal .brand-logo-img { filter: none; }
+        header.header-minimal .menu-item { color: var(--text-dark); text-shadow: none; }
+        header.header-minimal .menu-item:hover { color: var(--primary-color); }
+        header.header-minimal .brand-area { 
+            background: transparent;
+            box-shadow: none;
+            border: none;
+            padding-left: 0;
+            backdrop-filter: none;
+            -webkit-backdrop-filter: none;
+        }
+        header.header-minimal .hamburger-btn span { background-color: var(--primary-color); }
+        header.header-minimal .nav-menu button { color: var(--primary-color) !important; }
+
+        /* NAVIGASI DESKTOP */
+        .nav-menu { height: 100%; display: flex; align-items: center; transition: all 0.4s ease; }
+        .menu-list { display: flex; gap: 8px; height: 100%; align-items: center; }
+        
+        .menu-item { 
+            position: relative; height: 100%; display: flex; align-items: center; 
+            padding: 0 12px; font-size: 14px; font-weight: 600; 
+            color: #ffffff; 
+            cursor: pointer; transition: color 0.3s;
+            text-shadow: 0 1px 5px rgba(0, 0, 0, 0.4); 
+        }
+        .menu-item:hover { color: var(--accent-yellow); opacity: 1; }
+        
+        .menu-item::after {
+            content: ''; position: absolute; bottom: 0; left: 0; width: 0%; height: 3px; background: var(--accent-yellow); transition: width 0.3s ease;
+        }
+        .menu-item:hover::after { width: 100%; }
+        
+        .dropdown-content { 
+            display: none; position: absolute; top: 100%; left: 0; background-color: #ffffff; min-width: 240px; 
+            box-shadow: 0 15px 30px rgba(0,0,0,0.1); border-radius: 0 0 8px 8px; z-index: 1000; padding: 10px 0; border-top: 3px solid var(--primary-color); animation: slideDown 0.3s ease;
+        }
+        .menu-item:hover .dropdown-content { display: block; }
+        .dropdown-content li a { display: block; padding: 10px 20px; color: var(--text-dark); font-weight: 400; font-size: 14px; font-family: 'Albert Sans', sans-serif; text-shadow: none; }
+        .dropdown-content li a:hover { background-color: var(--bg-light-blue); color: var(--primary-color); padding-left: 25px; }
+        @keyframes slideDown { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* HAMBURGER */
+        .hamburger-btn {
+            display: none; flex-direction: column; gap: 6px; background: none; border: none; cursor: pointer; padding: 8px; z-index: 1001;
+        }
+        .hamburger-btn span {
+            width: 24px; height: 2.5px; 
+            background-color: white;
+            border-radius: 2px; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); transform-origin: center;
+        }
+        .hamburger-btn.active span:nth-child(1) { transform: translateY(8.5px) rotate(45deg); }
+        .hamburger-btn.active span:nth-child(2) { opacity: 0; transform: translateX(10px); }
+        .hamburger-btn.active span:nth-child(3) { transform: translateY(-8.5px) rotate(-45deg); }
+        
+        .hamburger-btn.active span { background-color: var(--primary-color) !important; }
+
+        .mobile-nav-dropdown {
+            display: none; position: fixed; top: 80px; left: 0; width: 100%; max-height: calc(100vh - 80px); background-color: #ffffff;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1); flex-direction: column; overflow-y: auto; z-index: 999; animation: slideDownMobile 0.3s ease;
+        }
+        .mobile-nav-dropdown.active { display: flex; }
+        @keyframes slideDownMobile { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
+
+        .mobile-menu-item {
+            font-family: 'Albert Sans', sans-serif;
+            padding: 16px 20px; border-bottom: 1px solid #eee; color: var(--text-dark); font-weight: 600; font-size: 15px; cursor: pointer; transition: all 0.3s ease; display: flex; justify-content: space-between; align-items: center;
+        }
+        .mobile-menu-item:hover { background-color: var(--bg-light-blue); color: var(--primary-color); }
+        .mobile-menu-item.has-submenu::after { content: '▼'; font-size: 12px; transition: transform 0.3s ease; }
+        .mobile-menu-item.has-submenu.active::after { transform: rotate(-180deg); }
+        .mobile-submenu { max-height: 0; overflow: hidden; background-color: #f8f9fa; transition: max-height 0.3s ease; }
+        .mobile-submenu.active { max-height: 500px; }
+        .mobile-submenu a { display: block; padding: 12px 40px; color: var(--text-gray); font-size: 14px; font-weight: 500; border-bottom: 1px solid #eee; transition: all 0.2s ease; }
+        .mobile-submenu a:hover { background-color: #ffffff; color: var(--primary-color); padding-left: 48px; }
+
+        /* HERO SECTION */
+        .hero-section {
+            position: relative;
+            min-height: 100vh; 
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            text-align: center;
+        }
+
+        .hero-bg-image {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-image: url('https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1280&q=60');
+            background-size: cover;
+            background-position: center;
+            filter: blur(8px); 
+            transform: scale(1.1);
+            z-index: 0;
+        }
+
+        .hero-overlay {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.4);
+            background: linear-gradient(to bottom, rgba(0,0,0,0.5) 0%, rgba(0,0,0,0.2) 50%, rgba(0,0,0,0.6) 100%);
+            z-index: 1;
+        }
+
+        .hero-content-wrapper {
+            position: relative;
+            z-index: 2;
+            max-width: 900px;
+            padding: 0 20px;
+            color: #ffffff;
+            margin-top: 40px;
+        }
+
+        .hero-title {
+            font-size: 64px; 
+            line-height: 1.1; 
+            margin: 0 0 25px 0; 
+            font-weight: 800; 
+            letter-spacing: -2px;
+        }
+        .hero-title span { 
+            color: var(--secondary-color); 
+            background: -webkit-linear-gradient(45deg, #00ace0, #4fdfff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero-subtitle {
+            font-size: 18px; 
+            margin: 0 auto 40px auto; 
+            max-width: 700px; 
+            font-weight: 400; 
+            opacity: 0.9;
+            line-height: 1.7;
+        }
+
+        .hero-btn-group { 
+            display: flex; 
+            justify-content: center; 
+            gap: 20px; 
+        }
+
+        .btn-primary-hero {
+            background: var(--primary-color); 
+            color: white; 
+            padding: 16px 36px; 
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 16px;
+            box-shadow: 0 10px 30px rgba(0, 111, 176, 0.3); 
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+        .btn-primary-hero:hover { 
+            background: var(--primary-dark); 
+            transform: translateY(-3px); 
+            box-shadow: 0 15px 40px rgba(0, 111, 176, 0.5); 
+        }
+
+        .btn-secondary-hero {
+            background: rgba(255, 255, 255, 0.1); 
+            backdrop-filter: blur(5px);
+            color: #ffffff; 
+            border: 2px solid rgba(255, 255, 255, 0.5); 
+            padding: 16px 36px; 
+            border-radius: 50px; 
+            font-weight: 600;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+        .btn-secondary-hero:hover { 
+            border-color: #ffffff; 
+            background: #ffffff; 
+            color: var(--primary-color); 
+            transform: translateY(-3px);
+        }
+
+        /* --- PARALLAX FIX --- */
+        .parallax-banner {
+            background-image: url('https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=1280&q=60');
+            background-attachment: fixed; 
+            background-position: center; 
+            background-size: cover; 
+            background-repeat: no-repeat;
+            min-height: 150px; 
+            position: relative; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            text-align: center; 
+            color: white;
+            transform: none !important;
+            will-change: auto !important;
+        }
+        .parallax-overlay { position: absolute; inset: 0; background: rgba(0, 50, 90, 0.85); z-index: 1; }
+        .parallax-content { position: relative; z-index: 2; padding: 20px; max-width: 800px; }
+        .parallax-content h2 { font-size: 36px; font-weight: 800; margin-bottom: 10px; letter-spacing: 1px; text-transform: uppercase; }
+        .tagline-berakhlak { font-size: 18px; color: var(--accent-yellow); font-weight: 500; display: block; margin-top: 15px; border-top: 1px solid rgba(255,255,255,0.2); padding-top: 15px; }
+
+        .feature-carousel-section {
+            --fc-primary-blue: #0056b3; --fc-dark-blue: #003d80; --fc-accent-yellow: #ffc107; --fc-bg-light-blue: #f0f8ff; --fc-white: #ffffff; --fc-text-gray: #666666;
+            padding: 30px 0; 
+            width: 100%; 
+            background-color: var(--fc-white); 
+            position: relative; 
+            overflow: hidden;
+
+            /* --- TAMBAHAN FIX SHADOW/GAP --- */
+            margin-top: -2px;  /* Menarik section ke atas untuk menutup celah */
+            z-index: 5;        /* Memastikan section ini menumpuk di atas celah */
+        }
+        .feature-bg-decor {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-color: white; z-index: 0; pointer-events: none;
+        }
+        .fc-wrapper { position: relative; max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+        .fc-window { width: 100%; overflow: visible; padding: 10px 5px; }
+        .fc-track { display: flex; gap: 20px; transition: transform 0.5s cubic-bezier(0.25, 1, 0.5, 1); width: max-content; align-items: flex-start; will-change: transform; justify-content: center; flex-wrap: wrap; }
+        .fc-card {
+            width: 280px; height: 380px; background: var(--fc-white); border-radius: 12px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); border: 1px solid rgba(0,0,0,0.05);
+            position: relative; overflow: hidden; transition: all 0.3s ease; cursor: pointer; margin-bottom: 20px;
+        }
+        .fc-card:hover { transform: translateY(-5px); box-shadow: 0 12px 25px rgba(0, 86, 179, 0.15); border-color: rgba(0, 86, 179, 0.3); }
+        .fc-card-img { height: 200px; width: 100%; overflow: hidden; position: relative; }
+        .fc-card-img img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease; }
+        
+        .click-hint {
+            position: absolute; top: 15px; right: 15px; background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px);
+            border-radius: 30px; padding: 6px 12px; display: flex; align-items: center; gap: 6px; box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+            z-index: 5; transition: all 0.3s ease; opacity: 0.9; pointer-events: none; animation: softPulse 2.5s infinite ease-in-out;
+        }
+        .click-hint svg { width: 14px; height: 14px; color: var(--primary-color); }
+        .click-hint span { font-size: 11px; font-weight: 700; color: var(--primary-color); text-transform: uppercase; letter-spacing: 0.5px; }
+        .fc-card.active .click-hint { opacity: 0; transform: scale(0.8); }
+        @keyframes softPulse {
+            0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.6); } 50% { transform: scale(1.05); box-shadow: 0 0 0 6px rgba(255, 255, 255, 0); } 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 255, 255, 0); }
+        }
+
+        .fc-card-content {
+            position: absolute; bottom: 0; left: 0; width: 100%; height: 180px; background: var(--fc-white); padding: 20px; display: flex; flex-direction: column; transition: height 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+            z-index: 2; border-top: 1px solid transparent;
+        }
+        .fc-card.active .fc-card-content { height: 100%; border-top: 4px solid var(--fc-accent-yellow); }
+        .fc-card-header-text { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; flex-shrink: 0; }
+        .fc-card-content h3 { margin: 0; color: var(--fc-primary-blue); font-size: 18px; font-weight: 700; }
+        .fc-card-desc { font-size: 13px; color: var(--fc-text-gray); margin: 0 0 15px 0; line-height: 1.5; flex-shrink: 0; }
+        .fc-dropdown-area {
+            opacity: 0; transform: translateY(20px); transition: all 0.3s ease 0.1s; overflow-y: auto; margin-top: 10px; scrollbar-width: none; -ms-overflow-style: none;
+        }
+        .fc-dropdown-area::-webkit-scrollbar { display: none; }
+        .fc-card.active .fc-dropdown-area { opacity: 1; transform: translateY(0); flex: 1; }
+        .fc-link-list { display: flex; flex-direction: column; gap: 8px; }
+        .fc-link-list a {
+            display: block; padding: 10px 12px; background: var(--fc-bg-light-blue); color: var(--fc-primary-blue); border-radius: 6px; font-size: 13px; font-weight: 600; text-align: center; border: 1px solid transparent; transition: 0.2s;
+        }
+        .fc-link-list a:hover { background: var(--fc-accent-yellow); color: var(--fc-dark-blue); transform: translateX(3px); border-color: var(--fc-accent-yellow); }
+
+        /* ====================================================== */
+        /* --- NEWS SECTION MODERN (FIXED POSITION & HEIGHT) --- */
+        /* ====================================================== */
+        /* Cari bagian ini di CSS kamu */
+        .news-section {
+            padding: 30px 0;
+            background-color: var(--bg-white);
+            position: relative;
+            
+            /* --- TAMBAHKAN KODE DI BAWAH INI --- */
+            margin-top: -2px;  /* Menarik section ke atas untuk menutup celah */
+            z-index: 5;        /* Memastikan section ini menumpuk di atas celah tsb */
+        }
+        .news-section::before {
+            content: '';
+            position: absolute; left: 0; 
+            
+            /* UBAH top: 0 MENJADI top: -1px */
+            top: -1px; 
+            
+            width: 100%; height: 50%;
+            background: var(--bg-white);
+        }
+
+        .news-container {
+            display: flex;
+            align-items: stretch;
+            gap: 0; 
+            background: #fff;
+            border-radius: 24px;
+            overflow: hidden;
+            border: 1px solid rgba(0, 111, 176, 0.1);
+            box-shadow: 0 20px 50px rgba(0, 50, 90, 0.08);
+            /* FIXED HEIGHT AGAR TIDAK NAIK TURUN */
+            height: 500px;
+            width: 100%;
+            position: relative;
+            z-index: 1;
+        }
+
+        .news-text-col {
+            flex: 1; 
+            padding: 50px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center; 
+            height: 100%;
+            min-width: 0; 
+            position: relative;
+            background: #ffffff;
+            overflow: hidden; /* Mencegah overflow */
+        }
+
+        /* REVISI: MENGHILANGKAN DEKORASI SAMAR AGAR PUTIH BERSIH */
+        .news-text-col::before {
+            display: none; /* Menghilangkan radial-gradient blob */
+        }
+
+        .news-header-row {
+            display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; position: relative; z-index: 1;
+        }
+
+        .news-badge {
+            display: inline-flex; align-items: center; gap: 6px;
+            background: var(--primary-color); color: #ffffff;
+            padding: 6px 14px; border-radius: 50px;
+            font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;
+        }
+        .news-badge::before { content: ''; width: 6px; height: 6px; background: var(--accent-yellow); border-radius: 50%; }
+
+        .news-counter { font-size: 14px; font-weight: 600; color: var(--text-gray); letter-spacing: 1px; }
+
+        /* Judul Berita (FIXED LINES) */
+        .news-title-anim {
+            font-size: 32px; font-weight: 800; color: var(--text-dark);
+            margin-bottom: 12px; line-height: 1.25;
+            position: relative; z-index: 1;
+            /* Batasi 2 baris */
+            display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+            height: auto;
+        }
+        
+        .news-meta {
+            font-size: 14px; color: var(--text-gray); font-weight: 500;
+            margin-bottom: 20px; display: flex; align-items: center; gap: 8px; position: relative; z-index: 1;
+        }
+        .news-meta i { color: var(--secondary-color); }
+
+        /* Deskripsi (FIXED LINES) */
+        .news-desc-anim {
+            font-size: 16px; color: #555; line-height: 1.7;
+            margin-bottom: 35px; font-weight: 400; opacity: 0.9;
+            /* Batasi 3 baris */
+            display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;
+            position: relative; z-index: 1;
+        }
+
+        .news-footer-row {
+            display: flex; align-items: center; justify-content: space-between;
+            margin-top: auto; position: relative; z-index: 1; border-top: 1px solid #f0f0f0; padding-top: 25px;
+        }
+
+        .news-nav-group { display: flex; gap: 10px; }
+        .news-btn-nav {
+            width: 42px; height: 42px; border: 1px solid #e2e8f0; border-radius: 50%;
+            background: white; color: var(--text-dark); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s ease;
+        }
+        .news-btn-nav:hover {
+            border-color: var(--primary-color); background: var(--primary-color); color: white; transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0, 111, 176, 0.15);
+        }
+
+        .news-btn-readmore {
+            display: inline-flex; align-items: center; gap: 8px; padding: 10px 24px;
+            background: var(--bg-light-blue); color: var(--primary-color); border-radius: 50px;
+            font-weight: 700; font-size: 14px; transition: all 0.3s ease;
+        }
+        .news-btn-readmore:hover {
+            background: var(--primary-color); color: white; box-shadow: 0 8px 20px rgba(0, 111, 176, 0.25); transform: translateY(-2px);
+        }
+
+        /* KOLOM KANAN: GAMBAR FIXED */
+        .news-image-col {
+            flex: 0 0 500px; width: 500px; position: relative; overflow: hidden; height: 100%; background: #eee;
+        }
+        .news-image-col::after {
+            content: ''; position: absolute; inset: 0; box-shadow: inset 10px 0 20px -10px rgba(0,0,0,0.1); pointer-events: none; z-index: 2;
+        }
+        .news-slider-track-manual {
+            display: flex; height: 100%; width: 100%; transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+        .news-slide-img {
+            min-width: 100%; width: 100%; height: 100%; object-fit: cover; flex-shrink: 0; display: block; transition: transform 5s ease;
+        }
+        .news-image-col:hover .news-slide-img { transform: scale(1.05); }
+        
+        /* Animasi Text */
+        .text-fade-out { opacity: 0; transform: translateY(10px); transition: 0.3s; }
+        .text-fade-in { opacity: 1; transform: translateY(0); transition: 0.3s; }
+
+        .news-progress {
+            position: absolute; bottom: 0; left: 0; height: 5px; background: var(--accent-yellow); width: 0%; z-index: 10;
+        }
+        .news-progress.active { transition: width 5s linear; width: 100%; }
+        .news-progress.reset { transition: none; width: 0%; }
+
+        /* ====================================================== */
+        /* --- VIDEO SLIDER SECTION (FIXED HEIGHT) --- */
+        /* ====================================================== */
+        .video-slider-section {
+            padding: 20px 0 20px 0;
+            background-color: #0f172a; 
+            background-image: url('https://images.unsplash.com/photo-1550751827-4bd374c3f58b?q=80&w=2070&auto=format&fit=crop'); 
+            background-attachment: fixed; background-position: center; background-size: cover;
+            position: relative; overflow: hidden;
+        }
+        .video-slider-section::before {
+            content: ''; position: absolute; left: 0; top: 0; width: 100%; height: 100%;
+            background: linear-gradient(135deg, rgba(11, 22, 42, 0.95) 0%, rgba(20, 35, 60, 0.9) 100%); z-index: 1;
+        }
+
+        .video-flex-container {
+            position: relative; z-index: 2; display: flex; align-items: center; gap: 40px; flex-wrap: wrap;
+        }
+
+        .video-info-col { flex: 1; min-width: 300px; color: #ffffff; }
+        .video-info-col h2 { font-size: 48px; font-weight: 800; margin: 0 0 15px 0; letter-spacing: -1px; }
+        .video-info-col p { font-size: 16px; color: rgba(255, 255, 255, 0.8); margin-bottom: 30px; line-height: 1.6; }
+
+        .video-carousel-col { flex: 2; min-width: 0; width: 100%; }
+        .video-slider-wrapper { position: relative; width: 100%; padding: 0 40px; }
+
+        .vc-window { width: 100%; overflow: hidden; padding: 20px 5px; position: relative; }
+        .vc-track { display: flex; gap: 20px; width: max-content; transition: transform 0.5s cubic-bezier(0.25, 1, 0.5, 1); }
+
+        /* KARTU VIDEO - FIXED HEIGHT & WIDTH */
+        .video-card {
+            flex: 0 0 280px; width: 280px; 
+            /* KUNCI TINGGI */
+            height: 300px; 
+            background: #fff; border-radius: 16px; overflow: hidden;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2); border: none; transition: all 0.3s ease;
+            display: flex; flex-direction: column;
+        }
+        .video-card:hover { transform: translateY(-5px); box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3); }
+
+        .video-card-media {
+            position: relative; width: 100%; padding-bottom: 56.25%; height: 0; background: #000; flex-shrink: 0;
+        }
+        .video-card-media iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0; }
+
+        .video-card-content { padding: 20px; flex-grow: 1; display: flex; flex-direction: column; }
+        .video-card-content h3 {
+            font-size: 16px; font-weight: 700; color: var(--text-dark); margin: 0 0 10px 0; line-height: 1.3;
+            display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+        }
+        .video-card-content p {
+            font-size: 13px; color: var(--text-gray); margin: 0; line-height: 1.6;
+            display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;
+        }
+        
+        /* Navigasi Video Desktop */
+        .vc-nav-btn-absolute {
+            position: absolute; top: 50%; transform: translateY(-50%); width: 45px; height: 45px;
+            border: none; border-radius: 50%; background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(5px);
+            border: 1px solid rgba(255,255,255,0.2); color: #fff; box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            cursor: pointer; z-index: 10; display: flex; align-items: center; justify-content: center; font-size: 18px; transition: all 0.2s ease;
+        }
+        .vc-nav-btn-absolute:hover { background: #fff; color: var(--primary-color); transform: translateY(-50%) scale(1.1); }
+        .vc-nav-btn-absolute.prev { left: -10px; }
+        .vc-nav-btn-absolute.next { right: -10px; }
+        
+        /* RESPONSIVE VIDEO (SWIPE MOBILE) */
+        @media (max-width: 900px) {
+            .video-flex-container { flex-direction: column; align-items: flex-start; gap: 30px; }
+            .video-info-col { width: 100%; text-align: left; padding: 0 20px; }
+            .video-carousel-col { width: 100%; overflow: visible; }
+            .video-slider-wrapper { padding: 0; }
+
+            /* Sembunyikan Tombol Desktop */
+            .vc-nav-btn-absolute { display: none !important; }
+
+            /* Enable Scroll Swipe */
+            .vc-window {
+                display: flex; width: 100%; overflow-x: auto !important; overflow-y: hidden;
+                -webkit-overflow-scrolling: touch; padding: 10px 20px 40px 20px !important;
+                scrollbar-width: none; -ms-overflow-style: none;
+            }
+            .vc-window::-webkit-scrollbar { display: none; }
+
+            .vc-track {
+                transform: none !important; width: auto !important; margin: 0 !important; gap: 15px;
+            }
+            .video-card {
+                flex: 0 0 280px !important; width: 280px !important; margin-right: 0; scroll-snap-align: center;
+            }
+        }
+
+        /* RESPONSIVE NEWS (MOBILE STACK) */
+        @media (max-width: 900px) {
+            .news-container {
+                flex-direction: column-reverse; /* Gambar atas, Teks bawah */
+                height: auto; /* Auto height di HP */
+                min-height: 500px;
+            }
+            .news-image-col {
+                width: 100%; height: 250px; flex: none; border-radius: 16px 16px 0 0;
+            }
+            .news-text-col {
+                width: 100%; flex: none; padding: 25px;
+            }
+            .news-title-anim { font-size: 24px; }
+        }
+
+        /* ARCHIVE */
+        .archive-section { font-family: 'Albert Sans', sans-serif; background-color: #ffffff; padding: 120px 0; text-align: center; position: relative; overflow: hidden; }
+        
+        /* REVISI: MENGHILANGKAN DEKORASI SAMAR AGAR PUTIH BERSIH */
+        .archive-bg-decor { 
+            display: none; /* Menghilangkan radial-gradient */
+        }
+        
+        .archive-content { position: relative; z-index: 1; max-width: 900px; margin: 0 auto; padding: 0 20px; }
+        .archive-icon { 
+            display: flex; align-items: center; justify-content: center; width: 100px; height: 100px; background-color: #f0f8ff; color: #0056b3; 
+            border-radius: 28px; margin: 0 auto 35px auto; font-size: 42px; box-shadow: 0 12px 24px rgba(0, 86, 179, 0.08); transition: transform 0.3s ease;
+        }
+        .archive-section:hover .archive-icon { transform: scale(1.05) rotate(-5deg); }
+        .archive-title { font-size: 46px; color: #0056b3; font-weight: 800; margin-bottom: 20px; line-height: 1.15; letter-spacing: -0.02em; }
+        .archive-desc { font-size: 18px; color: #555555; margin-bottom: 50px; line-height: 1.7; font-weight: 400; max-width: 780px; margin-left: auto; margin-right: auto; }
+        .btn-download-primary {
+            display: inline-flex; align-items: center; justify-content: center; gap: 15px; background-color: #0056b3; color: #ffffff; 
+            padding: 20px 45px; border-radius: 16px; font-size: 18px; font-weight: 700; text-decoration: none; transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); box-shadow: 0 10px 25px rgba(0, 86, 179, 0.25);
+        }
+        .btn-download-primary:hover { background-color: #003d80; transform: translateY(-4px); box-shadow: 0 15px 35px rgba(0, 86, 179, 0.35); }
+        .btn-download-primary svg { width: 24px; height: 24px; stroke-width: 3; }
+
+        /* FOOTER */
+        footer { background-color: var(--primary-color); color: white; padding-top: 70px; font-size: 14px; position: relative; }
+        .footer-grid { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 40px; padding-bottom: 50px; }
+        .footer-col { flex: 1; min-width: 250px; }
+        .footer-col h3 { color: var(--accent-yellow); margin-bottom: 25px; font-size: 18px; font-weight: 700; }
+        .footer-links a { color: rgba(255,255,255,0.8); display: block; margin-bottom: 12px; transition: 0.2s; }
+        .footer-links a:hover { color: #fff; transform: translateX(5px); }
+        .copyright { background-color: rgba(0,0,0,0.1); text-align: center; padding: 25px 0; color: rgba(255,255,255,0.6); border-top: 1px solid rgba(255,255,255,0.1); }
+
+        /* --- CHAT WIDGET TERBARU --- */
+        .chat-toggle-btn { 
+            position: fixed; bottom: 30px; right: 30px; width: 65px; height: 65px; 
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark)); color: #ffffff; 
+            border: none; border-radius: 50%; box-shadow: 0 8px 25px rgba(0, 111, 176, 0.4); 
+            cursor: pointer; z-index: 10000; display: flex; align-items: center; justify-content: center; 
+            transition: transform 0.3s, box-shadow 0.3s, background 0.3s; overflow: hidden; will-change: transform;
+        }
+        .chat-toggle-btn:hover { transform: scale(1.1); box-shadow: 0 12px 30px rgba(0, 111, 176, 0.5); }
+        .chat-toggle-btn.on-footer { background: var(--accent-yellow); color: var(--text-dark); }
+        .chat-toggle-btn svg { position: absolute; width: 28px; height: 28px; transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); pointer-events: none; }
+        .icon-message { opacity: 1; transform: scale(1) rotate(0deg); fill: currentColor; }
+        .icon-close { opacity: 0; transform: scale(0) rotate(-180deg); fill: none; stroke: currentColor; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+        .chat-toggle-btn.active .icon-message { opacity: 0; transform: scale(0) rotate(90deg); }
+        .chat-toggle-btn.active .icon-close { opacity: 1; transform: scale(1) rotate(0deg); }
+
+        .chat-box-container { 
+            position: fixed; bottom: 110px; right: 30px; width: 350px; height: 500px; max-height: 70vh;
+            background-color: #fff; border-radius: 16px; box-shadow: 0 20px 50px -10px rgba(0, 60, 100, 0.25);
+            border: 1px solid rgba(0, 111, 176, 0.1); z-index: 9999; 
+            opacity: 0; visibility: hidden; transform: translateY(20px) scale(0.95); transition: all 0.3s;
+            overflow: hidden; display: flex; flex-direction: column;
+        }
+        .chat-box-container.active { opacity: 1; visibility: visible; transform: translateY(0) scale(1); }
+        
+        .chat-header {
+            background: linear-gradient(135deg, var(--primary-color) 0%, #00406b 100%);
+            padding: 20px; display: flex; align-items: center; justify-content: space-between;
+            border-bottom: 3px solid var(--accent-yellow); color: #fff; flex-shrink: 0;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1); position: relative; overflow: hidden;
+        }
+        .chat-header::after {
+            content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 60%); pointer-events: none;
+        }
+
+        .chat-header-content { display: flex; align-items: center; gap: 15px; z-index: 2; width: 100%; }
+        .chat-logo-bg { 
+            width: 48px; height: 48px; background: rgba(255, 255, 255, 0.15); backdrop-filter: blur(5px); 
+            border: 1px solid rgba(255, 255, 255, 0.3); border-radius: 50%; 
+            display: flex; align-items: center; justify-content: center; color: #fff; box-shadow: 0 4px 10px rgba(0,0,0,0.1); flex-shrink: 0;
+        }
+        .chat-info { display: flex; flex-direction: column; justify-content: center; }
+        .chat-info h4 { margin: 0; font-size: 16px; font-weight: 700; letter-spacing: 0.5px; text-shadow: 0 2px 4px rgba(0,0,0,0.15); line-height: 1.2; }
+        .chat-status { display: flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 500; color: rgba(255,255,255,0.9); margin-top: 3px; }
+        .status-dot { width: 8px; height: 8px; background-color: #00ff9d; border-radius: 50%; box-shadow: 0 0 8px rgba(0, 255, 157, 0.6); animation: pulseDot 2s infinite; }
+        @keyframes pulseDot { 0% { transform: scale(0.95); opacity: 0.7; } 50% { transform: scale(1.2); opacity: 1; } 100% { transform: scale(0.95); opacity: 0.7; } }
+
+        /* Responsive */
+        @media (max-width: 900px) {
+            .hero-title { font-size: 42px; }
+            .hero-bg-image { background-position: center; }
+            .fc-nav-btn { display: none; } 
+            .fc-window { overflow-x: auto; scroll-behavior: smooth; } 
+        }
+        @media (max-width: 600px) {
+            .brand-text { font-size: 14px; }
+            .brand-logo-img { height: 35px; }
+            .menu-list { display: none; } 
+            .hero-title { font-size: 36px; }
+            .hero-btn-group { flex-direction: column; gap: 10px; width: 100%; }
+            .hero-btn-group a { width: 100%; text-align: center; }
+        }
+        @media (max-width: 768px) {
+            .hamburger-btn { display: flex; }
+            .menu-list { display: none; }
+            .nav-menu { display: flex; }
+            header.header-minimal { background-color: #fff; }
+            
+            .chat-toggle-btn { bottom: 20px; right: 20px; }
+            .chat-box-container {
+                width: calc(100% - 40px) !important; height: 65vh !important; max-height: 600px !important;
+                right: 20px !important; left: 20px !important; bottom: 100px !important; top: auto !important; border-radius: 16px !important;
+            }
+        }
+
+        /* FIX UNTUK MENGHILANGKAN KOTAK LOGO DI HP */
+        @media (max-width: 768px) {
+            .brand-area {
+                background: transparent !important; backdrop-filter: none !important; -webkit-backdrop-filter: none !important;
+                border: none !important; box-shadow: none !important; padding-left: 0 !important;
+            }
+        }
+
+        /* HEADER SOCIALS */
+        .header-socials {
+            display: flex; align-items: center; gap: 15px; margin-left: auto; margin-right: 30px; padding-right: 30px;
+            border-right: 1px solid rgba(255, 255, 255, 0.3); padding-left: 0; height: 40px;
+        }
+        .social-icon { display: flex; align-items: center; justify-content: center; transition: transform 0.3s ease; }
+        .social-icon svg { width: 20px; height: 20px; fill: #ffffff; transition: all 0.3s ease; opacity: 0.9; }
+        .social-icon:hover { transform: translateY(-2px); }
+        .social-icon:hover svg { opacity: 1; fill: var(--accent-yellow); }
+
+        header.header-minimal .header-socials { border-right-color: #e2e8f0; }
+        header.header-minimal .social-icon svg { fill: var(--text-gray); }
+        header.header-minimal .social-icon:hover svg { fill: var(--primary-color); }
+        header.header-minimal .social-icon.wa-icon:hover svg { fill: #25D366; }
+
+        @media (max-width: 992px) { .header-socials { display: none; } }
+        
+        /* SEARCH OVERLAY */
+        .search-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); z-index: 99999;
+            display: flex; justify-content: center; align-items: flex-start; padding-top: 100px;
+            opacity: 0; visibility: hidden; transition: all 0.3s ease;
+        }
+        .search-overlay.active { opacity: 1; visibility: visible; }
+        .search-content { width: 100%; max-width: 600px; position: relative; padding: 0 20px; transform: translateY(-20px); transition: 0.4s ease; }
+        .search-overlay.active .search-content { transform: translateY(0); }
+        .close-search { position: absolute; top: -50px; right: 0; font-size: 40px; border: none; background: none; cursor: pointer; color: var(--text-dark); transition: 0.3s; }
+        .close-search:hover { color: var(--accent-red); transform: rotate(90deg); }
+        #searchInput {
+            width: 100%; padding: 20px; font-size: 18px; border: 2px solid #eee; border-radius: 12px; outline: none; transition: 0.3s; font-family: 'Albert Sans', sans-serif; box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+        }
+        #searchInput:focus { border-color: var(--primary-color); box-shadow: 0 5px 20px rgba(0, 111, 176, 0.2); }
+        .search-results { margin-top: 20px; max-height: 60vh; overflow-y: auto; }
+        .search-item {
+            background: #fff; padding: 15px; border-radius: 8px; margin-bottom: 10px; border: 1px solid #eee; transition: 0.2s; cursor: pointer; display: block; text-decoration: none; color: var(--text-dark);
+        }
+        .search-item:hover { background: var(--bg-light-blue); border-color: var(--primary-color); transform: translateX(5px); }
+        .search-item h4 { margin: 0 0 5px 0; color: var(--primary-color); font-size: 16px; }
+        .search-item p { margin: 0; font-size: 13px; color: var(--text-gray); }
+
+        /* --- ABOUT SECTION (TENTANG BALMON) --- */
+        /* =========================================== */
+        .about-section {
+            padding: 60px 0;
+            background-color: #ffffff;
+            position: relative;
+            z-index: 1; /* Pastikan ini lebih rendah dari feature carousel */
+        }
+
+        .about-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 40px;
+            position: relative;
+        }
+
+        /* KOLOM GAMBAR (KIRI) */
+        .about-img-col {
+            flex: 1;
+            position: relative;
+        }
+
+        .about-main-img {
+            width: 100%;
+            border-radius: 16px;
+            position: relative;
+            transition: transform 0.3s ease;
+        }
+
+        .about-img-col:hover .about-main-img {
+            transform: translateY(-3px);
+        }
+
+        /* KOLOM TEKS (KANAN) */
+        .about-text-col {
+            flex: 1;
+        }
+
+        .about-tag {
+            display: inline-block;
+            background: rgba(0, 172, 224, 0.1);
+            /* FIX TYPO: font-style: bold; menjadi font-weight: bold; */
+            font-weight: 700;
+            font-size: 14px;
+            color: var(--secondary-color);
+            padding: 4px 12px;
+            border-radius: 20px;
+            margin-bottom: 16px;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        .about-title {
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin: 0 0 16px 0;
+            line-height: 1.3;
+        }
+
+        .about-title span {
+            color: var(--primary-color);
+        }
+
+        .about-desc {
+            font-size: 16px;
+            color: var(--text-gray);
+            line-height: 1.6;
+            margin-bottom: 24px;
+            text-align: justify;
+        }
+
+        /* Poin-poin Checklist */
+        .about-points {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 28px;
+        }
+
+        .point-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 500;
+            color: var(--primary-dark);
+            font-size: 14px;
+        }
+
+        .point-item i {
+            color: var(--accent-yellow);
+            font-size: 16px;
+            background: var(--primary-color);
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            flex-shrink: 0;
+        }
+
+        .btn-about {
+            /* Ubah display dari inline-block ke block atau flex */
+            display: table; /* atau fit-content */
+            
+            /* Trik margin auto untuk menengahkan elemen block */
+            margin: 0 auto; 
+            
+            /* Style lama Anda tetap di bawah ini */
+            align-items: center;
+            gap: 8px;
+            background-color: var(--primary-color);
+            color: #ffffff;
+            padding: 12px 24px;
+            border-radius: 24px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .btn-about:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 900px) {
+            .about-wrapper {
+                flex-direction: column;
+                gap: 30px;
+            }
+            .about-img-col {
+                width: 100%;
+                padding: 0 20px;
+            }
+            .about-text-col {
+                width: 100%;
+                text-align: left;
+            }
+        }
+
+        /* ABOUT SECTION - MOBILE RESPONSIVE & TEXT CENTER */
+        @media (max-width: 768px) {
+            .about-wrapper {
+                flex-direction: column;
+                gap: 30px;
+            }
+            
+            .about-img-col {
+                width: 100%;
+                order: 1;
+            }
+            
+            .about-text-col {
+                width: 100%;
+                order: 2;
+                text-align: center;
+            }
+            
+            .about-tag {
+                display: inline-block;
+                margin-bottom: 16px;
+            }
+            
+            .about-title {
+                font-size: 24px;
+            }
+            
+            .about-desc {
+                text-align: center;
+                font-size: 15px;
+            }
+            
+            .about-points {
+                grid-template-columns: 1fr;
+                justify-items: center;
+                margin-bottom: 28px;
+            }
+            
+            .point-item {
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="pageLoader" class="page-loader">
+        <div class="loader-spinner"></div>
+        <div class="loader-text">MEMUAT...</div>
+    </div>
+
+<header id="mainHeader">
+    <div class="container header-content">
+        <div class="brand-area" onclick="scrollToTop()">
+            <img src="balmonsmd1.png" alt="Logo Balmon" class="brand-logo-img">
+            <div class="brand-text">
+                BALMON SAMARINDA
+                <span>Kementerian Komunikasi & Digital</span>
+            </div>
+        </div>
+
+        <div class="header-socials">
+            <a href="https://wa.me/6285648283012" target="_blank" class="social-icon wa-icon" aria-label="WhatsApp">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></path></svg>
+            </a>
+            <a href="https://www.instagram.com/balmonsamarinda/" target="_blank" class="social-icon" aria-label="Instagram">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.163 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+            </a>
+            <a href="https://www.facebook.com/profile.php?id=100068963927418" class="social-icon" aria-label="Facebook">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9 8h-3v4h3v12h5v-12h3.642l.358-4h-4v-1.667c0-.955.192-1.333 1.115-1.333h2.885v-5h-3.808c-3.596 0-5.192 1.583-5.192 4.615v3.385z"/></svg>
+            </a>
+            <a href="https://youtube.com/@balmonsamarindaa?si=EZUAjSarJaMD-7R9" class="social-icon" aria-label="YouTube">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z"/></svg>
+            </a>
+            <a href="https://www.tiktok.com/@balmon.samarinda?lang=en" class="social-icon" aria-label="TikTok">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" stroke="none">
+                    <path d="M12.53.02C13.84 0 15.14.01 16.44 0c.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.65-1.58-1.09-.1-.09-.19-.2-.29-.3v6.52c.02 4.07-3.23 7.49-7.29 7.49-3.93.04-7.3-3.13-7.48-7.05-.07-1.84.58-3.66 1.83-5.01 1.25-1.35 3.03-2.14 4.86-2.16v4.03c-1.11-.02-2.19.46-2.95 1.29a4.106 4.106 0 0 0-1.1 2.89c.04 2.22 1.84 4.02 4.02 4.02 2.22 0 4.02-1.8 4.02-4.02V.02h.22z"/>
+                </svg>
+            </a>
+        </div>
+
+        <nav class="nav-menu">
+            <ul class="menu-list">
+                <li class="menu-item" onclick="window.location.href='index.html'">Beranda</li>
+                <li class="menu-item">Layanan
+                    <ul class="dropdown-content">
+                        <li><a href="konsesi.html">Izin Konsesi</a></li>
+                        <li><a href="maritim.html">Izin Maritim</a></li>
+                        <li><a href="fm.html">Izin Penyiaran FM</a></li>
+                    </ul>
+                </li>
+                <li class="menu-item" onclick="window.location.href='galeri.html'">Publikasi</li>
+                <li class="menu-item" onclick="window.location.href='arsip.html'">Download</li>
+                <li class="menu-item" onclick="window.location.href='kontak.html'">Kontak</li>
+            </ul>
+            <button class="nav-search-btn" onclick="openSearch()" style="margin-left:10px; border:none; background:transparent; color:white; cursor:pointer;">
+                <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                </svg>
+            </button>
+        </nav>
+        
+        <button class="hamburger-btn" id="hamburgerBtn" onclick="toggleMobileMenu()">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+    </div>
+
+    <div class="mobile-nav-dropdown" id="mobileNavDropdown">
+        <div class="mobile-menu-item" onclick="handleMobileMenuItem(this, 'beranda')">Beranda</div>
+        <div class="mobile-menu-item has-submenu" onclick="toggleMobileSubmenu(this)">Layanan</div>
+        <div class="mobile-submenu" id="submenu-layanan">
+            <a href="konsesi.html" onclick="closeMobileMenu()">Izin Konsesi</a>
+            <a href="maritim.html" onclick="closeMobileMenu()">Izin Maritim</a>
+            <a href="fm.html" onclick="closeMobileMenu()">Izin Penyiaran FM</a>
+        </div>
+        <div class="mobile-menu-item" onclick="handleMobileMenuItem(this, 'publikasi')">Publikasi</div>
+        <div class="mobile-menu-item" onclick="handleMobileMenuItem(this, 'download')">Download</div>
+        <div class="mobile-menu-item" onclick="handleMobileMenuItem(this, 'kontak')">Kontak</div>
+    </div>
+</header>
+
+    <div class="hero-section">
+        <div class="hero-bg-image"></div>
+        <div class="hero-overlay"></div>
+        
+        <div class="hero-content-wrapper">
+            <h1 class="hero-title">Balai Monitor Spektrum<br><span>Frekuensi Radio Kelas 1 Samarinda</span></h1>
+            <p class="hero-subtitle">Mewujudkan frekuensi radio yang tertib, efisien, dan bebas gangguan di Kalimantan Timur. Ajukan perizinan dan pengaduan Anda secara online dengan mudah dan transparan.</p>
+            <div class="hero-btn-group">
+                <a href="#layanan-publik" class="btn-primary-hero btn-tooltip" data-tooltip="Lihat Jenis Perizinan">Layanan</a>
+                <a href="kontak.html" class="btn-secondary-hero btn-tooltip" data-tooltip="Hubungi via WhatsApp/Email">Hubungi Kami</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="about-section fade-in-section">
+        <div class="container">
+            <div class="about-wrapper">
+                
+                <div class="about-img-col">
+                    <img src="https://images.unsplash.com/photo-1497215728101-856f4ea42174?q=80&w=2070&auto=format&fit=crop" alt="Kantor Balmon Samarinda" class="about-main-img">
+                </div>
+
+                <div class="about-text-col">
+                    <span class="about-tag">Tentang</span>
+                    <h2 class="about-title">Balai Monitor Spektrum <br> Frekuensi Radio Kelas I Samarinda</h2>
+                    <p class="about-desc">
+                        Adalah Unit Pelaksana Teknis (UPT) di lingkungan Direktorat Jenderal Sumber Daya dan Perangkat Pos dan Informatika (Ditjen SDPPI), Kementerian Komunikasi dan Digital.
+                        <br><br>
+                        Kami bertugas melaksanakan pengawasan, pengendalian, dan penertiban penggunaan spektrum frekuensi radio agar tercipta komunikasi yang lancar tanpa interferensi di wilayah Kalimantan Timur.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="feature-carousel-section fade-in-section">
+        <div class="feature-bg-decor"></div>
+        <div class="fc-wrapper">
+            <div class="fc-window" id="fcWindow">
+                <div class="fc-track fade-stagger-children" id="fcTrack">
+                    
+                    <div class="fc-card" onclick="toggleDropdown(this)">
+                        <div class="fc-card-img">
+                            <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=400&q=60" alt="Tentang Balmon" loading="lazy">
+                            <div class="click-hint">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+                                <span>Detail</span>
+                            </div>
+                        </div>
+                        <div class="fc-card-content">
+                            <div class="fc-card-header-text"><h3>Tentang Balmon</h3></div>
+                            <p class="fc-card-desc">Unit Pelaksana Teknis (UPT) Ditjen SDPPI yang bertugas mengawasi frekuensi radio di Kaltim.</p>
+                            <div class="fc-dropdown-area">
+                                <ul class="fc-link-list"><li><a href="#">Sejarah Kami</a></li><li><a href="#">Visi & Misi</a></li><li><a href="#">Struktur Organisasi</a></li><li><a href="galeri.html">Publikasi</a></li></ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="fc-card" onclick="toggleDropdown(this)">
+                        <div class="fc-card-img">
+                            <img src="https://images.unsplash.com/photo-1581092160562-40aa08e78837?auto=format&fit=crop&w=400&q=60" alt="Tugas Fungsi" loading="lazy">
+                            <div class="click-hint">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+                                <span>Detail</span>
+                            </div>
+                        </div>
+                        <div class="fc-card-content">
+                            <div class="fc-card-header-text"><h3>Tugas & Fungsi</h3></div>
+                            <p class="fc-card-desc">Monitoring frekuensi, penertiban gangguan, dan pelayanan ujian amatir radio (UNAR).</p>
+                            <div class="fc-dropdown-area">
+                                <ul class="fc-link-list"><li><a href="#">Kegiatan Monitoring</a></li><li><a href="#">Jadwal UNAR</a></li></ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="layanan-publik" class="fc-card" onclick="toggleDropdown(this)">
+                        <div class="fc-card-img">
+                            <img src="https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?auto=format&fit=crop&w=400&q=60" alt="Pelayanan Publik" loading="lazy">
+                            <div class="click-hint">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+                                <span>Detail</span>
+                            </div>
+                        </div>
+                        <div class="fc-card-content">
+                            <div class="fc-card-header-text"><h3>Pelayanan Publik</h3></div>
+                            <p class="fc-card-desc">Layanan perizinan spektrum radio maritim, penerbangan, dan penyiaran.</p>
+                            <div class="fc-dropdown-area">
+                                <ul class="fc-link-list"><li><a href="konsesi.html">Izin Konsesi</a></li><li><a href="maritim.html">Izin Maritim/Pantai</a></li><li><a href="fm.html">Izin Penyiaran FM</a></li></ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="fc-card" onclick="toggleDropdown(this)">
+                        <div class="fc-card-img">
+                            <img src="https://images.unsplash.com/photo-1596524430615-b46475ddff6e?auto=format&fit=crop&w=400&q=60" alt="Pengaduan" loading="lazy">
+                            <div class="click-hint">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+                                <span>Detail</span>
+                            </div>
+                        </div>
+                        <div class="fc-card-content">
+                            <div class="fc-card-header-text"><h3>Hubungi Kami</h3></div>
+                            <p class="fc-card-desc">Masyarakat dapat melaporkan gangguan frekuensi radio melalui kanal pengaduan resmi kami.</p>
+                            <div class="fc-dropdown-area">
+                                <ul class="fc-link-list"><li><a href="kontak.html">Kontak</a></li></ul> </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="news-section fade-in-section">
+        <div class="container">
+            <div class="news-container">
+                <div class="news-text-col">
+                    <div class="news-header-row">
+                        <span class="news-badge">Berita & Pengumuman</span>
+                        <span class="news-counter" id="newsCounter" style="margin: 0 0 0 auto;">00 / 00</span>
+                    </div>
+                    
+                    <h2 class="news-title-anim" id="newsTitle" style="font-size: 24px;">Memuat Berita...</h2>
+                    <div class="news-meta">
+                        <i class="bi bi-calendar-event"></i> <span id="newsDate">...</span>
+                    </div>
+                    <p class="news-desc-anim" id="newsDesc">Menghubungkan ke database Firebase...</p>
+                    
+                    <div class="news-footer-row">
+                        <a href="galeri.html?filter=news" class="news-btn-readmore">
+                            Baca Selengkapnya <i class="bi bi-arrow-right"></i>
+                        </a>
+                        
+                        <div class="news-nav-group">
+                            <button class="news-btn-nav" onclick="prevNews()">
+                                <i class="bi bi-chevron-left"></i>
+                            </button>
+                            <button class="news-btn-nav" onclick="nextNews()">
+                                <i class="bi bi-chevron-right"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="news-image-col">
+                    <div class="news-slider-track-manual" id="newsTrack">
+                        </div>
+                    <div class="news-progress" id="newsProgress"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="video-slider-section fade-in-section">
+        <div class="container video-flex-container">
+            
+            <div class="video-info-col">
+                <h2>Video</h2>
+                <p>Galeri video Balai Monitoring Spektrum Frekuensi Radio Kelas I Samarinda. Temukan berbagai informasi edukatif seputar spektrum frekuensi dan kegiatan kami.</p>
+            </div>
+
+            <div class="video-carousel-col">
+                <div class="video-slider-wrapper">
+                    <button class="vc-nav-btn-absolute prev" id="btnPrev" onclick="slideVideo('prev')" aria-label="Previous">
+                        <i class="bi bi-chevron-left"></i>
+                    </button>
+
+                    <div class="vc-window">
+                        <div class="vc-track fade-stagger-children" id="videoTrack">
+                            </div>
+                    </div>
+
+                    <button class="vc-nav-btn-absolute next" id="btnNext" onclick="slideVideo('next')" aria-label="Next">
+                        <i class="bi bi-chevron-right"></i>
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+
+    <div class="archive-section fade-in-section">
+    <div class="archive-content fade-stagger-children">
+        <div class="archive-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                <polyline points="14 2 14 8 20 8"></polyline>
+                <line x1="16" y1="13" x2="8" y2="13"></line>
+                <line x1="16" y1="17" x2="8" y2="17"></line>
+                <polyline points="10 9 9 9 8 9"></polyline>
+            </svg>
+        </div>
+
+        <h2 class="archive-title">Pusat Arsip & Regulasi</h2>
+        <p class="archive-desc">
+            Akses dan unduh kebutuhan dokumen perizinan Anda secara lengkap. Kami menyediakan formulir permohonan ISR, Standar Operasional Prosedur (SOP), serta kumpulan regulasi terbaru terkait penggunaan spektrum frekuensi radio.
+        </p>
+
+        <a href="arsip.html" class="btn-download-primary">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                <polyline points="7 10 12 15 17 10"></polyline>
+                <line x1="12" y1="15" x2="12" y2="3"></line>
+            </svg>
+            Unduh Dokumen & Regulasi
+        </a>
+    </div>
+    </div>
+
+    <div class="parallax-banner">
+        <div class="parallax-overlay"></div>
+        <div class="parallax-content fade-in-section">
+            <h2>ASN BerAKHLAK</h2>
+            <p style="font-size: 16px; opacity: 0.9;">Bangga Melayani Bangsa</p>
+            <span class="tagline-berakhlak">Berorientasi Pelayanan • Akuntabel • Kompeten • Harmonis • Loyal • Adaptif • Kolaboratif</span>
+        </div>
+    </div>
+
+    <footer id="mainFooter" class="fade-in-section">
+        <div class="container">
+            <div class="footer-grid fade-stagger-children">
+                <div class="footer-col">
+                    <h3>Balmon Samarinda</h3>
+                    <p style="color:rgba(255,255,255,0.7); line-height:1.8;">
+                        Jl. Sultan Sulaiman No. 55, Kel. Sambutan, Kec. Sambutan,<br>Samarinda, Kalimantan Timur 75115.<br><br>
+                        <strong>Telp:</strong> 0856-4828-3012<br><strong>Email:</strong>
+                        pelayananuptbalmonsamarinda@gmail.com
+                    </p>
+                </div>
+                <div class="footer-col">
+                    <h3>Tautan Cepat</h3>
+                    <div class="footer-links">
+                        <a href="profil.html">Profil Organisasi</a><a href="#">Standar Pelayanan</a><a
+                            href="#">Pengaduan Masyarakat</a><a href="#">Peta Sebaran Menara</a>
+                    </div>
+                </div>
+                <div class="footer-col">
+                    <h3>Jam Pelayanan</h3>
+                    <p style="color:rgba(255,255,255,0.7);">Senin - Kamis: 08.00 - 16.00<br>Jumat: 08.00 -
+                        16.30<br>Sabtu - Minggu: Libur</p>
+                </div>
+            </div>
+        </div>
+        <div class="copyright">Copyright@2024 Balai Monitor Spektrum Frekuensi Radio Kelas I Samarinda</div>
+    </footer>
+
+    <div class="chat-box-container" id="chatBox">
+        <div class="chat-header">
+            <div class="chat-header-content">
+                <div class="chat-logo-bg">
+                    <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>
+                </div>
+                <div class="chat-info">
+                    <h4>Sobat Digi</h4>
+                    <div class="chat-status"><span class="status-dot"></span>Online - Siap Membantu</div>
+                </div>
+            </div>
+        </div>
+        <iframe id="chatFrame" data-src="https://MagangBalmon2619-Chat-Balmon.hf.space" style="width: 100%; height: 100%; border: none; background: #fff;" allow="clipboard-write; microphone" loading="lazy"></iframe>
+    </div>
+
+    <button class="chat-toggle-btn" id="toggleBtn" onclick="animateChatToggle()">
+        <svg class="icon-message" viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 9h12v2H6V9zm8 5H6v-2h8v2zm4-6H6V6h12v2z"/></svg>
+        <svg class="icon-close" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+    </button>
+
+    <div class="search-overlay" id="searchOverlay">
+        <div class="search-content">
+            <button class="close-search" onclick="closeSearch()">&times;</button>
+            <h2 style="color:var(--primary-color);">Pencarian</h2>
+            <input type="text" id="searchInput" onkeyup="performSearch()" placeholder="Ketik kata kunci...">
+            <div class="search-results" id="searchResults"></div>
+        </div>
+    </div>
+
+    <script>
+        // ===========================================
+        // FUNGSI ANIMASI FADE-IN PADA SCROLL
+        // ===========================================
+        function initScrollAnimations() {
+            const fadeSections = document.querySelectorAll('.fade-in-section');
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('is-visible');
+                    }
+                });
+            }, { 
+                threshold: 0.1, 
+                rootMargin: '0px 0px -50px 0px' 
+            });
+            
+            fadeSections.forEach(section => {
+                observer.observe(section);
+            });
+        }
+        
+        document.addEventListener('DOMContentLoaded', () => {
+            initScrollAnimations();
+        });
+        
+        // PAGE LOADER LOGIC OPTIMIZED
+        window.addEventListener('load', () => {
+            const loader = document.getElementById('pageLoader');
+            if(loader) loader.classList.add('hidden');
+            
+            setTimeout(() => {
+                const visibleSections = document.querySelectorAll('.fade-in-section');
+                visibleSections.forEach(section => {
+                    const rect = section.getBoundingClientRect();
+                    if (rect.top < window.innerHeight && rect.bottom > 0) {
+                        section.classList.add('is-visible');
+                    }
+                });
+            }, 100);
+            
+            // INIT VIDEO SLIDER
+            // Note: initVideoSlider dipanggil di script bawah jika Firebase aktif
+            if(typeof initVideoSlider === 'function') initVideoSlider();
+        });
+        
+        window.addEventListener('pageshow', (event) => {
+            const loader = document.getElementById('pageLoader');
+            if (event.persisted && loader) loader.classList.add('hidden');
+        });
+        
+        document.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', function(e) {
+                const href = this.getAttribute('href');
+                const target = this.getAttribute('target');
+                if (href && !href.startsWith('#') && !href.startsWith('javascript') && target !== '_blank') {
+                    e.preventDefault();
+                    const loader = document.getElementById('pageLoader');
+                    loader.classList.remove('hidden');
+                    setTimeout(() => { window.location.href = href; }, 300);
+                }
+            });
+        });
+
+        // FEATURE CAROUSEL
+        function toggleDropdown(clickedCard) { clickedCard.classList.toggle('active'); }
+
+        // CHAT ANIMATION & LAZY LOAD
+        function animateChatToggle() {
+            const btn = document.getElementById("toggleBtn");
+            const box = document.getElementById("chatBox");
+            const iframe = document.getElementById("chatFrame");
+
+            if (!iframe.getAttribute('src')) {
+                iframe.setAttribute('src', iframe.getAttribute('data-src'));
+            }
+
+            if (btn.classList.contains("active")) {
+                btn.classList.remove("active"); 
+                box.classList.remove("active"); 
+                return;
+            }
+            if (btn.classList.contains("loading")) return;
+            
+            btn.classList.add("loading");
+            setTimeout(() => {
+                btn.classList.remove("loading"); 
+                btn.classList.add("active"); 
+                box.classList.add("active");
+            }, 400); 
+        }
+
+        // SCROLL EVENTS
+        let lastScrollY = window.scrollY;
+        let ticking = false;
+        function updateScroll() {
+            const scrollY = window.scrollY;
+            const chatBtn = document.getElementById('toggleBtn');
+            const footer = document.getElementById('mainFooter');
+            const header = document.getElementById('mainHeader');
+            
+            if (scrollY > 50) header.classList.add('header-minimal');
+            else header.classList.remove('header-minimal');
+
+            if (footer) {
+                const footerRect = footer.getBoundingClientRect();
+                const windowHeight = window.innerHeight;
+                if (footerRect.top < windowHeight) {
+                    chatBtn.classList.add('on-footer');
+                } else {
+                    chatBtn.classList.remove('on-footer');
+                }
+            }
+            ticking = false;
+        }
+        
+        window.addEventListener('scroll', function() {
+            lastScrollY = window.scrollY;
+            if (!ticking) {
+                window.requestAnimationFrame(updateScroll);
+                ticking = true;
+            }
+        }, { passive: true });
+
+        function scrollToTop() { window.scrollTo({ top: 0, behavior: 'smooth' }); }
+
+        // MOBILE MENU
+        function toggleMobileMenu() {
+            document.getElementById('hamburgerBtn').classList.toggle('active');
+            document.getElementById('mobileNavDropdown').classList.toggle('active');
+        }
+        
+        function closeMobileMenu() {
+            document.getElementById('hamburgerBtn').classList.remove('active');
+            document.getElementById('mobileNavDropdown').classList.remove('active');
+            document.querySelectorAll('.mobile-submenu').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.mobile-menu-item.has-submenu').forEach(i => i.classList.remove('active'));
+        }
+        
+        function toggleMobileSubmenu(element) {
+            const submenu = element.nextElementSibling;
+            element.classList.toggle('active');
+            if (submenu && submenu.classList.contains('mobile-submenu')) submenu.classList.toggle('active');
+        }
+        
+        function handleMobileMenuItem(element, action) {
+            if (action === 'beranda') window.location.href = 'index.html';
+            else if (action === 'kontak') window.location.href = 'kontak.html';
+            else if (action === 'publikasi') window.location.href = 'galeri.html';
+            else if (action === 'download') window.location.href = 'arsip.html';
+            closeMobileMenu();
+        }
+        
+        document.addEventListener('click', function(event) {
+            const header = document.getElementById('mainHeader');
+            const nav = document.getElementById('mobileNavDropdown');
+            if (!header.contains(event.target) && nav.classList.contains('active')) closeMobileMenu();
+        });
+
+        /* =========================================
+            LOGIKA VIDEO SLIDER (STATIC FALLBACK)
+            ========================================= */
+        
+        // Menggunakan "var" agar bisa diakses global jika Firebase gagal
+        var globalVideoData = [
+            { id: "MhM-jKwb92g", title: "Mengenal Spektrum Frekuensi Radio", desc: "Video edukasi singkat." },
+            { id: "ScMzIvxBSi4", title: "Prosedur Perizinan ISR Online", desc: "Panduan lengkap Izin Stasiun Radio." }
+        ];
+        
+        let videoScrollPosition = 0;
+        let videoCardWidth = 300; 
+
+        // Fungsi ini akan ditimpa oleh Firebase Script jika berhasil load
+        function initVideoSlider() {
+            const track = document.getElementById('videoTrack');
+            if(!track) return;
+            track.innerHTML = '';
+
+            globalVideoData.forEach(video => {
+                const card = document.createElement('div');
+                card.className = 'video-card';
+                card.innerHTML = `
+                    <div class="video-card-media">
+                         <iframe src="https://www.youtube.com/embed/${video.id}" loading="lazy" allowfullscreen title="${video.title}"></iframe>
+                    </div>
+                    <div class="video-card-content">
+                        <h3>${video.title}</h3>
+                        <p>${video.desc}</p>
+                    </div>
+                `;
+                track.appendChild(card);
+            });
+        }
+
+        // Fungsi Slide Video Global
+        function slideVideo(direction) {
+            const track = document.getElementById('videoTrack');
+            const firstCard = track.querySelector('.video-card');
+            if(firstCard) {
+                videoCardWidth = firstCard.offsetWidth + 20; 
+            }
+
+            // Gunakan globalVideoData jika belum ditimpa Firebase
+            const currentDataLength = (window.firebaseVideoData && window.firebaseVideoData.length > 0) ? window.firebaseVideoData.length : globalVideoData.length;
+            const maxScroll = (currentDataLength * videoCardWidth) - track.parentElement.offsetWidth;
+            
+            if (direction === 'next') {
+                videoScrollPosition += videoCardWidth;
+                if (videoScrollPosition > maxScroll) videoScrollPosition = maxScroll; 
+                if (maxScroll < 0) videoScrollPosition = 0;
+            } else {
+                videoScrollPosition -= videoCardWidth;
+                if (videoScrollPosition < 0) videoScrollPosition = 0;
+            }
+
+            track.style.transform = `translateX(-${videoScrollPosition}px)`;
+        }
+
+
+        /* SEARCH FUNCTIONALITY */
+        const pages = [
+            { title: "Beranda", url: "index.html", desc: "Halaman utama Balmon Samarinda" },
+            { title: "Izin Konsesi", url: "konsesi.html", desc: "Layanan perizinan frekuensi untuk perusahaan/konsesi." },
+            { title: "Izin Maritim (Kapal)", url: "maritim.html", desc: "Pengurusan izin stasiun radio kapal dan laut." },
+            { title: "Izin Penyiaran FM", url: "fm.html", desc: "Prosedur perizinan untuk stasiun radio FM/Penyiaran." },
+            { title: "Galeri Kegiatan", url: "galeri.html", desc: "Dokumentasi foto dan video kegiatan Balmon." },
+            { title: "Arsip & Regulasi", url: "arsip.html", desc: "Download dokumen, SOP, dan regulasi terbaru." },
+            { title: "Kontak Kami", url: "kontak.html", desc: "Alamat kantor, email, dan nomor pengaduan." }
+        ];
+
+        function openSearch() {
+            document.getElementById('searchOverlay').classList.add('active');
+            setTimeout(() => document.getElementById('searchInput').focus(), 300);
+        }
+
+        function closeSearch() {
+            document.getElementById('searchOverlay').classList.remove('active');
+            document.getElementById('searchInput').value = '';
+            document.getElementById('searchResults').innerHTML = '';
+        }
+
+        function performSearch() {
+            const input = document.getElementById('searchInput').value.toLowerCase();
+            const resultContainer = document.getElementById('searchResults');
+            resultContainer.innerHTML = '';
+
+            if (input.length < 2) return;
+
+            const results = pages.filter(page => 
+                page.title.toLowerCase().includes(input) || 
+                page.desc.toLowerCase().includes(input)
+            );
+
+            if (results.length > 0) {
+                results.forEach(page => {
+                    const item = document.createElement('a');
+                    item.href = page.url;
+                    item.className = 'search-item';
+                    item.innerHTML = `
+                        <h4>${page.title}</h4>
+                        <p>${page.desc}</p>
+                    `;
+                    resultContainer.appendChild(item);
+                });
+            } else {
+                resultContainer.innerHTML = '<div style="text-align:center; color:#888;">Tidak ditemukan hasil yang cocok.</div>';
+            }
+        }
+
+        document.addEventListener('keydown', function(event) {
+            if (event.key === "Escape") closeSearch();
+        });
+    </script>
+    
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getDatabase, ref, runTransaction, onValue } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+
+        // --- 1. KONFIGURASI FIREBASE ---
+        // CATATAN PENTING: Jika error CORS, buka file ini via Live Server (http://127.0.0.1:5500), jangan double click file html.
+        const firebaseConfig = {
+            apiKey: "AIzaSyDUeIg9Zn_xndPXtChO8KufXFp6EMtqBJ0",
+            authDomain: "admin-pelayanan-balmon.firebaseapp.com",
+            databaseURL: "https://admin-pelayanan-balmon-default-rtdb.firebaseio.com",
+            projectId: "admin-pelayanan-balmon",
+            storageBucket: "admin-pelayanan-balmon.firebasestorage.app",
+            messagingSenderId: "1071557110255",
+            appId: "1:1071557110255:web:bff7087da1feacccb7ee1a"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+
+        // ============================================================
+        // BAGIAN A: VISITOR TRACKER
+        // ============================================================
+        try {
+            function runVisitorTracker() {
+                if (!sessionStorage.getItem('visited_v2')) {
+                    const visitRef = ref(db, 'statistik_web/total_kunjungan');
+                    runTransaction(visitRef, (currentCount) => {
+                        return (currentCount || 0) + 1;
+                    }).then(() => {
+                        console.log("✅ Tracker: Data kunjungan diperbarui.");
+                        sessionStorage.setItem('visited_v2', 'true');
+                    }).catch((err) => console.error("❌ Tracker Error:", err));
+                }
+            }
+            runVisitorTracker();
+        } catch (e) {
+            console.log("Visitor tracker skipped (local context)");
+        }
+
+        // ============================================================
+        // BAGIAN B: LOGIKA NEWS CAROUSEL
+        // ============================================================
+        
+        // 1. Variabel Global News
+        let newsData = []; 
+        let currentNewsIndex = 0;
+        let newsInterval;
+
+        // 2. Fungsi Init Carousel News
+        function initNewsCarousel() {
+            const track = document.getElementById('newsTrack');
+            if (!track) return;
+
+            track.innerHTML = ''; 
+
+            if (newsData.length === 0) {
+                const titleEl = document.getElementById('newsTitle');
+                const descEl = document.getElementById('newsDesc');
+                if(titleEl) titleEl.textContent = "Data Kosong";
+                if(descEl) descEl.textContent = "Tidak ada berita ditemukan.";
+                return;
+            }
+
+            // Masukkan gambar
+            newsData.forEach(news => {
+                const img = document.createElement('img');
+                img.src = news.img;
+                img.className = 'news-slide-img';
+                img.alt = news.title;
+                img.style.minWidth = "100%";
+                img.style.width = "100%";
+                img.style.objectFit = "cover";
+                img.onerror = function() {
+                    this.src = 'https://via.placeholder.com/800x600?text=Image+Not+Found';
+                };
+                track.appendChild(img);
+            });
+
+            updateNewsDisplay(false); 
+            startAutoNews();
+        }
+
+        // 3. Fungsi Update Tampilan News
+        function updateNewsDisplay(useAnimation = true) {
+            const titleEl = document.getElementById('newsTitle');
+            const dateEl = document.getElementById('newsDate');
+            const descEl = document.getElementById('newsDesc');
+            const counterEl = document.getElementById('newsCounter');
+            const progressEl = document.getElementById('newsProgress');
+            const track = document.getElementById('newsTrack');
+            const container = document.querySelector('.news-image-col');
+
+            if (!track || !container || newsData.length === 0) return;
+
+            const containerWidth = container.clientWidth;
+            
+            track.style.transition = useAnimation ? 'transform 0.6s cubic-bezier(0.25, 1, 0.5, 1)' : 'none';
+            track.style.transform = `translateX(-${currentNewsIndex * containerWidth}px)`;
+
+            titleEl.classList.add('text-fade-out');
+            titleEl.classList.remove('text-fade-in');
+            descEl.classList.add('text-fade-out');
+            descEl.classList.remove('text-fade-in');
+
+            setTimeout(() => {
+                const item = newsData[currentNewsIndex];
+                if(item) {
+                    titleEl.textContent = item.title;
+                    dateEl.textContent = item.date;
+                    descEl.textContent = item.desc;
+                    
+                    const idx = currentNewsIndex + 1;
+                    const total = newsData.length;
+                    counterEl.textContent = `${idx < 10 ? '0'+idx : idx} / ${total < 10 ? '0'+total : total}`;
+                }
+                
+                titleEl.classList.remove('text-fade-out');
+                titleEl.classList.add('text-fade-in');
+                descEl.classList.remove('text-fade-out');
+                descEl.classList.add('text-fade-in');
+            }, 300);
+
+            progressEl.classList.remove('active');
+            void progressEl.offsetWidth; 
+            progressEl.classList.add('active');
+        }
+
+        // 4. Navigasi News
+        function nextNews() {
+            if (newsData.length <= 1) return;
+            currentNewsIndex++;
+            if (currentNewsIndex >= newsData.length) currentNewsIndex = 0;
+            updateNewsDisplay(true);
+            startAutoNews();
+        }
+
+        function prevNews() {
+            if (newsData.length <= 1) return;
+            currentNewsIndex--;
+            if (currentNewsIndex < 0) currentNewsIndex = newsData.length - 1;
+            updateNewsDisplay(true);
+            startAutoNews();
+        }
+
+        function startAutoNews() {
+            clearInterval(newsInterval);
+            if (newsData.length > 1) {
+                newsInterval = setInterval(() => { nextNews(); }, 5000);
+            }
+        }
+
+        window.addEventListener('resize', () => {
+            if (newsData.length > 0) updateNewsDisplay(false);
+        });
+
+        // Expose News Functions
+        window.nextNews = nextNews;
+        window.prevNews = prevNews;
+
+
+        // ============================================================
+        // BAGIAN C: LOGIKA VIDEO SLIDER (FIREBASE INTEGRATED)
+        // ============================================================
+        
+        let dbVideoData = []; 
+        
+        // Helper: Ekstrak YouTube ID dari URL (Link panjang/pendek)
+        function getYoutubeId(url) {
+            if (!url) return null;
+            const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
+            const match = url.match(regExp);
+            return (match && match[2].length === 11) ? match[2] : null;
+        }
+
+        // 2. Fungsi Init Video Slider (Render Kartu dari DB)
+        function initDbVideoSlider() {
+            const track = document.getElementById('videoTrack');
+            if(!track) return;
+            
+            track.innerHTML = ''; 
+
+            if (dbVideoData.length === 0) {
+                track.innerHTML = '<div style="color:white; padding:20px;">Belum ada video tersedia.</div>';
+                return;
+            }
+
+            dbVideoData.forEach(video => {
+                const card = document.createElement('div');
+                card.className = 'video-card';
+                const embedUrl = video.id ? `https://www.youtube.com/embed/${video.id}` : '';
+                
+                card.innerHTML = `
+                    <div class="video-card-media">
+                         <iframe src="${embedUrl}" loading="lazy" allowfullscreen title="${video.title}"></iframe>
+                    </div>
+                    <div class="video-card-content">
+                        <h3>${video.title}</h3>
+                        <p>${video.desc}</p>
+                    </div>
+                `;
+                track.appendChild(card);
+            });
+            
+            // Simpan ke window agar fungsi global slideVideo bisa akses
+            window.firebaseVideoData = dbVideoData;
+            
+            // Reset posisi scroll
+            const trackEl = document.getElementById('videoTrack');
+            if(trackEl) trackEl.style.transform = `translateX(0px)`;
+        }
+
+
+        // ============================================================
+        // BAGIAN D: FETCH DATA DARI FIREBASE (GABUNGAN NEWS & VIDEO)
+        // ============================================================
+        console.log("Firebase: Menghubungkan...");
+        const galleryRef = ref(db, 'galeri'); 
+
+        onValue(galleryRef, (snapshot) => {
+            console.log("Firebase: Data diterima.");
+            const data = snapshot.val();
+            
+            if (data) {
+                let allItems = Object.keys(data).map(key => ({ id: key, ...data[key] }));
+
+                // 1. PROSES DATA BERITA (NEWS)
+                const newsItems = allItems.filter(item => {
+                    const cat = String(item.category || item.kategori || '').trim().toLowerCase();
+                    return cat === 'news' || cat === 'berita';
+                });
+
+                newsItems.sort((a, b) => {
+                    const dateA = new Date(a.date || a.tanggal || 0);
+                    const dateB = new Date(b.date || b.tanggal || 0);
+                    return dateB - dateA;
+                });
+
+                newsData = newsItems.map(item => {
+                    const rawDate = item.date || item.tanggal || new Date();
+                    const dateStr = new Date(rawDate).toLocaleDateString('id-ID', {
+                        day: 'numeric', month: 'long', year: 'numeric'
+                    });
+
+                    return {
+                        title: item.title || item.judul || 'Tanpa Judul',
+                        date: dateStr,
+                        desc: item.description || item.desc || item.content || 'Klik selengkapnya untuk membaca.',
+                        img: item.imageUrl || item.url || item.gambar || 'https://via.placeholder.com/800x600?text=No+Image'
+                    };
+                });
+                
+                if (newsData.length > 0) initNewsCarousel();
+                else {
+                    document.getElementById('newsTitle').textContent = "Data Kosong";
+                    document.getElementById('newsDesc').textContent = "Tidak ada berita ditemukan.";
+                }
+
+                // 2. PROSES DATA VIDEO
+                const videoItems = allItems.filter(item => {
+                    const cat = String(item.category || item.kategori || '').trim().toLowerCase();
+                    return cat === 'video';
+                });
+                
+                dbVideoData = videoItems.map(item => {
+                    const rawLink = item.url || item.videoUrl || item.link || '';
+                    return {
+                        id: getYoutubeId(rawLink), 
+                        title: item.title || item.judul || 'Video Balmon',
+                        desc: item.description || item.desc || item.deskripsi || 'Video dokumentasi dan edukasi.'
+                    };
+                });
+
+                console.log(`Firebase: Ditemukan ${dbVideoData.length} video.`);
+                
+                if(dbVideoData.length > 0) {
+                    initDbVideoSlider();
+                }
+
+            } else {
+                console.log("Firebase: Data Galeri Kosong.");
+                document.getElementById('newsTitle').textContent = "Database Kosong";
+            }
+        }, (err) => {
+            console.error("Firebase Error:", err);
+            document.getElementById('newsTitle').textContent = "Gagal Koneksi";
+            document.getElementById('newsDesc').textContent = "Pastikan Anda membuka file ini menggunakan Server (bukan file://) atau periksa koneksi internet.";
+        });
+
+    </script>
+    <script src="TTS_Adaptif.js"></script>
+</body>
+</html>
