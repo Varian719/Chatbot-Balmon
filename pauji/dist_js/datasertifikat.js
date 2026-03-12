@@ -41,11 +41,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 return false;
             }
 
-            // Filter by search term
-            const namaPemilik = String(row['Nama Pemilik'] || '').toLowerCase();
-            const noSertifikat = String(row['No Sertifikat'] || '').toLowerCase();
+            // Filter strictly by EXACT search term
+            const namaPemilik = String(row['Nama Pemilik'] || '').toLowerCase().trim();
+            const noSertifikat = String(row['No Sertifikat'] || '').toLowerCase().trim();
 
-            return namaPemilik.includes(searchTerm) || noSertifikat.includes(searchTerm);
+            return namaPemilik === searchTerm || noSertifikat === searchTerm;
         });
         renderTable(filteredData);
     }
