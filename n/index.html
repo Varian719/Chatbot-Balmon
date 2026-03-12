@@ -84,10 +84,11 @@
                             <li><a href="faq.html">FAQ</a></li>
                             <li><a href="simulasibhp.html">Simulasi Estimasi BHP ISR</a></li>
                             <li><a href="simulasidenda.html">Simulasi Estimasi Sanksi Denda</a></li>
+                            <li><a href="datasertifikat.html">Data Sertifikat REOR</a></li>
+                            <li><a href="simulasireor.html">Simulasi REOR</a></li>
                         </ul>
                     </li>
                     <li class="menu-item" onclick="window.location.href='galeri.html'">Publikasi</li>
-
                     <li class="menu-item" onclick="window.location.href='kontak.html'">Kontak</li>
                 </ul>
                 <button class="nav-search-btn" onclick="openSearch()"
@@ -120,15 +121,16 @@
                 <a href="konsesi.html" onclick="closeMobileMenu()">Izin Konsesi</a>
                 <a href="maritim.html" onclick="closeMobileMenu()">Izin Maritim</a>
                 <a href="fm.html" onclick="closeMobileMenu()">Izin Penyiaran FM</a>
-                <a href="arsip.html" onclick="closeMobileMenu()">Download Formulir</a>
+                <a href="arsip.html" onclick="closeMobileMenu()">Download</a>
                 <a href="faq.html" onclick="closeMobileMenu()">FAQ</a>
                 <a href="simulasibhp.html" onclick="closeMobileMenu()">Simulasi Estimasi BHP ISR</a>
                 <a href="simulasidenda.html" onclick="closeMobileMenu()">Simulasi Estimasi Sanksi Denda</a>
+                <a href="datasertifikat.html" onclick="closeMobileMenu()">Data Sertifikat</a>
             </div>
             <div class="mobile-menu-item" onclick="handleMobileMenuItem(this, 'publikasi')">Publikasi</div>
-
             <div class="mobile-menu-item" onclick="handleMobileMenuItem(this, 'kontak')">Kontak</div>
         </div>
+
     </header>
 
     <div class="hero-section">
@@ -246,6 +248,7 @@
                         <li><a href="maritim.html"><i class="bi bi-water"></i> Izin Maritim/Pantai</a></li>
                         <li><a href="fm.html"><i class="bi bi-broadcast"></i> Izin Penyiaran FM</a></li>
                         <li><a href="arsip.html"><i class="bi bi-download"></i> Download Formulir</a></li>
+                        <li><a href="simulasireor.html"><i class="bi bi-download"></i>Simulasi REOR</a></li>
                     </ul>
                 </div>
                 <div class="cat-panel" id="panel-informasi">
@@ -259,6 +262,7 @@
                                 ISR</a></li>
                         <li><a href="simulasidenda.html"><i class="bi bi-receipt"></i> Simulasi Estimasi Sanksi
                                 Denda</a></li>
+                        <li><a href="datasertifikat.html"><i class="bi bi-receipt"></i> Data Sertifikat REOR</a></li>
                     </ul>
                 </div>
                 <div class="cat-panel" id="panel-kontak">
@@ -448,22 +452,30 @@
                             Dimanakah pengajuan izin frekuensi radio dilakukan? <i class="bi bi-chevron-down"></i>
                         </button>
                         <div class="faq-answer">
-                            <p>Pengajuan izin frekuensi radio dilakukan secara online melalui website <a href='https://isr.postel.go.id' target='_blank' style='color:#006fb0;'>isr.postel.go.id</a> setelah akun terdaftar.</p>
+                            <p>Pengajuan izin frekuensi radio dilakukan secara online melalui website <a
+                                    href='https://isr.postel.go.id' target='_blank'
+                                    style='color:#006fb0;'>isr.postel.go.id</a> setelah akun terdaftar.</p>
                         </div>
                     </div>
-                    
+
                     <!-- FAQ 2 -->
                     <div class="faq-item">
                         <button class="faq-question" aria-expanded="false">
-                            Bagaimanakah persyaratan atau tata cara mengurus izin frekuensi radio? <i class="bi bi-chevron-down"></i>
+                            Bagaimanakah persyaratan atau tata cara mengurus izin frekuensi radio? <i
+                                class="bi bi-chevron-down"></i>
                         </button>
                         <div class="faq-answer">
                             <p>Ada 2 tahap:</p>
                             <ol>
                                 <li><strong>Pembuatan Akun</strong>
                                     <ul>
-                                        <li><strong>Instansi Pemerintah:</strong> Surat Keterangan Berdirinya Instansi, NPWP Instansi, Surat Kuasa (jika dikuasakan), KTP Pemberi dan Penerima Kuasa, form my spectra yang sudah ditandatangani dan distempel.</li>
-                                        <li><strong>Pelaku Usaha/Badan Hukum:</strong> NIB RBA yang sudah memiliki PBUMKU ISR, NPWP Perusahaan, Akta Perusahaan, Surat Kuasa (jika dikuasakan), KTP Direktur/Penerima Kuasa, form my spectra yang ditandatangani dan distempel.</li>
+                                        <li><strong>Instansi Pemerintah:</strong> Surat Keterangan Berdirinya Instansi,
+                                            NPWP Instansi, Surat Kuasa (jika dikuasakan), KTP Pemberi dan Penerima
+                                            Kuasa, form my spectra yang sudah ditandatangani dan distempel.</li>
+                                        <li><strong>Pelaku Usaha/Badan Hukum:</strong> NIB RBA yang sudah memiliki
+                                            PBUMKU ISR, NPWP Perusahaan, Akta Perusahaan, Surat Kuasa (jika dikuasakan),
+                                            KTP Direktur/Penerima Kuasa, form my spectra yang ditandatangani dan
+                                            distempel.</li>
                                     </ul>
                                 </li>
                                 <li><strong>Pengajuan Teknis Perizinan:</strong>
@@ -477,49 +489,56 @@
                             <p>Semua file dalam format PDF.</p>
                         </div>
                     </div>
-                    
+
                     <!-- FAQ 3 -->
                     <div class="faq-item">
                         <button class="faq-question" aria-expanded="false">
                             Bagaimanakah cara mengetahui status pengajuan akun saya? <i class="bi bi-chevron-down"></i>
                         </button>
                         <div class="faq-answer">
-                            <p>Status pengajuan akun dapat dicek secara berkala melalui email yang didaftarkan pada sistem.</p>
+                            <p>Status pengajuan akun dapat dicek secara berkala melalui email yang didaftarkan pada
+                                sistem.</p>
                         </div>
                     </div>
-                    
+
                     <!-- FAQ 4 -->
                     <div class="faq-item">
                         <button class="faq-question" aria-expanded="false">
                             Bagaimanakah jika pengajuan akun saya ditolak? <i class="bi bi-chevron-down"></i>
                         </button>
                         <div class="faq-answer">
-                            <p>Ajukan kembali dengan memperhatikan alasan penolakan (kelengkapan dokumen, salah pengisian data).</p>
+                            <p>Ajukan kembali dengan memperhatikan alasan penolakan (kelengkapan dokumen, salah
+                                pengisian data).</p>
                         </div>
                     </div>
-                    
+
                     <!-- FAQ 5 -->
                     <div class="faq-item">
                         <button class="faq-question" aria-expanded="false">
-                            Apa langkah selanjutnya setelah pengajuan akun saya diterima? <i class="bi bi-chevron-down"></i>
+                            Apa langkah selanjutnya setelah pengajuan akun saya diterima? <i
+                                class="bi bi-chevron-down"></i>
                         </button>
                         <div class="faq-answer">
-                            <p>Lanjutkan dengan login pada website perizinan untuk mengajukan ISR dengan mengisi data teknis dan melengkapi dokumen pengajuan teknis perizinan.</p>
+                            <p>Lanjutkan dengan login pada website perizinan untuk mengajukan ISR dengan mengisi data
+                                teknis dan melengkapi dokumen pengajuan teknis perizinan.</p>
                         </div>
                     </div>
-                    
+
                     <!-- FAQ 6 -->
                     <div class="faq-item">
                         <button class="faq-question" aria-expanded="false">
-                            Apakah setelah akun disetujui saya bisa mengubah data akun? <i class="bi bi-chevron-down"></i>
+                            Apakah setelah akun disetujui saya bisa mengubah data akun? <i
+                                class="bi bi-chevron-down"></i>
                         </button>
                         <div class="faq-answer">
-                            <p>Bisa. Ajukan perubahan data akun/modifikasi data administrasi melalui website perizinan dengan login, kemudian klik profile dan klik ubah data user.</p>
+                            <p>Bisa. Ajukan perubahan data akun/modifikasi data administrasi melalui website perizinan
+                                dengan login, kemudian klik profile dan klik ubah data user.</p>
                         </div>
                     </div>
                 </div>
                 <div style="text-align: center; margin-top: 30px;">
-                    <a href="faq.html" class="btn-laporan-semua" style="display: inline-flex; align-items: center; gap: 8px; background-color: transparent; color: var(--primary-color); border: 2px solid var(--primary-color); box-shadow: none;">
+                    <a href="faq.html" class="btn-laporan-semua"
+                        style="display: inline-flex; align-items: center; gap: 8px; background-color: transparent; color: var(--primary-color); border: 2px solid var(--primary-color); box-shadow: none;">
                         Lihat Semua FAQ <i class="bi bi-arrow-right"></i>
                     </a>
                 </div>
@@ -705,7 +724,7 @@
                 <div class="footer-col">
                     <h3>Balmon Samarinda</h3>
                     <p style="color:rgba(255,255,255,0.7); line-height:1.8;">
-                        Jalan Sultan Sulaiman No. 123<br>Samarinda, Kalimantan Timur.<br><br>
+                        Jl. Sultan Sulaiman No. 55, Kel. Sambutan, Kec. Sambutan,<br>Samarinda, Kalimantan Timur 75115.<br><br>
                         <strong>Telp:</strong> 0856-4828-3012<br><strong>Email:</strong>
                         pelayananuptbalmonsamarinda@gmail.com
                     </p>
@@ -713,25 +732,23 @@
                 <div class="footer-col">
                     <h3>Tautan Cepat</h3>
                     <div class="footer-links">
-                        <a href="#">Profil Organisasi</a><a href="#">Standar Pelayanan</a><a href="#">Pengaduan
-                            Masyarakat</a><a href="#">Peta Sebaran Menara</a>
+                        <a href="profil.html">Profil Organisasi</a><a href="#">Standar Pelayanan</a><a
+                            href="#">Pengaduan Masyarakat</a><a href="#">Peta Sebaran Menara</a>
                     </div>
                 </div>
                 <div class="footer-col">
                     <h3>Jam Pelayanan</h3>
                     <p style="color:rgba(255,255,255,0.7);">Senin - Kamis: 08.00 - 16.00<br>Jumat: 08.00 -
                         16.30<br>Sabtu - Minggu: Libur</p>
- 
+                </div>
             </div>
         </div>
         <!-- ===== VISITOR COUNTER SECTION ===== -->
-<div class="visitor-counter-section" >
-    <i class="bi bi-people-fill" ></i>
-    <span >Total Pengunjung: <span id="total-visitors" >0</span></span>
-</div>
-<div class="copyright">Copyright@2024 Balai Monitor Spektrum Frekuensi Radio Kelas I Samarinda</div>
-
-
+        <div class="visitor-counter-section">
+            <i class="bi bi-people-fill"></i>
+            <span>Total Pengunjung: <span id="total-visitors" style="color: white;">0</span></span>
+        </div>
+        <div class="copyright">Copyright@2024 Balai Monitor Spektrum Frekuensi Radio Kelas I Samarinda</div>
     </footer>
 
     <div class="chat-box-container" id="chatBox">
@@ -1112,24 +1129,24 @@
     </script>
     <script>
         // Fungsi untuk toggle FAQ
-document.querySelectorAll('.faq-question').forEach(button => {
-    button.addEventListener('click', function() {
-        // Tutup FAQ lain yang terbuka
-        document.querySelectorAll('.faq-question').forEach(btn => {
-            if (btn !== this) {
-                btn.classList.remove('active');
-                btn.nextElementSibling.classList.remove('show');
-                btn.setAttribute('aria-expanded', 'false');
-            }
+        document.querySelectorAll('.faq-question').forEach(button => {
+            button.addEventListener('click', function () {
+                // Tutup FAQ lain yang terbuka
+                document.querySelectorAll('.faq-question').forEach(btn => {
+                    if (btn !== this) {
+                        btn.classList.remove('active');
+                        btn.nextElementSibling.classList.remove('show');
+                        btn.setAttribute('aria-expanded', 'false');
+                    }
+                });
+
+                // Toggle FAQ yang diklik
+                this.classList.toggle('active');
+                const answer = this.nextElementSibling;
+                answer.classList.toggle('show');
+                this.setAttribute('aria-expanded', this.classList.contains('active'));
+            });
         });
-        
-        // Toggle FAQ yang diklik
-        this.classList.toggle('active');
-        const answer = this.nextElementSibling;
-        answer.classList.toggle('show');
-        this.setAttribute('aria-expanded', this.classList.contains('active'));
-    });
-});
     </script>
     <script type="module" src="scriptvideo.js"></script>
     <script src="dist_js/TTS_Adaptif.min.js"></script>
@@ -1138,3 +1155,9 @@ document.querySelectorAll('.faq-question').forEach(button => {
 </body>
 
 </html>
+
+
+
+
+
+

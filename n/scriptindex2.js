@@ -36,7 +36,7 @@ window.addEventListener('pageshow', (event) => {
 
 // Link transition
 document.querySelectorAll('a').forEach(link => {
-    link.addEventListener('click', function(e) {
+    link.addEventListener('click', function (e) {
         const href = this.getAttribute('href');
         const target = this.getAttribute('target');
         if (href && !href.startsWith('#') && !href.startsWith('javascript') && target !== '_blank') {
@@ -49,14 +49,14 @@ document.querySelectorAll('a').forEach(link => {
 });
 
 // FEATURE CAROUSEL
-window.toggleDropdown = function(clickedCard) {
+window.toggleDropdown = function (clickedCard) {
     clickedCard.classList.toggle('active');
     const isExpanded = clickedCard.classList.contains('active');
     clickedCard.setAttribute('aria-expanded', isExpanded);
 };
 
 // CHAT ANIMATION & LAZY LOAD
-window.animateChatToggle = function() {
+window.animateChatToggle = function () {
     const btn = document.getElementById("toggleBtn");
     const box = document.getElementById("chatBox");
     const iframe = document.getElementById("chatFrame");
@@ -93,10 +93,12 @@ function updateScroll() {
     const footer = document.getElementById('mainFooter');
     const header = document.getElementById('mainHeader');
 
-    if (scrollY > 50) header.classList.add('header-minimal');
-    else header.classList.remove('header-minimal');
+    if (header) {
+        if (scrollY > 50) header.classList.add('header-minimal');
+        else header.classList.remove('header-minimal');
+    }
 
-    if (footer) {
+    if (footer && chatBtn) {
         const footerRect = footer.getBoundingClientRect();
         const windowHeight = window.innerHeight;
         if (footerRect.top < windowHeight) {
@@ -107,7 +109,7 @@ function updateScroll() {
     }
     ticking = false;
 }
-window.addEventListener('scroll', function() {
+window.addEventListener('scroll', function () {
     lastScrollY = window.scrollY;
     if (!ticking) {
         window.requestAnimationFrame(updateScroll);
@@ -115,32 +117,32 @@ window.addEventListener('scroll', function() {
     }
 }, { passive: true });
 
-window.scrollToTop = function() { window.scrollTo({ top: 0, behavior: 'smooth' }); };
+window.scrollToTop = function () { window.scrollTo({ top: 0, behavior: 'smooth' }); };
 
 // MOBILE MENU
-window.toggleMobileMenu = function() {
+window.toggleMobileMenu = function () {
     document.getElementById('hamburgerBtn').classList.toggle('active');
     document.getElementById('mobileNavDropdown').classList.toggle('active');
 };
-window.closeMobileMenu = function() {
+window.closeMobileMenu = function () {
     document.getElementById('hamburgerBtn').classList.remove('active');
     document.getElementById('mobileNavDropdown').classList.remove('active');
     document.querySelectorAll('.mobile-submenu').forEach(s => s.classList.remove('active'));
     document.querySelectorAll('.mobile-menu-item.has-submenu').forEach(i => i.classList.remove('active'));
 };
-window.toggleMobileSubmenu = function(element) {
+window.toggleMobileSubmenu = function (element) {
     const submenu = element.nextElementSibling;
     element.classList.toggle('active');
     if (submenu && submenu.classList.contains('mobile-submenu')) submenu.classList.toggle('active');
 };
-window.handleMobileMenuItem = function(element, action) {
+window.handleMobileMenuItem = function (element, action) {
     if (action === 'beranda') window.location.href = 'index.html';
     else if (action === 'kontak') window.location.href = 'kontak.html';
     else if (action === 'publikasi') window.location.href = 'galeri.html';
     else if (action === 'download') window.location.href = 'arsip.html';
     window.closeMobileMenu();
 };
-document.addEventListener('click', function(event) {
+document.addEventListener('click', function (event) {
     const header = document.getElementById('mainHeader');
     const nav = document.getElementById('mobileNavDropdown');
     if (!header.contains(event.target) && nav.classList.contains('active')) window.closeMobileMenu();
@@ -149,7 +151,7 @@ document.addEventListener('click', function(event) {
 /* =========================================
    VIDEO SLIDER LAZY LOAD (FALLBACK)
    ========================================= */
-window.playVideoFromSlider = function(wrapper, event) {
+window.playVideoFromSlider = function (wrapper, event) {
     if (event) event.stopPropagation();
     const card = wrapper.closest('.video-card');
     if (!card) return;
@@ -213,7 +215,7 @@ function initVideoSlider() {
     });
 }
 
-window.slideVideo = function(direction) {
+window.slideVideo = function (direction) {
     const track = document.getElementById('videoTrack');
     const firstCard = track.querySelector('.video-card');
     if (firstCard) {
@@ -246,16 +248,16 @@ const pages = [
     { title: "Kontak Kami", url: "kontak.html", desc: "Alamat kantor, email, dan nomor pengaduan." }
 ];
 
-window.openSearch = function() {
+window.openSearch = function () {
     document.getElementById('searchOverlay').classList.add('active');
     setTimeout(() => document.getElementById('searchInput').focus(), 300);
 };
-window.closeSearch = function() {
+window.closeSearch = function () {
     document.getElementById('searchOverlay').classList.remove('active');
     document.getElementById('searchInput').value = '';
     document.getElementById('searchResults').innerHTML = '';
 };
-window.performSearch = function() {
+window.performSearch = function () {
     const input = document.getElementById('searchInput').value.toLowerCase();
     const resultContainer = document.getElementById('searchResults');
     resultContainer.innerHTML = '';
