@@ -1,1 +1,0 @@
-﻿const fs = require('fs'); const { JSDOM } = require('jsdom'); const html = fs.readFileSync('index.html', 'utf8'); const dom = new JSDOM(html, { runScripts: 'dangerously' }); setTimeout(() => { const btn = dom.window.document.querySelector('.faq-question'); if(btn) { btn.click(); console.log('Answer class:', btn.nextElementSibling.className); } }, 2000);

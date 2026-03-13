@@ -182,7 +182,52 @@ function getYoutubeId(url) {
     const match = url.match(regExp);
     return (match && match[2].length === 11) ? match[2] : null;
 }
+// ================== LAPORAN KINERJA (LAKIP) ==================
+// Fungsi konversi link Google Drive ke URL gambar user-content
+function getDriveImageUrl(link) {
+    if (!link) return '';
+    // Format: https://drive.google.com/file/d/FILE_ID/view...
+    const match = link.match(/\/file\/d\/([^\/?]+)/);
+    if (match && match[1]) {
+        return `https://lh3.googleusercontent.com/d/${match[1]}`;
+    }
+    // Format: ?id=FILE_ID
+    const idMatch = link.match(/[?&]id=([^&]+)/);
+    if (idMatch && idMatch[1]) {
+        return `https://lh3.googleusercontent.com/d/${idMatch[1]}`;
+    }
+    return link;
+}
 
+// Render laporan kinerja ke grid
+function renderLaporan(items) {
+    const grid = document.getElementById('laporanGrid');
+    if (!grid) return;
+
+    if (items.length === 0) {
+        grid.innerHTML = '<div class="no-data">Belum ada laporan kinerja.</div>';
+        return;
+    }
+
+    grid.innerHTML = items.map(item => {
+        const imgUrl = getDriveImageUrl(item.imageUrl);
+        // Jika ada pdfUrl, buka PDF di tab baru; jika tidak, arahkan ke halaman arsip dengan pencarian judul
+        const link = item.pdfUrl ? item.pdfUrl : `arsip.html?search=${encodeURIComponent(item.title)}`;
+        const target = item.pdfUrl ? '_blank' : '_self';
+
+        return `
+            <div class="laporan-card" onclick="window.open('${link}', '${target}')">
+                <div class="laporan-cover">
+                    <img src="${imgUrl}" alt="${item.title}" loading="lazy"
+                        onerror="this.src='https://via.placeholder.com/300x400?text=Cover'">
+                </div>
+                <div class="laporan-info">
+                    <h3>${item.title}</h3>
+                </div>
+            </div>
+        `;
+    }).join('');
+}
 function initDbVideoSlider(videoData) {
     const track = document.getElementById('videoTrack');
     if (!track) return;
@@ -349,7 +394,13 @@ onValue(galleryRef, (snapshot) => {
         document.getElementById('newsTitle').textContent = "Tidak ada berita";
         document.getElementById('newsDesc').textContent = "";
     }
+    // Laporan Kinerja
+const laporanItems = allItems.filter(item => {
+    const cat = String(item.category || '').toLowerCase().trim();
+    return cat === 'laporan';
+}).sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0)).slice(0, 4); // ambil 4 terbaru
 
+renderLaporan(laporanItems);
     // Video
     const videoItems = allItems.filter(item => {
         const cat = String(item.category || '').toLowerCase().trim();
@@ -367,3 +418,27 @@ onValue(galleryRef, (snapshot) => {
     console.error("Firebase Error:", err);
     document.getElementById('newsTitle').textContent = "Gagal Koneksi";
 });
+
+// ================== VISITOR COUNTER (TOTAL KUNJUNGAN) ==================
+function loadTotalVisitors() {
+    const visitorsRef = ref(db, 'statistik_web/kunjungan_bulanan');
+    onValue(visitorsRef, (snapshot) => {
+        let total = 0;
+        if (snapshot.exists()) {
+            const data = snapshot.val();
+            // Jumlahkan semua nilai dari tiap bulan
+            Object.values(data).forEach(val => {
+                total += val;
+            });
+        }
+        const visitorEl = document.getElementById('total-visitors');
+        if (visitorEl) {
+            visitorEl.textContent = total.toLocaleString('id-ID');
+        }
+    }, {
+        onlyOnce: true // Ambil data sekali saja, tidak perlu realtime
+    });
+}
+
+// Panggil setelah Firebase siap
+loadTotalVisitors();
