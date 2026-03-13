@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <title>Admin Balmon | Manajemen Data REOR</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/source-sans-3@5.0.12/index.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.min.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/admin-lte@4.0.0-beta2/dist/css/adminlte.min.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" />
+  <style>
+    .data-table th { background-color: #f8f9fa; white-space: nowrap; }
+    /* Tambahan CSS untuk garis tabel yang lebih tegas tapi tipis */
+    .data-table th, .data-table td { border: 1px solid #dee2e6; } 
+    .btn-action { margin: 0 2px; }
+    .table-responsive { overflow-x: auto; }
+    .small-box { transition: transform 0.3s; }
+    .small-box:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.15) !important; }
+    .search-input { max-width: 300px; }
+    .table-success { background-color: #d4edda !important; }
+  </style>
+</head>
+<body class="layout-fixed sidebar-expand-lg bg-body-tertiary">
+
+<div class="app-wrapper">
+
+  <nav class="app-header navbar navbar-expand bg-body shadow-sm">
+    <div class="container-fluid">
+      <ul class="navbar-nav">
+        <li class="nav-item"><a class="nav-link" data-lte-toggle="sidebar" href="#"><i class="bi bi-list"></i></a></li>
+        <li class="nav-item"><span class="nav-link fw-bold text-primary">MANAJEMEN DATA SERTIFIKAT REOR</span></li>
+      </ul>
+      <ul class="navbar-nav ms-auto">
+        <li class="nav-item d-none d-md-block me-3">
+          <span class="nav-link text-muted" id="user-display">Memuat...</span>
+        </li>
+        <li class="nav-item">
+          <button id="btnLogout" class="btn btn-danger btn-sm shadow-sm">
+            <i class="bi bi-power"></i> Keluar
+          </button>
+        </li>
+      </ul>
+    </div>
+  </nav>
+
+  <aside class="app-sidebar bg-body-secondary shadow" data-bs-theme="dark">
+    <div class="sidebar-brand">
+      <a href="#" class="brand-link text-center">
+        <span class="brand-text fw-bold">BALMON SAMARINDA</span>
+      </a>
+    </div>
+    <div class="sidebar-wrapper">
+      <nav class="mt-2">
+        <ul class="nav sidebar-menu flex-column">
+          <li class="nav-item"><a href="admin-balmon.html" class="nav-link"><i class="nav-icon bi bi-speedometer"></i><p>Dashboard</p></a></li>
+          <li class="nav-item"><a href="dokumen.html" class="nav-link"><i class="nav-icon bi bi-folder-fill"></i><p>Arsip Digital</p></a></li>
+          <li class="nav-item"><a href="datachat.html" class="nav-link"><i class="nav-icon bi bi-chat-fill"></i><p>History Chatbot</p></a></li>
+          <li class="nav-item"><a href="gform_management.html" class="nav-link"><i class="nav-icon bi bi-ui-checks"></i><p>Manajemen GForm</p></a></li>
+          <li class="nav-item"><a href="manage-gallery.html" class="nav-link"><i class="nav-icon bi bi-image-fill"></i><p>Manajemen Publikasi</p></a></li>
+          <li class="nav-item"><a href="reor-crud.html" class="nav-link active"><i class="nav-icon bi bi-award"></i><p>Manajemen Data Sertifikat REOR</p></a></li>
+          <li class="nav-item"><a href="https://pelayananbalmonsamarindatest.web.app/" target="_blank" class="nav-link"><i class="nav-icon bi bi-globe"></i><p>Lihat Website</p></a></li>
+        </ul>
+      </nav>
+    </div>
+  </aside>
+
+  <main class="app-main">
+    <div class="app-content-header">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-sm-6">
+            <h3 class="mb-0">Data Sertifikat REOR (Semua Tahun)</h3>
+          </div>
+          <div class="col-sm-6 text-end">
+            <div class="d-flex justify-content-end gap-2">
+              
+              <input type="text" id="searchInput" class="form-control search-input" placeholder="Cari data..." onkeyup="filterData()">
+              
+              <button class="btn btn-secondary" onclick="refreshSheets()" title="Muat ulang data dari semua sheet">
+               <i class="bi bi-arrow-repeat"></i> Refresh
+              </button>
+              <small class="text-muted ms-2 d-none d-md-inline align-self-center" id="sheetInfo"></small>
+                
+              <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalREOR" onclick="openCreateModal()">
+                <i class="bi bi-plus-circle"></i> Tambah Baru
+              </button>
+              <button class="btn btn-primary" onclick="window.open('https://docs.google.com/spreadsheets/d/1mNz4Kzz-pi3vRAyoQxnm8pVYO3uPqpyshx_DlPDcdgc/edit?usp=sharing', '_blank')" style="background-color: green; border-color: green;">
+                <i class="bi bi-file-earmark-spreadsheet"></i> Spreadsheet
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="app-content">
+      <div class="container-fluid">
+        
+        <div class="row mb-4">
+          <div class="col-md-6">
+            <div class="small-box text-bg-info">
+              <div class="inner">
+                <h3 id="count-status-permohonan-cetak">0</h3>
+                <p>Status Permohonan "Telah Dicetak"</p>
+              </div>
+              <div class="icon">
+                <i class="bi bi-printer"></i>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="small-box text-bg-success">
+              <div class="inner">
+                <h3 id="count-status-pengambilan-selesai">0</h3>
+                <p>Sudah Diambil / Diselesaikan</p>
+              </div>
+              <div class="icon">
+                <i class="bi bi-check-circle"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card shadow-sm">
+          <div class="card-body">
+            <div class="table-responsive">
+              <table class="table table-bordered table-striped table-hover align-middle data-table" id="reorTable">
+                <thead id="tableHeader"></thead>
+                <tbody id="reorTableBody">
+                  <tr><td colspan="18" class="text-center">Memuat data...</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="app-footer text-center">
+    <strong>Copyright &copy; 2026 <a href="#" class="text-decoration-none">Balmon Samarinda</a>.</strong> All rights reserved.
+  </footer>
+</div>
+
+<div class="modal fade" id="modalREOR" tabindex="-1" aria-labelledby="modalREORLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <div class="modal-header bg-primary text-white">
+        <h5 class="modal-title" id="modalREORLabel"><i class="bi bi-pencil-square me-2"></i>Form Data Sertifikat REOR</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form id="reorForm">
+          <input type="hidden" id="rowId" name="rowId">
+          <div id="formFields" class="row g-3"></div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+        <button type="button" class="btn btn-primary" id="saveBtn" onclick="saveData()">Simpan</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/admin-lte@4.0.0-beta2/dist/js/adminlte.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script type="module" src="./dist_js/manajemen_reor.min.js?v=5"></script>
+</body>
+</html>

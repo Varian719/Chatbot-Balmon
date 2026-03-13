@@ -1,0 +1,1292 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Portal Resmi Balmon Samarinda - Pengawasan Spektrum Frekuensi Radio">
+    
+    <title>Balmon Samarinda - DJID Official</title>
+    <link rel="icon" type="image/png" href="logo-ikon.png" sizes="32x32">
+    <link rel="icon" type="image/svg+xml" href="balmonsmd1.png">
+    <link rel="apple-touch-icon" href="logo-180x180.png">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Albert+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        /* --- 1. SETUP WARNA (Branding Guideline DJID) --- */
+        :root {
+            --primary-color: #006fb0;   /* Biru Utama */
+            --primary-dark: #005082;    /* Biru Gelap untuk Hover */
+            --secondary-color: #00ace0; /* Cyan/Biru Langit */
+            --accent-yellow: #ecbb1d;   /* Kuning Emas */
+            --accent-red: #de262a;      /* Merah */
+            --bg-light-blue: #f4f9fc;   
+            --bg-white: #ffffff;
+            --text-dark: #1e293b;
+            --text-gray: #64748b;
+            --shadow-soft: 0 10px 30px -5px rgba(0, 0, 0, 0.05);
+            --radius-md: 12px;
+            --wa-green: #25D366;
+        }
+
+        /* --- RESET & GLOBAL --- */
+        body { 
+            margin: 0; padding: 0; 
+            font-family: 'Albert Sans', sans-serif; 
+            background-color: var(--bg-light-blue);
+            color: var(--text-dark); 
+            line-height: 1.6; 
+            overflow-x: hidden; 
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        
+        html { 
+            scroll-behavior: smooth; 
+            scroll-padding-top: 100px; 
+        }
+
+        a { text-decoration: none; color: inherit; transition: color 0.3s ease, transform 0.3s ease; }
+        ul { list-style: none; padding: 0; margin: 0; }
+        * { box-sizing: border-box; }
+
+        .container {
+            max-width: 1200px; margin: 0 auto; padding: 0 20px; width: 100%;
+        }
+
+        /* --- STYLE TOMBOL WHATSAPP --- */
+        .wa-float-btn {
+            position: fixed;
+            bottom: 30px; 
+            right: 105px; 
+            z-index: 9990; 
+            width: 50px;
+            height: 50px;
+            background-color: #ffffff;
+            border: 2px solid var(--wa-green); 
+            border-radius: 50%; 
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            cursor: pointer;
+        }
+
+        .wa-float-btn svg {
+            width: 28px;
+            height: 28px;
+            fill: var(--wa-green);
+            transition: transform 0.3s ease;
+        }
+
+        .wa-float-btn:hover {
+            transform: scale(1.1); 
+            box-shadow: 0 8px 15px rgba(37, 211, 102, 0.3); 
+            background-color: var(--wa-green);
+        }
+
+        .wa-float-btn:hover svg {
+            fill: #ffffff;
+        }
+
+        .wa-tooltip {
+            position: absolute;
+            left: 60px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: #333;
+            color: #fff;
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 12px;
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s;
+        }
+        .wa-float-btn:hover .wa-tooltip {
+            opacity: 1;
+        }
+
+        @media (max-width: 600px) {
+            .wa-float-btn {
+                width: 45px; height: 45px;
+                left: 24px;
+                bottom: 80px; 
+            }
+        }
+
+        /* --- PAGE LOADER --- */
+        .page-loader {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: #ffffff; z-index: 99999; 
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            transition: opacity 0.5s ease, visibility 0.5s ease; opacity: 1; visibility: visible;
+        }
+        .page-loader.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
+        .loader-spinner {
+            width: 50px; height: 50px; border: 4px solid rgba(0, 111, 176, 0.1); border-left-color: var(--primary-color);
+            border-radius: 50%; animation: spin 1s linear infinite; margin-bottom: 15px; will-change: transform;
+        }
+        .loader-text {
+            color: var(--primary-color); font-weight: 600; font-size: 14px; letter-spacing: 1px; animation: pulseText 1.5s infinite ease-in-out;
+        }
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+        @keyframes pulseText { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+
+        /* --- HEADER (DEFAULT: Transparent) --- */
+        header {
+            background-color: transparent;
+            backdrop-filter: none;
+            -webkit-backdrop-filter: none;
+            box-shadow: none;
+            height: 80px; position: fixed; top: 0; left: 0; width: 100%; z-index: 1000;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            will-change: transform, height, background-color;
+        }
+        .header-content { display: flex; align-items: center; justify-content: space-between; height: 100%; }
+        
+        .brand-area { 
+            display: flex; 
+            align-items: center; 
+            gap: 12px; 
+            transition: all 0.4s ease; 
+            cursor: pointer;
+
+            /* LOGO BACKGROUND STYLE (GLASS EFFECT) */
+            background-color: rgba(255, 255, 255, 0.1); 
+            backdrop-filter: blur(8px);                 
+            -webkit-backdrop-filter: blur(8px);         
+            padding: 8px 20px;                          
+            border-radius: 50px;                        
+            border: 1px solid rgba(255, 255, 255, 0.2); 
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);  
+        }
+
+        .brand-area:hover {
+            background-color: rgba(255, 255, 255, 0.2); 
+            transform: translateY(-2px);                
+            box-shadow: 0 8px 20px rgba(0, 111, 176, 0.3); 
+        }
+        .brand-logo-img { 
+            height: 50px; width: auto; 
+            filter: drop-shadow(0 2px 5px rgba(0, 0, 0, 0.5)); 
+            transition: all 0.3s;
+        }
+        
+        .brand-text { 
+            font-size: 18px; font-weight: 800; color: #ffffff; 
+            line-height: 1.2; display: flex; flex-direction: column; 
+            transition: color 0.3s; 
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.6); 
+        }
+        .brand-text span { 
+            font-size: 11px; font-weight: 500; color: rgba(255,255,255,0.9); 
+            letter-spacing: 0.5px; transition: color 0.3s; 
+            text-shadow: 0 1px 5px rgba(0, 0, 0, 0.6);
+        }
+
+        /* --- HEADER SAAT SCROLL (CLASS: .header-minimal) --- */
+        /* Class ini ditambahkan via JS saat scroll > 50px */
+        
+        header.header-minimal {
+            /* PERBAIKAN: Gunakan RGBA, bukan transparent() */
+            background-color: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.08);
+            height: 70px;
+        }
+
+        /* UBAH WARNA TEKS & LOGO SAAT SCROLL */
+        header.header-minimal .brand-text { color: var(--primary-color); text-shadow: none; }
+        header.header-minimal .brand-text span { color: var(--text-gray); text-shadow: none; }
+        
+        /* Hapus efek shadow pada logo saat background putih agar bersih */
+        header.header-minimal .brand-logo-img { filter: none; }
+
+        /* UBAH WARNA MENU */
+        header.header-minimal .menu-item { color: var(--text-dark); text-shadow: none; }
+        header.header-minimal .menu-item:hover { color: var(--primary-color); }
+        
+        /* FIX: HAPUS KOTAK KACA DI BELAKANG LOGO SAAT SCROLL */
+        header.header-minimal .brand-area { 
+            background: transparent;
+            box-shadow: none;
+            border: none;
+            padding-left: 0;
+            backdrop-filter: none;
+            -webkit-backdrop-filter: none;
+        }
+        
+        /* UBAH WARNA HAMBURGER JADI BIRU */
+        header.header-minimal .hamburger-btn span { background-color: var(--primary-color); }
+
+        /* Icon Search di menu */
+        header.header-minimal .nav-menu button { color: var(--primary-color) !important; }
+
+
+        /* NAVIGASI DESKTOP */
+        .nav-menu { height: 100%; display: flex; align-items: center; transition: all 0.4s ease; }
+        .menu-list { display: flex; gap: 8px; height: 100%; align-items: center; }
+        
+        .menu-item { 
+            position: relative; height: 100%; display: flex; align-items: center; 
+            padding: 0 12px; font-size: 14px; font-weight: 600; 
+            color: #ffffff; 
+            cursor: pointer; transition: color 0.3s;
+            text-shadow: 0 1px 5px rgba(0, 0, 0, 0.4); 
+        }
+        .menu-item:hover { color: var(--accent-yellow); opacity: 1; }
+        
+        .menu-item::after {
+            content: ''; position: absolute; bottom: 0; left: 0; width: 0%; height: 3px; background: var(--accent-yellow); transition: width 0.3s ease;
+        }
+        .menu-item:hover::after { width: 100%; }
+        
+        .dropdown-content { 
+            display: none; position: absolute; top: 100%; left: 0; background-color: #ffffff; min-width: 240px; 
+            box-shadow: 0 15px 30px rgba(0,0,0,0.1); border-radius: 0 0 8px 8px; z-index: 1000; padding: 10px 0; border-top: 3px solid var(--primary-color); animation: slideDown 0.3s ease;
+        }
+        .menu-item:hover .dropdown-content { display: block; }
+        .dropdown-content li a { display: block; padding: 10px 20px; color: var(--text-dark); font-weight: 400; font-size: 14px; font-family: 'Albert Sans', sans-serif; text-shadow: none; }
+        .dropdown-content li a:hover { background-color: var(--bg-light-blue); color: var(--primary-color); padding-left: 25px; }
+        @keyframes slideDown { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* HAMBURGER */
+        .hamburger-btn {
+            display: none; flex-direction: column; gap: 6px; background: none; border: none; cursor: pointer; padding: 8px; z-index: 1001;
+        }
+        .hamburger-btn span {
+            width: 24px; height: 2.5px; 
+            background-color: white; /* Default Putih agar terlihat di Hero */
+            border-radius: 2px; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); transform-origin: center;
+        }
+        .hamburger-btn.active span:nth-child(1) { transform: translateY(8.5px) rotate(45deg); }
+        .hamburger-btn.active span:nth-child(2) { opacity: 0; transform: translateX(10px); }
+        .hamburger-btn.active span:nth-child(3) { transform: translateY(-8.5px) rotate(-45deg); }
+        
+        /* Saat tombol aktif (menu terbuka), ubah warna jadi biru agar terlihat di background putih dropdown */
+        .hamburger-btn.active span { background-color: var(--primary-color) !important; }
+
+        .mobile-nav-dropdown {
+            display: none; position: fixed; top: 80px; left: 0; width: 100%; max-height: calc(100vh - 80px); background-color: #ffffff;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1); flex-direction: column; overflow-y: auto; z-index: 999; animation: slideDownMobile 0.3s ease;
+        }
+        .mobile-nav-dropdown.active { display: flex; }
+        @keyframes slideDownMobile { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
+
+        .mobile-menu-item {
+            font-family: 'Albert Sans', sans-serif;
+            padding: 16px 20px; border-bottom: 1px solid #eee; color: var(--text-dark); font-weight: 600; font-size: 15px; cursor: pointer; transition: all 0.3s ease; display: flex; justify-content: space-between; align-items: center;
+        }
+        .mobile-menu-item:hover { background-color: var(--bg-light-blue); color: var(--primary-color); }
+        .mobile-menu-item.has-submenu::after { content: '▼'; font-size: 12px; transition: transform 0.3s ease; }
+        .mobile-menu-item.has-submenu.active::after { transform: rotate(-180deg); }
+        .mobile-submenu { max-height: 0; overflow: hidden; background-color: #f8f9fa; transition: max-height 0.3s ease; }
+        .mobile-submenu.active { max-height: 500px; }
+        .mobile-submenu a { display: block; padding: 12px 40px; color: var(--text-gray); font-size: 14px; font-weight: 500; border-bottom: 1px solid #eee; transition: all 0.2s ease; }
+        .mobile-submenu a:hover { background-color: #ffffff; color: var(--primary-color); padding-left: 48px; }
+
+        /* --- HERO SECTION (REMASTERED: Modern & Blur) --- */
+        .hero-section {
+            position: relative;
+            /* Tinggi yang cukup agar background foto terlihat lega */
+            min-height: 100vh; 
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            text-align: center;
+        }
+
+        /* Elemen Background Foto yang Diblur */
+        .hero-bg-image {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            /* Ganti URL di bawah dengan foto kantor/kegiatan Anda */
+            background-image: url('https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1920&q=80');
+            background-size: cover;
+            background-position: center;
+            /* Efek Blur */
+            filter: blur(8px); 
+            /* Scale diperbesar sedikit agar pinggiran blur tidak terlihat putih */
+            transform: scale(1.1);
+            z-index: 0;
+        }
+
+        /* Overlay Gelap agar Text Putih Terbaca Jelas */
+        .hero-overlay {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.4); /* Tingkat kegelapan overlay */
+            background: linear-gradient(to bottom, rgba(0,0,0,0.5) 0%, rgba(0,0,0,0.2) 50%, rgba(0,0,0,0.6) 100%);
+            z-index: 1;
+        }
+
+        /* Kontainer Teks */
+        .hero-content-wrapper {
+            position: relative;
+            z-index: 2;
+            max-width: 900px;
+            padding: 0 20px;
+            color: #ffffff;
+            margin-top: 40px; /* Kompensasi header */
+        }
+
+        .hero-badge {
+            background-color: rgba(255, 255, 255, 0.15); 
+            backdrop-filter: blur(5px);
+            color: #ffffff; 
+            padding: 8px 18px; 
+            border-radius: 50px; 
+            font-size: 13px; 
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            border: 1px solid rgba(255,255,255,0.3);
+            display: inline-flex; 
+            align-items: center; 
+            gap: 8px; 
+            margin-bottom: 25px;
+            text-transform: uppercase;
+        }
+        .hero-badge::before { content: ''; width: 8px; height: 8px; background: var(--accent-yellow); border-radius: 50%; box-shadow: 0 0 10px var(--accent-yellow); }
+
+        /* Tipografi Modern */
+        .hero-title {
+            font-size: 64px; 
+            line-height: 1.1; 
+            margin: 0 0 25px 0; 
+            font-weight: 800; 
+            letter-spacing: -2px; /* Kesan Modern Rapat */
+        }
+        .hero-title span { 
+            color: var(--secondary-color); 
+            background: -webkit-linear-gradient(45deg, #00ace0, #4fdfff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero-subtitle {
+            font-size: 18px; 
+            margin: 0 auto 40px auto; 
+            max-width: 700px; 
+            font-weight: 400; 
+            opacity: 0.9;
+            line-height: 1.7;
+        }
+
+        .hero-btn-group { 
+            display: flex; 
+            justify-content: center; 
+            gap: 20px; 
+        }
+
+        .btn-primary-hero {
+            background: var(--primary-color); 
+            color: white; 
+            padding: 16px 36px; 
+            border-radius: 50px; /* Tombol bulat lebih modern */
+            font-weight: 600;
+            font-size: 16px;
+            box-shadow: 0 10px 30px rgba(0, 111, 176, 0.3); 
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+        .btn-primary-hero:hover { 
+            background: var(--primary-dark); 
+            transform: translateY(-3px); 
+            box-shadow: 0 15px 40px rgba(0, 111, 176, 0.5); 
+        }
+
+        .btn-secondary-hero {
+            background: rgba(255, 255, 255, 0.1); 
+            backdrop-filter: blur(5px);
+            color: #ffffff; 
+            border: 2px solid rgba(255, 255, 255, 0.5); 
+            padding: 16px 36px; 
+            border-radius: 50px; 
+            font-weight: 600;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+        .btn-secondary-hero:hover { 
+            border-color: #ffffff; 
+            background: #ffffff; 
+            color: var(--primary-color); 
+            transform: translateY(-3px);
+        }
+
+        /* --- PARALLAX --- */
+        .parallax-banner {
+            background-image: url('https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=1600&q=80');
+            background-attachment: fixed; background-position: center; background-size: cover; min-height: 350px; position: relative; display: flex; align-items: center; justify-content: center; text-align: center; color: white;
+        }
+        .parallax-overlay { position: absolute; inset: 0; background: rgba(0, 50, 90, 0.85); z-index: 1; }
+        .parallax-content { position: relative; z-index: 2; padding: 20px; max-width: 800px; }
+        .parallax-content h2 { font-size: 36px; font-weight: 800; margin-bottom: 10px; letter-spacing: 1px; text-transform: uppercase; }
+        .tagline-berakhlak { font-size: 18px; color: var(--accent-yellow); font-weight: 500; display: block; margin-top: 15px; border-top: 1px solid rgba(255,255,255,0.2); padding-top: 15px; }
+        @media (max-width: 768px) { .parallax-banner, .yellow-cta-section { background-attachment: scroll !important; } }
+
+        /* --- FEATURE CAROUSEL --- */
+        .feature-carousel-section {
+            --fc-primary-blue: #0056b3; --fc-dark-blue: #003d80; --fc-accent-yellow: #ffc107; --fc-bg-light-blue: #f0f8ff; --fc-white: #ffffff; --fc-text-gray: #666666;
+            padding: 80px 0; width: 100%; background-color: var(--fc-white); position: relative; overflow: hidden;
+        }
+        .feature-bg-decor {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: radial-gradient(circle at top right, rgba(0, 86, 179, 0.08), transparent 60%); z-index: 0; pointer-events: none;
+        }
+        .fc-wrapper { position: relative; max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+        .fc-window { width: 100%; overflow: visible; padding: 10px 5px; }
+        .fc-track { display: flex; gap: 20px; transition: transform 0.5s cubic-bezier(0.25, 1, 0.5, 1); width: max-content; align-items: flex-start; will-change: transform; justify-content: center; flex-wrap: wrap; }
+        .fc-card {
+            width: 280px; height: 380px; background: var(--fc-white); border-radius: 12px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); border: 1px solid rgba(0,0,0,0.05);
+            position: relative; overflow: hidden; transition: all 0.3s ease; cursor: pointer; margin-bottom: 20px;
+        }
+        .fc-card:hover { transform: translateY(-5px); box-shadow: 0 12px 25px rgba(0, 86, 179, 0.15); border-color: rgba(0, 86, 179, 0.3); }
+        .fc-card-img { height: 200px; width: 100%; overflow: hidden; position: relative; }
+        .fc-card-img img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease; }
+        
+        .click-hint {
+            position: absolute; top: 15px; right: 15px; background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px);
+            border-radius: 30px; padding: 6px 12px; display: flex; align-items: center; gap: 6px; box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+            z-index: 5; transition: all 0.3s ease; opacity: 0.9; pointer-events: none; animation: softPulse 2.5s infinite ease-in-out;
+        }
+        .click-hint svg { width: 14px; height: 14px; color: var(--primary-color); }
+        .click-hint span { font-size: 11px; font-weight: 700; color: var(--primary-color); text-transform: uppercase; letter-spacing: 0.5px; }
+        .fc-card.active .click-hint { opacity: 0; transform: scale(0.8); }
+        @keyframes softPulse {
+            0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.6); } 50% { transform: scale(1.05); box-shadow: 0 0 0 6px rgba(255, 255, 255, 0); } 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 255, 255, 0); }
+        }
+
+        .fc-card-content {
+            position: absolute; bottom: 0; left: 0; width: 100%; height: 180px; background: var(--fc-white); padding: 20px; display: flex; flex-direction: column; transition: height 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+            z-index: 2; border-top: 1px solid transparent;
+        }
+        .fc-card.active .fc-card-content { height: 100%; border-top: 4px solid var(--fc-accent-yellow); }
+        .fc-card-header-text { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; flex-shrink: 0; }
+        .fc-card-content h3 { margin: 0; color: var(--fc-primary-blue); font-size: 18px; font-weight: 700; }
+        .fc-card-desc { font-size: 13px; color: var(--fc-text-gray); margin: 0 0 15px 0; line-height: 1.5; flex-shrink: 0; }
+        .fc-dropdown-area {
+            opacity: 0; transform: translateY(20px); transition: all 0.3s ease 0.1s; overflow-y: auto; margin-top: 10px; scrollbar-width: none; -ms-overflow-style: none;
+        }
+        .fc-dropdown-area::-webkit-scrollbar { display: none; }
+        .fc-card.active .fc-dropdown-area { opacity: 1; transform: translateY(0); flex: 1; }
+        .fc-link-list { display: flex; flex-direction: column; gap: 8px; }
+        .fc-link-list a {
+            display: block; padding: 10px 12px; background: var(--fc-bg-light-blue); color: var(--fc-primary-blue); border-radius: 6px; font-size: 13px; font-weight: 600; text-align: center; border: 1px solid transparent; transition: 0.2s;
+        }
+        .fc-link-list a:hover { background: var(--fc-accent-yellow); color: var(--fc-dark-blue); transform: translateX(3px); border-color: var(--fc-accent-yellow); }
+
+        /* --- YELLOW CTA --- */
+        .yellow-cta-section {
+            position: relative; background-image: url('uia.jpg'); background-attachment: fixed; background-position: center; background-size: cover; padding: 90px 0; color: #ffffff; overflow: hidden;
+        }
+        .yellow-cta-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(135deg, rgba(236, 187, 29, 0.92) 0%, rgba(210, 150, 10, 0.9) 100%); z-index: 1; }
+        .cta-content { position: relative; z-index: 2; display: flex; align-items: center; justify-content: space-between; gap: 50px; }
+        .cta-text-area { flex: 1; }
+        .cta-title { font-size: 38px; font-weight: 800; margin-bottom: 15px; line-height: 1.2; text-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .cta-desc { font-size: 18px; font-weight: 400; margin-bottom: 30px; opacity: 0.95; max-width: 90%; }
+        .cta-stats-grid { display: flex; gap: 30px; margin-top: 20px; }
+        .cta-stat-item { border-left: 3px solid #fff; padding-left: 15px; }
+        .cta-stat-number { display: block; font-size: 32px; font-weight: 800; line-height: 1; }
+        .cta-stat-label { font-size: 13px; text-transform: uppercase; letter-spacing: 1px; margin-top: 5px; opacity: 0.9; }
+        .cta-action-area {
+            flex-shrink: 0; background: rgba(255,255,255,0.15); backdrop-filter: blur(5px); padding: 30px; border-radius: 16px; border: 1px solid rgba(255,255,255,0.3);
+            text-align: center; width: 300px; box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        .cta-btn-white {
+            display: inline-block; background: #ffffff; color: #d2960a; padding: 15px 30px; border-radius: 50px; font-weight: 700; font-size: 16px; transition: all 0.3s ease; box-shadow: 0 5px 15px rgba(0,0,0,0.1); width: 100%;
+        }
+        .cta-btn-white:hover { transform: translateY(-3px); box-shadow: 0 8px 20px rgba(0,0,0,0.15); background: #fcfcfc; color: #b07d08; }
+        .cta-note { font-size: 12px; margin-top: 15px; opacity: 0.8; }
+
+        /* --- ARCHIVE --- */
+        .archive-section { font-family: 'Albert Sans', sans-serif; background-color: #ffffff; padding: 120px 0; text-align: center; position: relative; overflow: hidden; }
+        .archive-bg-decor { position: absolute; width: 500px; height: 500px; border-radius: 50%; background: radial-gradient(circle, rgba(0, 86, 179, 0.06) 0%, transparent 70%); top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 0; pointer-events: none; }
+        .archive-content { position: relative; z-index: 1; max-width: 900px; margin: 0 auto; padding: 0 20px; }
+        .archive-icon {
+            display: flex; align-items: center; justify-content: center; width: 100px; height: 100px; background-color: #f0f8ff; color: #0056b3; 
+            border-radius: 28px; margin: 0 auto 35px auto; font-size: 42px; box-shadow: 0 12px 24px rgba(0, 86, 179, 0.08); transition: transform 0.3s ease;
+        }
+        .archive-section:hover .archive-icon { transform: scale(1.05) rotate(-5deg); }
+        .archive-title { font-size: 46px; color: #0056b3; font-weight: 800; margin-bottom: 20px; line-height: 1.15; letter-spacing: -0.02em; }
+        .archive-desc { font-size: 18px; color: #555555; margin-bottom: 50px; line-height: 1.7; font-weight: 400; max-width: 780px; margin-left: auto; margin-right: auto; }
+        .btn-download-primary {
+            display: inline-flex; align-items: center; justify-content: center; gap: 15px; background-color: #0056b3; color: #ffffff;
+            padding: 20px 45px; border-radius: 16px; font-size: 18px; font-weight: 700; text-decoration: none; transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); box-shadow: 0 10px 25px rgba(0, 86, 179, 0.25);
+        }
+        .btn-download-primary:hover { background-color: #003d80; transform: translateY(-4px); box-shadow: 0 15px 35px rgba(0, 86, 179, 0.35); }
+        .btn-download-primary svg { width: 24px; height: 24px; stroke-width: 3; }
+
+        /* --- FOOTER --- */
+        footer { background-color: var(--primary-color); color: white; padding-top: 70px; font-size: 14px; position: relative; }
+        .footer-grid { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 40px; padding-bottom: 50px; }
+        .footer-col { flex: 1; min-width: 250px; }
+        .footer-col h3 { color: var(--accent-yellow); margin-bottom: 25px; font-size: 18px; font-weight: 700; }
+        .footer-links a { color: rgba(255,255,255,0.8); display: block; margin-bottom: 12px; transition: 0.2s; }
+        .footer-links a:hover { color: #fff; transform: translateX(5px); }
+        .copyright { background-color: rgba(0,0,0,0.1); text-align: center; padding: 25px 0; color: rgba(255,255,255,0.6); border-top: 1px solid rgba(255,255,255,0.1); }
+
+        /* CHAT WIDGET */
+        .chat-toggle-btn { 
+            position: fixed; bottom: 30px; right: 30px; width: 65px; height: 65px; 
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark)); color: #ffffff; 
+            border: none; border-radius: 50%; box-shadow: 0 8px 25px rgba(0, 111, 176, 0.4); 
+            cursor: pointer; z-index: 9999; display: flex; align-items: center; justify-content: center; 
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.3s, background 0.3s; overflow: hidden; will-change: transform;
+        }
+        .chat-toggle-btn:hover { transform: scale(1.1); box-shadow: 0 12px 30px rgba(0, 111, 176, 0.5); }
+        .chat-toggle-btn.on-footer { background: var(--accent-yellow); color: var(--text-dark); }
+        .chat-toggle-btn svg { position: absolute; width: 28px; height: 28px; transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); pointer-events: none; }
+        .icon-message { opacity: 1; transform: scale(1) rotate(0deg); fill: currentColor; }
+        .icon-close { opacity: 0; transform: scale(0) rotate(-180deg); fill: none; stroke: currentColor; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+        .chat-toggle-btn.active .icon-message { opacity: 0; transform: scale(0) rotate(90deg); }
+        .chat-toggle-btn.active .icon-close { opacity: 1; transform: scale(1) rotate(0deg); }
+
+        .chat-box-container { 
+            position: fixed; bottom: 110px; right: 30px; width: 400px; height: 600px; max-height: 75vh;
+            background-color: #fff; border-radius: 16px; box-shadow: 0 20px 50px -10px rgba(0, 60, 100, 0.25);
+            border: 1px solid rgba(0, 111, 176, 0.1); z-index: 9998; opacity: 0; visibility: hidden; 
+            transform: translateY(20px) scale(0.95); transition: all 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
+            overflow: hidden; display: flex; flex-direction: column;
+        }
+        .chat-box-container.active { opacity: 1; visibility: visible; transform: translateY(0) scale(1); }
+        .chat-header {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+            padding: 18px 20px; display: flex; align-items: center; gap: 15px; border-bottom: 2px solid var(--accent-yellow); color: #fff; flex-shrink: 0;
+        }
+        .chat-logo-bg { 
+            width: 42px; height: 42px; background: rgba(255, 255, 255, 0.15); backdrop-filter: blur(4px); 
+            border: 1px solid rgba(255, 255, 255, 0.3); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #fff;
+        }
+        .chat-title { display: flex; flex-direction: column; }
+        .chat-title h4 { margin: 0; font-size: 16px; font-weight: 700; letter-spacing: 0.5px; }
+        .chat-status { display: flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 400; color: rgba(255,255,255,0.9); margin-top: 2px; }
+        .status-dot {
+            width: 8px; height: 8px; background-color: #00ff88; border-radius: 50%; box-shadow: 0 0 8px rgba(0, 255, 136, 0.6); animation: pulseDot 2s infinite;
+        }
+        @keyframes pulseDot { 0% { transform: scale(0.95); opacity: 0.7; } 50% { transform: scale(1.2); opacity: 1; } 100% { transform: scale(0.95); opacity: 0.7; } }
+
+        /* Responsive */
+        @media (max-width: 900px) {
+            .hero-title { font-size: 42px; }
+            .hero-bg-image { background-position: center; }
+            .fc-nav-btn { display: none; } 
+            .fc-window { overflow-x: auto; scroll-behavior: smooth; } 
+            .cta-content { flex-direction: column; text-align: center; }
+            .cta-desc { margin: 0 auto 30px auto; }
+            .cta-stats-grid { justify-content: center; margin-bottom: 30px; }
+            .cta-stat-item { text-align: left; }
+        }
+        @media (max-width: 600px) {
+            .brand-text { font-size: 14px; }
+            .brand-logo-img { height: 35px; }
+            .menu-list { display: none; } 
+            .hero-title { font-size: 36px; }
+            .hero-btn-group { flex-direction: column; gap: 10px; width: 100%; }
+            .hero-btn-group a { width: 100%; text-align: center; }
+        }
+        @media (max-width: 768px) {
+            .hamburger-btn { display: flex; }
+            .menu-list { display: none; }
+            .nav-menu { display: flex; }
+            /* Pada mobile, header minimalis lebih aman dikasih background agar menu terlihat */
+            header.header-minimal { background-color: #fff; }
+        }
+        /* --- FIX UNTUK MENGHILANGKAN KOTAK LOGO DI HP --- */
+        @media (max-width: 768px) {
+            .brand-area {
+                background: transparent !important;       /* Hapus background putih */
+                backdrop-filter: none !important;         /* Hapus efek blur */
+                -webkit-backdrop-filter: none !important; /* Hapus blur (support khusus) */
+                border: none !important;                  /* Hapus garis pinggir */
+                box-shadow: none !important;              /* Hapus bayangan */
+                padding-left: 0 !important;               /* Rapatkan logo ke kiri */
+            }
+        }
+
+        /* --- CSS UNTUK SOSIAL MEDIA HEADER --- */
+        .header-socials {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            
+            /* --- BAGIAN PENTING UNTUK GESER KE KANAN --- */
+            margin-left: auto;  /* Dorong elemen ini mentok ke kanan */
+            margin-right: 30px; /* Beri jarak antara Sosmed dan Menu Navigasi */
+            
+            /* Pindah Garis Pemisah ke Sebelah Kanan */
+            padding-right: 30px;
+            border-right: 1px solid rgba(255, 255, 255, 0.3);
+            
+            /* Reset (Hapus) Garis Pemisah Kiri yang lama */
+            padding-left: 0;
+            border-left: none;
+            
+            height: 40px;
+        }
+
+        .social-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.3s ease;
+        }
+
+        .social-icon svg {
+            width: 20px; /* Ukuran Ikon */
+            height: 20px;
+            fill: #ffffff; /* Warna default Putih (Transparan Header) */
+            transition: all 0.3s ease;
+            opacity: 0.9;
+        }
+
+        .social-icon:hover { transform: translateY(-2px); }
+        .social-icon:hover svg { opacity: 1; fill: var(--accent-yellow); }
+
+        /* Saat Header di-Scroll (Mode Minimal/Putih) */
+        header.header-minimal .header-socials {
+            border-right-color: #e2e8f0; /* Ubah warna garis kanan jadi abu-abu */
+            border-left: none; 
+        }
+        header.header-minimal .social-icon svg {
+            fill: var(--text-gray); /* Ubah warna ikon jadi abu-abu */
+        }
+        header.header-minimal .social-icon:hover svg {
+            fill: var(--primary-color); /* Hover jadi Biru */
+        }
+
+        /* KHUSUS WHATSAPP (Agar tetap hijau saat di-scroll) */
+        header.header-minimal .social-icon.wa-icon:hover svg {
+            fill: #25D366; 
+        }
+
+        /* Sembunyikan di Layar Mobile/Tablet agar tidak berantakan */
+        @media (max-width: 992px) {
+            .header-socials { display: none; }
+        }
+        /* --- SEARCH OVERLAY STYLE --- */
+        .search-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+            z-index: 99999; /* Di atas segalanya */
+            display: flex; justify-content: center; align-items: flex-start;
+            padding-top: 100px;
+            opacity: 0; visibility: hidden; transition: all 0.3s ease;
+        }
+
+        .search-overlay.active { opacity: 1; visibility: visible; }
+
+        .search-content {
+            width: 100%; max-width: 600px; position: relative; padding: 0 20px;
+            transform: translateY(-20px); transition: 0.4s ease;
+        }
+        .search-overlay.active .search-content { transform: translateY(0); }
+
+        .close-search {
+            position: absolute; top: -50px; right: 0; font-size: 40px; border: none; background: none; cursor: pointer; color: var(--text-dark); transition: 0.3s;
+        }
+        .close-search:hover { color: var(--accent-red); transform: rotate(90deg); }
+
+        #searchInput {
+            width: 100%; padding: 20px; font-size: 18px; border: 2px solid #eee; border-radius: 12px; outline: none; transition: 0.3s; font-family: 'Albert Sans', sans-serif;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+        }
+        #searchInput:focus { border-color: var(--primary-color); box-shadow: 0 5px 20px rgba(0, 111, 176, 0.2); }
+
+        .search-results { margin-top: 20px; max-height: 60vh; overflow-y: auto; }
+
+        .search-item {
+            background: #fff; padding: 15px; border-radius: 8px; margin-bottom: 10px;
+            border: 1px solid #eee; transition: 0.2s; cursor: pointer; display: block; text-decoration: none; color: var(--text-dark);
+        }
+        .search-item:hover { background: var(--bg-light-blue); border-color: var(--primary-color); transform: translateX(5px); }
+        .search-item h4 { margin: 0 0 5px 0; color: var(--primary-color); font-size: 16px; }
+        .search-item p { margin: 0; font-size: 13px; color: var(--text-gray); }
+    
+        /* --- SURVEY MODAL (POPUP) --- */
+        #age-survey-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 50, 90, 0.7); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+            z-index: 99999; display: flex; align-items: center; justify-content: center; opacity: 0; visibility: hidden; transition: all 0.4s ease;
+        }
+        #age-survey-overlay.active { opacity: 1; visibility: visible; }
+        .survey-card {
+            background: #fff; width: 90%; max-width: 420px; border-radius: 20px; overflow: hidden; box-shadow: 0 25px 50px rgba(0,0,0,0.25);
+            transform: scale(0.9) translateY(20px); transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); position: relative;
+        }
+        #age-survey-overlay.active .survey-card { transform: scale(1) translateY(0); }
+        .survey-header { background: linear-gradient(135deg, var(--primary-color), var(--primary-dark)); padding: 25px 20px; text-align: center; color: white; position: relative; }
+        .survey-header h3 { margin: 0; font-size: 20px; font-weight: 700; }
+        .survey-header p { margin: 5px 0 0; font-size: 13px; opacity: 0.9; }
+        .survey-icon { width: 60px; height: 60px; background: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+        .survey-body { padding: 30px 25px; }
+        .input-group-survey { margin-bottom: 20px; }
+        .input-group-survey label { display: block; font-size: 14px; font-weight: 600; color: var(--text-dark); margin-bottom: 8px; }
+        .input-survey { width: 100%; padding: 12px 15px; border: 2px solid #e0e0e0; border-radius: 10px; font-size: 16px; transition: border-color 0.3s; outline: none; }
+        .input-survey:focus { border-color: var(--primary-color); }
+        .btn-submit-survey { width: 100%; padding: 14px; background: var(--secondary-color); color: white; border: none; border-radius: 10px; font-size: 16px; font-weight: 700; cursor: pointer; transition: 0.3s; }
+        .btn-submit-survey:hover { background: #009ac9; transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0, 172, 224, 0.3); }
+        .survey-close { position: absolute; top: 15px; right: 15px; background: rgba(255,255,255,0.2); border: none; color: white; width: 30px; height: 30px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 18px; transition: 0.3s; }
+        .survey-close:hover { background: rgba(255,255,255,0.4); transform: rotate(90deg); }
+
+    </style>
+</head>
+<body>
+
+    <div id="pageLoader" class="page-loader">
+        <div class="loader-spinner"></div>
+        <div class="loader-text">MEMUAT...</div>
+    </div>
+    <div id="age-survey-overlay">
+        <div class="survey-card">
+            <button class="survey-close" id="closeSurvey">&times;</button>
+            <div class="survey-header">
+                <div class="survey-icon">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="#006fb0"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+                </div>
+                <h3>Survei Pengunjung</h3>
+                <p>Bantu kami mengenal Anda lebih baik</p>
+            </div>
+            <div class="survey-body">
+                <div class="input-group-survey">
+                    <label>Berapa Umur Anda?</label>
+                    <input type="number" id="inputAge" class="input-survey" placeholder="Contoh: 25" min="5" max="100">
+                </div>
+                <button id="submitAge" class="btn-submit-survey">Kirim Data</button>
+            </div>
+        </div>
+    </div>
+<header id="mainHeader">
+    <div class="container header-content">
+        <div class="brand-area" onclick="scrollToTop()">
+            <img src="balmonsmd1.png" alt="Logo Balmon" class="brand-logo-img">
+            <div class="brand-text">
+                BALMON SAMARINDA
+                <span>Kementerian Komunikasi & Digital</span>
+            </div>
+        </div>
+
+        <div class="header-socials">
+            <a href="https://wa.me/6285648283012" target="_blank" class="social-icon wa-icon" aria-label="WhatsApp">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg>
+            </a>
+            <a href="#" class="social-icon" aria-label="Instagram">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+            </a>
+            <a href="#" class="social-icon" aria-label="Facebook">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9 8h-3v4h3v12h5v-12h3.642l.358-4h-4v-1.667c0-.955.192-1.333 1.115-1.333h2.885v-5h-3.808c-3.596 0-5.192 1.583-5.192 4.615v3.385z"/></svg>
+            </a>
+            <a href="#" class="social-icon" aria-label="YouTube">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z"/></svg>
+            </a>
+        </div>
+
+        <nav class="nav-menu">
+            <ul class="menu-list">
+                <li class="menu-item" onclick="window.location.href='index.html'">Beranda</li>
+                <li class="menu-item">Layanan
+                    <ul class="dropdown-content">
+                        <li><a href="konsesi.html">Izin Konsesi</a></li>
+                        <li><a href="maritim.html">Izin Maritim</a></li>
+                        <li><a href="fm.html">Izin Penyiaran FM</a></li>
+                    </ul>
+                </li>
+                <li class="menu-item" onclick="window.location.href='galeri.html'">Publikasi</li>
+                <li class="menu-item" onclick="window.location.href='arsip.html'">Download</li>
+                <li class="menu-item" onclick="window.location.href='kontak.html'">Kontak</li>
+            </ul>
+            <button class="nav-search-btn" onclick="openSearch()" style="margin-left:10px; border:none; background:transparent; color:white; cursor:pointer;">
+                <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                </svg>
+            </button>
+        </nav>
+        
+        <button class="hamburger-btn" id="hamburgerBtn" onclick="toggleMobileMenu()">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+    </div>
+
+    <div class="mobile-nav-dropdown" id="mobileNavDropdown">
+        </div>
+</header>
+
+        <div class="mobile-nav-dropdown" id="mobileNavDropdown">
+            <div class="mobile-menu-item" onclick="handleMobileMenuItem(this, 'beranda')">Beranda</div>
+            <div class="mobile-menu-item has-submenu" onclick="toggleMobileSubmenu(this)">Layanan</div>
+            <div class="mobile-submenu" id="submenu-layanan">
+                <a href="konsesi.html" onclick="closeMobileMenu()">Izin Konsesi</a>
+                <a href="maritim.html" onclick="closeMobileMenu()">Izin Maritim</a>
+                <a href="fm.html" onclick="closeMobileMenu()">Izin Penyiaran FM</a>
+            </div>
+            <div class="mobile-menu-item has-submenu" onclick="toggleMobileSubmenu(this)">Publikasi</div>
+            <div class="mobile-submenu" id="submenu-publikasi">
+                <a href="galeri.html" onclick="closeMobileMenu()">Galeri Foto</a>
+                <a href="#" onclick="closeMobileMenu()">Galeri Video</a>
+            </div>
+            <div class="mobile-menu-item" onclick="handleMobileMenuItem(this, 'kontak')">Kontak</div>
+        </div>
+    </header>
+
+    <div class="hero-section">
+        <div class="hero-bg-image"></div>
+        <div class="hero-overlay"></div>
+        
+        <div class="hero-content-wrapper">
+            <h1 class="hero-title">Balai Monitor Spektrum<br><span>Frekuensi Radio Kelas 1 Samarinda</span></h1>
+            <p class="hero-subtitle">Mewujudkan frekuensi radio yang tertib, efisien, dan bebas gangguan di Kalimantan Timur. Ajukan perizinan dan pengaduan Anda secara online dengan mudah dan transparan.</p>
+            <div class="hero-btn-group">
+                <a href="#layanan-publik" class="btn-primary-hero btn-tooltip" data-tooltip="Lihat Jenis Perizinan">Layanan</a>
+                <a href="kontak.html" class="btn-secondary-hero btn-tooltip" data-tooltip="Hubungi via WhatsApp/Email">Hubungi Kami</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="parallax-banner">
+        <div class="parallax-overlay"></div>
+        <div class="parallax-content">
+            <h2>ASN BerAKHLAK</h2>
+            <p style="font-size: 16px; opacity: 0.9;">Bangga Melayani Bangsa</p>
+            <span class="tagline-berakhlak">Berorientasi Pelayanan • Akuntabel • Kompeten • Harmonis • Loyal • Adaptif • Kolaboratif</span>
+        </div>
+    </div>
+
+    <div class="feature-carousel-section">
+        <div class="feature-bg-decor"></div>
+        <div class="fc-wrapper">
+            <div class="fc-window" id="fcWindow">
+                <div class="fc-track" id="fcTrack">
+                    
+                    <div class="fc-card" onclick="toggleDropdown(this)">
+                        <div class="fc-card-img">
+                            <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=600&q=80" alt="Tentang Balmon" loading="lazy">
+                            <div class="click-hint">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+                                <span>Detail</span>
+                            </div>
+                        </div>
+                        <div class="fc-card-content">
+                            <div class="fc-card-header-text"><h3>Tentang Balmon</h3></div>
+                            <p class="fc-card-desc">Unit Pelaksana Teknis (UPT) Ditjen SDPPI yang bertugas mengawasi frekuensi radio di Kaltim.</p>
+                            <div class="fc-dropdown-area">
+                                <ul class="fc-link-list"><li><a href="#">Sejarah Kami</a></li><li><a href="#">Visi & Misi</a></li><li><a href="#">Struktur Organisasi</a></li><li><a href="galeri.html">Publikasi</a></li></ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="fc-card" onclick="toggleDropdown(this)">
+                        <div class="fc-card-img">
+                            <img src="https://images.unsplash.com/photo-1581092160562-40aa08e78837?auto=format&fit=crop&w=600&q=80" alt="Tugas Fungsi" loading="lazy">
+                            <div class="click-hint">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+                                <span>Detail</span>
+                            </div>
+                        </div>
+                        <div class="fc-card-content">
+                            <div class="fc-card-header-text"><h3>Tugas & Fungsi</h3></div>
+                            <p class="fc-card-desc">Monitoring frekuensi, penertiban gangguan, dan pelayanan ujian amatir radio (UNAR).</p>
+                            <div class="fc-dropdown-area">
+                                <ul class="fc-link-list"><li><a href="#">Kegiatan Monitoring</a></li><li><a href="#">Jadwal UNAR</a></li></ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="layanan-publik" class="fc-card" onclick="toggleDropdown(this)">
+                        <div class="fc-card-img">
+                            <img src="https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?auto=format&fit=crop&w=600&q=80" alt="Pelayanan Publik" loading="lazy">
+                            <div class="click-hint">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+                                <span>Detail</span>
+                            </div>
+                        </div>
+                        <div class="fc-card-content">
+                            <div class="fc-card-header-text"><h3>Pelayanan Publik</h3></div>
+                            <p class="fc-card-desc">Layanan perizinan spektrum radio maritim, penerbangan, dan penyiaran.</p>
+                            <div class="fc-dropdown-area">
+                                <ul class="fc-link-list"><li><a href="konsesi.html">Izin Konsesi</a></li><li><a href="maritim.html">Izin Maritim/Pantai</a></li><li><a href="fm.html">Izin Penyiaran FM</a></li></ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="fc-card" onclick="toggleDropdown(this)">
+                        <div class="fc-card-img">
+                            <img src="https://images.unsplash.com/photo-1596524430615-b46475ddff6e?auto=format&fit=crop&w=600&q=80" alt="Pengaduan" loading="lazy">
+                            <div class="click-hint">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+                                <span>Detail</span>
+                            </div>
+                        </div>
+                        <div class="fc-card-content">
+                            <div class="fc-card-header-text"><h3>Hubungi Kami</h3></div>
+                            <p class="fc-card-desc">Masyarakat dapat melaporkan gangguan frekuensi radio melalui kanal pengaduan resmi kami.</p>
+                            <div class="fc-dropdown-area">
+                                <ul class="fc-link-list"><li><a href="kontak.html">Kontak</a></li>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="yellow-cta-section">
+        <div class="yellow-cta-overlay"></div>
+        <div class="container cta-content">
+            <div class="cta-text-area">
+                <h2 class="cta-title">Tertib Frekuensi,<br>Komunikasi Lancar.</h2>
+                <p class="cta-desc">Mari bersama wujudkan spektrum frekuensi radio yang bersih dan bebas interferensi demi keselamatan dan kemajuan bangsa. Laporkan jika Anda menemukan gangguan.</p>
+                <div class="cta-stats-grid">
+                    <div class="cta-stat-item"><span class="cta-stat-number">24/7</span><div class="cta-stat-label">Monitoring</div></div>
+                    <div class="cta-stat-item"><span class="cta-stat-number">100%</span><div class="cta-stat-label">Respon Cepat</div></div>
+                </div>
+            </div>
+            <div class="cta-action-area">
+                <h4 style="margin:0 0 15px 0; font-size:20px;">Butuh Bantuan?</h4>
+                <a href="kontak.html" class="cta-btn-white">Hubungi Kami</a>
+                <div class="cta-note">Layanan bebas pulsa & terintegrasi</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="archive-section">
+    <div class="archive-content">
+        <div class="archive-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                <polyline points="14 2 14 8 20 8"></polyline>
+                <line x1="16" y1="13" x2="8" y2="13"></line>
+                <line x1="16" y1="17" x2="8" y2="17"></line>
+                <polyline points="10 9 9 9 8 9"></polyline>
+            </svg>
+        </div>
+
+        <h2 class="archive-title">Pusat Arsip & Regulasi</h2>
+        <p class="archive-desc">
+            Akses dan unduh kebutuhan dokumen perizinan Anda secara lengkap. Kami menyediakan formulir permohonan ISR, Standar Operasional Prosedur (SOP), serta kumpulan regulasi terbaru terkait penggunaan spektrum frekuensi radio.
+        </p>
+
+        <a href="arsip.html" class="btn-download-primary">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                <polyline points="7 10 12 15 17 10"></polyline>
+                <line x1="12" y1="15" x2="12" y2="3"></line>
+            </svg>
+            Unduh Dokumen & Regulasi
+        </a>
+    </div>
+    </div>
+
+    <footer id="mainFooter">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <h3>Balmon Samarinda</h3>
+                    <p style="color:rgba(255,255,255,0.7); line-height:1.8;">
+                        Jl. Sultan Sulaiman No. 55, Kel. Sambutan, Kec. Sambutan,<br>Samarinda, Kalimantan Timur 75115.<br><br>
+                        <strong>Telp:</strong> 0856-4828-3012<br><strong>Email:</strong>
+                        pelayananuptbalmonsamarinda@gmail.com
+                    </p>
+                </div>
+                <div class="footer-col">
+                    <h3>Tautan Cepat</h3>
+                    <div class="footer-links">
+                        <a href="profil.html">Profil Organisasi</a><a href="#">Standar Pelayanan</a><a
+                            href="#">Pengaduan Masyarakat</a><a href="#">Peta Sebaran Menara</a>
+                    </div>
+                </div>
+                <div class="footer-col">
+                    <h3>Jam Pelayanan</h3>
+                    <p style="color:rgba(255,255,255,0.7);">Senin - Kamis: 08.00 - 16.00<br>Jumat: 08.00 -
+                        16.30<br>Sabtu - Minggu: Libur</p>
+                </div>
+            </div>
+        </div>
+        <div class="copyright">Copyright@2024 Balai Monitor Spektrum Frekuensi Radio Kelas I Samarinda</div>
+    </footer>
+
+    <div class="chat-box-container" id="chatBox">
+        <div class="chat-header">
+            <div class="chat-logo-bg">
+                <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>
+            </div>
+            <div class="chat-title"><h4>Sobat Digi</h4><div class="chat-status"><span class="status-dot"></span>Online - Siap Membantu</div></div>
+        </div>
+        <iframe src="https://MagangBalmon2619-Chat-Balmon.hf.space" style="width: 100%; height: 100%; border: none; background: #fff;" allow="clipboard-write; microphone" loading="lazy"></iframe>
+    </div>
+
+    <button class="chat-toggle-btn" id="toggleBtn" onclick="animateChatToggle()">
+        <svg class="icon-message" viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 9h12v2H6V9zm8 5H6v-2h8v2zm4-6H6V6h12v2z"/></svg>
+        <svg class="icon-close" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+    </button>
+
+    <script>
+        // --- PAGE LOADER LOGIC ---
+        window.addEventListener('load', () => {
+            const loader = document.getElementById('pageLoader');
+            if(loader) loader.classList.add('hidden');
+        });
+        window.addEventListener('pageshow', (event) => {
+            const loader = document.getElementById('pageLoader');
+            if (event.persisted && loader) loader.classList.add('hidden');
+        });
+        document.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', function(e) {
+                const href = this.getAttribute('href');
+                const target = this.getAttribute('target');
+                if (href && !href.startsWith('#') && !href.startsWith('javascript') && target !== '_blank') {
+                    e.preventDefault();
+                    const loader = document.getElementById('pageLoader');
+                    loader.classList.remove('hidden');
+                    setTimeout(() => { window.location.href = href; }, 300);
+                }
+            });
+        });
+
+        // --- FEATURE CAROUSEL ---
+        function toggleDropdown(clickedCard) { clickedCard.classList.toggle('active'); }
+
+        // --- CHAT ANIMATION ---
+        function animateChatToggle() {
+            const btn = document.getElementById("toggleBtn");
+            const box = document.getElementById("chatBox");
+            if (btn.classList.contains("active")) {
+                btn.classList.remove("active"); box.classList.remove("active"); return;
+            }
+            if (btn.classList.contains("loading")) return;
+            btn.classList.add("loading");
+            setTimeout(() => {
+                btn.classList.remove("loading"); btn.classList.add("active"); box.classList.add("active");
+            }, 400); 
+        }
+
+        // --- SCROLL EVENTS ---
+        let lastScrollY = window.scrollY;
+        let ticking = false;
+        function updateScroll() {
+            const scrollY = window.scrollY;
+            const chatBtn = document.getElementById('toggleBtn');
+            const footer = document.getElementById('mainFooter');
+            const header = document.getElementById('mainHeader');
+            
+            // Logika Header Minimalis
+            if (scrollY > 50) header.classList.add('header-minimal');
+            else header.classList.remove('header-minimal');
+
+            // Logika Tombol Chat di atas Footer
+            const footerRect = footer.getBoundingClientRect();
+            const windowHeight = window.innerHeight;
+            if (footerRect.top < windowHeight) {
+                chatBtn.classList.add('on-footer');
+            } else {
+                chatBtn.classList.remove('on-footer');
+            }
+            ticking = false;
+        }
+        window.addEventListener('scroll', function() {
+            lastScrollY = window.scrollY;
+            if (!ticking) {
+                window.requestAnimationFrame(updateScroll);
+                ticking = true;
+            }
+        }, { passive: true });
+
+        function scrollToTop() { window.scrollTo({ top: 0, behavior: 'smooth' }); }
+
+        // --- MOBILE MENU ---
+        function toggleMobileMenu() {
+            document.getElementById('hamburgerBtn').classList.toggle('active');
+            document.getElementById('mobileNavDropdown').classList.toggle('active');
+        }
+        function closeMobileMenu() {
+            document.getElementById('hamburgerBtn').classList.remove('active');
+            document.getElementById('mobileNavDropdown').classList.remove('active');
+            document.querySelectorAll('.mobile-submenu').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.mobile-menu-item.has-submenu').forEach(i => i.classList.remove('active'));
+        }
+        function toggleMobileSubmenu(element) {
+            const submenu = element.nextElementSibling;
+            element.classList.toggle('active');
+            if (submenu && submenu.classList.contains('mobile-submenu')) submenu.classList.toggle('active');
+        }
+        function handleMobileMenuItem(element, action) {
+            if (action === 'beranda') window.location.href = 'index.html';
+            else if (action === 'kontak') window.location.href = 'kontak.html';
+            closeMobileMenu();
+        }
+        document.addEventListener('click', function(event) {
+            const header = document.getElementById('mainHeader');
+            const nav = document.getElementById('mobileNavDropdown');
+            if (!header.contains(event.target) && nav.classList.contains('active')) closeMobileMenu();
+        
+        /* --- SEARCH FUNCTIONALITY --- */
+        // 1. Database Halaman (Tambahkan manual di sini)
+        const pages = [
+            { title: "Beranda", url: "index.html", desc: "Halaman utama Balmon Samarinda" },
+            { title: "Izin Konsesi", url: "konsesi.html", desc: "Layanan perizinan frekuensi untuk perusahaan/konsesi." },
+            { title: "Izin Maritim (Kapal)", url: "maritim.html", desc: "Pengurusan izin stasiun radio kapal dan laut." },
+            { title: "Izin Penyiaran FM", url: "fm.html", desc: "Prosedur perizinan untuk stasiun radio FM/Penyiaran." },
+            { title: "Galeri Kegiatan", url: "galeri.html", desc: "Dokumentasi foto dan video kegiatan Balmon." },
+            { title: "Arsip & Regulasi", url: "arsip.html", desc: "Download dokumen, SOP, dan regulasi terbaru." },
+            { title: "Kontak Kami", url: "kontak.html", desc: "Alamat kantor, email, dan nomor pengaduan." }
+        ];
+
+        // 2. Fungsi Buka/Tutup
+        function openSearch() {
+            document.getElementById('searchOverlay').classList.add('active');
+            setTimeout(() => document.getElementById('searchInput').focus(), 300); // Auto focus input
+        }
+
+        function closeSearch() {
+            document.getElementById('searchOverlay').classList.remove('active');
+            document.getElementById('searchInput').value = ''; // Reset input
+            document.getElementById('searchResults').innerHTML = ''; // Reset hasil
+        }
+
+        // 3. Logika Pencarian
+        function performSearch() {
+            const input = document.getElementById('searchInput').value.toLowerCase();
+            const resultContainer = document.getElementById('searchResults');
+            resultContainer.innerHTML = ''; // Bersihkan hasil lama
+
+            if (input.length < 2) return; // Jangan cari kalau cuma 1 huruf
+
+            // Filter data
+            const results = pages.filter(page => 
+                page.title.toLowerCase().includes(input) || 
+                page.desc.toLowerCase().includes(input)
+            );
+
+            // Tampilkan hasil
+            if (results.length > 0) {
+                results.forEach(page => {
+                    const item = document.createElement('a');
+                    item.href = page.url;
+                    item.className = 'search-item';
+                    item.innerHTML = `
+                        <h4>${page.title}</h4>
+                        <p>${page.desc}</p>
+                    `;
+                    resultContainer.appendChild(item);
+                });
+            } else {
+                resultContainer.innerHTML = '<div style="text-align:center; color:#888;">Tidak ditemukan hasil yang cocok.</div>';
+            }
+        }
+
+        // Tutup jika tekan ESC
+        document.addEventListener('keydown', function(event) {
+            if (event.key === "Escape") closeSearch();
+        });
+        });
+    </script>
+    <script src="TTS_Adaptif.js"></script>
+    <div id="searchOverlay" class="search-overlay">
+    <div class="search-content">
+        <button class="close-search" onclick="closeSearch()">&times;</button>
+        <h2 style="color:var(--primary-color); margin-bottom:20px;">Pencarian</h2>
+        <input type="text" id="searchInput" placeholder="Ketik kata kunci (misal: Izin, Maritim)..." onkeyup="performSearch()">
+        <div id="searchResults" class="search-results"></div>
+    </div>
+</div>
+
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { getDatabase, ref, push, serverTimestamp, get, runTransaction } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+
+    // Konfigurasi Firebase
+    const firebaseConfig = {
+        apiKey: "AIzaSyDUeIg9Zn_xndPXtChO8KufXFp6EMtqBJ0",
+        authDomain: "admin-pelayanan-balmon.firebaseapp.com",
+        databaseURL: "https://admin-pelayanan-balmon-default-rtdb.firebaseio.com",
+        projectId: "admin-pelayanan-balmon",
+        appId: "1:1071557110255:web:bff7087da1feacccb7ee1a"
+    };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+
+    // --- 1. PENCATAT TOTAL KUNJUNGAN (TRAFFIC) ---
+    // Kode ini otomatis menambah angka kunjungan setiap kali halaman dimuat
+    const visitRef = ref(db, 'statistik_web/total_kunjungan');
+    runTransaction(visitRef, (currentData) => {
+        return (currentData || 0) + 1;
+    }).then(() => {
+        console.log("Traffic recorded +1");
+    }).catch((err) => console.error("Traffic error:", err));
+    // ---------------------------------------------
+
+    // --- 2. LOGIKA POPUP SURVEI UMUR ---
+    const overlay = document.getElementById('age-survey-overlay');
+    const btnSubmit = document.getElementById('submitAge');
+    const inputAge = document.getElementById('inputAge');
+    const btnClose = document.getElementById('closeSurvey');
+
+    // Cek LocalStorage (Apakah user sudah pernah isi?)
+    // const hasFilled = localStorage.getItem('balmon_age_filled'); 
+    // Uncomment baris di atas jika ingin survei muncul sekali saja seumur hidup per browser.
+    // Saat ini dimatikan agar Anda bisa mengetesnya berulang kali.
+    
+    // Tampilkan Popup setelah 2 detik
+    setTimeout(() => {
+        // if (!hasFilled) { // Gunakan ini nanti saat produksi
+            overlay.style.display = 'flex';
+            // Sedikit delay biar transisi CSS jalan
+            setTimeout(() => overlay.classList.add('active'), 50);
+        // }
+    }, 2000);
+
+    btnClose.addEventListener('click', () => {
+        overlay.classList.remove('active');
+        setTimeout(() => { overlay.style.display = 'none'; }, 400);
+    });
+
+    btnSubmit.addEventListener('click', () => {
+        const age = parseInt(inputAge.value);
+        if (!age || age < 5 || age > 100) {
+            alert("Mohon isi umur dengan benar (5-100 tahun).");
+            return;
+        }
+
+        btnSubmit.innerText = "Mengirim...";
+        btnSubmit.disabled = true;
+
+        // Kirim ke Firebase
+        push(ref(db, 'statistik_web/demografi_umur'), {
+            umur: age,
+            kategori: getCategory(age),
+            waktu: serverTimestamp(),
+            device: /Mobi|Android/i.test(navigator.userAgent) ? 'Mobile' : 'Desktop'
+        })
+        .then(() => {
+            // Sukses
+            localStorage.setItem('balmon_age_filled', 'true'); // Tandai sudah isi
+            overlay.classList.remove('active'); // Hilangkan animasi
+            setTimeout(() => { overlay.style.display = 'none'; }, 400); // Hilangkan elemen
+            alert("Terima kasih! Data tersimpan.");
+        })
+        .catch((err) => {
+            console.error("Firebase Error:", err);
+            alert("Gagal mengirim data. Cek koneksi internet.");
+            btnSubmit.innerText = "Kirim Data";
+            btnSubmit.disabled = false;
+        });
+    });
+
+    // Helper: Tentukan kategori umur
+    function getCategory(age) {
+        if(age < 18) return "Remaja";
+        if(age < 25) return "Dewasa Muda";
+        if(age < 45) return "Dewasa";
+        if(age < 60) return "Pra-Lansia";
+        return "Lansia";
+    }
+</script>
+</body>
+</html>

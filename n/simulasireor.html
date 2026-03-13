@@ -1,0 +1,896 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Simulasi Ujian REOR - Balmon Samarinda">
+    
+    <title>Simulasi REOR - Balmon Samarinda</title>
+    <link rel="icon" type="image/png" href="balmonsmd1.png" sizes="32x32">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Albert+Sans:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    
+    <style>
+        /* Tambahkan di dalam <style> setelah CSS yang ada */
+
+/* Layout dengan sidebar */
+.simulasi-layout {
+    display: flex;
+    gap: 30px;
+    align-items: flex-start;
+}
+
+.simulasi-utama {
+    flex: 2;
+}
+
+.simulasi-sidebar {
+    flex: 1;
+    background: white;
+    border-radius: 16px;
+    padding: 20px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+    position: sticky;
+    top: 100px;
+}
+
+.ringkasan-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.ringkasan-header h4 {
+    margin: 0;
+    color: var(--primary-color);
+    font-size: 16px;
+    font-weight: 700;
+}
+
+.btn-acak {
+    background: var(--bg-light-blue);
+    border: 1px solid #e2e8f0;
+    border-radius: 30px;
+    padding: 6px 12px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--primary-color);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    transition: all 0.3s ease;
+}
+
+.btn-acak:hover {
+    background: var(--primary-color);
+    color: white;
+    border-color: var(--primary-color);
+}
+
+.btn-acak i {
+    font-size: 12px;
+}
+
+.ringkasan-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 8px;
+    margin: 15px 0;
+}
+
+.badge-soal {
+    width: 100%;
+    aspect-ratio: 1/1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    background: #f1f5f9;
+    color: var(--text-dark);
+    border: 2px solid transparent;
+}
+
+.badge-soal.terjawab {
+    background: var(--primary-color);
+    color: white;
+}
+
+.badge-soal.aktif {
+    border: 2px solid var(--accent-yellow);
+    transform: scale(1.05);
+    box-shadow: 0 0 0 2px rgba(236, 187, 29, 0.3);
+}
+
+.badge-soal:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+}
+
+.ringkasan-footer {
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 1px solid #e2e8f0;
+    display: flex;
+    justify-content: space-between;
+    font-size: 13px;
+    color: var(--text-gray);
+}
+
+.ringkasan-footer span {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.badge-legenda {
+    width: 16px;
+    height: 16px;
+    border-radius: 4px;
+    display: inline-block;
+}
+
+.legenda-terjawab {
+    background: var(--primary-color);
+}
+
+.legenda-belum {
+    background: #f1f5f9;
+    border: 1px solid #cbd5e1;
+}
+
+.progress-reor {
+    margin-bottom: 25px;
+}
+
+.progress-label {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 8px;
+    font-size: 13px;
+    color: var(--text-gray);
+}
+
+.progress-bar {
+    width: 100%;
+    height: 8px;
+    background: #e2e8f0;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.progress-fill {
+    width: 0%;
+    height: 100%;
+    background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+    transition: width 0.3s ease;
+}
+
+.info-reor-box {
+    background: #e8f4fd;
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 30px;
+    border-left: 4px solid var(--primary-color);
+}
+
+@media (max-width: 900px) {
+    .simulasi-layout {
+        flex-direction: column;
+    }
+    
+    .simulasi-sidebar {
+        position: static;
+        width: 100%;
+        order: -1;
+        margin-bottom: 20px;
+    }
+    
+    .ringkasan-grid {
+        grid-template-columns: repeat(10, 1fr);
+    }
+}
+
+@media (max-width: 600px) {
+    .ringkasan-grid {
+        grid-template-columns: repeat(5, 1fr);
+    }
+}
+        /* CSS Khusus untuk halaman simulasi REOR */
+        .simulasi-section {
+            padding: 60px 0;
+            background-color: #f9fafc;
+            min-height: 70vh;
+        }
+        
+        .simulasi-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            padding: 40px;
+        }
+        
+        .timer-box {
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            color: white;
+            padding: 15px 25px;
+            border-radius: 50px;
+            display: inline-block;
+            margin-bottom: 30px;
+            font-weight: 700;
+            font-size: 18px;
+            box-shadow: 0 5px 15px rgba(0,111,176,0.3);
+        }
+        
+        .soal-box {
+            margin-bottom: 30px;
+        }
+        
+        .soal-box p {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-dark);
+            line-height: 1.6;
+        }
+        
+        .jawaban-box {
+            margin-bottom: 30px;
+        }
+        
+        .pilihan {
+            margin-bottom: 15px;
+            padding: 15px 20px;
+            background: var(--bg-light-blue);
+            border-radius: 12px;
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+        }
+        
+        .pilihan:hover {
+            border-color: var(--primary-color);
+            transform: translateX(5px);
+        }
+        
+        .pilihan input[type="radio"] {
+            margin-right: 12px;
+            accent-color: var(--primary-color);
+            width: 18px;
+            height: 18px;
+        }
+        
+        .pilihan label {
+            font-size: 16px;
+            color: var(--text-dark);
+            cursor: pointer;
+            font-weight: 500;
+        }
+        
+        .nav-box {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+        
+        .nav-box button {
+            background: var(--bg-light-blue);
+            border: 1px solid #e2e8f0;
+            padding: 12px 25px;
+            border-radius: 30px;
+            font-weight: 600;
+            color: var(--text-dark);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Albert Sans', sans-serif;
+        }
+        
+        .nav-box button:hover {
+            background: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,111,176,0.2);
+        }
+        
+        .nav-box span {
+            font-weight: 600;
+            color: var(--text-gray);
+        }
+        
+        .submit-box {
+            text-align: center;
+        }
+        
+        .submit-box button {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Albert Sans', sans-serif;
+            box-shadow: 0 8px 20px rgba(0,111,176,0.2);
+        }
+        
+        .submit-box button:hover {
+            background: var(--primary-dark);
+            transform: translateY(-3px);
+            box-shadow: 0 12px 30px rgba(0,111,176,0.3);
+        }
+        
+        .hasil-box {
+            margin-top: 30px;
+            padding: 30px;
+            background: #e8f4fd;
+            border-radius: 16px;
+            border-left: 5px solid var(--primary-color);
+        }
+        
+        .hasil-box h3 {
+            color: var(--primary-color);
+            margin-bottom: 20px;
+            font-size: 24px;
+        }
+        
+        .hasil-box h4 {
+            color: var(--text-dark);
+            margin: 20px 0 15px;
+            font-size: 18px;
+        }
+        
+        .hasil-box #skor {
+            font-size: 28px;
+            font-weight: 800;
+            color: var(--primary-color);
+            margin-bottom: 15px;
+        }
+        
+        .hasil-box ul {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .hasil-box li {
+            background: white;
+            padding: 15px 20px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #e2e8f0;
+            color: var(--text-gray);
+            line-height: 1.6;
+        }
+        
+        .hasil-box li strong {
+            color: var(--primary-color);
+        }
+        
+        @media (max-width: 768px) {
+            .simulasi-container {
+                padding: 25px;
+            }
+            
+            .nav-box {
+                flex-wrap: wrap;
+                gap: 10px;
+                justify-content: center;
+            }
+            
+            .nav-box span {
+                order: -1;
+                width: 100%;
+                text-align: center;
+            }
+        }
+
+        /* Banner Biru */
+        .page-header-blue {
+            background: linear-gradient(135deg, #006fb0 0%, #004b7c 100%);
+            color: white;
+            padding: 80px 0 60px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .page-header-blue::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 60%);
+            pointer-events: none;
+        }
+
+        .page-header-blue .container-custom {
+            position: relative;
+            z-index: 2;
+        }
+
+        .page-header-blue .breadcrumb {
+            font-size: 14px;
+            margin-bottom: 20px;
+            color: rgba(255,255,255,0.8);
+        }
+
+        .page-header-blue .breadcrumb a {
+            color: white;
+            text-decoration: none;
+            border-bottom: 1px solid rgba(255,255,255,0.3);
+            transition: border-color 0.3s;
+        }
+
+        .page-header-blue .breadcrumb a:hover {
+            border-bottom-color: white;
+        }
+
+        .page-header-blue h1 {
+            font-size: 42px;
+            font-weight: 800;
+            margin: 0 0 15px;
+            line-height: 1.2;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        }
+
+        .page-header-blue p {
+            font-size: 18px;
+            opacity: 0.95;
+            max-width: 700px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        @media (max-width: 768px) {
+            .page-header-blue {
+                padding: 60px 0 40px;
+            }
+            .page-header-blue h1 {
+                font-size: 32px;
+            }
+            .page-header-blue p {
+                font-size: 16px;
+                padding: 0 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="pageLoader" class="page-loader">
+        <div class="loader-spinner"></div>
+        <div class="loader-text">MEMUAT...</div>
+    </div>
+
+    <header id="mainHeader">
+        <div class="container header-content">
+            <div class="brand-area" onclick="scrollToTop()">
+                <img src="balmonsmd1.png" alt="Logo Balmon" class="brand-logo-img">
+                <div class="brand-text">
+                    BALMON SAMARINDA
+                    <span>Kementerian Komunikasi & Digital</span>
+                </div>
+            </div>
+
+            <div class="header-socials">
+                <a href="https://wa.me/6285648283012" target="_blank" class="social-icon wa-icon" aria-label="WhatsApp">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z" />
+                    </svg>
+                </a>
+                <a href="https://www.instagram.com/balmonsamarinda/" target="_blank" class="social-icon" aria-label="Instagram">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" />
+                    </svg>
+                </a>
+                <a href="https://www.facebook.com/profile.php?id=100068963927418" class="social-icon" aria-label="Facebook">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <path d="M9 8h-3v4h3v12h5v-12h3.642l.358-4h-4v-1.667c0-.955.192-1.333 1.115-1.333h2.885v-5h-3.808c-3.596 0-5.192 1.583-5.192 4.615v3.385z" />
+                    </svg>
+                </a>
+                <a href="https://youtube.com/@balmonsamarindaa?si=EZUAjSarJaMD-7R9" class="social-icon" aria-label="YouTube">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z" />
+                    </svg>
+                </a>
+                <a href="https://www.tiktok.com/@balmon.samarinda?lang=en" class="social-icon" aria-label="TikTok">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" stroke="none">
+                        <path d="M18.2 4.5c-2.3-.2-4.1-1.9-4.4-4.2V0h-3.4v13.8c0 1.4-1.2 2.6-2.8 2.6-1.4 0-2.6-1.1-2.6-2.6s1.1-2.6 2.6-2.6h.2l.5.1V7.5h-.7c-3.4 0-6.2 2.8-6.2 6.2S4.2 20 7.7 20s6.2-2.8 6.2-6.2v-7c1.1 1.1 2.4 1.6 3.9 1.6h.8V4.6l-.4-.1z" />
+                    </svg>
+                </a>
+            </div>
+
+            <nav class="nav-menu">
+                <ul class="menu-list">
+                    <li class="menu-item" onclick="window.location.href='index.html'">Beranda</li>
+                    <li class="menu-item" onclick="window.location.href='profil.html'">Profil</li>
+                    <li class="menu-item">Layanan
+                        <ul class="dropdown-content">
+                            <li><a href="konsesi.html">Izin Konsesi</a></li>
+                            <li><a href="maritim.html">Izin Maritim</a></li>
+                            <li><a href="fm.html">Izin Penyiaran FM</a></li>
+                            <li><a href="arsip.html">Download</a></li>
+                            <li><a href="faq.html">FAQ</a></li>
+                            <li><a href="simulasibhp.html">Simulasi Estimasi BHP ISR</a></li>
+                            <li><a href="simulasidenda.html">Simulasi Estimasi Sanksi Denda</a></li>
+                            <li><a href="datasertifikat.html">Data Sertifikat</a></li>
+                        </ul>
+                    </li>
+                    <li class="menu-item" onclick="window.location.href='galeri.html'">Publikasi</li>
+                    <li class="menu-item" onclick="window.location.href='kontak.html'">Kontak</li>
+                </ul>
+                <button class="nav-search-btn" onclick="openSearch()"
+                    style="margin-left:10px; border:none; background:transparent; color:white; cursor:pointer;">
+                    <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                    </svg>
+                </button>
+            </nav>
+
+            <button class="hamburger-btn" id="hamburgerBtn" onclick="toggleMobileMenu()">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+
+        <div id="mobileNavOverlay" class="mobile-nav-overlay"></div>
+
+        <div class="mobile-nav-dropdown" id="mobileNavDropdown">
+            <div class="mobile-menu-item" onclick="handleMobileMenuItem(this, 'beranda')">Beranda</div>
+
+
+    </header>
+
+    <!-- Banner Biru -->
+    <div class="page-header-blue">
+        <div class="container-custom">
+            <div class="breadcrumb">
+                <a href="index.html">Beranda</a> / <a href="#">Layanan</a> / <span style="color: #ecbb1d;">Simulasi Ujian REOR</span>
+            </div>
+            <h1>Simulasi Ujian REOR</h1>
+            <p>Latihan soal untuk persiapan ujian sertifikasi Radio Elektronika dan Operator Radio</p>
+        </div>
+    </div>
+<div class="simulasi-section fade-in-section">
+    <div class="container">
+        <div class="simulasi-layout">
+            <!-- Sidebar Ringkasan Soal -->
+            <div class="simulasi-sidebar" id="sidebarRingkasan">
+                <div class="ringkasan-header">
+                    <h4><i class="bi bi-grid-3x3-gap-fill"></i> Navigasi Soal</h4>
+                    <button class="btn-acak" onclick="acakSoal()" title="Acak urutan soal">
+                        <i class="bi bi-shuffle"></i> Acak
+                    </button>
+                </div>
+                
+                <!-- Progress Bar -->
+                <div class="progress-reor">
+                    <div class="progress-label">
+                        <span>Progress</span>
+                        <span id="progressText">0%</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progressBar"></div>
+                    </div>
+                </div>
+                
+                <!-- Grid Ringkasan Soal -->
+                <div class="ringkasan-grid" id="ringkasanGrid"></div>
+                
+                <!-- Legenda -->
+                <div class="ringkasan-footer">
+                    <span><span class="badge-legenda legenda-terjawab"></span> Terjawab: <span id="totalTerjawab">0</span></span>
+                    <span><span class="badge-legenda legenda-belum"></span> Belum: <span id="totalBelum">20</span></span>
+                </div>
+            </div>
+            
+            <!-- Konten Utama -->
+            <div class="simulasi-utama">
+                <div class="simulasi-container">
+                    <!-- Info REOR -->
+                    <div class="info-reor-box">
+                        <div style="display: flex; gap: 15px; align-items: flex-start; flex-wrap: wrap;">
+                            <div style="background: var(--primary-color); width: 50px; height: 50px; border-radius: 12px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                                <i class="bi bi-info-circle-fill" style="color: white; font-size: 24px;"></i>
+                            </div>
+                            <div style="flex: 1;">
+                                <h4 style="margin: 0 0 8px 0; color: var(--primary-color); font-weight: 700;">Tentang REOR</h4>
+                                <p style="margin: 0; color: var(--text-gray); font-size: 14px; line-height: 1.6;">
+                                    <strong>REOR (Radio Elektronika dan Operator Radio)</strong> adalah sertifikasi resmi yang wajib dimiliki oleh operator radio di kapal dan bidang maritim. 
+                                    Sertifikat ini berlaku selama 5 tahun dan diatur oleh ITU, IMO, dan SOLAS.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Timer -->
+                    <div class="timer-box" id="timer">Waktu: 00:00</div>
+                    
+                    <!-- Soal -->
+                    <div class="soal-box" id="soal">
+                        <!-- Soal akan dimuat via JavaScript -->
+                    </div>
+                    
+                    <!-- Pilihan Jawaban -->
+                    <div class="jawaban-box" id="jawaban">
+                        <!-- Pilihan jawaban akan dimuat via JavaScript -->
+                    </div>
+                    
+                    <!-- Navigasi -->
+                    <div class="nav-box">
+                        <button id="prevBtn" onclick="prevSoal()"><i class="bi bi-chevron-left"></i> Sebelumnya</button>
+                        <span id="soalCounter">Soal 1/20</span>
+                        <button id="nextBtn" onclick="nextSoal()">Selanjutnya <i class="bi bi-chevron-right"></i></button>
+                    </div>
+                    
+                    <!-- Submit -->
+                    <div class="submit-box">
+                        <button id="submitBtn" onclick="submitUjian()">Selesai & Lihat Hasil</button>
+                    </div>
+                    
+                    <!-- Hasil -->
+                    <div class="hasil-box" id="hasil" style="display:none;">
+                        <h3><i class="bi bi-trophy-fill"></i> Hasil Simulasi</h3>
+                        <p id="skor"></p>
+                        <div id="pembahasan"></div>
+                        <button onclick="ulangiUjian()" style="margin-top: 20px; background: var(--primary-color); color: white; border: none; padding: 12px 30px; border-radius: 50px; font-weight: 600; cursor: pointer; font-family: 'Albert Sans', sans-serif;">Ulangi Ujian</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+    <footer id="mainFooter" class="fade-in-section">
+        <div class="container">
+            <div class="footer-grid fade-stagger-children">
+                <div class="footer-col">
+                    <h3>Balmon Samarinda</h3>
+                    <p style="color:rgba(255,255,255,0.7); line-height:1.8;">
+                        Jl. Sultan Sulaiman No. 55, Kel. Sambutan, Kec. Sambutan,<br>Samarinda, Kalimantan Timur 75115.<br><br>
+                        <strong>Telp:</strong> 0856-4828-3012<br><strong>Email:</strong>
+                        pelayananuptbalmonsamarinda@gmail.com
+                    </p>
+                </div>
+                <div class="footer-col">
+                    <h3>Tautan Cepat</h3>
+                    <div class="footer-links">
+                        <a href="profil.html">Profil Organisasi</a><a href="#">Standar Pelayanan</a><a
+                            href="#">Pengaduan Masyarakat</a><a href="#">Peta Sebaran Menara</a>
+                    </div>
+                </div>
+                <div class="footer-col">
+                    <h3>Jam Pelayanan</h3>
+                    <p style="color:rgba(255,255,255,0.7);">Senin - Kamis: 08.00 - 16.00<br>Jumat: 08.00 -
+                        16.30<br>Sabtu - Minggu: Libur</p>
+                </div>
+            </div>
+        </div>
+        <div class="copyright">Copyright@2024 Balai Monitor Spektrum Frekuensi Radio Kelas I Samarinda</div>
+    </footer>
+
+    <div class="chat-box-container" id="chatBox">
+        <div class="chat-header">
+            <div class="chat-header-content">
+                <div class="chat-logo-bg">
+                    <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path>
+                    </svg>
+                </div>
+                <div class="chat-info">
+                    <h4>Sobat Digi</h4>
+                    <div class="chat-status"><span class="status-dot"></span>Online - Siap Membantu</div>
+                </div>
+            </div>
+        </div>
+        <iframe id="chatFrame" data-src="https://MagangBalmon2619-Chat-Balmon.hf.space"
+            style="width: 100%; height: 100%; border: none; background: #fff;" allow="clipboard-write; microphone"
+            loading="lazy"></iframe>
+    </div>
+
+    <button class="chat-toggle-btn" id="toggleBtn" onclick="animateChatToggle()">
+        <svg class="icon-message" viewBox="0 0 24 24">
+            <path d="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 9h12v2H6V9zm8 5H6v-2h8v2zm4-6H6V6h12v2z" />
+        </svg>
+        <svg class="icon-close" viewBox="0 0 24 24">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+    </button>
+
+    <div class="search-overlay" id="searchOverlay">
+        <div class="search-content">
+            <button class="close-search" onclick="closeSearch()">&times;</button>
+            <h2 style="color:var(--primary-color);">Pencarian</h2>
+            <input type="text" id="searchInput" onkeyup="performSearch()" placeholder="Ketik kata kunci...">
+            <div class="search-results" id="searchResults"></div>
+        </div>
+    </div>
+
+    <script src="dist_js/scriptindex2.min.js"></script>
+    <script src="dist_js/simulasireor.js"></script>
+    <script>
+        // Fungsi untuk menangani sidebar mobile
+        function toggleMobileMenu() {
+            const btn = document.getElementById('hamburgerBtn');
+            const menu = document.getElementById('mobileNavDropdown');
+            const overlay = document.getElementById('mobileNavOverlay');
+
+            btn.classList.toggle('active');
+            menu.classList.toggle('active');
+            overlay.classList.toggle('active');
+
+            if (menu.classList.contains('active')) {
+                document.body.style.overflow = 'hidden';
+            } else {
+                document.body.style.overflow = '';
+            }
+        }
+
+        function closeMobileMenu() {
+            const btn = document.getElementById('hamburgerBtn');
+            const menu = document.getElementById('mobileNavDropdown');
+            const overlay = document.getElementById('mobileNavOverlay');
+
+            btn.classList.remove('active');
+            menu.classList.remove('active');
+            overlay.classList.remove('active');
+            document.body.style.overflow = '';
+
+            document.querySelectorAll('.mobile-submenu').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.mobile-menu-item.has-submenu').forEach(i => i.classList.remove('active'));
+        }
+
+        function toggleMobileSubmenu(element) {
+            const submenu = element.nextElementSibling;
+            element.classList.toggle('active');
+            if (submenu && submenu.classList.contains('mobile-submenu')) {
+                submenu.classList.toggle('active');
+            }
+        }
+
+        function handleMobileMenuItem(element, action) {
+            if (action === 'beranda') window.location.href = 'index.html';
+            else if (action === 'profil') window.location.href = 'profil.html';
+            else if (action === 'kontak') window.location.href = 'kontak.html';
+            else if (action === 'publikasi') window.location.href = 'galeri.html';
+            else if (action === 'download') window.location.href = 'arsip.html';
+            closeMobileMenu();
+        }
+
+        document.addEventListener('click', function (event) {
+            const overlay = document.getElementById('mobileNavOverlay');
+            if (overlay && overlay.classList.contains('active') && event.target === overlay) {
+                closeMobileMenu();
+            }
+        });
+
+        // Fungsi animasi scroll header
+        let ticking = false;
+        function updateScroll() {
+            const scrollY = window.scrollY;
+            const header = document.getElementById('mainHeader');
+            const chatBtn = document.getElementById('toggleBtn');
+            const footer = document.getElementById('mainFooter');
+
+            if (scrollY > 50) header.classList.add('header-minimal');
+            else header.classList.remove('header-minimal');
+
+            if (footer) {
+                const footerRect = footer.getBoundingClientRect();
+                if (footerRect.top < window.innerHeight) chatBtn.classList.add('on-footer');
+                else chatBtn.classList.remove('on-footer');
+            }
+            ticking = false;
+        }
+        window.addEventListener('scroll', function () {
+            if (!ticking) { window.requestAnimationFrame(updateScroll); ticking = true; }
+        }, { passive: true });
+
+        function animateChatToggle() {
+            const btn = document.getElementById("toggleBtn");
+            const box = document.getElementById("chatBox");
+            const iframe = document.getElementById("chatFrame");
+
+            if (!iframe.getAttribute('src')) {
+                iframe.setAttribute('src', iframe.getAttribute('data-src'));
+            }
+
+            if (btn.classList.contains("active")) {
+                btn.classList.remove("active"); box.classList.remove("active"); return;
+            }
+            btn.classList.add("active"); box.classList.add("active");
+        }
+
+        const pages = [
+            { title: "Beranda", url: "index.html", desc: "Halaman utama Balmon Samarinda" },
+            { title: "Profil", url: "profil.html", desc: "Informasi tentang Balmon Samarinda." },
+            { title: "Izin Konsesi", url: "konsesi.html", desc: "Layanan perizinan frekuensi untuk perusahaan/konsesi." },
+            { title: "Izin Maritim (Kapal)", url: "maritim.html", desc: "Pengurusan izin stasiun radio kapal dan laut." },
+            { title: "Izin Penyiaran FM", url: "fm.html", desc: "Prosedur perizinan untuk stasiun radio FM/Penyiaran." },
+            { title: "Galeri Kegiatan", url: "galeri.html", desc: "Dokumentasi foto dan video kegiatan Balmon." },
+            { title: "Arsip & Regulasi", url: "arsip.html", desc: "Download dokumen, SOP, dan regulasi terbaru." },
+            { title: "Kontak Kami", url: "kontak.html", desc: "Alamat kantor, email, dan nomor pengaduan." },
+            { title: "FAQ Layanan", url: "faq.html", desc: "Pertanyaan umum seputar perizinan dan layanan." },
+            { title: "Simulasi Ujian REOR", url: "simulasireor.html", desc: "Latihan soal untuk persiapan ujian REOR." }
+        ];
+
+        function openSearch() {
+            document.getElementById('searchOverlay').classList.add('active');
+            setTimeout(() => document.getElementById('searchInput').focus(), 300);
+        }
+        function closeSearch() {
+            document.getElementById('searchOverlay').classList.remove('active');
+            document.getElementById('searchInput').value = '';
+            document.getElementById('searchResults').innerHTML = '';
+        }
+        function performSearch() {
+            const input = document.getElementById('searchInput').value.toLowerCase();
+            const resultContainer = document.getElementById('searchResults');
+            resultContainer.innerHTML = '';
+            if (input.length < 2) return;
+
+            const results = pages.filter(page => page.title.toLowerCase().includes(input) || page.desc.toLowerCase().includes(input));
+            if (results.length > 0) {
+                results.forEach(page => {
+                    const item = document.createElement('a');
+                    item.href = page.url;
+                    item.className = 'search-item';
+                    item.innerHTML = `<h4>${page.title}</h4><p>${page.desc}</p>`;
+                    resultContainer.appendChild(item);
+                });
+            } else {
+                resultContainer.innerHTML = '<div style="text-align:center; color:#888;">Tidak ditemukan hasil yang cocok.</div>';
+            }
+        }
+        document.addEventListener('keydown', (e) => { if (e.key === "Escape") closeSearch(); });
+
+        window.addEventListener('load', () => {
+            const loader = document.getElementById('pageLoader');
+            if (loader) loader.classList.add('hidden');
+        });
+        window.addEventListener('pageshow', (event) => {
+            const loader = document.getElementById('pageLoader');
+            if (event.persisted && loader) loader.classList.add('hidden');
+        });
+
+        function scrollToTop() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    </script>
+    <script type="module" src="scriptvideo.js"></script>
+    <script src="dist_js/TTS_Adaptif.min.js"></script>
+    <script src="https://unpkg.com/@varienos/device-detector-js@latest/dist/device-detector.min.js"></script>
+    <script type="module" src="dist_js/analytics.min.js"></script>
+    <script src="dist_js/simulasireor.min.js"></script>
+</body>
+
+</html>
+
+
+
+
+
+
